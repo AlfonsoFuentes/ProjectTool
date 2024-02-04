@@ -1,0 +1,29 @@
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.FluentUI.AspNetCore.Components
+@using Microsoft.JSInterop
+@using Client
+@using Client.Layout
+@using Shared.Commons.UserManagement
+@using Shared.Models.Requests
+@using Shared.Models.Responses
+@using Shared.Commons.Results
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Blazored.FluentValidation
+@using Client.Identity
+@using Client.Managers.Accounts
+@using Client.Managers.MWOS
+@using Shared.Models.MWO
+@using Shared.Models.MWOTypes
+@inject CurrentUser CurrentUser
+@inject NavigationManager _NavigationManager
+@attribute [Authorize]
+@inject IMessageService MessageService
+@inject IDialogService DialogService
+

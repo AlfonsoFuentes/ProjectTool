@@ -1,0 +1,43 @@
+﻿@inherits LayoutComponentBase
+
+<RadzenLayout Style="width:100%">
+    <RadzenHeader>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.SpaceBetween>
+
+            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
+
+            <AuthorizeView>
+                <Authorized>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.SpaceBetween Gap="1">
+                        <div>
+                            @context.User.Identity?.Name
+                        </div>
+                        <RadzenLink Path="logout">Logout</RadzenLink>
+                    </RadzenStack>
+                </Authorized>
+                <NotAuthorized>
+
+                    <RadzenLink Path="login">Login</RadzenLink>
+
+                </NotAuthorized>
+            </AuthorizeView>
+
+        </RadzenStack>
+    </RadzenHeader>
+    <RadzenSidebar @bind-Expanded="@sidebar1Expanded" Responsive=true>
+        <NavMenu sidebarExpanded=@sidebar1Expanded></NavMenu>
+    </RadzenSidebar>
+    <RadzenBody>
+        <div class="rz-p-1">
+            @Body
+        </div>
+    </RadzenBody>
+    <RadzenFooter>
+        Footer
+    </RadzenFooter>
+</RadzenLayout>
+
+<RadzenComponents />
+@code {
+    bool sidebar1Expanded = true;
+}

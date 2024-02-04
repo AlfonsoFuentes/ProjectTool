@@ -1,0 +1,17 @@
+﻿@page "/CreateSuperAdmin"
+@using Client.Managers.Accounts
+
+
+<div class="alert alert-info">@Message</div>
+@code {
+    [Inject]
+    private IAccountManager accountManager { get; set; } = null!;
+    string Message = "";
+    protected override async Task OnInitializedAsync()
+    {
+        var result=await accountManager.CreateSuperAdminUser();
+        Message = result.Messages.FirstOrDefault()!;
+
+    }
+
+}

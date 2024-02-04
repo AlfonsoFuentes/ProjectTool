@@ -1,0 +1,42 @@
+﻿@page "/UpdateBrand/{Id:guid}"
+
+<PageTitle>Update @BrandName</PageTitle>Brand
+
+<RadzenStack Orientation="Orientation.Vertical">
+    <div>Update Brand @BrandName</div>
+    <RadzenRow>
+        <RadzenColumn SizeXS="8" SizeSM="4">
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenTemplateForm TItem="UpdateBrandRequest" Data="@Model">
+                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+
+                    <RadzenFormField Text="Name" Style="width: 100%;">
+                        <RadzenTextBox @bind-Value=@Model.Name AutoComplete class="w-100"
+                                        Change=ChangeName Name="name" />
+
+                     </RadzenFormField>
+                     <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                     <ValidationMessage For="() => Model" style="color:red; font-size:x-small;" />
+                 </RadzenTemplateForm>
+             </RadzenStack>
+         </RadzenColumn>
+
+     </RadzenRow>
+     <RadzenRow>
+         <RadzenStack Orientation="Orientation.Horizontal">
+             <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Click="SaveAsync">Save</RadzenButton>
+             <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync">Cancel</RadzenButton>
+         </RadzenStack>
+
+     </RadzenRow>
+ </RadzenStack>
+
+ @code {
+    async Task ChangeName(string name)
+    {
+        Model.Name = name;
+
+
+    }
+}
+

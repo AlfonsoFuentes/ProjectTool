@@ -1,0 +1,28 @@
+﻿
+<RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false">
+    <RadzenPanelMenuItem Text="Home" Icon="home" Path="/" />
+    <RadzenPanelMenuItem Text="Counter" Icon="account_box" Path="counter" />
+    <RadzenPanelMenuItem Text="Weather" Icon="account_box" Path="weather" />
+   
+    <AuthorizeView>
+        <Authorized>
+
+            @if (CurrentUser.IsSuperAdmin)
+            {
+                <RadzenPanelMenuItem Text="CreateSuperAdmin" Path="CreateSuperAdmin" />
+
+                <RadzenPanelMenuItem Text="Register" Path="register" />
+                <RadzenPanelMenuItem Text="Brands" Path="brandstable" />
+                <RadzenPanelMenuItem Text="Suppliers" Path="Supplierstable" />
+            }
+            <RadzenPanelMenuItem Text="MWOs Table" Path="mwotable" />
+            
+        </Authorized>
+    </AuthorizeView>
+</RadzenPanelMenu>
+
+@code {
+    [Parameter]
+    public bool sidebarExpanded { get; set; }
+
+}

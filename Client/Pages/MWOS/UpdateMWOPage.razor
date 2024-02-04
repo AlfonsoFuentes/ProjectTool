@@ -1,0 +1,66 @@
+﻿@page "/UpdateMWO/Guid:Id"
+@using Client.Managers.MWOS
+@using Shared.Models.MWO
+@using Shared.Models.MWOTypes
+
+<FluentDialogHeader ShowDismiss="true">
+    <FluentStack VerticalAlignment="VerticalAlignment.Center">
+        <FluentIcon Value="@(new Icons.Regular.Size24.WindowApps())" />
+        <FluentLabel Typo="Typography.PaneHeader">
+            @Dialog!.Instance.Parameters.Title
+        </FluentLabel>
+    </FluentStack>
+</FluentDialogHeader>
+
+@* Footer *@
+<FluentDialogFooter>
+    <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit" OnClick="SaveAsync">Save</FluentButton>
+    <FluentButton Appearance="Appearance.Neutral" OnClick="@CancelAsync">Cancel</FluentButton>
+</FluentDialogFooter>
+
+@* Body *@
+<FluentDialogBody>
+    <EditForm Model="@Content" FormName="register" OnValidSubmit="@SaveAsync">
+        <FluentValidationValidator @ref="_fluentValidationValidator" />
+        <FluentStack Orientation="Orientation.Vertical">
+            <FluentTextField Name="Content.Name" @bind-Value="@Content.Name" Label="Name" Style="width: 100%" Immediate=true />
+            <ValidationMessage For="() => Content.Name" style="color:red; font-size:x-small;" />
+            <ValidationMessage For="() => Content" style="color:red; font-size:x-small;" />
+            <FluentCombobox Items="@MWOTypeEnum.List" Style="width: 100%"
+                            OptionValue="@(i => i!.Id.ToString())"
+                            OptionText="@(i=>i.Name)"
+                            @bind-SelectedOption=@Content.Type></FluentCombobox>
+
+            <ValidationMessage For="() => Content.Type" style="color:red; font-size:x-small;" />
+
+        </FluentStack>
+    </EditForm>
+</FluentDialogBody>
+
+@* <FluentGrid>
+    <FluentGridItem xs="8" sm="4">
+
+        <EditForm Model="@Model" OnValidSubmit="CreateMWO" FormName="register">
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentTextField Name="Model.Name" @bind-Value="@Model.Name" Label="Name" Style="width: 100%" Immediate=true />
+                <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                <FluentCombobox Items="@MWOTypeEnum.List"
+                                OptionValue="@(i => i!.Id.ToString())"
+                                OptionText="@(i=>i.Name)"
+                                @bind-SelectedOption=@Model.Type></FluentCombobox>
+
+                <ValidationMessage For="() => Model.Type" style="color:red; font-size:x-small;" />
+                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" Style="width: 100%">CreateNew MWO</FluentButton>
+            </FluentStack>
+        </EditForm>
+    </FluentGridItem>
+    <FluentGridItem xs="12" sm="8">
+
+    </FluentGridItem>
+</FluentGrid>
+ *@
+
+@code {
+    
+}

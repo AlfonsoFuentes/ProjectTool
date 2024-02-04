@@ -1,0 +1,43 @@
+﻿@page "/CreateMWO"
+@using Client.Managers.MWOS
+@using Shared.Models.MWO
+@using Shared.Models.MWOTypes
+
+<PageTitle>Create New MWO</PageTitle>
+<FluentStack Orientation="Orientation.Vertical">
+    <FluentStack Orientation="Orientation.Vertical">
+        <div>Create MWO</div>
+        <FluentGrid>
+            <FluentGridItem xs="8" sm="4">
+
+                <EditForm Model="@Content" OnValidSubmit="SaveAsync" FormName="register">
+                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <FluentTextField Name="Content.Name" @bind-Value="@Content.Name" Label="Name" Style="width: 100%" Immediate=true />
+                        <ValidationMessage For="() => Content.Name" style="color:red; font-size:x-small;" />
+                        <FluentCombobox Items="@MWOTypeEnum.List" Style="width: 100%"
+                                        OptionValue="@(i => i!.Id.ToString())"
+                                        OptionText="@(i=>i.Name)"
+                                        @bind-SelectedOption=@Content.Type></FluentCombobox>
+
+                        <ValidationMessage For="() => Content.Type" style="color:red; font-size:x-small;" />
+                        
+                    </FluentStack>
+                </EditForm>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="8">
+
+            </FluentGridItem>
+        </FluentGrid>
+    </FluentStack>
+    <div>
+        <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">Save</FluentButton>
+        <FluentButton Appearance="Appearance.Neutral" OnClick="@CancelAsync">Cancel</FluentButton>
+    </div>
+</FluentStack>
+ 
+
+
+@code {
+    
+}

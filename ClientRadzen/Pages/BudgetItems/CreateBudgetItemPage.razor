@@ -1,0 +1,123 @@
+﻿@page "/CreateBudgetItem/{MWOId:guid}"
+@using Shared.Models.BudgetItemTypes
+
+<PageTitle>Create New BudgetItem</PageTitle>
+
+<RadzenStack Orientation="Orientation.Vertical">
+    <div>Create BudgetItem</div>
+    <RadzenRow>
+        <RadzenColumn SizeXS="8" SizeSM="4">
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenTemplateForm TItem="CreateBudgetItemRequest" Data="@Model">
+                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                    <RadzenFormField Text="Type" Style="width: 100%;">
+                        <RadzenDropDown @bind-Value=@Model.Type Data=@BudgetItemTypeEnum.List Style="width: 100%;"
+                                        Name="type" TextProperty="Name"
+                                        TValue="BudgetItemTypeEnum" />
+                    </RadzenFormField>
+                    <ValidationMessage For="() => Model.Type" style="color:red; font-size:x-small;" />
+                    @if (Model.Type != BudgetItemTypeEnum.None)
+                    {
+                        <RadzenFormField Text="Name" Style="width: 100%;">
+                            <RadzenTextBox @bind-Value=@Model.Name class="w-100" Change=ChangeName Name="name" />
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                    }
+                    @if (Model.IsRegularData || Model.IsEquipmentData)
+                    {
+
+                        <RadzenFormField Text="Quantity" Style="width: 100%;">
+                            <RadzenNumeric @bind-Value=@Model.Quantity class="w-100" TValue=double
+                                           Name="Quantity" Change="Model.ChangeQuantity" />
+
+                        </RadzenFormField>
+
+                        <RadzenFormField Text="Unitary Cost, USD" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown="false" @bind-Value=@Model.UnitaryCost class="w-100" TValue=double Format="c"
+                                           Name="UnitaryCost" Change="Model.ChangeUnidatryCost"  />
+
+                        </RadzenFormField>
+
+                        <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown="false" Value=@Model.Budget class="w-100" TValue=double Format="c"
+                                           Name="Budget" Disabled=true />
+
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Budget" style="color:red; font-size:x-small;" />
+                    }
+                    else if (Model.IsTaxesData)
+                    {
+
+                    }
+                    else if (Model.IsEngContData)
+                    {
+                        <RadzenFormField Text="Percentage" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown="false" Value=@Model.Percentage class="w-100" TValue=double Format="c"
+                                           Name="Percentage"  Change="Model.ChangePercentage" />
+
+                        </RadzenFormField>
+                        <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown="false" Value=@Model.Budget class="w-100" TValue=double Format="c"
+                                           Name="Budget" Disabled=true />
+
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Budget" style="color:red; font-size:x-small;" />
+                    }
+
+
+                </RadzenTemplateForm>
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn SizeXS="8" SizeSM="4">
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenTemplateForm TItem="CreateBudgetItemRequest" Data="@Model">
+                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                    @if (Model.IsEquipmentData)
+                    {
+                        <RadzenFormField Text="Brand" Style="width: 100%;">
+                            <RadzenDropDown @bind-Value=@Model.Brand Data=@Brands Style="width: 100%;"
+                                            Name="type" TextProperty="Name"
+                                            TValue="BrandResponse" />
+                        </RadzenFormField>
+                        <RadzenFormField Text="Model" Style="width: 100%;">
+                            <RadzenTextBox @bind-Value=@Model.Model class="w-100" Name="Model" />
+                        </RadzenFormField>
+
+                        <RadzenFormField Text="Reference" Style="width: 100%;">
+                            <RadzenTextBox @bind-Value=@Model.Reference class="w-100" Name="Reference" />
+                        </RadzenFormField>
+
+                    }
+                    else if (Model.IsTaxesData)
+                    {
+
+                    }
+                    else if (Model.IsEngContData)
+                    {
+
+                    }
+
+
+                </RadzenTemplateForm>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Click="SaveAsync">Create</RadzenButton>
+            <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync">Cancel</RadzenButton>
+        </RadzenStack>
+
+    </RadzenRow>
+</RadzenStack>
+
+@code {
+    void ChangeName(string name)
+    {
+        Model.Name = name;
+    }
+    void ChangeQuantity(double quantity)
+    {
+        Model.Quantity = quantity;
+    }
+}

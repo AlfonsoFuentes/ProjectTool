@@ -1,0 +1,53 @@
+﻿@page "/register"
+
+
+@inject ICookieAuthenticationStateProvider Acct
+<PageTitle>Register</PageTitle>
+<h2>Create a new account.</h2>
+<RadzenRow>
+    <RadzenColumn SizeXS="8" SizeSM="4">
+        <EditForm Model="@Input" OnValidSubmit="RegisterUser" FormName="register">
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenFormField Text="User Name" Variant="Variant.Text" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Input.UserName class="w-100" aria-label="Default TextBox" Name="username" />
+                 
+                </RadzenFormField>
+                <ValidationMessage For="() => Input.UserName" style="color:red; font-size:x-small;" />
+                <RadzenFormField Text="Email" Variant="Variant.Text" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Input.Email class="w-100" aria-label="Default TextBox" Placeholder="name@example.com" Name="email" />
+              
+                </RadzenFormField>
+                <ValidationMessage For="() => Input.UserName" style="color:red; font-size:x-small;" />
+                <RadzenFormField Text="Role" Variant="Variant.Text" Style="width: 100%;">
+                    <RadzenDropDown @bind-Value=@Input.Role Data=@RolesDto.Roles Style="width: 100%; max-width: 400px;" Name="role" TextProperty="Name" 
+                    ValueProperty="Name" />
+              
+                </RadzenFormField>
+                <ValidationMessage For="() => Input.Role" style="color:red; font-size:x-small;" />
+               
+                <RadzenButton ButtonType="ButtonType.Submit">Register new user</RadzenButton>
+            </RadzenStack>
+        </EditForm>
+    </RadzenColumn>
+    <RadzenColumn SizeXS="12" SizeSM="8">
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+    FluentValidationValidator _fluentValidationValidator = null!;
+    RegisterRequest Input = new();
+    public async Task RegisterUser()
+    {
+        if (await _fluentValidationValidator!.ValidateAsync())
+        {
+
+            var result = await Acct.RegisterAsync(Input);
+            if (result.Succeeded)
+            {
+                _NavigationManager.NavigateTo("/RegisterSuccesfull");
+            }
+        }
+
+    }
+}

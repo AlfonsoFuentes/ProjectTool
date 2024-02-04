@@ -1,0 +1,6 @@
+@ProjectTool_HostAddress = http://localhost:5148
+
+GET {{ProjectTool_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

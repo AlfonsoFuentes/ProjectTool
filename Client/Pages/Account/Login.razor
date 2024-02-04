@@ -1,0 +1,112 @@
+﻿@page "/login"
+
+@layout AuthLayout
+@inject ICookieAuthenticationStateProvider Acct
+@attribute [AllowAnonymous]
+<PageTitle>Login</PageTitle>
+
+
+
+<AuthorizeView>
+    <Authorized>
+
+    </Authorized>
+    <NotAuthorized>
+
+        <h1>Log in</h1>
+        @if (Message != string.Empty)
+        {
+            @Message
+        }
+        <FluentGrid>
+            <FluentGridItem xs="8" sm="4">
+
+
+                <FluentStack Orientation="Orientation.Vertical">
+                    <FluentTextField Name="Input.Email" Value="@Input.Email" AutoComplete="username" Required="true"
+                                     Placeholder="name@example.com" Label="Email" Style="width: 100%" Immediate=true ValueChanged="ReviewIfMustChangePassword" />
+
+                    @if (ShowData)
+                    {
+                        @if (UserExist)
+                        {
+                            <FluentTextField type="password" Name="Input.Password" @bind-Value="Input.Password" AutoComplete="current-password" Required="true" Placeholder="password" Label="Password" Style="width: 100%" />
+                            @if (MustChangePassword)
+                            {
+                                <FluentCheckbox Name="Input.RememberMe" @bind-Value="Input.RememberMe" Label="Remember me" />
+                                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" Style="width: 100%" OnClick="DoLoginAsync">Log in</FluentButton>
+
+
+                            }
+                            else
+                            {
+                                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" Style="width: 100%" OnClick="ChangePassword">Change Password</FluentButton>
+
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-info" style="width:100%">User does not exist</div>
+                        }
+                    }
+
+
+
+
+
+                </FluentStack>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="8">
+
+            </FluentGridItem>
+        </FluentGrid>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Inject]
+    private IAccountManager accountManager { get; set; } = null!;
+    private LoginRequest Input { get; set; } = new();
+    string Message = string.Empty;
+    public async Task DoLoginAsync()
+    {
+        Message = string.Empty;
+        var result = await Acct.LoginAsync(Input);
+        if (!result.Succeeded)
+        {
+            Message = result.Messages.FirstOrDefault()!;
+        }
+
+    }
+    bool UserExist;
+    bool MustChangePassword;
+    bool ShowData = false;
+    public async Task ReviewIfMustChangePassword(string email)
+    {
+        ShowData = false;
+        Input.Email = email;
+        var resultuserexiste = await accountManager.ReviewEmailExist(email);
+        UserExist = resultuserexiste.Succeeded;
+        if (UserExist)
+        {
+            var result = await accountManager.ReviewChangePassWord(Input);
+            MustChangePassword = result.Succeeded;
+        }
+
+        ShowData = true;
+    }
+    public async Task ChangePassword()
+    {
+        ChangePasswordRequest changePasswordRequest = new()
+            {
+                Email = Input.Email,
+                Password = Input.Password,
+            };
+        var result = await accountManager.ChangePassWord(changePasswordRequest);
+        if (result.Succeeded)
+        {
+            await DoLoginAsync();
+            _NavigationManager.NavigateTo("/");
+        }
+    }
+}

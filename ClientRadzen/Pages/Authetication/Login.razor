@@ -1,0 +1,124 @@
+﻿@page "/login"
+
+@using ClientRadzen.Managers.Accounts
+@using Shared.Models.Logins
+@inject ICookieAuthenticationStateProvider Acct
+@attribute [AllowAnonymous]
+<PageTitle>Login</PageTitle>
+
+
+
+<AuthorizeView>
+    <Authorized>
+
+    </Authorized>
+    <NotAuthorized>
+
+        <h1>Log in</h1>
+        @if (Message != string.Empty)
+        {
+            @Message
+        }
+        <RadzenRow>
+            <RadzenColumn SizeXS="8" SizeSM="4">
+
+                <RadzenStack Orientation="Orientation.Vertical">
+
+                    <RadzenFormField Text="Email" Variant="Variant.Text" Style="width: 100%;">
+                        <RadzenTextBox @bind-Value=@Input.Email AutoComplete class="w-100" aria-label="Default TextBox"
+                                        Placeholder="name@example.com" Name="email" Change="@((arg)=>ReviewIfMustChangePassword(arg))" />
+
+                     </RadzenFormField>
+                     @if (ShowData)
+                    {
+                        @if (UserExist)
+                        {
+                            <RadzenFormField Text="Password" Variant="Variant.Text" Style="width: 100%;">
+                                <RadzenPassword @bind-Value=@Input.Password AutoComplete class="w-100" aria-label="Default TextBox" Name="password" />
+
+                             </RadzenFormField>
+
+
+                            @if (MustChangePassword)
+                            {
+                                <div>
+                                    <RadzenCheckBox @bind-Value=@Input.RememberMe Name="CheckBox1" />
+                                    <RadzenLabel Text="Remember me" Component="CheckBox1" Style="margin-left: 8px; vertical-align: middle;" />
+                                </div>
+                                <RadzenButton ButtonType="ButtonType.Submit" Click="DoLoginAsync">Log in</RadzenButton>
+
+
+
+                            }
+                            else
+                            {
+                                <RadzenButton ButtonType="ButtonType.Submit" Click="ChangePassword">Change Password</RadzenButton>
+
+
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-info" style="width:100%">User does not exist</div>
+                        }
+                    }
+
+
+
+                </RadzenStack>
+
+            </RadzenColumn>
+            <RadzenColumn SizeXS="12" SizeSM="8">
+            </RadzenColumn>
+        </RadzenRow>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Inject]
+    private IAccountManager accountManager { get; set; } = null!;
+    private LoginRequest Input { get; set; } = new();
+    string Message = string.Empty;
+    public async Task DoLoginAsync()
+    {
+        Message = string.Empty;
+        var result = await Acct.LoginAsync(Input);
+        if (!result.Succeeded)
+        {
+            Message = result.Messages.FirstOrDefault()!;
+        }
+
+    }
+    bool UserExist;
+    bool MustChangePassword;
+    bool ShowData = false;
+    public async Task ReviewIfMustChangePassword(string email)
+    {
+        ShowData = false;
+        Input.Email = email;
+        var resultuserexiste = await accountManager.ReviewEmailExist(email);
+        UserExist = resultuserexiste.Succeeded;
+        if (UserExist)
+        {
+            var result = await accountManager.ReviewChangePassWord(Input);
+            MustChangePassword = result.Succeeded;
+        }
+
+        ShowData = true;
+    }
+    public async Task ChangePassword()
+    {
+        ChangePasswordRequest changePasswordRequest = new()
+            {
+                Email = Input.Email,
+                Password = Input.Password,
+            };
+        var result = await accountManager.ChangePassWord(changePasswordRequest);
+        if (result.Succeeded)
+        {
+            await DoLoginAsync();
+            _NavigationManager.NavigateTo("/");
+        }
+    }
+}

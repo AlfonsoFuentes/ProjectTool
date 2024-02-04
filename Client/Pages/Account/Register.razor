@@ -1,0 +1,58 @@
+﻿@page "/register"
+
+@using Client.Identity
+@using Microsoft.AspNetCore.Components.Authorization
+@using Shared.Models.Roles
+@inject ICookieAuthenticationStateProvider Acct
+
+
+<PageTitle>Register</PageTitle>
+
+<h2>Create a new account.</h2>
+<FluentGrid>
+    <FluentGridItem xs="8" sm="4">
+
+        <EditForm Model="@Input" OnValidSubmit="RegisterUser" FormName="register">
+
+
+            <hr />
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentTextField Name="Input.UserName" @bind-Value="Input.UserName"
+                                 Label="User Name" Style="width: 100%" />
+                <ValidationMessage For="() => Input.UserName" style="color:red; font-size:x-small;" />
+                <FluentTextField Name="Input.Email" @bind-Value="Input.Email" Placeholder="name@example.com"
+                                 Label="Email" Style="width: 100%" />
+                <ValidationMessage For="() => Input.Email" style="color:red; font-size:x-small;" />
+
+                <FluentCombobox Label="Role" Items="@RolesDto.Roles" @bind-Value="@Input.Role" Height="200px" OptionValue="@(i=>i.Name)"
+                                OptionText="@(i=>i.Name)" Style="width: 100%" />
+                <ValidationMessage For="() => Input.Role" style="color:red; font-size:x-small;" />
+                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" Style="width: 100%">Register New user</FluentButton>
+            </FluentStack>
+        </EditForm>
+    </FluentGridItem>
+    <FluentGridItem xs="12" sm="8">
+
+    </FluentGridItem>
+</FluentGrid>
+
+
+@code {
+
+    FluentValidationValidator _fluentValidationValidator = null!;
+    RegisterRequest Input = new();
+    public async Task RegisterUser()
+    {
+        if (await _fluentValidationValidator!.ValidateAsync())
+        {
+
+            var result = await Acct.RegisterAsync(Input);
+            if(result.Succeeded)
+            {
+                _NavigationManager.NavigateTo("/RegisterSuccesfull");
+            }
+        }
+
+    }
+}
