@@ -1,0 +1,62 @@
+﻿@page "/listview-features"
+@using Syncfusion.Blazor.Lists
+<PageTitle>ListView</PageTitle>
+<h2>ListView</h2>
+<br/>
+<div id = "ControlRegion">
+			<h4>Select your favorite car:</h4>
+    <SfListView CssClass="listview" ShowCheckBox="true" DataSource="@Data">
+       <ListViewFieldSettings TValue="DataModel" Id="ID" Text="Text"></ListViewFieldSettings>
+    </SfListView>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> ListView Samples - Default</li>
+      <li class="list"> Checklist</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+	#ControlRegion {
+        width: 350px;
+        margin: 0 auto;
+    }
+    .listview {
+        border: 1px solid #dddddd;
+        border-radius: 3px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 250px;
+    }
+</style>
+         @code{
+    DataModel[] Data =
+     {
+            new DataModel { Text = "Hennessey Venom", ID = "list-01" },
+            new DataModel { Text = "Bugatti Chiron", ID = "list-02" },
+            new DataModel { Text = "Bugatti Veyron Super Sport", ID = "list-03" },
+            new DataModel { Text = "SSC Ultimate Aero", ID = "list-04" },
+            new DataModel { Text = "Koenigsegg CCR", ID = "list-05" },
+            new DataModel { Text = "McLaren F1", ID = "list-06" },
+            new DataModel { Text = "Aston Martin One- 77", ID = "list-07" },
+            new DataModel { Text = "Jaguar XJ220", ID = "list-08" },
+            new DataModel { Text = "McLaren P1", ID = "list-09" },
+            new DataModel { Text = "Ferrari LaFerrari", ID = "list-10" }
+    };
+    class DataModel
+    {
+        public string Text { get; set; } = string.Empty;
+        public string ID { get; set; } = string.Empty;
+    }
+}

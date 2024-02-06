@@ -1,0 +1,79 @@
+﻿@page "/multiselectdropdown-features"
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Data
+<PageTitle>MultiSelect Dropdown</PageTitle>
+<h2>MultiSelect Dropdown</h2>
+<br/>
+<div id = "ControlRegion">
+<div class="control-section">
+    <div class="control_wrapper">
+            <div class="control-styles">
+                <h5> Default Mode</h5>
+                <SfMultiSelect TValue="string[]" TItem="GameFields" Mode="@VisualMode.Default" Placeholder="Favorite Sports" DataSource="@Games">
+                    <MultiSelectFieldSettings Text="Text" Value="ID"></MultiSelectFieldSettings>
+                </SfMultiSelect>
+            </div>
+            <div class="control-styles">
+                <h5>Box Mode</h5>
+                <SfMultiSelect TValue="string[]" TItem="GameFields" Mode="@VisualMode.Box" Placeholder="Favorite Sports" DataSource="@Games">
+                    <MultiSelectFieldSettings Text="Text" Value="ID"></MultiSelectFieldSettings>
+                </SfMultiSelect>
+            </div>
+            <div class="control-styles">
+                <h5>Delimiter Mode</h5>
+                <SfMultiSelect TValue="string[]" TItem="GameFields" Mode="@VisualMode.Delimiter" Placeholder="Favorite Sports" DataSource="@Games">
+                    <MultiSelectFieldSettings Text="Text" Value="ID"></MultiSelectFieldSettings>
+                </SfMultiSelect>
+            </div>
+        </div>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> MultiSelect Dropdown Samples - Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+	.control-styles{
+        margin-bottom:3%;
+    }
+    .control_wrapper {
+        width: 350px;
+        margin: 0 auto;
+        padding: 2%;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 370px;
+    }
+</style>
+@code{
+    public class GameFields
+    {
+       public string ID { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
+    }
+    private List<GameFields> Games = new List<GameFields>()
+{
+        new GameFields(){ ID= "Game1", Text= "American Football" },
+        new GameFields(){ ID= "Game2", Text= "Badminton" },
+        new GameFields(){ ID= "Game3", Text= "Basketball" },
+        new GameFields(){ ID= "Game4", Text= "Cricket" },
+        new GameFields(){ ID= "Game5", Text= "Football" },
+        new GameFields(){ ID= "Game6", Text= "Golf" },
+        new GameFields(){ ID= "Game7", Text= "Hockey" },
+        new GameFields(){ ID= "Game8", Text= "Rugby"},
+    };
+}

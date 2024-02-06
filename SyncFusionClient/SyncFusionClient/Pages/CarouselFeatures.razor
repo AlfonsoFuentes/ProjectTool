@@ -1,0 +1,90 @@
+﻿@page "/carousel-features"
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Inputs
+<PageTitle>Carousel</PageTitle>
+<h2>Carousel</h2>
+<br/>
+ <div class="carousel-section">
+        <SfCarousel ID="carousel" Width="600px" Height="360px" AnimationEffect="CarouselAnimationEffect.Slide" ButtonsVisibility="CarouselButtonVisibility.Visible">
+            @foreach (BirdDetails bird in BirdsData)
+            {
+                <CarouselItem>
+                    <figure class="img-container">
+                        <img src="@bird.ImageName" alt=@bird.Title style="height:100%;width:100%;" />
+                        <a class="img-caption" href=@bird.URL target="_blank">@bird.Content</a>
+                    </figure>
+                </CarouselItem>
+            }
+        </SfCarousel>
+    </div>
+@code{
+    List<BirdDetails> BirdsData = new List<BirdDetails>() {
+        new BirdDetails {
+            ID = 1,
+            Title = "cardinal",
+            Content = "Cardinalidae is a family of New World endemic passerine birds that consists of cardinals, grosbeaks, and buntings.",
+            ImageName = "cardinal.png",
+            URL= "https://en.wikipedia.org/wiki/Cardinal_(bird)"
+        },
+        new BirdDetails {
+            ID = 2,
+            Title = "kingfisher",
+            Content = "Kingfishers or Alcedinidae are a family of small to medium-sized, brightly colored birds in the order Coraciiformes.",
+            ImageName = "kingfisher.png",
+            URL= "https://en.wikipedia.org/wiki/Kingfisher"
+        },
+        new BirdDetails {
+            ID = 3,
+            Title = "keel-billed-toucan",
+            Content = "The keel-billed toucan, also known as sulfur-breasted toucan or rainbow-billed toucan, is a colorful Latin American member of the toucan family.",
+            ImageName = "keel-billed-toucan.png",
+            URL= "https://en.wikipedia.org/wiki/Keel-billed_toucan"
+        },
+        new BirdDetails {
+            ID = 4,
+            Title = "yellow-warbler",
+            Content = "The yellow warblers are the most widespread species in the diverse genus Setophaga, breeding in almost the whole of North America, the Caribbean, and down to northern South America.",
+            ImageName = "yellow-warbler.png",
+            URL= "https://en.wikipedia.org/wiki/American_yellow_warbler"
+        },
+        new BirdDetails {
+            ID = 5,
+            Title = "bee-eater",
+            Content = "The bee-eaters are a group of non-passerine birds in the family Meropidae, containing three genera and twenty-seven species.",
+            ImageName = "bee-eater.png",
+            URL= "https://en.wikipedia.org/wiki/Bee-eater"
+        }
+    };
+    public class BirdDetails
+    {
+        public int ID { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
+        public string ImageName { get; set; } = string.Empty;
+        public string URL { get; set; } = string.Empty;
+    }
+}
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Animation - Slide</li>
+      <li class="list"> Buttons visibility - Visible</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .img-container {
+        height: 100%;
+        margin: 0;
+    }
+    .img-caption {
+        color: #fff !important;
+        font-size: 1rem;
+        left: 1rem;
+        position: absolute;
+        bottom: 4rem;
+        margin-right: 1rem;
+        text-align: justify;
+    }
+</style>

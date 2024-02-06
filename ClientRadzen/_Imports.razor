@@ -13,8 +13,9 @@
 @using Radzen.Blazor
 @using Microsoft.AspNetCore.Components.Authorization
 @using Blazored.FluentValidation
-@using ClientRadzen.IdentityModels
-@using ClientRadzen.Managers.Accounts
+@using Client.Infrastructure.IdentityModels
+@using Client.Infrastructure.Managers.Accounts
+
 @using Shared.Models.MWOTypes
 @using Shared.Models.Logins
 @using Shared.Models.Roles
@@ -23,6 +24,9 @@
 @using Shared.Models.Suppliers
 @using Shared.Models.Brands
 @using Shared.Models.BudgetItems
+@using Shared.Commons.UserManagement
+@using Shared.Models.Logins
+
 @inject CurrentUser CurrentUser
 @inject NavigationManager _NavigationManager
 @inject DialogService DialogService

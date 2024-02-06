@@ -1,0 +1,202 @@
+﻿@page "/treeview-features"
+@using Syncfusion.Blazor.Navigations
+<PageTitle>TreeView</PageTitle>
+<h2>TreeView</h2>
+<br/>
+<div id = "ControlRegion">
+    <SfTreeView TValue="TreeData"  AllowEditing="true" AllowDragAndDrop="true"  SortOrder="Syncfusion.Blazor.Navigations.SortOrder.None">
+        <TreeViewFieldsSettings DataSource="@TreeDataSource" Id="Id" ParentID="Pid" Text="Name" HasChildren="HasChild" Expanded="Expanded"  ></TreeViewFieldsSettings>
+    </SfTreeView>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Node Editing</li>
+      <li class="list"> Drag and Drop</li>
+      <li class="list"> Sort Order - None</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    #ControlRegion {
+        width: 350px;
+        margin: 0 auto;
+        border: 1px solid #dddddd;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+        float: left;
+        line-height: 20px;
+        margin: 10px;
+        min-width: 200px;
+    }
+</style>
+@code{
+   List<TreeData> TreeDataSource = new List<TreeData>();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "1",
+            Name = "China",
+            HasChild = true,
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "2",
+            Pid = "1",
+            Name = "Guangzhou",
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "3",
+            Pid = "1",
+            Name = "Shanghai"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "4",
+            Pid = "1",
+            Name = "Beijing"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "5",
+            Pid = "1",
+            Name = "Shantou",
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "6",
+            Name = "India",
+            HasChild = true
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "7",
+            Pid = "6",
+            Name = "Assam"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "8",
+            Pid = "6",
+            Name = "Bihar"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "9",
+            Pid = "6",
+            Name = "Tamil Nadu"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "10",
+            Pid = "6",
+            Name = "Punjab"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "11",
+            Name = "Australia",
+            HasChild = true,
+            Expanded = true
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "12",
+            Pid = "11",
+            Name = "Victoria",
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "13",
+            Pid = "11",
+            Name = "New South Wales",
+            IsSelected = true
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "14",
+            Pid = "11",
+            Name = "Western Australia",
+            IsSelected = true
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "15",
+            Pid = "11",
+            Name = "South Australia"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "16",
+            Name = "France",
+            HasChild = true
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "17",
+            Pid = "16",
+            Name = "Pays de la Loire"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "18",
+            Pid = "16",
+            Name = "Aquitaine"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "19",
+            Pid = "16",
+            Name = "Brittany"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "20",
+            Pid = "16",
+            Name = "Lorraine"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "21",
+            Name = "Brazil",
+            HasChild = true
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "22",
+            Pid = "21",
+            Name = "Mato Grosso"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "23",
+            Pid = "21",
+            Name = "Roraima"
+        });
+        TreeDataSource.Add(new TreeData
+        {
+            Id = "24",
+            Pid = "21",
+            Name = "Acre"
+        });
+    }
+    class TreeData
+    {
+        public string Id { get; set; } = string.Empty;
+        public string? Pid { get; set; }
+        public bool HasChild { get; set; }
+        public bool Expanded { get; set; }
+        public bool IsSelected { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+}

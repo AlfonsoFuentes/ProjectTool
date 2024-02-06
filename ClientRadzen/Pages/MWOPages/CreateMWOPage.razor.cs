@@ -2,7 +2,7 @@
 using Blazored.FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Radzen;
-
+using Client.Infrastructure.Managers.MWOS;
 namespace ClientRadzen.Pages.MWOPages
 {
     public partial class CreateMWOPage

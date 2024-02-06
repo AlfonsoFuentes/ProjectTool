@@ -1,0 +1,59 @@
+﻿@page "/numerictextbox-features"
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs
+<PageTitle>Numeric TextBox</PageTitle>
+<h2>Numeric TextBox</h2>
+<br/>
+<div id = "ControlRegion">
+<div class="control-section">
+    <div class="col-lg-12 control-section">
+        <div class="content-wrapper">
+            <div class="control-label">
+                Numeric TextBox
+            </div>
+            <SfNumericTextBox TValue="double?" Value=10></SfNumericTextBox>
+            <div class="control-label">
+                Percentage TextBox
+            </div>
+            <SfNumericTextBox TValue="double?" Format="p2" Value=0.5 Max=1 Min=0 Step=0.01></SfNumericTextBox>
+            <div class="control-label">
+                Currency TextBox
+            </div>
+            <SfNumericTextBox TValue="double?" Format="c2" Value=100></SfNumericTextBox>
+        </div>
+    </div>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Numeric TextBox Samples - Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .control-label {
+        padding: 24px 0px 10px 0px;
+        font-size: 12px;
+    }
+    .content-wrapper {
+        width: 25%;
+        margin: 0 auto;
+        min-width: 185px;
+		padding-top:35px;
+        padding-bottom:35px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 350px;
+    }
+</style>

@@ -1,0 +1,59 @@
+﻿@page "/inputmask-features"
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs
+<PageTitle>Input Mask</PageTitle>
+<h2>Input Mask</h2>
+<br/>
+<div id = "ControlRegion">
+ <div class="col-lg-12 control-section">
+    <div class="control_wrapper">
+        <div class="control-label">
+            Mobile Number
+        </div>
+        <SfMaskedTextBox Mask="000-000-0000"></SfMaskedTextBox>
+        <div class="control-label">
+                Country ISO Code
+            </div>
+            <SfMaskedTextBox Mask=">LL / LLL"></SfMaskedTextBox>
+            <div class="control-label">
+                D.O.B
+            </div>
+            <SfMaskedTextBox Mask="00/00/0000"></SfMaskedTextBox>
+            <div class="control-label">
+                Product Key
+            </div>
+            <SfMaskedTextBox Mask=">AAAAA-AAAAA-AAAAA-AAAAA"></SfMaskedTextBox>
+    </div>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Input Mask Samples - Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .control_wrapper {
+        width: 350px;
+        margin: 0 auto;
+        padding: 3%;
+    }
+    .control-label {
+        padding: 24px 0px 10px 0px;
+        font-size: 12px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 280px;
+    }
+</style>

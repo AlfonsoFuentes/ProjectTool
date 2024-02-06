@@ -1,0 +1,92 @@
+﻿@page "/smithchart-features"
+@using Syncfusion.Blazor.Charts
+<PageTitle>Smith Chart</PageTitle>
+<h2>Smith Chart</h2>
+<br/>
+<div id = "ControlRegion">
+	<SfSmithChart Radius="1" Theme="Theme.Tailwind" RenderType="ChartRenderType">
+    <SmithChartHorizontalAxis>
+        <SmithChartHorizontalMinorGridLines Visible="true"></SmithChartHorizontalMinorGridLines>
+    </SmithChartHorizontalAxis>
+    <SmithChartRadialAxis>
+        <SmithChartRadialMinorGridLines Visible="true"></SmithChartRadialMinorGridLines>
+    </SmithChartRadialAxis>
+    <SmithChartTitle Visible="true" Text="Impedance Transmission" EnableTrim="true" MaximumWidth="200">
+        <SmithChartTitleFont Size="16px"></SmithChartTitleFont>
+    </SmithChartTitle>
+    <SmithChartSeriesCollection>
+        <SmithChartSeries Name="Transmission1" DataSource="FirstTransmissionData" Resistance="resistance" Reactance="reactance" EnableAnimation="true" EnableSmartLabels="true" Fill="#0F94C4" Width="2">
+            <SmithChartSeriesTooltip Visible="true"></SmithChartSeriesTooltip>
+               <SmithChartSeriesMarker Visible="true" Shape="Syncfusion.Blazor.Charts.Shape.Rectangle">
+                <SmithChartSeriesDatalabel Visible="true"></SmithChartSeriesDatalabel>
+                <SmithChartSeriesMarkerBorder Width="2">
+                </SmithChartSeriesMarkerBorder>
+            </SmithChartSeriesMarker>
+        </SmithChartSeries>
+        <SmithChartSeries Name="Transmission2" DataSource="SecondTransmissionData" Resistance="resistance" Reactance="reactance" EnableAnimation="true" EnableSmartLabels="true" Fill="#EE0C88" Width="2">
+            <SmithChartSeriesTooltip Visible="true"></SmithChartSeriesTooltip>
+               <SmithChartSeriesMarker Visible="true" Shape="Syncfusion.Blazor.Charts.Shape.Rectangle">
+                <SmithChartSeriesDatalabel Visible="true"></SmithChartSeriesDatalabel>
+                <SmithChartSeriesMarkerBorder Width="2">
+                </SmithChartSeriesMarkerBorder>
+            </SmithChartSeriesMarker>
+        </SmithChartSeries>
+    </SmithChartSeriesCollection>
+    <SmithChartLegendSettings Visible="true" Shape="Syncfusion.Blazor.Charts.Shape.Circle" Position="Syncfusion.Blazor.Charts.LegendPosition.Left" >
+        <SmithChartBorder Color="transparent"></SmithChartBorder>
+        <SmithChartLegendTitle Text=""></SmithChartLegendTitle>
+    </SmithChartLegendSettings>
+</SfSmithChart>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Enable Tooltip</li>
+      <li class="list"> Marker</li>
+      <li class="list"> Data Label</li>
+      <li class="list"> Animation</li>
+      <li class="list"> Legend Position - Left</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code {
+    private RenderType ChartRenderType = RenderType.Impedance;
+    public class SmithDataSource
+    {
+        public double? resistance { get; set; }
+        public double? reactance { get; set; }
+    };
+    public List<SmithDataSource> FirstTransmissionData = new List<SmithDataSource> {
+        new SmithDataSource { resistance= 10, reactance= 25 }, new SmithDataSource { resistance= 8, reactance= 6 },
+        new SmithDataSource { resistance= 6, reactance= 4.5 }, new SmithDataSource { resistance= 4.5, reactance= 4 },
+        new SmithDataSource { resistance= 3.5, reactance= 3 }, new SmithDataSource { resistance= 2.5, reactance= 2 },
+        new SmithDataSource { resistance= 2, reactance= 1.5 }, new SmithDataSource { resistance= 1.5, reactance= 1.25 },
+        new SmithDataSource { resistance= 1, reactance= 0.9 }, new SmithDataSource { resistance= 0.5, reactance= 0.6 },
+        new SmithDataSource { resistance= 0.3, reactance= 0.4 }, new SmithDataSource { resistance= 0, reactance= 0.15 },
+    };
+    public List<SmithDataSource> SecondTransmissionData = new List<SmithDataSource> {
+        new SmithDataSource { resistance= 20, reactance= -50 }, new SmithDataSource { resistance= 10, reactance= -10 },
+        new SmithDataSource { resistance= 9, reactance= -4.5 }, new SmithDataSource { resistance= 8, reactance= -3.5 },
+        new SmithDataSource { resistance= 7, reactance= -2.5 }, new SmithDataSource{ resistance= 6, reactance= -1.5 },
+        new SmithDataSource { resistance= 5, reactance= -1 }, new SmithDataSource { resistance= 4.5, reactance= -0.8 },
+        new SmithDataSource { resistance= 3.5, reactance= -0.8 }, new SmithDataSource { resistance= 2.5, reactance= -0.4 },
+        new SmithDataSource { resistance= 2, reactance= -0.2 }, new SmithDataSource { resistance= 1.5, reactance= 0 },
+        new SmithDataSource { resistance= 1, reactance= 0.1 }, new SmithDataSource { resistance= 0.5, reactance= 0.2 },
+        new SmithDataSource { resistance= 0.3, reactance= 0.15 }, new SmithDataSource { resistance= 0, reactance= 0.05 },
+    };
+}

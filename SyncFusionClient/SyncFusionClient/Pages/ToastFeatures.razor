@@ -1,0 +1,66 @@
+﻿@page "/toast-features"
+@using Syncfusion.Blazor.Notifications
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+<PageTitle>Toast</PageTitle>
+<h2>Toast</h2>
+<br/>
+<div id = "Control-Region">
+<div class="col-lg-12 control-section toast-default-section">
+    <SfToast ID="toast_default" @ref="ToastObj" Target="#Control-Region" ShowCloseButton="true" ShowProgressBar="true" Title="Adaptive Tiles Meeting" Content="@ToastContent" Timeout="5000" Icon="e-meeting">
+        <ToastPosition X="@ToastPosition"></ToastPosition>
+    </SfToast>
+    <div class="col-lg-12 col-sm-12 col-md-12 center">
+        <div id="toastBtnDefault" style="margin: auto;text-align: center">
+            <button class="e-btn" id="toastBtnShow" @onclick="@ShowOnClick">Show Toast</button>
+            <button class="e-btn" id="toastBtnHide" @onclick="@HideOnClick">Hide All</button>
+        </div>
+    </div>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Toast Samples - Default</li>
+      <li class="list"> Show Close Button</li>
+      <li class="list"> Show Progress Bar</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    #toast_default .e-meeting::before {
+        content: "\e705";
+        font-size: 17px;
+    }
+    .bootstrap4 #toast_default .e-meeting::before {
+        content: "\e763";
+        font-size: 20px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code {
+    SfToast? ToastObj;
+    private string ToastPosition = "Right";
+    private string ToastContent = "Conference Room 01 / Building 135 10:00 AM-10:30 AM";
+    private void ShowOnClick()
+    {
+        this.ToastObj?.ShowAsync();
+    }
+    private void HideOnClick()
+    {
+        this.ToastObj?.HideAsync("All");
+    }
+}

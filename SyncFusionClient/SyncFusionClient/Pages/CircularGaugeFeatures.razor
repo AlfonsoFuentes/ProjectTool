@@ -1,0 +1,78 @@
+﻿@page "/circulargauge-features"
+@using Syncfusion.Blazor.CircularGauge
+<PageTitle>Circular Gauge</PageTitle>
+<h2>Circular Gauge</h2>
+<br/>
+<div id="ControlRegion">
+    <SfCircularGauge Theme="Theme.Tailwind"  EnablePointerDrag="true" >
+         <CircularGaugeTooltipSettings Enable="true"></CircularGaugeTooltipSettings>
+        <CircularGaugeAxes>
+            <CircularGaugeAxis Direction="GaugeDirection.ClockWise" StartAngle="210" EndAngle="150" Minimum="0" Maximum="120" Radius="80%">
+                <CircularGaugeAxisLineStyle Width="10" Color="transparent">
+                </CircularGaugeAxisLineStyle>
+                <CircularGaugeAxisLabelStyle UseRangeColor="true">
+                    <CircularGaugeAxisLabelFont Size="12px" FontFamily="Roboto" FontStyle="Regular">
+                    </CircularGaugeAxisLabelFont>
+                </CircularGaugeAxisLabelStyle>
+                <CircularGaugeAxisMajorTicks Height="15" Offset="5" UseRangeColor="true">
+                </CircularGaugeAxisMajorTicks>
+                <CircularGaugeAxisMinorTicks Height="10" UseRangeColor="true">
+                </CircularGaugeAxisMinorTicks>
+                 <CircularGaugeAnnotations>
+                    <CircularGaugeAnnotation Radius="30%" Angle="0" ZIndex="1">
+                        <ContentTemplate>
+                            <div><span style="font-size:14px; color:#9E9E9E; font-family:Regular; margin-left: -33px">Speedometer</span></div>
+                        </ContentTemplate>
+                    </CircularGaugeAnnotation>
+                    <CircularGaugeAnnotation Radius="40%" Angle="180" ZIndex="1">
+                        <ContentTemplate>
+                            <div><span style="font-size:20px; color:#424242; font-family:Regular; margin-left: -33px">65 MPH</span></div>
+                        </ContentTemplate>
+                    </CircularGaugeAnnotation>
+                </CircularGaugeAnnotations>
+                <CircularGaugeRanges>
+                    <CircularGaugeRange Start="0" End="40" Color="#30B32D" StartWidth="10" EndWidth="10" RoundedCornerRadius="0">
+                    </CircularGaugeRange>
+                    <CircularGaugeRange Start="40" End="80" Color="#FFDD00" StartWidth="10" EndWidth="10" RoundedCornerRadius="0">
+                    </CircularGaugeRange>
+                    <CircularGaugeRange Start="80" End="120" Color="#F03E3E" StartWidth="10" EndWidth="10" RoundedCornerRadius="0">
+                    </CircularGaugeRange>
+                </CircularGaugeRanges>
+                <CircularGaugePointers>
+                    <CircularGaugePointer Value="65" Radius="60%" PointerWidth="7">
+                        <CircularGaugeCap Radius="7" Color="#757575">
+                            <CircularGaugeCapBorder Width="8"></CircularGaugeCapBorder>
+                        </CircularGaugeCap>
+                        <CircularGaugeNeedleTail Length="25%"></CircularGaugeNeedleTail>
+                    </CircularGaugePointer>
+                </CircularGaugePointers>
+            </CircularGaugeAxis>
+        </CircularGaugeAxes>
+    </SfCircularGauge>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Enable Tooltip</li>
+      <li class="list"> Enable Drag</li>
+      <li class="list"> Axis Direction - Clockwise</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 260px;
+    }
+</style>
+@code{
+}

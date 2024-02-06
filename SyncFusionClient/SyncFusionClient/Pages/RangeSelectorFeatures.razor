@@ -1,0 +1,53 @@
+﻿@page "/rangeselector-features"
+@using Syncfusion.Blazor.Charts
+<PageTitle>Range Selector</PageTitle>
+<h2>Range Selector</h2>
+<br/>
+<div id = "ControlRegion">
+    <div class="control-section" align="center">
+        <h4  style="font-family: Segoe UI;font-weight: 500; font-style:normal; font-size:15px;" align="center">Bitcoin (USD) Price Range</h4>
+        <div>
+      		      <SfRangeNavigator Value="@Value" ValueType="Syncfusion.Blazor.Charts.RangeValueType.DateTime"
+                   LabelFormat="MMM-yy" Theme="Theme.Tailwind" EnableRtl="true">
+    <RangeNavigatorSeriesCollection>
+        <RangeNavigatorSeries DataSource="@StockDetails" XName="Date" Type="RangeNavigatorType.Area" YName="Close"></RangeNavigatorSeries>
+    </RangeNavigatorSeriesCollection>
+</SfRangeNavigator> 
+    </div>
+    </div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> RTL</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code {
+    object[] Value = new object[] { new DateTime(2006, 01, 01), new DateTime(2008, 01, 01) };
+    public class Data
+    {
+        public DateTime Date { get; set; }
+        public double Close { get; set; }
+    }
+    public List<Data> StockDetails = new List<Data>
+{
+       new Data { Date = new DateTime(2017, 01, 01), Close = 21,   },
+        new Data { Date = new DateTime(2018, 01, 01), Close = 24, }
+    };
+}

@@ -1,5 +1,5 @@
 ﻿#nullable disable
-using ClientRadzen.Managers.Brands;
+using Client.Infrastructure.Managers.Brands;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
@@ -19,7 +19,7 @@ namespace ClientRadzen.Pages.Brands
         IQueryable<BrandResponse>? FilteredItems => OriginalData?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
         protected override async Task OnInitializedAsync()
         {
-            var user = CurrentUser.UserId;
+            //var user = CurrentUser.UserId;
             await ShowLoading();
             await UpdateAll();
         }

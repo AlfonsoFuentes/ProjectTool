@@ -1,0 +1,53 @@
+﻿@page "/bulletchart-features"
+@using Syncfusion.Blazor.Charts
+<PageTitle>Bullet Chart</PageTitle>
+<h2>Bullet Chart</h2>
+<br/>
+<div id="ControlRegion">
+    <SfBulletChart Theme="Theme.Tailwind" DataSource="@BulletChartData" ValueField="value" TargetField="target" Minimum="0" Maximum="300" Interval="50" Title="Revenue" LabelFormat="${value}k" >
+              <BulletChartRangeCollection>          
+                  <BulletChartRange End=150> </BulletChartRange>          
+                  <BulletChartRange End=250></BulletChartRange>          
+                  <BulletChartRange End=300></BulletChartRange>   
+              </BulletChartRangeCollection>
+	<BulletChartTooltip TValue="ChartData" Enable="true"></BulletChartTooltip>
+    </SfBulletChart>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Ranges</li>
+      <li class="list"> Tooltip</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    #ControlRegion{
+            margin:0 auto;
+            width:800px;
+        }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code{
+    public class ChartData
+    {
+        public double value { get; set; }
+        public double target { get; set; }
+    }
+    public List<ChartData> BulletChartData = new List<ChartData>
+{
+        new ChartData { value = 230, target = 200 }
+    };
+}

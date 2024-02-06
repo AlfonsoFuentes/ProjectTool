@@ -1,5 +1,5 @@
 ﻿using Blazored.FluentValidation;
-using ClientRadzen.Managers.Brands;
+using Client.Infrastructure.Managers.Brands;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.Brands;

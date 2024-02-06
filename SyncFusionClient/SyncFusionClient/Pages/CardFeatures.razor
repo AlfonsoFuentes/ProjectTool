@@ -1,0 +1,63 @@
+﻿@page "/card-features"
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Cards
+<PageTitle>Card</PageTitle>
+<h2>Card</h2>
+<br/>
+<SfCard ID="BasicCard">
+    <CardHeader Title="Debunking Five Data Science Myths" SubTitle="By John Doe | Jan 20, 2018" />
+    <CardContent Content="Tech evangelists are currently pounding their pulpits about all things AI, machine learning, analytics anything that sounds." />
+    <CardFooter>
+        <CardFooterContent>
+            <SfButton CssClass="e-btn e-outline e-primary">Read More</SfButton>
+        </CardFooterContent>
+    </CardFooter>
+</SfCard>
+<SfCard ID="NewIconCard">
+    <div class="newIcon">NEW</div>
+    <CardHeader Title="Debunking Five Data Science Myths" />
+    <CardContent Content="Tech evangelists are currently pounding their pulpits about all things AI, machine learning, analytics- anything that sounds." />
+</SfCard>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+      #BasicCard, #NewIconCard {
+        height: 180px;
+         width: 800px;
+        margin: 16px auto;
+    }
+    .newIcon {
+        background: #2CC000;
+        border-radius: 12px;
+        border-radius: 12px;
+        font-family: HelveticaNeue-Medium, 'Segoe UI';
+        font-weight: 500;
+        color: #ffffff;
+        margin-left: 16px;
+        font-size: 14px;
+        width: 58px;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        letter-spacing: 0.4px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>

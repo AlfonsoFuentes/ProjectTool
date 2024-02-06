@@ -1,0 +1,38 @@
+﻿@page "/pdfviewer-features"
+@using Syncfusion.Blazor.PdfViewer
+<PageTitle>PDF Viewer</PageTitle>
+<h2>PDF Viewer</h2>
+<br/>
+<div id = "ControlRegion">
+<SfPdfViewer ServiceUrl="https://ej2services.syncfusion.com/production/web-services/api/pdfviewer" DocumentPath="@DocumentPath" Height="500px" Width="750px">
+</SfPdfViewer>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    #ControlRegion {
+        margin: 0 auto;
+        width:750px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code{
+    private string DocumentPath { get; set; } = "Blazor_Succinctly.pdf";
+}

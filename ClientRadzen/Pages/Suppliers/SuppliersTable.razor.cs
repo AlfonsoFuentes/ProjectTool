@@ -1,5 +1,5 @@
 ﻿#nullable disable
-using ClientRadzen.Managers.Suppliers;
+using Client.Infrastructure.Managers.Suppliers;
 using Microsoft.AspNetCore.Components;
 using Radzen.Blazor;
 using Radzen;

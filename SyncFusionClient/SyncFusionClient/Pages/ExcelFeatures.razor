@@ -1,0 +1,23 @@
+﻿@page "/excel-features"
+@using System.IO;
+@using SyncFusionClient;
+@inject SyncFusionClient.Data.ExcelService service
+@inject Microsoft.JSInterop.IJSRuntime JS
+<PageTitle>Excel</PageTitle>
+<h2>Excel</h2>
+<br/>
+<div id = "ControlRegion">
+<p>Syncfusion Excel Library (Essential XlsIO) is a feature-rich and high-performance Blazor Excel library that allows you to create, read, edit, and convert Excel documents programmatically without Microsoft Office dependencies. This library also offers functionality to import and export data, visualize data as charts, tabulate data, calculate with simple and complex formulas, format cells and values, sort and filter data, protect Excel files, and more.</p>
+<button class="btn btn-primary" @onclick="@CreateExcel">Create Excel</button>
+</div>
+@code {
+    MemoryStream? excelStream;
+    /// <summary>
+    /// Create and download the Excel document
+    /// </summary>
+    protected async void CreateExcel()
+    {
+        excelStream = service.CreateExcel();
+        await JS.SaveAs("Sample.xlsx", excelStream.ToArray());
+    }
+}

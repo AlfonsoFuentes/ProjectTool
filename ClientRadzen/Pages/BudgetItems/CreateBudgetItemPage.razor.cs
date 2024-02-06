@@ -1,7 +1,7 @@
 ﻿#nullable disable
 using Blazored.FluentValidation;
-using ClientRadzen.Managers.Brands;
-using ClientRadzen.Managers.BudgetItems;
+using Client.Infrastructure.Managers.Brands;
+using Client.Infrastructure.Managers.BudgetItems;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.Brands;

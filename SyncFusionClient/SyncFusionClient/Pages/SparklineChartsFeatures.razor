@@ -1,0 +1,90 @@
+﻿@page "/sparklinecharts-features"
+@using Syncfusion.Blazor.Charts
+<PageTitle>Sparkline Charts</PageTitle>
+<h2>Sparkline Charts</h2>
+<br/>
+<div id = "ControlRegion">
+	<div class="cols-sample-area" align="center">
+    <p style="font-size:15px"> Worldwide car sales by brand - 2017</p>  
+    <table style="width:100%;">
+        <tr>
+            <td align="center" style="width: 30%">Sales Percentage</td>
+            <td style="width: 30%;">
+                <div id="percentage" style="height:250px">
+                    <SfSparkline DataSource="dataSource" Theme="Theme.Tailwind" Width="180px" Height="200px" LineWidth="1" Type="Syncfusion.Blazor.Charts.SparklineType.Column" ValueType="SparklineValueType.Category" XName="xval" YName="yval">
+                        <SparklinePadding Top="20" Bottom="20"></SparklinePadding>
+                        <SparklineAxisSettings>
+                            <SparklineAxisLineSettings Visible="true">
+                            </SparklineAxisLineSettings>
+                        </SparklineAxisSettings>
+                        <SparklineDataLabelSettings Visible="new List<VisibleType> { VisibleType.All }"></SparklineDataLabelSettings>
+                        <SparklineMarkerSettings Fill="red" Size="5" Visible="new List<VisibleType> { VisibleType.All }"></SparklineMarkerSettings>
+                        <SparklineTooltipSettings TValue="Data" Visible="true" Format="${xval}: ${yval}">
+                            <SparklineTrackLineSettings Visible="true" Color="red" Width="1"></SparklineTrackLineSettings>
+                        </SparklineTooltipSettings>
+                    </SfSparkline>
+                </div>
+            </td>
+        </tr>                
+    </table>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Enable Tooltip</li>
+      <li class="list"> Marker</li>
+      <li class="list"> Data Label</li>
+      <li class="list"> Track Line</li>
+      <li class="list"> Axis Line</li>
+      <li class="list"> Chart Types - Column</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code {
+    public class Data
+    {
+        public string xval { get; set; } = string.Empty;
+        public double yval { get; set; }
+        public double yval1 { get; set; }
+    }
+    public List<Data> dataSource = new List<Data> {
+        new Data { xval = "AUDI", yval1 = 1847613, yval = 1 },
+        new Data { xval = "BMW", yval1 = 2030331, yval = 5 },
+        new Data { xval = "BUICK", yval1 = 1465823, yval = -1 },
+        new Data { xval = "CETROE", yval1 = 999888, yval = -6 },
+        new Data { xval = "CHEVROLE", yval1 = 3857388, yval = 0 },
+        new Data { xval = "FIAT", yval1 = 1503806, yval = 1 },
+        new Data { xval = "FORD", yval1 = 5953122, yval = -2 },
+        new Data { xval = "HONDA", yval1 = 4967689, yval = 7 },
+        new Data { xval = "HYUNDAI", yval1 = 3951176, yval = -9 },
+        new Data { xval = "JEEP", yval1 = 1390130, yval = 0 },
+        new Data { xval = "KIA", yval1 = 2511293, yval = -10 },
+        new Data { xval = "MAZDA", yval1 = 1495557, yval = 3 },
+        new Data { xval = "MERCEDES", yval1 = 2834181, yval = 13 },
+        new Data { xval = "NISSAN", yval1 = 4834694, yval = 5 },
+        new Data { xval = "OPEL/VHALL", yval1 = 996559, yval = -6 },
+        new Data { xval = "PEUGEOT", yval1 = 1590300, yval = 0 },
+        new Data { xval = "RENAULT", yval1 = 2275227, yval = 7 },
+        new Data { xval = "SKODA", yval1 = 1180672, yval = 5 },
+        new Data { xval = "SUBARU", yval1 = 1050390, yval = 5 },
+        new Data { xval = "SUZUKI", yval1 = 2891415, yval = 11 },
+        new Data { xval = "TOYOTA", yval1 = 7843423, yval = 5 },
+        new Data { xval = "VOLKSWAGEN", yval1 = 6639250, yval = 3 }
+    };
+}

@@ -1,10 +1,5 @@
-﻿global using ClientRadzen.IdentityModels.Models;
-global using ClientRadzen.Managers.MWOS;
-global using FluentValidation;
+﻿global using FluentValidation;
 global using Microsoft.AspNetCore.Components.Authorization;
-global using Shared.Commons.Results;
 global using Shared.Commons.UserManagement;
 global using Shared.Models.MWO;
-global using System.Net.Http.Json;
-global using System.Security.Claims;
-global using System.Text.Json;
+global using Client.Infrastructure.Managers.MWOS;

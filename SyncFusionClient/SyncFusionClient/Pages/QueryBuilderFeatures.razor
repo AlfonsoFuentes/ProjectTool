@@ -1,0 +1,63 @@
+﻿@page "/querybuilder-features"
+@using SyncFusionClient.Data
+@using Syncfusion.Blazor.QueryBuilder
+@using SyncFusionClient.Pages
+@using Syncfusion.Blazor.Buttons
+
+<PageTitle>Query Builder</PageTitle>
+<h2>Query Builder</h2>
+<br/>
+<div id = "ControlRegion">
+<div class="col-lg-12 control-section">
+    <SfQueryBuilder Width="70%" DataSource="@DataSource">
+        <QueryBuilderRule Condition="and" Rules="@rule"></QueryBuilderRule>
+        <QueryBuilderColumns>
+            <QueryBuilderColumn Field="CustomerId" Label="CustomerId" Type=Syncfusion.Blazor.QueryBuilder.ColumnType.Number></QueryBuilderColumn>
+            <QueryBuilderColumn Field="EmployeeId" Label="EmployeeId" Type=Syncfusion.Blazor.QueryBuilder.ColumnType.String></QueryBuilderColumn>
+            <QueryBuilderColumn Field="Verified" Label="Verified" Type=Syncfusion.Blazor.QueryBuilder.ColumnType.Boolean Values=@Values></QueryBuilderColumn>
+            <QueryBuilderColumn Field="ShipName" Label="ShipName" Type=Syncfusion.Blazor.QueryBuilder.ColumnType.String></QueryBuilderColumn>
+            <QueryBuilderColumn Field="OrderDate" Label="OrderDate" Type=Syncfusion.Blazor.QueryBuilder.ColumnType.Date Format="dd/MM/yyyy"></QueryBuilderColumn>
+            <QueryBuilderColumn Field="ShipCountry" Label="ShipCountry" Type=Syncfusion.Blazor.QueryBuilder.ColumnType.String></QueryBuilderColumn>
+            <QueryBuilderColumn Field="ShipAddress" Label="ShipAddress" Type=Syncfusion.Blazor.QueryBuilder.ColumnType.String></QueryBuilderColumn>
+        </QueryBuilderColumns>
+    </SfQueryBuilder>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+    .e-query-builder {
+        margin: 0 auto;
+    }
+</style>
+@code{
+    List<RuleModel> rule = new List<RuleModel>()
+    {
+            new RuleModel { Label="CustomerId", Field="CustomerId", Type="Number", Operator="equal", Value = 1001 },
+            new RuleModel { Label="EmployeeId", Field="EmployeeId", Type="String", Operator="equal", Value = "FLKIN" }
+    };
+    public List<string> Values = new List<string> { "True", "False" };
+    public List<Orders>? DataSource { get; set; }
+    protected override void OnInitialized()
+    {
+        DataSource = Orders.GetAllRecords();
+    }
+}

@@ -1,0 +1,106 @@
+﻿@page "/treegrid-features"
+@using Syncfusion.Blazor.TreeGrid
+<PageTitle>Tree Grid</PageTitle>
+<h2>Tree Grid</h2>
+<br/>
+<div id = "ControlRegion">
+<SfTreeGrid DataSource="@TreeGridData" @ref="TreeGrid" AllowFiltering="true" AllowPaging="true" AllowExcelExport="true" AllowSelection="true" AllowSorting="true" IdMapping="TaskId" ParentIdMapping="ParentId" TreeColumnIndex="1" Toolbar="@(new List<string>() { "Add", "Delete", "Update", "Cancel", "Search", "ExcelExport"})">
+    <TreeGridEditSettings AllowEditing="true" AllowAdding="true" AllowDeleting="true" Mode="Syncfusion.Blazor.TreeGrid.EditMode.Cell" />
+    <TreeGridFilterSettings Type="Syncfusion.Blazor.TreeGrid.FilterType.Menu" HierarchyMode="Syncfusion.Blazor.TreeGrid.FilterHierarchyMode.Parent"></TreeGridFilterSettings>
+    <TreeGridSearchSettings HierarchyMode="Syncfusion.Blazor.TreeGrid.FilterHierarchyMode.Parent"></TreeGridSearchSettings>
+    <TreeGridEvents OnToolbarClick="ToolbarClick" TValue="TreeData.BusinessObject"></TreeGridEvents>
+    <TreeGridAggregates>
+        <TreeGridAggregate>
+            <TreeGridAggregateColumns>
+                <TreeGridAggregateColumn Field="Duration" Type="Syncfusion.Blazor.Grids.AggregateType.Sum">
+                    <FooterTemplate>
+                        @{
+                            var sumvalue = (context as Syncfusion.Blazor.Grids.AggregateTemplateContext);
+                            <div>
+                                <p>Sum: @sumvalue?.Sum</p>
+                            </div>
+                        }
+                    </FooterTemplate>
+                </TreeGridAggregateColumn>
+            </TreeGridAggregateColumns>
+        </TreeGridAggregate>
+    </TreeGridAggregates>
+    <TreeGridColumns>
+        <TreeGridColumn Field="TaskId" HeaderText="Task ID" IsPrimaryKey="true" Width="80" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right"></TreeGridColumn>
+        <TreeGridColumn Field="TaskName" HeaderText="Task Name" Width="160"></TreeGridColumn>
+        <TreeGridColumn Field="Duration" HeaderText="Duration" Width="100" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right"></TreeGridColumn>
+        <TreeGridColumn Field="Progress" HeaderText="Progress" Width="100" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Right"></TreeGridColumn>
+    </TreeGridColumns>
+</SfTreeGrid>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Sorting</li>
+      <li class="list"> Paging</li>
+      <li class="list"> Selection</li>
+      <li class="list"> Exporting - Excel Export</li>
+      <li class="list"> Aggregate</li>
+      <li class="list"> Editing - Cell</li>
+      <li class="list"> Filter Hierarchy Mode - Parent</li>
+      <li class="list"> Search Hierarchy Mode - Parent</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 250px;
+    }
+</style>
+@code{
+    public class TreeData
+    {
+        public class BusinessObject
+        {
+            public int TaskId { get; set; }
+            public string TaskName { get; set; } = string.Empty;
+            public int? Duration { get; set; }
+            public int? Progress { get; set; }
+            public string Priority { get; set; } = string.Empty;
+            public int? ParentId { get; set; }
+            public DateTime StartDate { get; set; }
+        }
+        public static List<BusinessObject> GetSelfDataSource()
+        {
+            List<BusinessObject> BusinessObjectCollection = new List<BusinessObject>();
+            BusinessObjectCollection.Add(new BusinessObject() { TaskId = 1, TaskName = "Parent Task 1", Duration = 10, Progress = 70, Priority = "Critical", StartDate = new DateTime(2017, 10, 23), ParentId = null });
+            BusinessObjectCollection.Add(new BusinessObject() { TaskId = 2, TaskName = "Child Task 1", Progress = 80, Priority = "Low", Duration = 13, StartDate = new DateTime(2017, 10, 23), ParentId = 1 });
+            BusinessObjectCollection.Add(new BusinessObject() { TaskId = 3, TaskName = "Child Task 2", Duration = 5, Progress = 65, Priority = "Critical", StartDate = new DateTime(2017, 10, 23), ParentId = 2 });
+            BusinessObjectCollection.Add(new BusinessObject() { TaskId = 4, TaskName = "Child Task 3", Duration = 6, Priority = "High", Progress = 77, StartDate = new DateTime(2017, 10, 23), ParentId = 3 });
+            BusinessObjectCollection.Add(new BusinessObject() { TaskId = 5, TaskName = "Parent Task 2", Duration = 10, Progress = 70, Priority = "Critical", StartDate = new DateTime(2017, 10, 23), ParentId = null });
+            BusinessObjectCollection.Add(new BusinessObject() { TaskId = 6, TaskName = "Child Task 1", Duration = 4, Progress = 80, Priority = "Critical", StartDate = new DateTime(2017, 10, 23), ParentId = 5 });
+            BusinessObjectCollection.Add(new BusinessObject() { TaskId = 7, TaskName = "Child Task 2", Duration = 5, Progress = 65, Priority = "Low", StartDate = new DateTime(2017, 10, 23), ParentId = 5 });
+            BusinessObjectCollection.Add(new BusinessObject() { TaskId = 8, TaskName = "Child Task 3", Duration = 6, Progress = 77, Priority = "High", StartDate = new DateTime(2017, 10, 23), ParentId = 5 });
+            BusinessObjectCollection.Add(new BusinessObject() { TaskId = 9, TaskName = "Child Task 4", Duration = 6, Progress = 77, Priority = "Low", StartDate = new DateTime(2017, 10, 23), ParentId = 5 });
+            return BusinessObjectCollection;
+        }
+    }
+    SfTreeGrid<TreeData.BusinessObject>? TreeGrid;
+    public List<TreeData.BusinessObject>? TreeGridData { get; set; }
+    protected override void OnInitialized()
+    {
+        this.TreeGridData = TreeData.GetSelfDataSource().ToList();
+    }
+    public void ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Id == this.TreeGrid.ID + "_gridcontrol_excelexport")
+        {
+                this.TreeGrid?.ExportToExcelAsync();
+        }
+    }
+}

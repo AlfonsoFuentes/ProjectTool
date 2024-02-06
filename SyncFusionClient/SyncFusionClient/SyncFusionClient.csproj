@@ -1,0 +1,86 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+        <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.10.4" />
+    <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
+    <PackageReference Include="FluentValidation" Version="11.9.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.DataForm" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.QueryBuilder" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Notifications" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Spinner" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.DropDowns" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.SplitButtons" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Buttons" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Navigations" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.FileManager" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Inputs" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Cards" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Layouts" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Popups" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Lists" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Gantt" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Calendars" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Schedule" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.RichTextEditor" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.InPlaceEditor" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.ImageEditor" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.SfPdfViewer" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.PdfViewer" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.BulletChart" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Kanban" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Sparkline" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.TreeMap" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.BarcodeGenerator" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.RangeNavigator" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.SmithChart" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.LinearGauge" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Diagram" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Charts" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.StockChart" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.CircularGauge" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.TreeGrid" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.PivotTable" Version="24.2.3" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="24.2.3" />
+    <PackageReference Include="Toolbelt.Blazor.HttpClientInterceptor" Version="10.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Client.Infrastructure\Client.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\SfResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SfResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\SfResources.resx">
+       <Generator>PublicResXFileCodeGenerator</Generator>
+       <LastGenOutput>SfResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  
+</Project>

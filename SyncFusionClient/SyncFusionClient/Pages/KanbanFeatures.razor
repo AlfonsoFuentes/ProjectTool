@@ -1,0 +1,60 @@
+﻿@page "/kanban-features"
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Kanban
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.DropDowns
+@using SyncFusionClient.Data
+<PageTitle>Kanban</PageTitle>
+<h2>Kanban</h2>
+<br/>
+<div id = "ControlRegion">
+<div class="control-section">
+    <SfKanban TValue="KanbanDataModels" CssClass="kanban-default" KeyField="Status" DataSource="@Tasks" EnableTooltip="true">
+         <KanbanColumns>
+            @foreach (Syncfusion.Blazor.Kanban.ColumnModel item in columnData)
+            {
+                <KanbanColumn HeaderText="@item.HeaderText" KeyField="@item.KeyField" AllowToggle="true"></KanbanColumn>
+            }
+        </KanbanColumns>
+        <KanbanCardSettings HeaderField="Id" ContentField="Summary"></KanbanCardSettings>
+		  <KanbanSwimlaneSettings KeyField="Assignee" AllowDragAndDrop="false" ShowItemCount="true" SortDirection=Syncfusion.Blazor.Kanban.SortDirection.Ascending></KanbanSwimlaneSettings>
+    </SfKanban>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Kanban Samples - Default</li>
+      <li class="list"> Toggle Columns</li>
+      <li class="list"> Tooltip Template</li>
+      <li class="list"> Enable Swimlane</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 290px;
+    }
+</style>
+@code {
+    private List<KanbanDataModels> Tasks = new KanbanDataModels().GetCardTasks();
+     private List<Syncfusion.Blazor.Kanban.ColumnModel> columnData = new List<Syncfusion.Blazor.Kanban.ColumnModel>() {
+        new Syncfusion.Blazor.Kanban.ColumnModel(){ HeaderText = "To Do", KeyField = new List<string>() { "Open" } },
+        new Syncfusion.Blazor.Kanban.ColumnModel(){ HeaderText = "In Progress", KeyField = new List<string>() { "InProgress" } },
+        new Syncfusion.Blazor.Kanban.ColumnModel(){ HeaderText = "In Review", KeyField = new List<string>() { "Review" } },
+        new Syncfusion.Blazor.Kanban.ColumnModel(){ HeaderText = "Done", KeyField = new List<string>() { "Close" } }
+    };
+    private Syncfusion.Blazor.Kanban.SortDirection sortType { get; set; } = Syncfusion.Blazor.Kanban.SortDirection.Ascending;
+    private bool allowDragAndDrop { get; set; } = false;
+    private bool showItemCount { get; set; } = true;
+}

@@ -1,0 +1,69 @@
+﻿@page "/skeleton-features"
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Notifications
+<PageTitle>Skeleton</PageTitle>
+<h2>Skeleton</h2>
+<br/>
+<div class="control-section">
+   <table cellspacing="0" width="100%">
+        <tbody>
+           <tr>
+                <td>
+                    <label>Circle</label>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Circle" Width="3rem"></SfSkeleton>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Circle" Width="48px"></SfSkeleton>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Circle" Width="64px"></SfSkeleton>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Circle" Width="80px"></SfSkeleton>
+                </td>
+                <td>
+                    <label>Square</label>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Square" Width="3rem"></SfSkeleton>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Square" Width="48px"></SfSkeleton>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Square" Width="64px"></SfSkeleton>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Square" Width="80px"></SfSkeleton>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Text</label>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Text" Width="100%" Height="15px"></SfSkeleton>
+                    <SfSkeleton Width="30%" Height="15px"></SfSkeleton>
+                    <br />
+                    <SfSkeleton Width="15%" Height="15px"></SfSkeleton>
+                    <br />
+                    <SfSkeleton Width="60%" Height="15px"></SfSkeleton>
+                    <br />
+                    <SfSkeleton Width="15%" Height="15px"></SfSkeleton>
+                </td>
+                <td>
+                    <label>Rectangle</label>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Rectangle" Width="100%" Height="100px"></SfSkeleton>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Rectangle" Width="20%" Height="35px"></SfSkeleton>
+                    <SfSkeleton Shape="Syncfusion.Blazor.Notifications.SkeletonType.Rectangle" Width="20%" Height="35px" CssClass="custom-css"></SfSkeleton>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    label {
+        display: block;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+    table td {
+        padding: 25px 35px 15px 25px;
+        vertical-align: top;
+    }
+    .e-skeleton.custom-css {
+        float: right;
+    }
+</style>

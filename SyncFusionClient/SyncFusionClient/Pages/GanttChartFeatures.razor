@@ -1,0 +1,206 @@
+﻿@page "/ganttchart-features"
+@using Syncfusion.Blazor.Gantt
+<PageTitle>Gantt Chart</PageTitle>
+<h2>Gantt Chart</h2>
+<br/>
+<div id = "ControlRegion">
+    <SfGantt DataSource="@TaskCollection" Height="450px" Width="900px" ProjectStartDate="@ProjectStart" ProjectEndDate="@ProjectEnd" AllowFiltering="true" EnableContextMenu="true"
+              Toolbar="@(new List<string>() { "NextTimeSpan", "PrevTimeSpan", "Search", "Add", "Cancel", "Delete", "Edit", "Update", "ZoomIn","ZoomOut","ZoomToFit"  })">
+        <GanttTaskFields Id="TaskId" Name="TaskName" StartDate="StartDate" EndDate="EndDate"
+                         Duration="Duration" Progress="Progress" Dependency="Predecessor" Child="SubTasks">
+        </GanttTaskFields>
+        <GanttEditSettings AllowEditing="true" AllowTaskbarEditing="true" AllowAdding="true" AllowDeleting="true" ShowDeleteConfirmDialog="true"></GanttEditSettings>
+	<GanttSearchSettings Fields="@Searchfields"></GanttSearchSettings> 
+        <GanttHolidays>
+            <GanttHoliday From="@HolidayFrom1" To="@HolidayTo1"></GanttHoliday>
+            <GanttHoliday From="@HolidayFrom2" To="@HolidayTo2"></GanttHoliday>
+        </GanttHolidays>
+        <GanttEventMarkers>
+            <GanttEventMarker Day="@EventDay1" Label="Project approval and kick-off"
+                              CssClass="e-custom-event-marker"></GanttEventMarker>
+        </GanttEventMarkers>
+        <GanttTimelineSettings TimelineUnitSize="@DefaultUnitWidth">
+            <GanttTopTierSettings Unit="@TopTierUnit" Count="@TopTierCount" Format="@TopTierFormat"></GanttTopTierSettings>
+            <GanttBottomTierSettings Count="@BottomTierCount" Unit="@BottomTierUnit" Format="@BottomTierFormat"></GanttBottomTierSettings>
+        </GanttTimelineSettings>
+    </SfGantt>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Zooming</li>
+      <li class="list"> Editing</li>
+      <li class="list"> Filtering</li>
+      <li class="list"> Timeline</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code{
+    public DateTime ProjectStart = new DateTime(2019, 4, 1);
+    public DateTime ProjectEnd = new DateTime(2019, 5, 4);
+    public DateTime EventDay1 = new DateTime(2019, 4, 17);
+    public DateTime HolidayFrom1 = new DateTime(2019, 4, 11);
+    public DateTime HolidayTo1 = new DateTime(2019, 4, 12);
+    public DateTime HolidayFrom2 = new DateTime(2019, 4, 1);
+    public DateTime HolidayTo2 = new DateTime(2019, 4, 1);
+    public List<TaskData>? TaskCollection { get; set; }
+    public int DefaultUnitWidth = 33;
+    public int TopTierCount = 1;
+    public int BottomTierCount = 1;
+    TimelineViewMode TopTierUnit = TimelineViewMode.Week;
+    TimelineViewMode BottomTierUnit = TimelineViewMode.Day;
+    string TopTierFormat = "MMM dd, yyyy";
+    string BottomTierFormat = "";
+    public string[] Searchfields = new string[] { "TaskId", "TaskName", "StartDate", "EndDate", "Duration", "Progress", "Predecessor" };
+    protected override void OnInitialized()
+    {
+        this.TaskCollection = GetTaskCollection();
+    }
+    public class TaskData
+    {
+        public int TaskId { get; set; }
+        public string TaskName { get; set; } = string.Empty;
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string Duration { get; set; } = string.Empty;
+        public int Progress { get; set; }
+        public string Predecessor { get; set; } = string.Empty;
+        public List<TaskData>? SubTasks { get; set; }
+    }
+    public static List<TaskData> GetTaskCollection()
+    {
+        List<TaskData> Tasks = new List<TaskData>() {
+        new TaskData() {
+            TaskId = 1,
+            TaskName = "Project initiation",
+            StartDate = new DateTime(2019, 04, 02),
+            EndDate = new DateTime(2019, 04, 21),
+            SubTasks = (new List <TaskData> () {
+                new TaskData() {
+                    TaskId = 2,
+                    TaskName = "Identify Site location",
+                    StartDate = new DateTime(2019, 04, 02),
+                    Duration = "0",
+                    Progress = 30
+                },
+                new TaskData() {
+                    TaskId = 3,
+                    TaskName = "Perform soil test",
+                    StartDate = new DateTime(2019, 04, 02),
+                    Duration = "4",
+                    Predecessor = "2",
+                },
+                new TaskData() {
+                    TaskId = 4,
+                    TaskName = "Soil test approval",
+                    StartDate = new DateTime(2019, 04, 02),
+                    Duration = "0",
+                    Progress = 30,
+                    Predecessor = "3"
+                },
+            })
+        },
+        new TaskData() {
+            TaskId = 5,
+            TaskName = "Project estimation",
+            StartDate = new DateTime(2019, 04, 02),
+            EndDate = new DateTime(2019, 04, 21),
+            SubTasks = (new List <TaskData> () {
+                new TaskData() {
+                    TaskId = 6,
+                    TaskName = "Develop floor plan for estimation",
+                    StartDate = new DateTime(2019, 04, 04),
+                    Duration = "3",
+                    Progress = 30,
+                    Predecessor = "4",
+                },
+                new TaskData() {
+                    TaskId = 7,
+                    TaskName = "List materials",
+                    StartDate = new DateTime(2019, 04, 04),
+                    Duration = "3",
+                    Predecessor = "6",
+                },
+                new TaskData() {
+                    TaskId = 8,
+                    TaskName = "Estimation approval",
+                    StartDate = new DateTime(2019, 04, 04),
+                    Duration = "0",
+                    Predecessor = "7",
+                },
+            })
+        },
+        new TaskData() {
+            TaskId = 9,
+            TaskName = "Sign contract",
+            StartDate = new DateTime(2019, 04, 04),
+            Duration = "1",
+            Predecessor = "8",
+            Progress = 30,
+        },
+        new TaskData() {
+            TaskId = 10,
+            TaskName = "Project approval and kick off",
+            StartDate = new DateTime(2019, 04, 04),
+            EndDate = new DateTime(2019, 04, 21),
+            Duration = "0",
+            Predecessor = "9",
+        },
+        new TaskData() {
+            TaskId = 11,
+            TaskName = "Site work",
+            StartDate = new DateTime(2019, 04, 04),
+            EndDate = new DateTime(2019, 04, 21),
+            SubTasks = (new List <TaskData> () {
+                new TaskData() {
+                    TaskId = 12,
+                    TaskName = "Clear the building site",
+                    StartDate = new DateTime(2019, 04, 04),
+                    Duration = "2",
+                    Progress = 30,
+                    Predecessor = "9",
+                },
+                new TaskData() {
+                    TaskId = 13,
+                    TaskName = "Install temporary power service",
+                    StartDate = new DateTime(2019, 04, 04),
+                    Duration = "2",
+                    Predecessor = "12",
+                },
+            })
+        },
+        new TaskData() {
+            TaskId = 14,
+            TaskName = "Foundation",
+            StartDate = new DateTime(2019, 04, 04),
+            EndDate = new DateTime(2019, 04, 21),
+            SubTasks = (new List <TaskData> () {
+                new TaskData() {
+                    TaskId = 15,
+                    TaskName = "Excavate for foundations",
+                    StartDate = new DateTime(2019, 04, 04),
+                    Duration = "3",
+                    Progress = 30,
+                    Predecessor = "13",
+                }
+            })
+        }
+    };
+        return Tasks;
+    }
+}

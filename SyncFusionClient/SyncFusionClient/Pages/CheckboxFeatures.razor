@@ -1,0 +1,75 @@
+﻿@page "/checkbox-features"
+@using Syncfusion.Blazor.Buttons
+<PageTitle>Checkbox</PageTitle>
+<h2>Checkbox</h2>
+<br/>
+<div id = "ControlRegion">
+<div class="control-section">
+    <div class="checkbox-control">
+<div class="row">
+<SfCheckBox @bind-Checked="@isChecked" Label="CheckBox"></SfCheckBox>
+</div>
+<div class="row">
+<SfCheckBox Disabled="true" @bind-Checked="@isNewChecked" Label="Checked, Disabled"></SfCheckBox>
+</div>
+<div class="row">
+<SfCheckBox Indeterminate="true" Disabled="true" Label="Indeterminate, Disabled" TChecked="bool"></SfCheckBox>
+</div>
+</div>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+        #ControlRegion {
+            margin: 0 auto;
+            width: 25%;
+            padding: 3%;
+        }
+    .checkbox-control {
+        margin: 12% 0 12% 40%;
+    }
+    @@media only screen and (max-width: 700px) {
+        .checkbox-control {
+            margin: 20% 0 0 32%;
+        }
+        .control-section {
+            min-height: 200px;
+        }
+    }
+    @@media only screen and (max-width: 500px) {
+        .control-section {
+            min-height: 200px;
+        }
+        .checkbox-control {
+            margin-top: 27%;
+            margin-left: 20%;
+            margin-bottom: 27%;
+        }
+    }
+    .control-section .row {
+        margin: 20px 0;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code {
+private bool isChecked = true;
+private bool isNewChecked = true;
+}

@@ -1,0 +1,115 @@
+﻿@page "/spinner-features"
+@using Syncfusion.Blazor.Spinner
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons
+<PageTitle>Spinner</PageTitle>
+<h2>Spinner</h2>
+<br/>
+<div id = "Control-Region">
+<div class="row">
+    <div class="col-lg-8 control-section inplace-control-section drop-down-layout">
+        <div class="control_wrapper">
+            <div id="spinnerTarget" style="position: relative;">
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsu</p>
+                <SfSpinner Type="spinnerType" @bind-Visible="VisibleSpinner" >
+                </SfSpinner>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 property-section" id="dropdownProperty">
+        <table id="property" title="Properties" class="property-panel-table">
+            <tbody>
+                <tr>
+                    <td>
+                        Spinner Type
+                    </td>
+                    <td>
+                        <SfDropDownList TValue="string" TItem="TypesFields" PopupHeight="230px" @bind-Value="@DDLValue" Placeholder="Select a spinner type" DataSource="@Types">
+                            <DropDownListEvents TItem="TypesFields" TValue="string" ValueChange="onChange"></DropDownListEvents>
+                            <DropDownListFieldSettings Text="Text" Value="ID"></DropDownListFieldSettings>
+                        </SfDropDownList>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Show Spinner
+                    </td>
+                    <td>
+                        <SfButton CssClass="e-primary" @onclick="ShowSpinner">Show</SfButton>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Hide Spinner
+                    </td>
+                    <td>
+                        <SfButton CssClass="e-danger" @onclick="HideSpinner">Hide</SfButton>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Spinner Samples - Types</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    th, td {
+        padding: 5px
+    } 
+    .e-control .e-btn {
+        width : 90px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+.e-spinner-pane .e-spinner-inner .e-spin-bootstrap
+    {
+        fill: #ffd939;
+        stroke: #ffd939;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code{
+    private bool VisibleSpinner = false;
+    private string DDLValue { get; set; } = "Material";
+    private SpinnerType spinnerType { get; set; } = SpinnerType.Material;
+    public class TypesFields
+    {
+        public string ID { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
+    }
+    private List<TypesFields> Types = new List<TypesFields>() {
+        new TypesFields(){ ID= "Bootstrap4", Text= "Bootstrap 4" },
+        new TypesFields(){ ID= "Fabric", Text= "Fabric" },
+        new TypesFields(){ ID= "Bootstrap", Text= "Bootstrap" },
+        new TypesFields(){ ID= "HighContrast", Text= "High Contrast" },
+        new TypesFields(){ ID= "Material", Text= "Material" }
+    };
+    private void onChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, TypesFields> args)
+    {
+        spinnerType = (SpinnerType)System.Enum.Parse(typeof(SpinnerType), args.Value);
+    }
+    void ShowSpinner()
+    {
+        this.VisibleSpinner = true;
+    }
+    void HideSpinner()
+    {
+        this.VisibleSpinner = false;
+    }
+}

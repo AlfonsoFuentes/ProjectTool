@@ -1,6 +1,6 @@
 ﻿#nullable disable
 using Blazored.FluentValidation;
-using ClientRadzen.Managers.Suppliers;
+using Client.Infrastructure.Managers.Suppliers;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.Suppliers;

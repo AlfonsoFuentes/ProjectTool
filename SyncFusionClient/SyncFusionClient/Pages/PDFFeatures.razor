@@ -1,0 +1,23 @@
+﻿@page "/pdf-features"
+@using System.IO;
+@using SyncFusionClient;
+@inject SyncFusionClient.Data.PdfService service
+@inject Microsoft.JSInterop.IJSRuntime JS
+<PageTitle>PDF</PageTitle>
+<h2>PDF</h2>
+<br/>
+<div id = "ControlRegion">
+<p>Syncfusion PDF Library (Essential PDF) is a feature-rich and high-performance Blazor PDF library that allows you to add robust PDF functionalities to any Blazor application. It allows you to create, read, and edit PDF documents programmatically. This library also offers functionality to merge, split, stamp, and secure PDF files.</p>
+<button class="btn btn-primary" @onclick="@CreatePdf">Create PDF</button>
+</div>
+@code {
+    MemoryStream? documentStream;
+    /// <summary>
+    /// Create and download the Pdf document
+    /// </summary>
+    protected async void CreatePdf()
+    {
+        documentStream = service.CreatePdf();
+        await JS.SaveAs("Sample.pdf", documentStream.ToArray());
+    }
+}

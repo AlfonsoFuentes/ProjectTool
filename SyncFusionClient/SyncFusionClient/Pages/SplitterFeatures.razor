@@ -1,0 +1,82 @@
+﻿@page "/splitter-features"
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Layouts
+<PageTitle>Splitter</PageTitle>
+<h2>Splitter</h2>
+<br/>
+<div id = "ControlRegion">
+<div class="col-lg-12 control-section">
+    <div class="control_wrapper">
+        <div class="pane1">
+            <div id="pane-heading">Horizontal Splitter</div>
+            <SfSplitter ID="splitter1" Height="110px" Width="100%" Orientation="Syncfusion.Blazor.Layouts.Orientation.Horizontal" SeparatorSize="4">
+                <SplitterPanes>
+                    <SplitterPane Size="25%" Min="60px">
+                        <ContentTemplate>
+                            <div class='splitter-default-content'><div>Left pane<div id='panetext'>size: 25%</div><div id='panetext'>min: 60px</div></div></div>
+                        </ContentTemplate>
+                    </SplitterPane>
+                    <SplitterPane Size="50%" Min="60px">
+                        <ContentTemplate>
+                            <div class='splitter-default-content'><div>Middle pane<div id='panetext'>size: 50%</div><div id='panetext'>min: 60px</div></div></div>
+                        </ContentTemplate>
+                    </SplitterPane>
+                    <SplitterPane Size="25%" Min="60px">
+                        <ContentTemplate>
+                            <div class='splitter-default-content'><div>Right pane<div id='panetext'>size: 25%</div><div id='panetext'>min: 60px</div></div></div>
+                        </ContentTemplate>
+                    </SplitterPane>
+                </SplitterPanes>
+            </SfSplitter>
+        </div>
+    </div>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Splitter Samples - Default</li>
+      <li class="list"> Orientation - Horizontal</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    #panetext {
+        font-size: 11px;
+    }
+    #pane-heading {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    .pane1 {
+        margin: 20px auto;
+        max-width: 440px;
+    }
+    .control-section {
+        min-height: 70px;
+        margin-bottom: 15px;
+        margin-top: 10px;
+        padding-top:50px;
+        padding-bottom:50px;
+    }
+    #splitter1 .e-pane, #splitter2 .e-pane {
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        display: grid;
+        height: 100%;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 280px;
+    }
+</style>

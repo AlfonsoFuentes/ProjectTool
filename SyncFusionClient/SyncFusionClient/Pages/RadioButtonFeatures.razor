@@ -1,0 +1,78 @@
+﻿@page "/radiobutton-features"
+@using Syncfusion.Blazor.Buttons
+<PageTitle>Radio Button</PageTitle>
+<h2>Radio Button</h2>
+<br/>
+<div id = "ControlRegion">
+<div class="control-section">
+    <div class="radio-control">
+        <h4 class="row">Select a payment method</h4>
+         <div class="row">
+        <SfRadioButton Label="Credit/Debit Card" Name="payment" Value="credit/debit" Checked="@CheckedValue" ></SfRadioButton>
+        </div>
+        <div class="row">
+        <SfRadioButton Label="Net Banking" Name="payment" Value="netbanking" Checked="@CheckedValue"></SfRadioButton>
+        </div>
+        <div class="row">
+        <SfRadioButton Label="Cash on Delivery" Name="payment" Value="cashondelivery" Checked="@CheckedValue" ></SfRadioButton>
+        </div>
+        <div class="row">
+        <SfRadioButton Label="Other Wallets" Name="payment" Value="others" Checked="@CheckedValue" ></SfRadioButton>
+        </div>
+    </div>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+     #ControlRegion {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .radio-control {
+        margin: 5% 0 5% 40%;
+    }
+    @@media only screen and (max-width: 700px) {
+        .radio-control {
+            margin-left: 35%;
+            margin-top: 8%;
+        }
+        .control-section {
+            min-height: 200px;
+        }
+    }
+    @@media only screen and (max-width: 500px) {
+        .radio-control {
+            margin-top: 20%;
+            margin-left: 21%;
+            margin-bottom: 27%;
+        }
+    }
+    .control-section .row {
+        margin: 20px 0;
+    }
+    .e-bigger .radio-control h4 {
+        font-size: 20px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>
+@code {
+private string CheckedValue = "credit/debit";
+}

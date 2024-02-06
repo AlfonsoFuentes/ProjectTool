@@ -1,0 +1,39 @@
+﻿@page "/filemanager-features"
+@using Syncfusion.Blazor.FileManager
+<PageTitle>File Manager</PageTitle>
+<h2>File Manager</h2>
+<br/>
+@inject IJSRuntime JsRuntime;
+<div id = "ControlRegion">
+<SfFileManager TValue="FileManagerDirectoryContent" ShowThumbnail="true" AllowDragAndDrop="true" AllowMultiSelection="true" >
+    <FileManagerAjaxSettings Url="https://ej2-azure-aspcore-service.azurewebsites.net/api/AzureFileManager/AzureFileoperations"
+                             UploadUrl="https://ej2-azure-aspcore-service.azurewebsites.net/api/AzureFileManager/AzureUpload"
+                             DownloadUrl="https://ej2-azure-aspcore-service.azurewebsites.net/api/AzureFileManager/AzureDownload"
+                             GetImageUrl="https://ej2-azure-aspcore-service.azurewebsites.net/api/AzureFileManager/AzureGetImage">
+    </FileManagerAjaxSettings>
+</SfFileManager>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Thumbnail</li>
+      <li class="list"> Drag and Drop</li>
+      <li class="list"> Multiple Selection</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>

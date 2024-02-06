@@ -1,0 +1,40 @@
+﻿@page "/progressbar-features"
+@using Syncfusion.Blazor.ProgressBar
+<PageTitle>ProgressBar</PageTitle>
+<h2>ProgressBar</h2>
+<br/>
+<div id="ControlRegion">
+<SfProgressBar Theme="Theme.Tailwind" Type="ProgressType.Linear" Height="60"
+                    CornerRadius="CornerType.Round"
+                    TrackThickness="4"
+                    ProgressThickness="8"
+                    Value="30" Minimum="0" Maximum="100">
+        <ProgressBarAnimation Enable="true" Duration="2000" Delay="0" />
+    </SfProgressBar>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Container Type - Linear</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    #ControlRegion{
+            margin:0 auto;
+            width:400px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }
+</style>

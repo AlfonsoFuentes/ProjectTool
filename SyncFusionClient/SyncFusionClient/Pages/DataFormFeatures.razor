@@ -1,0 +1,31 @@
+﻿@page "/dataform-features"
+@using SyncFusionClient.Data
+<PageTitle>DataForm</PageTitle>
+@using Syncfusion.Blazor.DataForm
+@using Syncfusion.Blazor.Buttons
+<div class="control-section">
+        <SfDataForm ID="MyForm"
+                    Model="@EmployeeModel"
+                    ButtonsAlignment="FormButtonsAlignment.Right">
+            <FormValidator>
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+            </FormValidator>
+            <FormItems>
+                <FormAutoGenerateItems></FormAutoGenerateItems>
+            </FormItems>
+        </SfDataForm>
+</div>    
+@code {
+    private EmployeeDetails EmployeeModel = new EmployeeDetails()
+    {
+            EmployeeId = 1001
+    };
+}
+<style>
+    .control-section {
+        min-height: 400px;
+        
+        width: 100%;
+        padding: 20px;
+    }
+</style>

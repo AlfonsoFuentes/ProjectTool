@@ -1,0 +1,57 @@
+﻿@page "/rangeslider-features"
+@using Syncfusion.Blazor.Inputs
+<PageTitle>Range Slider</PageTitle>
+<h2>Range Slider</h2>
+<br/>
+<div id = "ControlRegion">
+<SfSlider Orientation="SliderOrientation.Vertical" Value="30" >
+  <SliderTicks Placement="Syncfusion.Blazor.Inputs.Placement.After" ShowSmallTicks="true" LargeStep="20" SmallStep="10"></SliderTicks>
+  <SliderTooltip IsVisible="true" ShowOn="TooltipShowOn.Always" Placement="TooltipPlacement.Before"></SliderTooltip>
+  <SliderLimits MinStart="10" MinEnd="40" Enabled="true"></SliderLimits>
+</SfSlider>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Range Slider Samples - Default</li>
+      <li class="list"> Ticks</li>
+      <li class="list"> Tooltip</li>
+      <li class="list"> Orientation</li>
+      <li class="list"> Limit</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 260px;
+    }
+    #ControlRegion {
+        margin: 0 auto;
+        height: 300px;
+        width:450px;
+        display: flex;
+        align-items: center;
+    }
+    .e-slider-container {
+        flex: auto;
+    }
+    .userselect {
+        -webkit-user-select: none; /* Safari 3.1+ */
+        -moz-user-select: none; /* Firefox 2+ */
+        -ms-user-select: none; /* IE 10+ */
+        user-select: none; /* Standard syntax */
+    }
+</style>
+@code{
+    public int[] Value = { 10, 40 };
+}

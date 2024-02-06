@@ -1,0 +1,78 @@
+﻿@page "/sidebar-features"
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
+<PageTitle>Sidebar</PageTitle>
+<h2>Sidebar</h2>
+<br/>
+<div id="ControlRegion">
+    <SfSidebar @ref="sidebarObj" Width="250px" Target="#sidebar-content" Type="SidebarType.Over" @bind-IsOpen="SidebarToggle">
+         <ChildContent>
+            <div style="text-align: center;" class="text-content">
+                <span>Sidebar</span>
+                <div class="sub-title">
+                    Place your primary content here.
+                </div>
+                <span>
+                    <SfButton @onclick="Close" IsPrimary="true">Close Sidebar</SfButton>
+                </span>
+            </div>
+        </ChildContent>
+    </SfSidebar>
+    <div id="sidebar-content" class="text-content" style="text-align: center;">
+        <div>Main content</div>
+        <div class="sub-title"> Click the button to open/close the Sidebar.</div>
+        <div>
+            <SfButton @onclick="Toggle" IsToggle="true" IsPrimary="true">Toggle Sidebar</SfButton>
+        </div>
+    </div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Sidebar Samples - Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .e-sidebar {
+        background-color: #f8f8f8;
+        color: black;
+    }
+    .text-content {
+        font-size: 1.5rem;
+        padding: 3rem;
+    }
+    #sidebar-content{
+        height: 60vh;
+    }
+    .sub-title {
+        text-align: center;
+        font-size: 14px;
+        padding: 10px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 220px;
+    }
+</style>
+@code{
+    SfSidebar? sidebarObj;
+    public bool SidebarToggle = false;
+    public void Close()
+    {
+        SidebarToggle = false;
+    }
+    public void Toggle()
+    {
+        SidebarToggle = !SidebarToggle;
+    }
+}

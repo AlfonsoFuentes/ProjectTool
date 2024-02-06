@@ -1,0 +1,33 @@
+﻿@page "/message-features"
+@using Syncfusion.Blazor.Notifications
+<PageTitle>Message</PageTitle>
+<h2>Message</h2>
+<br/>
+<div id = "ControlRegion">
+   <SfMessage ShowCloseIcon="true" Severity="MessageSeverity.Normal" Variant="MessageVariant.Text" ShowIcon="true">Your message has been sent successfully</SfMessage>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Severity - Normal</li>
+      <li class="list"> Variant - Text</li>
+      <li class="list"> Severity Icon</li>
+      <li class="list"> Close Icon</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 230px;
+    }
+</style>

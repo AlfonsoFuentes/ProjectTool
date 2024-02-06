@@ -1,0 +1,54 @@
+﻿@page "/lineargauge-features"
+@using Syncfusion.Blazor.LinearGauge
+<PageTitle>Linear Gauge</PageTitle>
+<h2>Linear Gauge</h2>
+<br/>
+<div id = "ControlRegion">
+<div class="col-md-8 control-section">
+    <div class="content-wrapper">
+	<SfLinearGauge Theme="Theme.Tailwind" Orientation="Syncfusion.Blazor.LinearGauge.Orientation.Horizontal" >
+                <LinearGaugeContainer Type="ContainerType.Normal" Width="25"></LinearGaugeContainer>
+                 <LinearGaugeTooltipSettings Enable="true"></LinearGaugeTooltipSettings>
+                <LinearGaugeAxes>
+                    <LinearGaugeAxis IsInversed="true" OpposedPosition="true">
+                        <LinearGaugeAxisLabelStyle Offset="0">
+                        </LinearGaugeAxisLabelStyle>
+                        <LinearGaugePointers>
+                            <LinearGaugePointer PointerValue="50" Height="15" Width="15" Placement="Syncfusion.Blazor.LinearGauge.Placement.Near" Offset="-0" Color="#f02828" Type="Syncfusion.Blazor.LinearGauge.Point.Bar"></LinearGaugePointer>
+                        </LinearGaugePointers>
+                        <LinearGaugeMajorTicks Interval="10" Height="20"></LinearGaugeMajorTicks>
+                        <LinearGaugeMinorTicks Interval="2" Height="10"></LinearGaugeMinorTicks>
+                    </LinearGaugeAxis>
+                </LinearGaugeAxes>
+            </SfLinearGauge>
+    </div>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Enable Tooltip</li>
+      <li class="list"> Axis Inversed</li>
+      <li class="list"> Orientation - Horizontal</li>
+      <li class="list"> Container Type - Normal</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+   .control-section{
+        margin:0 auto;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 280px;
+    }
+</style>

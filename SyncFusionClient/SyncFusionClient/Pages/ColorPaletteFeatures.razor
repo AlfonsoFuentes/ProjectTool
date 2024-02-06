@@ -1,0 +1,29 @@
+﻿@page "/colorpalette-features"
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Inputs
+<PageTitle>Color Palette</PageTitle>
+<h2>Color Palette</h2>
+<br/>
+<SfColorPicker Mode="ColorPickerMode.Palette" Inline="true" ShowButtons="false"></SfColorPicker>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+.ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 340px;
+    }
+</style>

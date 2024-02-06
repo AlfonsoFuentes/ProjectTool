@@ -1,0 +1,45 @@
+﻿@page "/dropdowntree-features"
+@using Syncfusion.Blazor.Navigations 
+<PageTitle>DropdownTree</PageTitle>
+<SfDropDownTree TItem="ProductCategory" TValue="int?" ID="list" Placeholder="Select a Category" AutoUpdateCheckState="true" AllowFiltering="true" ShowCheckBox="true" AllowMultiSelection="true" Mode="DdtVisualMode.Default" > 
+    <DropDownTreeField TItem="ProductCategory" DataSource="@Categories" ID="Id" ParentID="ParentId" Text="Name" HasChildren="HasChild" Expanded="Expanded"></DropDownTreeField> 
+</SfDropDownTree> 
+@code {
+    List<ProductCategory> Categories = new List<ProductCategory>
+    {
+        new ProductCategory { Id = 1, Name = "Electronics", HasChild=true, Expanded = true },
+        new ProductCategory { Id = 2, Name = "Smartphones", ParentId = 1 },
+        new ProductCategory { Id = 3, Name = "Laptops", ParentId = 1 },
+        new ProductCategory { Id = 4, Name = "Tablets", ParentId = 1 },
+        new ProductCategory { Id = 5, Name = "Accessories", ParentId = 1 },
+        new ProductCategory { Id = 6, Name = "Clothing", HasChild=true  },
+        new ProductCategory { Id = 7, Name = "Men's Clothing", ParentId = 6 },
+        new ProductCategory { Id = 8, Name = "Women's Clothing", ParentId = 6 },
+        new ProductCategory { Id = 9, Name = "Kids' Clothing", ParentId = 6 },
+        new ProductCategory { Id = 10, Name = "Shoes", ParentId = 6 },
+        new ProductCategory { Id = 11, Name = "Home & Furniture", HasChild=true },
+        new ProductCategory { Id = 12, Name = "Living Room", ParentId = 11 },
+        new ProductCategory { Id = 13, Name = "Bedroom", ParentId = 11 },
+        new ProductCategory { Id = 14, Name = "Kitchen", ParentId = 11 },
+        new ProductCategory { Id = 15, Name = "Outdoor", ParentId = 11 },
+        new ProductCategory { Id = 16, Name = "Sports & Fitness", HasChild=true, Expanded=true },
+        new ProductCategory { Id = 17, Name = "Exercise Equipment", ParentId = 16 },
+        new ProductCategory { Id = 18, Name = "Outdoor Activities", ParentId = 16 },
+        new ProductCategory { Id = 19, Name = "Team Sports", ParentId = 16 },
+        new ProductCategory { Id = 20, Name = "Books & Media", HasChild=true },
+        new ProductCategory { Id = 21, Name = "Books", ParentId = 20 },
+        new ProductCategory { Id = 22, Name = "Movies", ParentId = 20 },
+        new ProductCategory { Id = 23, Name = "Music", ParentId = 20 },
+        new ProductCategory { Id = 24, Name = "Toys & Games", HasChild = true },
+        new ProductCategory { Id = 25, Name = "Board Games", ParentId = 24 },
+        new ProductCategory { Id = 26, Name = "Outdoor Games", ParentId = 24 }
+    };
+    class ProductCategory
+    {
+        public int? Id { get; set; }
+        public string Name { get; set; }
+        public int? ParentId { get; set; }
+        public bool HasChild { get; set; }
+        public bool Expanded { get; set; }
+    }
+}

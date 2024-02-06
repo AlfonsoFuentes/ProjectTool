@@ -1,5 +1,5 @@
 ﻿#nullable disable
-using ClientRadzen.Managers.BudgetItems;
+using Client.Infrastructure.Managers.BudgetItems;
 using Microsoft.AspNetCore.Components;
 using Radzen.Blazor;
 using Radzen;

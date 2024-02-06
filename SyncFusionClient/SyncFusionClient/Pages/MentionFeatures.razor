@@ -1,0 +1,92 @@
+﻿@page "/mention-features"
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Data
+<PageTitle>Mention</PageTitle>
+<h2>Mention</h2>
+<br/>
+<label class="default-size">Comments</label>
+<div id="commentsMention" placeHolder="Type @@ and tag user" ></div>
+<div id = "ControlRegion">
+            <div class="col-lg-12 control-section">
+    <div class="control_wrapper">
+        <SfMention TItem="PersonData" Target="#commentsMention" DataSource="@EmailData">
+           <MentionFieldSettings Text="Name"></MentionFieldSettings>
+        </SfMention>
+    </div>
+</div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Mention Samples - Data Binding</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }  
+     #commentsMention {
+        min-height: 100px;
+        border: 1px solid #D7D7D7;
+        border-radius: 4px;
+        padding: 8px;
+        font-size: 14px;
+        width: 600px;
+    }
+    #mention-controls {
+        margin: 0 auto;
+        width: 600px;
+    }
+    div#commentsMention[placeholder]:empty:before {
+        content: attr(placeholder);
+        color: #555;
+    }
+    @@media screen and (max-width: 1010px) {
+        #mention-controls, #mention-controls table{
+            width: 100%;
+        }
+    }
+</style>
+@code {
+  public class PersonData
+  {  
+    public string Name { get; set; }
+    public string EmailId { get; set; }
+    public string Eimg { get; set;}
+  }
+  List<PersonData> EmailData = new List<PersonData> {
+    new PersonData() { Name="Selma Rose", Eimg="7", EmailId="selma@gmail.com" },
+    new PersonData() { Name="Russo Kay", Eimg="8", EmailId="russo@gmail.com" },
+    new PersonData() { Name="Camden Kate", Eimg="9", EmailId="camden@gmail.com" },
+    new PersonData() { Name="Garth", Eimg="3", EmailId="garth@gmail.com" },
+    new PersonData() { Name="Ursula Ann", Eimg="10", EmailId="ursula@gmail.com" },
+    new PersonData() { Name="Margaret", Eimg="5", EmailId="margaret@gmail.com" },
+    new PersonData() { Name="Laura Grace", Eimg="7", EmailId="laura@gmail.com" },
+    new PersonData() { Name="Robert", Eimg="8", EmailId="robert@gmail.com" },
+    new PersonData() { Name="Albert", Eimg="9", EmailId="albert@gmail.com" },
+    new PersonData() { Name="Michale", Eimg="10", EmailId="michale@gmail.com" },
+    new PersonData() { Name="Andrew James", Eimg="3", EmailId="james@gmail.com" },
+    new PersonData() { Name="William", Eimg="4", EmailId="william@gmail.com" },
+    new PersonData() { Name="David", Eimg="5", EmailId="david@gmail.com" },
+    new PersonData() { Name="Richard Rose", Eimg="7", EmailId="richard@gmail.com" },
+    new PersonData() { Name="Joseph", Eimg="8", EmailId="joseph@gmail.com" },
+    new PersonData() { Name="Thomas", Eimg="9", EmailId="thomas@gmail.com" },
+    new PersonData() { Name="Charles Danny", Eimg="10", EmailId="charles@gmail.com" },
+    new PersonData() { Name="Daniel", Eimg="3", EmailId="daniel@gmail.com" },
+    new PersonData() { Name="Matthew", Eimg="2", EmailId="matthew@gmail.com" },
+    new PersonData() { Name="Donald Krish", Eimg="1", EmailId="donald@gmail.com" },
+    new PersonData() { Name="Paul", Eimg="4", EmailId="paul@gmail.com" },
+    new PersonData() { Name="Kevin Paul", Eimg="5", EmailId="kevin@gmail.com" }
+  };
+}

@@ -1,0 +1,68 @@
+﻿@page "/listbox-features"
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.DropDowns
+<PageTitle>ListBox</PageTitle>
+<h2>ListBox</h2>
+<br/>
+<div id = "ControlRegion">
+<div id="listbox-control">
+   <h4>Select your favorite car:</h4>
+   <SfListBox Value=@Value DataSource="@Data" TValue="string[]" TItem="DataValues">
+    <ListBoxFieldSettings Text="Text" Value="Id"></ListBoxFieldSettings>
+   </SfListBox>
+ </div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> ListBox Samples - Default</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 200px;
+    }  
+    #listbox-control {
+        width: 350px;
+        margin: auto;
+        padding-top:35px;
+        padding-bottom:35px;
+    }
+    @@media screen and (max-width: 590px) {
+        #listbox-control {
+            width: 100%;
+        }
+    }        
+</style>
+@code{
+    public string[] Value = new string[] { "List-01" };
+    public List<DataValues> Data = new List<DataValues>
+    {
+        new DataValues { Text = "Hennessey Venom", Id = "List-01" },
+        new DataValues { Text = "Bugatti Chiron", Id = "List-02" },
+        new DataValues { Text = "Bugatti Veyron Super Sport", Id = "List-03" },
+        new DataValues { Text = "SSC Ultimate Aero", Id = "List-04" },
+        new DataValues { Text = "Koenigsegg CCR", Id = "List-05" },
+        new DataValues { Text = "McLaren F1", Id = "List-06" },
+        new DataValues { Text = "Aston Martin One- 77", Id = "List-07" },
+        new DataValues { Text = "Jaguar XJ220", Id = "List-08" },
+        new DataValues { Text = "McLaren P1", Id = "List-09" },
+        new DataValues { Text = "Ferrari LaFerrari", Id = "List-10" }
+    };
+    public class DataValues
+    {
+        public string Text { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
+    }
+}

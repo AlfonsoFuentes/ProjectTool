@@ -1,0 +1,99 @@
+﻿@page "/tooltip-features"
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.DropDowns
+@using MSComponents = Microsoft.AspNetCore.Components
+<PageTitle>Tooltip</PageTitle>
+<h2>Tooltip</h2>
+<br/>
+<div id="ControlRegion">
+    <div class="col-lg-8 control-section">
+        <div class="control-section">
+            <!-- Tooltip element -->
+            <SfTooltip ID="Tooltip" Content=@Content Position="@Position" ShowTipPointer="true">
+                <SfButton Content="Show Tooltip"></SfButton>
+            </SfTooltip>
+        </div>
+    </div>
+    <div class="col-lg-3 control-section">
+        <select class="form-control" @onchange="@((eventArgs) => { SelectItems(eventArgs); })">
+            <option value="TopLeft">Top Left</option>
+            <option value="TopCenter">Top Center</option>
+            <option value="TopRight">Top Right</option>
+            <option value="BottomLeft">Bottom Left</option>
+            <option value="BottomCenter">Bottom Center</option>
+            <option value="BottomRight">Bottom Right</option>
+            <option value="LeftTop">Left Top</option>
+            <option value="LeftCenter">Left Center</option>
+            <option value="LeftBottom">Left Bottom</option>
+            <option value="RightTop">Right Top</option>
+            <option value="RightCenter">Right Center</option>
+            <option value="RightBottom">Right Bottom</option>
+        </select>
+    </div>
+</div>
+<br/>
+<div>
+  <h3>Selected Features:</h3>
+    <ul class="ulstyle">
+      <li class="list"> Tooltip Samples - Position</li>
+      <li class="list"> Theme - Tailwind</li>
+    </ul>
+</div>
+<br/>
+<style>
+    #Tooltip {
+        position: absolute;
+        left: calc( 50% - 60px);
+        top: 50%;
+    }
+    #ControlRegion {
+        height: 200px;
+    }
+    #ControlRegion .control-section{
+        float: left;
+        height: 100%;
+    }
+    .control-section .form-control{
+        position: absolute;
+        top: 50%;
+        height: 35px;
+        width: 160px;
+    }
+    .ulstyle {
+        margin: 0px;
+        padding-left: 20px;
+        display: inline-block;
+    }
+    .list {
+    float: left;
+    line-height: 20px;
+    margin: 10px;
+    min-width: 300px;
+    }
+</style>
+@code{
+    public string Content = "Lets go green & Save Earth !!";
+    Syncfusion.Blazor.Popups.Position Position, NewPosition;
+    void SelectItems(MSComponents.ChangeEventArgs eventArgs)
+    {
+        var value = eventArgs.Value != null ? eventArgs.Value.ToString() : String.Empty;
+        if(value != null)
+        {
+            Syncfusion.Blazor.Popups.Position selectedPos = (Syncfusion.Blazor.Popups.Position)Enum.Parse(typeof(Syncfusion.Blazor.Popups.Position), value);
+            foreach (Syncfusion.Blazor.Popups.Position position in Enum.GetValues(typeof(Syncfusion.Blazor.Popups.Position)))
+            {
+                NewPosition = (Syncfusion.Blazor.Popups.Position)Enum.Parse(typeof(Syncfusion.Blazor.Popups.Position), position.ToString());
+                if (selectedPos == NewPosition)
+                {
+                    Position = NewPosition;
+                }
+            }
+        }
+    }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Position = Syncfusion.Blazor.Popups.Position.TopLeft;
+    }
+}
