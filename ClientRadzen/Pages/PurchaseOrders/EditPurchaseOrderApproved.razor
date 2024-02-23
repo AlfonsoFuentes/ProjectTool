@@ -1,0 +1,103 @@
+﻿@page "/EditPurchaseOrderApproved/{PurchaseorderId:guid}"
+
+<RadzenStack Orientation="Orientation.Vertical">
+    <RadzenRow>
+        <RadzenText TextStyle="TextStyle.DisplayH5"
+                    Text="@($"Approve Purchase Order in {Model.PurchaseorderName}")"></RadzenText>
+    </RadzenRow>
+    <RadzenRow>
+        <AlertMessage Messages="@Model.ValidationErrors"></AlertMessage>
+    </RadzenRow>
+
+    <EditForm Model="@Model" OnValidSubmit="SaveAsync">
+        <FluentValidationValidator @ref="_fluentValidationValidator" />
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="@MediumColumn">
+                <RadzenFormField Text="Purchase order Number" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.PONumber class="w-100"
+                                   @oninput="@((arg)=>Model.ChangePONumber(arg.Value!.ToString()!))"
+                                   Name="ponumber" />
+
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.PONumber" style="color:red; font-size:x-small;" />
+                <RadzenFormField Text="Expected Date" Style="width: 100%;">
+                    <RadzenDatePicker @bind-Value=@Model.ExpetedOn Name="expetedon" AllowClear=true DateFormat="d"
+                                      TValue="DateTime?">
+
+                    </RadzenDatePicker>
+
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.ExpetedOn" style="color:red; font-size:x-small;" />
+                <RadzenFormField Text="Name" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.PurchaseorderName class="w-100" Disabled=true
+                                   Name="poname" />
+
+                </RadzenFormField>
+                <RadzenFormField Text="PO Value, USD" Style="width: 100%;">
+                    <RadzenNumeric TValue="double" Format="C" @bind-Value=@Model.PurchaseOrderValue Disabled=true ShowUpDown=false
+                                   InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})" />
+
+
+                </RadzenFormField>
+
+                <RadzenFormField Text="MWO" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.MWOCode class="w-100" Disabled=true
+                                   Name="quoteno" />
+
+                </RadzenFormField>
+
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="@MediumColumn">
+                <RadzenFormField Text="Purchase Requisition" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.PurchaseRequisition class="w-100" Disabled=true
+                                   Name="pr" />
+
+                </RadzenFormField>
+                <RadzenFormField Text="Quote No" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.QuoteNo class="w-100" Disabled=true
+                                   Name="quoteno" />
+
+                </RadzenFormField>
+                <RadzenFormField Text="Supplier" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.Supplier class="w-100" Disabled=true
+                                   Name="quoteno" />
+
+                </RadzenFormField>
+                <RadzenFormField Text="Supplier" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.VendorCode class="w-100" Disabled=true
+                                   Name="quoteno" />
+
+                </RadzenFormField>
+                <RadzenFormField Text="Account assigned" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.AccountAssigment class="w-100" Disabled=true
+                                   Name="quoteno" />
+
+                </RadzenFormField>
+
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow>
+
+
+            <RadzenColumn Size="12" SizeMD="@MediumColumn" Class="rz-p-2 rz-mt-2 rz-mb-2">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem">
+                    <RadzenButton Click="@Cancel" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 150px" />
+                    <RadzenButton Click="@SaveAsync" Variant="Variant.Flat" Text="Edit Purchase order" Style="width: 300px;" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+
+
+    </EditForm>
+</RadzenStack>
+
+@code {
+    int MaxColumn = 12;
+    int MediumColumn = 6;
+}
+
+@code {
+
+}
+

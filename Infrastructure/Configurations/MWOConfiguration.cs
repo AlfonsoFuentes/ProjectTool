@@ -15,6 +15,7 @@ namespace Infrastructure.Configurations
         {
             builder.HasKey(ci => ci.Id);
             builder.HasMany(c => c.BudgetItems).WithOne(t => t.MWO).HasForeignKey(e => e.MWOId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(c => c.PurchaseOrders).WithOne(t => t.MWO).HasForeignKey(e => e.MWOId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
 
     }

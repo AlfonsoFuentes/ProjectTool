@@ -1,0 +1,33 @@
+﻿@page "/UserList"
+
+<RadzenDataGrid @ref="grid" AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
+                AllowGrouping="false" AllowSorting="true" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                Density="Density.Default" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterPopupRenderMode="PopupRenderMode.OnDemand" SelectionMode="DataGridSelectionMode.Single" 
+                Data="@Model.Users" TItem="CurrentUser" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+    <Columns>
+        <RadzenDataGridColumn TItem="CurrentUser" Property="@nameof(CurrentUser.UserName)" Filterable="false" Title="Name" Frozen="false" Width="100px"
+                              TextAlign="TextAlign.Left" Groupable=false />
+        <RadzenDataGridColumn TItem="CurrentUser" Property="@nameof(CurrentUser.Role)" Filterable="false" Title="Role" Frozen="false" Width="100px"
+                              TextAlign="TextAlign.Left" Groupable=false />
+
+
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    [Inject]
+    private IAccountManager Service { get; set; } = null!;
+    UsersResponse Model = new();
+    RadzenDataGrid<CurrentUser> grid = null!;
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Service.GetUsersAsync();
+        if(result.Succeeded)
+        {
+            Model = result.Data;
+        }
+       
+    }
+
+}

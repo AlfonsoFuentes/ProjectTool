@@ -9,7 +9,7 @@ namespace Infrastructure.Configurations
         public void Configure(EntityTypeBuilder<Supplier> builder)
         {
             builder.HasKey(ci => ci.Id);
-
+           
         }
 
     }

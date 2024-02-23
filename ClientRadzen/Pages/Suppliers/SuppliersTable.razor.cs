@@ -13,10 +13,9 @@ namespace ClientRadzen.Pages.Suppliers
         private ISupplierService Service { get; set; }
         IList<SupplierResponse> selectedSuppliers;
         List<SupplierResponse> OriginalData { get; set; } = new();
-        private bool _trapFocus = true;
-        private bool _modal = true;
+       
         string nameFilter = string.Empty;
-        IQueryable<SupplierResponse>? FilteredItems => OriginalData?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
+        IQueryable<SupplierResponse> FilteredItems => OriginalData?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
         protected override async Task OnInitializedAsync()
         {
             var user = CurrentUser.UserId;

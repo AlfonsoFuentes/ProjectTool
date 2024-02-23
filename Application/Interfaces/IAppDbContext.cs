@@ -16,6 +16,9 @@ namespace Application.Interfaces
         DbSet<Supplier> Suppliers { get; set; }
         DbSet<BudgetItem> BudgetItems { get; set; }
         DbSet<TaxesItem> TaxesItems { get; set; }
+        DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+        DbSet<DownPayment> DownPayments { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

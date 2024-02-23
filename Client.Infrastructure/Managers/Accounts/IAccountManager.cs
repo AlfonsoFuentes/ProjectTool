@@ -5,6 +5,7 @@ namespace Client.Infrastructure.Managers.Accounts
 {
     public interface IAccountManager : IManager
     {
+        Task<IResult<UsersResponse>> GetUsersAsync();
         Task<IResult> ReviewEmailExist(string email);
         Task<IResult> CreateSuperAdminUser();
 
@@ -66,6 +67,13 @@ namespace Client.Infrastructure.Managers.Accounts
             var result = await httpresult.ToResult();
             return result;
 
+        }
+
+        public async Task<IResult<UsersResponse>> GetUsersAsync()
+        {
+            var httpresult = await Http.GetAsync($"Account/GetUserList");
+            var result = await httpresult.ToResult<UsersResponse>();
+            return result;
         }
     }
 }

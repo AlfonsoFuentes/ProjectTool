@@ -35,22 +35,21 @@ namespace Server.Services
                 opt.SignIn.RequireConfirmedEmail = true;
                 opt.ClaimsIdentity.UserIdClaimType = "ProjectToolId";
             })
-                 .AddRoles<IdentityRole>()
                  .AddSignInManager()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddApiEndpoints();
             var frontend = builder.Configuration["FrontendUrl"];
             var backend = builder.Configuration["BackendUrl"];
             // add CORS policy for Wasm client
-            builder.Services.AddCors(
-                options => options.AddPolicy(
-                    "wasm",
-                    policy => policy.WithOrigins([builder.Configuration["BackendUrl"] ?? "https://localhost:5001",
-                        builder.Configuration["FrontendUrl"] ?? "https://localhost:5002"])
-                        .AllowAnyMethod()
-                        .SetIsOriginAllowed(pol => true)
-                        .AllowAnyHeader()
-                        .AllowCredentials()));
+            //builder.Services.AddCors(
+            //    options => options.AddPolicy(
+            //        "wasm",
+            //        policy => policy.WithOrigins([builder.Configuration["BackendUrl"] ?? "https://localhost:5001",
+            //            builder.Configuration["FrontendUrl"] ?? "https://localhost:5002"])
+            //            .AllowAnyMethod()
+            //            .SetIsOriginAllowed(pol => true)
+            //            .AllowAnyHeader()
+            //            .AllowCredentials()));
 
             builder.Services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 

@@ -1,0 +1,125 @@
+﻿@page "/PurchaseOrdersTable"
+@using Shared.Models.PurchaseOrders.Responses
+@using Shared.Models.PurchaseorderStatus
+<PageTitle>Purchase Orders</PageTitle>
+<RadzenStack Orientation="Orientation.Vertical">
+    <RadzenRow>
+        <RadzenText TextStyle="TextStyle.H6">Purchase Orders </RadzenText>
+
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="9">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
+           
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="Edit Purchase Order" Click="@EditPurchaseOrder" Disabled=@(selectedRow==null) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="Approve" Click="@(()=>ApprovePurchaseOrder())" Disabled=@DisableButtonPurchaseorderToApprove />
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="Receive" Click="@(()=>ReceivePurchaseorder())" Disabled=@DisableButtonPurchaseorderToReceive />
+                   
+                
+               
+
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="3">
+          
+                <RadzenFormField Text="Search" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@_search class="w-100" Placeholder="Search..."
+                                   @oninput="@((arg)=>OnSearch(arg.Value!.ToString()!))"
+                                   Name="search" />
+
+                </RadzenFormField>
+            
+        </RadzenColumn>
+        
+    </RadzenRow>
+    <RadzenDataGrid @ref="grid" AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced"
+                    AllowGrouping="true" AllowSorting="true" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                    Density="Density.Default" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterCleared=@FilterCleared
+                    FilterPopupRenderMode="PopupRenderMode.OnDemand" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedPurchaseOrders
+                    Data="@FilteredItems" TItem="PurchaseOrderResponse" ColumnWidth="300px" RowClick=OnRowClick
+                    LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+        <HeaderTemplate>
+
+
+
+
+        </HeaderTemplate>
+
+        <Columns>
+            <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.PurchaseOrderStatusName)"
+                                  Title="Status" Frozen="true" Groupable Filterable=true
+                                   Width="130px" TextAlign="TextAlign.Center" Type="typeof(IEnumerable<string>)" LogicalFilterOperator=LogicalFilterOperator.Or
+                                   FilterValue="@selectedTypes" FilterOperator="FilterOperator.Contains">
+                 <FilterValueTemplate>
+                     <RadzenDropDown @bind-Value=@selectedTypes Style="width:100%"
+                                     Change=@OnSelectedTypesChange Data="@(titles)" AllowClear="true" Multiple="true" />
+                 </FilterValueTemplate>
+
+
+             </RadzenDataGridColumn>
+
+
+             <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.MWOCode)"
+                                   Sortable=true Filterable="true" Title="MWO" Frozen="false" Width="140px" TextAlign="TextAlign.Left" Groupable=true />
+
+             <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.AccountAssigment)"
+                                   Sortable=true Filterable="true" Title="Account" Frozen="false" Width="140px" TextAlign="TextAlign.Left"
+                                   Groupable=true />
+             <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.PurchaseRequisition)" Filterable="false" Title="PR"
+                                   Sortable=true Frozen="false" Width="120px" TextAlign="TextAlign.Left" Groupable=false />
+
+             <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.PONumber)" Filterable="false" Title="PO#"
+                                   Sortable=true Frozen="false" Width="120px" TextAlign="TextAlign.Left" Groupable=false />
+
+             <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.PurchaseOrderValue)"
+                                   Filterable="false" Title="Value, USD" Frozen="false" Width="130px" TextAlign="TextAlign.Left" Groupable=false>
+                 <Template Context="detail">
+                     @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.PurchaseOrderValue)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.ExpetedOn)"
+                                  Filterable="true" Title="ExpetedOn" Frozen="false" Width="140px" Sortable=true FormatString="{0:d}"
+                                  TextAlign="TextAlign.Left" Groupable=true />
+             <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.Supplier)"
+                                   Filterable="false" Title="Supplier" Frozen="false" Width="130px" TextAlign="TextAlign.Left" Groupable=false />
+             
+
+            @if (CurrentUser.IsSuperAdmin)
+            {
+                <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.CreatedOn)" Filterable="true"
+                                      Sortable=true Title="Created On" Frozen="false" Width="100px"
+                                      TextAlign="TextAlign.Left" Groupable=false FormatString="{0:d}" />
+                <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.CreatedBy)"
+                                      Filterable="false" Title="Created By" Frozen="false" Width="100px"
+                                      TextAlign="TextAlign.Left" Groupable=false />
+
+            }
+
+
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>
+
+
+
+@code {
+    string _search = string.Empty;
+    IEnumerable<string> selectedTypes;
+
+    async Task OnSelectedTypesChange(object value)
+    {
+        if (selectedTypes != null && !selectedTypes.Any())
+        {
+            selectedTypes = null!;
+        }
+
+        await grid.FirstPage();
+    }
+    List<string> titles = PurchaseOrderStatusEnum.List.Select(x => x.Name).ToList();
+    async Task FilterCleared()
+    {
+        selectedTypes = null!;
+
+        await grid.FirstPage();
+    }
+}

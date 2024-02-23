@@ -1,17 +1,38 @@
 ﻿@page "/CreateSuperAdmin"
 
 
+<AlertMessage Messages="@Message"></AlertMessage>
+@if (Message.Count>0)
+{
+    foreach(var row in Message)
+    {
+        <div class="alert alert-info">@row</div>
+    }
+}
 
-
-<div class="alert alert-info">@Message</div>
 @code {
     [Inject]
     private IAccountManager accountManager { get; set; } = null!;
-    string Message = "";
+    List<string> Message =new();
     protected override async Task OnInitializedAsync()
     {
         var result = await accountManager.CreateSuperAdminUser();
-        Message = result.Messages.FirstOrDefault()!;
+        if(result.Succeeded)
+        {
+            NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Success",
+                    Detail = result.Message,
+                    Duration = 4000
+                });
+        }
+        else
+        {
+            Message = result.Messages;
+        }
+
+        
 
     }
 

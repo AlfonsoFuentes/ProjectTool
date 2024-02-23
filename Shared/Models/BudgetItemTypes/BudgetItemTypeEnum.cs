@@ -4,12 +4,16 @@ namespace Shared.Models.BudgetItemTypes
 {
     public class BudgetItemTypeEnum
     {
+        public override string ToString()
+        {
+            return $"{Letter}-{Name}";
+        }
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Letter { get; set; } = string.Empty;
         public static BudgetItemTypeEnum Create(int id, string letter, string name) => new BudgetItemTypeEnum() { Id = id, Letter = letter, Name = name };
 
-        public static BudgetItemTypeEnum None = Create(-1, "", "NONE");
+        public static BudgetItemTypeEnum None = Create(-1, "", "None");
         public static BudgetItemTypeEnum Alterations = Create(0, "A", "Alterations");
         public static BudgetItemTypeEnum Foundations = Create(1, "B", "Foundations");
         public static BudgetItemTypeEnum Structural = Create(2, "C", "Structural");
@@ -18,7 +22,7 @@ namespace Shared.Models.BudgetItemTypes
         public static BudgetItemTypeEnum Piping = Create(5, "F", "Piping");
         public static BudgetItemTypeEnum Instruments = Create(6, "G", "Instruments");
         public static BudgetItemTypeEnum Insulations = Create(7, "H", "Insulation");
-        public static BudgetItemTypeEnum Painting = Create(8, "I", "Insulation");
+        public static BudgetItemTypeEnum Painting = Create(8, "I", "Painting");
         public static BudgetItemTypeEnum EHS = Create(9, "K", "EHS");
 
         public static BudgetItemTypeEnum Taxes = Create(10, "L", "Taxes");
@@ -28,6 +32,10 @@ namespace Shared.Models.BudgetItemTypes
         public static List<BudgetItemTypeEnum> List = new List<BudgetItemTypeEnum>()
         {
             None,Alterations,Foundations,Structural, Equipments,Electrical,Piping,Instruments, Insulations,Painting, EHS, Taxes, Testing, Engineering, Contingency
+        }; 
+        public static List<BudgetItemTypeEnum> ListForCreateItem = new List<BudgetItemTypeEnum>()
+        {
+            None,Alterations,Foundations,Structural, Equipments,Electrical,Piping,Instruments, Insulations,Painting, EHS, Taxes, Testing, Engineering
         };
         public static string GetName(int id) => List.Exists(x => x.Id == id) ? List.FirstOrDefault(x => x.Id == id)!.Name : string.Empty;
         public static string GetLetter(int id) => List.Exists(x => x.Id == id) ? List.FirstOrDefault(x => x.Id == id)!.Letter : string.Empty;

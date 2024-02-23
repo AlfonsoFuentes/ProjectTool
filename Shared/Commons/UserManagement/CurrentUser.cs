@@ -6,11 +6,11 @@ namespace Shared.Commons.UserManagement
     public class CurrentUser
     {
         public string UserId { get; set; } = string.Empty;
-        public string UserName { get; set; }=string.Empty;
-        public IList<string> Roles { get; set; } = new List<string>();
+        public string UserName { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
 
-        public  bool IsSuperAdmin => Roles.Contains("SuperAdmin");
-        public bool IsViewer => Roles.Contains(RolesDto.ViewerUser.Name);
-        public bool IsRegularUser => Roles.Contains(RolesDto.RegularUser.Name)|| Roles.Contains("SuperAdmin");
+        public bool IsSuperAdmin => Role.Contains("SuperAdmin");
+        public bool IsViewer => Role.Contains(RolesDto.ViewerUser.Name);
+        public bool IsRegularUser => Role.Contains(RolesDto.RegularUser.Name) || Role.Contains("SuperAdmin");
     }
 }

@@ -38,6 +38,11 @@ namespace Server.Controllers
         {
             return Ok(await Mediator.Send(new CreateTaxItemCommand(request)));
         }
+        [HttpPost("CreateAlterationItem")]
+        public async Task<IActionResult> CreateAlterationItem(CreateBudgetItemRequest request)
+        {
+            return Ok(await Mediator.Send(new CreateAlterationBudgetItemCommand(request)));
+        }
         [HttpGet("GetAllItems/{MWOId}")]
         public async Task<IActionResult> GetAllByMWOId(Guid MWOId)
         {
@@ -67,6 +72,38 @@ namespace Server.Controllers
         public async Task<IActionResult> GetSumTaxesBudget(Guid BudgetItemId)
         {
             return Ok(await Mediator.Send(new GetSumBugetTaxesItemsQuery(BudgetItemId)));
+        }
+        [HttpGet("GetDataForCreateBudget/{MWOId}")]
+        public async Task<IActionResult> GetDataForCreateBudget(Guid MWOId)
+        {
+            return Ok(await Mediator.Send(new GetDataForCreateBudgetItemQuery(MWOId)));
+        }
+        [HttpPost("UpdateRegularItem")]
+        public async Task<IActionResult> UpdateRegularBudgetItem(UpdateBudgetItemRequest request)
+        {
+
+            return Ok(await Mediator.Send(new UpdateRegularBudgetItemCommand(request)));
+        }
+        [HttpPost("UpdateEquipmentItem")]
+        public async Task<IActionResult> UpdateEquipmentItem(UpdateBudgetItemRequest request)
+        {
+
+            return Ok(await Mediator.Send(new UpdateEquipmentInstrumentsItemCommand(request)));
+        }
+        [HttpPost("UpdateEngContItem")]
+        public async Task<IActionResult> UpdateEngContItem(UpdateBudgetItemRequest request)
+        {
+            return Ok(await Mediator.Send(new UpdateEngContingencyCommand(request)));
+        }
+        [HttpPost("UpdateTaxItem")]
+        public async Task<IActionResult> UpdateTaxtItem(UpdateBudgetItemRequest request)
+        {
+            return Ok(await Mediator.Send(new UpdateTaxItemCommand(request)));
+        }
+        [HttpPost("UpdateAlterationItem")]
+        public async Task<IActionResult> UpdateAlterationItem(UpdateBudgetItemRequest request)
+        {
+            return Ok(await Mediator.Send(new UpdateAlterationBudgetItemCommand(request)));
         }
     }
 }

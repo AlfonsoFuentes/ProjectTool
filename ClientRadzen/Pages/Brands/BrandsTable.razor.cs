@@ -13,13 +13,12 @@ namespace ClientRadzen.Pages.Brands
         private IBrandService Service { get; set; }
         IList<BrandResponse> selectedBrands;
         List<BrandResponse> OriginalData { get; set; } = new();
-        private bool _trapFocus = true;
-        private bool _modal = true;
+      
         string nameFilter = string.Empty;
         IQueryable<BrandResponse>? FilteredItems => OriginalData?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
         protected override async Task OnInitializedAsync()
         {
-            //var user = CurrentUser.UserId;
+       
             await ShowLoading();
             await UpdateAll();
         }

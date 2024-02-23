@@ -21,6 +21,11 @@ namespace Server.Controllers
         {
             return Ok(await Mediator.Send(new CreateSupplierCommand(request)));
         }
+        [HttpPost("CreateSupplierForPurchaseorder")]
+        public async Task<IActionResult> CreateSupplierForPurchaseorder(CreateSupplierRequest request)
+        {
+            return Ok(await Mediator.Send(new CreateSupplierForPurchaseorderCommand(request)));
+        }
         [HttpPost("UpdateSupplier")]
         public async Task<IActionResult> UpdateSupplier(UpdateSupplierRequest request)
         {

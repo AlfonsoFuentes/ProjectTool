@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Features.Suppliers.Validators;
+using Application.Interfaces;
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
@@ -21,6 +22,15 @@ namespace Application.Features.Suppliers.Command
 
         public async Task<IResult> Handle(CreateSupplierCommand request, CancellationToken cancellationToken)
         {
+
+            var validator = new CreateSupplierValidator(Repository);
+            var validationresult = await validator.ValidateAsync(request.Data);
+            if(!validationresult.IsValid)
+            {
+                return Result.Fail(validationresult.Errors.Select(x=>x.ErrorMessage).ToArray());
+            }
+
+
             var row = Supplier.Create(request.Data.Name,request.Data.VendorCode,request.Data.TaxCodeLD,
                 request.Data.TaxCodeLP,request.Data.SupplierCurrency.Id);
           

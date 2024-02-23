@@ -7,6 +7,10 @@
 <RadzenStack Orientation="Orientation.Vertical">
     <div>Create Supplier</div>
     <RadzenRow>
+        <AlertMessage Messages="@Model.ValidationErrors"></AlertMessage>
+    </RadzenRow>
+    
+    <RadzenRow>
         <RadzenColumn SizeXS="8" SizeSM="4">
             <RadzenStack Orientation="Orientation.Vertical">
                 <RadzenTemplateForm TItem="CreateSupplierRequest" Data="@Model">

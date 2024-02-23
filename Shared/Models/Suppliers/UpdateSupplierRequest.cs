@@ -9,7 +9,7 @@ namespace Shared.Models.Suppliers
         public string VendorCode { get; set; } = string.Empty;
         public string TaxCodeLD { get; set; } = string.Empty;
 
-        public string TaxCodeLP = string.Empty;
+        public string TaxCodeLP { get; set; } = string.Empty;
 
 
         public string? PhoneNumber { get; set; } = string.Empty;

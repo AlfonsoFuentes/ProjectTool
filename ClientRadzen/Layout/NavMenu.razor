@@ -1,22 +1,20 @@
 ﻿
 <RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false">
-    <RadzenPanelMenuItem Text="Home" Icon="home" Path="/" />
-    <RadzenPanelMenuItem Text="Counter" Icon="account_box" Path="counter" />
-    <RadzenPanelMenuItem Text="Weather" Icon="account_box" Path="weather" />
    
+    
     <AuthorizeView>
         <Authorized>
-
+            <RadzenPanelMenuItem Text="MWOs Table" Path="mwotable" />
+            <RadzenPanelMenuItem Text="Purchase orders" Path="PurchaseOrdersTable" />
             @if (CurrentUser.IsSuperAdmin)
             {
                 <RadzenPanelMenuItem Text="CreateSuperAdmin" Path="CreateSuperAdmin" />
-
+                <RadzenPanelMenuItem Text="Users" Path="UserList" />
                 <RadzenPanelMenuItem Text="Register" Path="register" />
                 <RadzenPanelMenuItem Text="Brands" Path="brandstable" />
                 <RadzenPanelMenuItem Text="Suppliers" Path="Supplierstable" />
             }
-            <RadzenPanelMenuItem Text="MWOs Table" Path="mwotable" />
-            
+           
         </Authorized>
     </AuthorizeView>
 </RadzenPanelMenu>

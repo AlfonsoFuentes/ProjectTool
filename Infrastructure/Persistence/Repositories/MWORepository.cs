@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain.Entities.Data;
 using Microsoft.EntityFrameworkCore;
+using Shared.Models.BudgetItemTypes;
 
 namespace Infrastructure.Persistence.Repositories
 {
@@ -33,6 +34,7 @@ namespace Infrastructure.Persistence.Repositories
         public Task<IQueryable<MWO>> GetMWOList()
         {
             var mwos = Context.MWOs.
+                Include(x => x.BudgetItems).
                 AsNoTracking().
                 AsSplitQuery().
                 AsQueryable();
@@ -50,6 +52,22 @@ namespace Infrastructure.Persistence.Repositories
             return (await Context.MWOs.FindAsync(id))!;
         }
 
-       
+        public async Task<bool> ReviewIfNumberExist(string cecNumber)
+        {
+            return await Context.MWOs.AnyAsync(x => x.MWONumber == cecNumber);
+        }
+        public async Task<MWO> GetMWOWithItemsById(Guid id)
+        {
+            return (await Context.MWOs
+                .Include(x => x.BudgetItems)
+                .AsNoTracking()
+                .AsQueryable()
+                .AsSplitQuery()
+                .SingleOrDefaultAsync(x => x.Id == id))!;
+        }
+
+
+
+
     }
 }

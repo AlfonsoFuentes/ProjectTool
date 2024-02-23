@@ -31,6 +31,12 @@ namespace Server.Controllers
 
             return Ok(await Mediator.Send(new UpdateMWOCommand(request)));
         }
+        [HttpPost("approveMWO")]
+        public async Task<IActionResult> ApproveMWO(ApproveMWORequest request)
+        {
+
+            return Ok(await Mediator.Send(new ApproveMWOCommand(request)));
+        }
         [HttpGet("CreateNameExist")]
         public async Task<IActionResult> ReviewIfNameExist(string name)
         {
@@ -56,6 +62,11 @@ namespace Server.Controllers
         public async Task<IActionResult> Delete(MWOResponse request)
         {
             return Ok(await Mediator.Send(new DeleteMWOCommand(request)));
+        }
+        [HttpGet("GetMWOToApprove/{MWOId}")]
+        public async Task<IActionResult> GetMWOToApprove(Guid MWOId)
+        {
+            return Ok(await Mediator.Send(new GetMWOToApproveQuery(MWOId)));
         }
     }
 }

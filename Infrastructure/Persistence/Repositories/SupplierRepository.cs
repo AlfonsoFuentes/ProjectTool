@@ -31,12 +31,17 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<bool> ReviewNameExist(string name)
         {
-            return await Context.Suppliers.AnyAsync(x => x.Name == name);
+            if (string.IsNullOrEmpty(name)) return false;
+
+            var retorno= await Context.Suppliers.AnyAsync(x => x.Name == name);
+            return retorno;
         }
 
         public async Task<bool> ReviewVendorCodeExist(string vendorcode)
         {
-            return await Context.Suppliers.AnyAsync(x => x.VendorCode == vendorcode);
+            if (string.IsNullOrEmpty(vendorcode)) return false;
+            var retorno = await Context.Suppliers.AnyAsync(x => x.VendorCode == vendorcode);
+            return retorno;
         }
 
         public async Task<bool> ReviewEmailExist(string? email)

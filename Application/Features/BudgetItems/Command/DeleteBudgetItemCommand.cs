@@ -1,36 +1,56 @@
 ﻿using Application.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
+using System;
 
 namespace Application.Features.BudgetItems.Command
 {
-    public record DeleteBudgetItemCommand(BudgetItemResponse Data):IRequest<IResult>;
-    public class DeleteBudgetItemCommandHandler:IRequestHandler<DeleteBudgetItemCommand,IResult>
+    public record DeleteBudgetItemCommand(BudgetItemResponse Data) : IRequest<IResult>;
+    public class DeleteBudgetItemCommandHandler : IRequestHandler<DeleteBudgetItemCommand, IResult>
     {
         private IAppDbContext _appDbContext;
-        public DeleteBudgetItemCommandHandler(IAppDbContext appDbContext)
+        private IBudgetItemRepository Repository { get; set; }
+        public DeleteBudgetItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository)
         {
             _appDbContext = appDbContext;
+            Repository = repository;
         }
 
         public async Task<IResult> Handle(DeleteBudgetItemCommand request, CancellationToken cancellationToken)
         {
-            var row=await _appDbContext.BudgetItems.FindAsync(request.Data.Id);
-            if (row==null)
+            var row = await _appDbContext.BudgetItems
+                .Include(x => x.TaxesItems)
+                .SingleOrDefaultAsync(x => x.Id == request.Data.Id);
+           
+            if (row == null)
             {
                 return Result.Fail($"{request.Data.Name} was not found!");
-                
+
+            }
+            if(row.IsMainItemTaxesNoProductive)
+            {
+                return Result.Fail($"{request.Data.Name} can not remove because is taxes non productive!");
+            }
+            var rowTaxes = await _appDbContext.TaxesItems
+                .SingleOrDefaultAsync(x => x.SelectedId == request.Data.Id);
+            if (rowTaxes!=null){
+
+                _appDbContext.TaxesItems.Remove(rowTaxes!);
             }
 
-            _appDbContext.BudgetItems.Remove(row); 
-            var result=await _appDbContext.SaveChangesAsync(cancellationToken); 
-            if(result>0)
+            _appDbContext.BudgetItems.Remove(row);
+
+            var result = await _appDbContext.SaveChangesAsync(cancellationToken);
+            await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
+            if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} was removed succesfully!");
             }
             return Result.Fail($"{request.Data.Name} was not removed succesfully!");
         }
+
     }
 
 }

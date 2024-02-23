@@ -55,6 +55,17 @@ namespace ClientRadzen.Pages.MWOPages
         {
             _NavigationManager.NavigateTo($"/BudgetItemtable/{mWOResponse.Id}");
         }
+        async Task Approve(MWOResponse mWOResponse)
+        {
+            var resultDialog = await DialogService.Confirm($"Are you sure Approved {mWOResponse.Name}?", "Confirm",
+                new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+            if (resultDialog.Value)
+            {
+                _NavigationManager.NavigateTo($"/ApproveMWO/{mWOResponse.Id}");
+                
+            }
+
+        }
         async Task Delete(MWOResponse mWOResponse)
         {
             var resultDialog =await DialogService.Confirm($"Are you sure delete {mWOResponse.Name}?", "Confirm Delete",

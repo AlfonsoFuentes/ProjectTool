@@ -8,14 +8,14 @@ namespace Client.Infrastructure.Managers.BudgetItems
     {
 
         Task<IResult> CreateBudgetItem(CreateBudgetItemRequest request);
-        Task<IResult> CreateEngContItem(CreateEngineeringContingencyRequest request);
+        Task<IResult> UpdateBudgetItem(UpdateBudgetItemRequest request);
         Task<IResult<ListBudgetItemResponse>> GetAllBudgetItemByMWO(Guid MWOId);
-        Task<IResult<BudgetItemResponse>> GetBudgetItemById(Guid Id);
+        Task<IResult<UpdateBudgetItemRequest>> GetBudgetItemById(Guid Id);
 
         Task<IResult> Delete(BudgetItemResponse request);
-        Task<IResult<double>> GetSumEngConPercentage(Guid MWOId);
-        Task<IResult<double>> GetSumBudget(Guid MWOId);
-        Task<IResult<double>> GetSumTaxes(Guid MWOId);
+        Task<IResult<DataforCreateBudgetItemResponse>> GetDataForCreateBudgetItem(Guid MWOId);
+       
+
     }
     public class BudgetItemService : IBudgetItemService
     {
@@ -32,36 +32,57 @@ namespace Client.Infrastructure.Managers.BudgetItems
                 var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateRegularItem", request);
                 return await httpresult.ToResult();
             }
-            if (request.IsEquipmentData)
+            else if (request.IsEquipmentData)
             {
                 var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEquipmentItem", request);
                 return await httpresult.ToResult();
             }
-            if (request.IsTaxesData)
+            else if (request.IsTaxesData)
             {
                 var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateTaxItem", request);
                 return await httpresult.ToResult();
             }
-            if (request.IsEngContData)
+            else if (request.IsEngContData)
             {
                 var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEngContItem", request);
                 return await httpresult.ToResult();
 
+            }
+            else if (request.IsAlteration)
+            {
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateAlterationItem", request);
+                return await httpresult.ToResult();
             }
             return await Result.FailAsync();
         }
 
-        public async Task<IResult> CreateEngContItem(CreateEngineeringContingencyRequest request)
+        public async Task<IResult> UpdateBudgetItem(UpdateBudgetItemRequest request)
         {
-            try
+            if (request.IsRegularData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEngContItem", request);
-
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateRegularItem", request);
                 return await httpresult.ToResult();
             }
-            catch (Exception ex)
+            else if (request.IsEquipmentData)
             {
-                string message = ex.Message;
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateEquipmentItem", request);
+                return await httpresult.ToResult();
+            }
+            else if (request.IsTaxesData)
+            {
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateTaxItem", request);
+                return await httpresult.ToResult();
+            }
+            else if (request.IsEngContData)
+            {
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateEngContItem", request);
+                return await httpresult.ToResult();
+
+            }
+            else if (request.IsAlteration)
+            {
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateAlterationItem", request);
+                return await httpresult.ToResult();
             }
             return await Result.FailAsync();
         }
@@ -81,10 +102,10 @@ namespace Client.Infrastructure.Managers.BudgetItems
 
         }
 
-        public async Task<IResult<BudgetItemResponse>> GetBudgetItemById(Guid Id)
+        public async Task<IResult<UpdateBudgetItemRequest>> GetBudgetItemById(Guid Id)
         {
             var httpresult = await Http.GetAsync($"BudgetItem/{Id}");
-            return await httpresult.ToResult<BudgetItemResponse>();
+            return await httpresult.ToResult<UpdateBudgetItemRequest>();
         }
 
         public async Task<IResult> Delete(BudgetItemResponse request)
@@ -93,22 +114,12 @@ namespace Client.Infrastructure.Managers.BudgetItems
             return await httpresult.ToResult();
         }
 
-        public async Task<IResult<double>> GetSumEngConPercentage(Guid MWOId)
-        {
-            var httpresult = await Http.GetAsync($"BudgetItem/SumPercEngContItems/{MWOId}");
-            return await httpresult.ToResult<double>();
-        }
+      
 
-        public async Task<IResult<double>> GetSumBudget(Guid MWOId)
+        public async Task<IResult<DataforCreateBudgetItemResponse>> GetDataForCreateBudgetItem(Guid MWOId)
         {
-            var httpresult = await Http.GetAsync($"BudgetItem/SumBudgetItems/{MWOId}");
-            return await httpresult.ToResult<double>();
-        }
-
-        public async Task<IResult<double>> GetSumTaxes(Guid BudgetItemId)
-        {
-            var httpresult = await Http.GetAsync($"BudgetItem/SumTaxesBudget/{BudgetItemId}");
-            return await httpresult.ToResult<double>();
+            var httpresult = await Http.GetAsync($"BudgetItem/GetDataForCreateBudget/{MWOId}");
+            return await httpresult.ToResult<DataforCreateBudgetItemResponse>();
         }
     }
 }

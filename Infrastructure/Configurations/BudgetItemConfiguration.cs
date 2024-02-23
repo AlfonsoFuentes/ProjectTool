@@ -14,8 +14,8 @@ namespace Infrastructure.Configurations
             builder.HasMany(x => x.TaxesItems).WithOne(t => t.BudgetItem).HasForeignKey(e => e.BudgetItemId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(x => x.Selecteds).WithOne(t => t.Selected).HasForeignKey(x => x.SelectedId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.PurchaseOrderItems).WithOne(t => t.BudgetItem).HasForeignKey(x => x.BudgetItemId).OnDelete(DeleteBehavior.NoAction);
 
-           
         }
 
     }

@@ -8,8 +8,10 @@ namespace Client.Infrastructure.Managers.MWOS
 {
     public interface IMWOService : IManager
     {
+        Task<IResult<ApproveMWORequest>> GetMWOByIdToApprove(Guid MWOId);
         Task<IResult> UpdateMWO(UpdateMWORequest request);
         Task<IResult> CreateMWO(CreateMWORequest request);
+        Task<IResult> ApproveMWO(ApproveMWORequest request);
         Task<bool> ReviewIfNameExist(string name);
         Task<bool> ReviewIfNameExist(UpdateMWORequest name);
         Task<IResult<List<MWOResponse>>> GetAllMWO();
@@ -87,6 +89,28 @@ namespace Client.Infrastructure.Managers.MWOS
         {
             var httpresult = await Http.PostAsJsonAsync($"mwo/Delete", request);
             return await httpresult.ToResult();
+        }
+
+        public async Task<IResult> ApproveMWO(ApproveMWORequest request)
+        {
+            try
+            {
+                var httpresult = await Http.PostAsJsonAsync("MWO/approveMWO", request);
+
+                return await httpresult.ToResult();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+            return await Result.FailAsync();
+        }
+
+        public async Task<IResult<ApproveMWORequest>> GetMWOByIdToApprove(Guid MWOId)
+        {
+            var httpresult = await Http.GetAsync($"mwo/GetMWOToApprove/{MWOId}");
+            return await httpresult.ToResult<ApproveMWORequest>();
+
         }
     }
 }

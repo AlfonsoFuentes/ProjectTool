@@ -8,7 +8,7 @@
 
         public string TaxCodeLP { get; set; } = string.Empty;
 
-
+        public ICollection<PurchaseOrder> PurchaseOrders { get; set; }=new List<PurchaseOrder>();
         public string? PhoneNumber { get; set; } = string.Empty;
         public string? ContactName { get; set; } = string.Empty;
         public string? Address { get; set; } = string.Empty;

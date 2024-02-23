@@ -33,7 +33,7 @@ namespace Application.Features.Suppliers.Queries
                 ContactEmail = e.ContactEmail!,
                 ContactName = e.ContactName!,
                 PhoneNumber = e.PhoneNumber!,
-                SupplierCurrency = CurrencyEnum.GetName(e.SupplierCurrency),
+                SupplierCurrency = CurrencyEnum.GetType(e.SupplierCurrency),
                 TaxCodeLD = e.TaxCodeLD,
                 TaxCodeLP = e.TaxCodeLP,
                 VendorCode = e.VendorCode,

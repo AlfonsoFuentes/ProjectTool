@@ -1,4 +1,6 @@
-﻿namespace Shared.Models.Suppliers
+﻿using Shared.Models.Currencies;
+
+namespace Shared.Models.Suppliers
 {
     public class SupplierResponse
     {
@@ -15,7 +17,7 @@
         public string Address { get; set; } = string.Empty;
         public string ContactEmail { get; set; } = string.Empty;
 
-        public string SupplierCurrency { get; set; } = string.Empty;
+        public CurrencyEnum SupplierCurrency { get; set; } = CurrencyEnum.None;
         public string CreatedBy { get; set; } = string.Empty;
         public string CreatedOn { get; set; } = string.Empty;
     }

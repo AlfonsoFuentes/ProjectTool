@@ -9,7 +9,7 @@ namespace Client.Infrastructure.IdentityModels.Validations
         {
 
             _accountManager = accountManager;
-            RuleFor(x => x.UserName).NotEmpty().WithMessage("Must Supply User Name");
+          
             RuleFor(x => x.Email).NotEmpty().WithMessage("Must Supply email");
             RuleFor(x => x.Email).MustAsync(ReviewEmailExist).WithMessage("Email already exist");
             RuleFor(x => x.Role).NotEmpty().WithMessage("Must Supply Role");

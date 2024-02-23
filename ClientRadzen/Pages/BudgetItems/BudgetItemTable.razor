@@ -1,47 +1,76 @@
 ﻿@page "/BudgetItemtable/{MWOId:guid}"
+@using Shared.Models.MWOStatus
 
 <RadzenStack Orientation="Orientation.Vertical">
 
-    <div>
-        Items for MWO : @MWOName
-    </div>
+    <RadzenRow>
+        <RadzenText TextStyle="TextStyle.H6">Items for MWO : @Response.MWO.Name</RadzenText>
 
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenText TextStyle="TextStyle.Subtitle2">Appropiation:  @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.Appropiation)</RadzenText>
+            <RadzenText TextStyle="TextStyle.Subtitle2">Capital: @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.Capital)</RadzenText>
+            <RadzenText TextStyle="TextStyle.Subtitle2">Expenses: @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.Expenses)</RadzenText>
 
-    <RadzenStack Orientation="Orientation.Horizontal">
-        <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="Add New" Click="@AddNewBudgetItem" />
-        <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="Edit" Click="@(()=>Edit(selectedRow))" Disabled=@(selectedRow==null) />
-        <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="Delete" Click="@(()=>Delete(selectedRow))" Disabled=@(selectedRow==null) />
-    </RadzenStack>
-
-
-
-    <RadzenDataGrid @ref="grid" AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
-                    AllowGrouping="true" AllowSorting="true" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
-                    Density="Density.Default" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                    FilterPopupRenderMode="PopupRenderMode.OnDemand" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedBudgetItems RowClick=OnRowClick
-                    Data="@FilteredItems" TItem="BudgetItemResponse" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
-        <Columns>
-            <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.Nomenclatore)"  Filterable="false" Title="ID" Frozen="false" Width="50px"
-                                  TextAlign="TextAlign.Left" Groupable=false />
-            <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.Type)" Filterable="true" Title="Type" Frozen="false" Width="100px"
-                                  TextAlign="TextAlign.Left" Groupable=true />
-            <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.Name)" Filterable="false" Title="Name" Frozen="false" Width="100px"
-                                  TextAlign="TextAlign.Left" Groupable=false />
-            
-            <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.Budget)" Filterable="false" Title="Budget, USD" Frozen="false" Width="100px"
-                                  TextAlign="TextAlign.Left" Groupable=false />
-            @if (CurrentUser.IsSuperAdmin)
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenStack Orientation="Orientation.Horizontal">
+                @if (Response.MWO.Status.Id == MWOStatusEnum.Created.Id)
             {
-                <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.CreatedBy)" Filterable="false" Title="Created By" Frozen="false" Width="100px"
-                                      TextAlign="TextAlign.Left" Groupable=false />
-                <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.CreatedOn)" Filterable="false" Title="Created On" Frozen="false" Width="100px"
-                                      TextAlign="TextAlign.Left" Groupable=false />
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="Add New" Click="@AddNewBudgetItem" />
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="Edit" Click="@(()=>Edit(selectedRow))" Disabled=@(selectedRow==null) />
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="Delete" Click="@(()=>Delete(selectedRow))" Disabled=@(selectedRow==null) />
 
             }
+            else
+            {
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="@($"Create PO")" Click="@(()=>GoToCreatePurchaseOrder(selectedRow))" Disabled=@(DisableCreatePurchaseOrderButton) />
 
 
-        </Columns>
-    </RadzenDataGrid>
+            }
+            <RadzenButton ButtonStyle="ButtonStyle.Primary" class="mt-2 mb-4" Text="Go to MWOs table" Click="@(()=>GotoMWOTable())" />
+        </RadzenStack>
+
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenDataGrid @ref="grid" AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
+                        AllowGrouping="true" AllowSorting="true" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                        Density="Density.Default" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                        AllowVirtualization="true" Style="height:800px"
+                        FilterPopupRenderMode="PopupRenderMode.OnDemand" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedBudgetItems RowClick=OnRowClick
+                        Data="@FilteredItems" TItem="BudgetItemResponse" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+            <Columns>
+                <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.Nomenclatore)" Filterable="false" Title="ID" Frozen="false" Width="50px"
+                                      TextAlign="TextAlign.Left" Groupable=false />
+                <RadzenDataGridColumn TItem="BudgetItemResponse" Filterable="true" Title="Type" Frozen="false" Width="100px"
+                                      TextAlign="TextAlign.Left" Groupable=true>
+                    <Template Context="details">
+                        @details.Type.Name
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.Name)" Filterable="false" Title="Name" Frozen="false" Width="150px"
+                                      TextAlign="TextAlign.Left" Groupable=false />
+
+                <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.Budget)" Filterable="false" Title="Budget, USD" Frozen="false" Width="100px"
+                                      TextAlign="TextAlign.Left" Groupable=false>
+                    <Template Context="detail">
+                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.Budget)
+                    </Template>
+                </RadzenDataGridColumn>
+                @if (CurrentUser.IsSuperAdmin)
+                {
+                    <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.CreatedBy)" Filterable="false" Title="Created By" Frozen="false" Width="100px"
+                                          TextAlign="TextAlign.Left" Groupable=false />
+                    <RadzenDataGridColumn TItem="BudgetItemResponse" Property="@nameof(BudgetItemResponse.CreatedOn)" Filterable="false" Title="Created On" Frozen="false" Width="100px"
+                                          TextAlign="TextAlign.Left" Groupable=false />
+
+                }
+
+
+            </Columns>
+        </RadzenDataGrid>
+
+    </RadzenRow>
 </RadzenStack>
 @code {
 

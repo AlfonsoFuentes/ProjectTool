@@ -15,12 +15,6 @@ namespace Infrastructure.Context
         {
             CurrentUser = currentUser;
         }
-
-        public DbSet<MWO> MWOs { get; set; }
-        public DbSet<Brand> Brands { get; set; }
-        public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<BudgetItem> BudgetItems { get; set; }
-        public DbSet<TaxesItem> TaxesItems { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach (var entry in ChangeTracker.Entries<IBaseEntity>().ToList())
@@ -69,5 +63,13 @@ namespace Infrastructure.Context
             base.OnModelCreating(builder);
 
         }
+        public DbSet<MWO> MWOs { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<BudgetItem> BudgetItems { get; set; }
+        public DbSet<TaxesItem> TaxesItems { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+        public DbSet<DownPayment> DownPayments { get; set; }
     }
 }

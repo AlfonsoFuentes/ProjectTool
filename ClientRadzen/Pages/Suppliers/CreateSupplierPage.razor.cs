@@ -37,13 +37,7 @@ namespace ClientRadzen.Pages.Suppliers
                 }
                 else
                 {
-                    NotificationService.Notify(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Error,
-                        Summary = "Error Summary",
-                        Detail = result.Message,
-                        Duration = 4000
-                    });
+                    Model.ValidationErrors = result.Messages;
                 }
             }
 

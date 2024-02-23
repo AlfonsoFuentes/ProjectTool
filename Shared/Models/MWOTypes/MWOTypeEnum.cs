@@ -9,6 +9,10 @@ namespace Shared.Models.MWOTypes
 {
     public class MWOTypeEnum
     {
+        public override string ToString()
+        {
+            return Name;
+        }
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public static MWOTypeEnum Create(int id, string name) => new MWOTypeEnum() { Id = id, Name = name };

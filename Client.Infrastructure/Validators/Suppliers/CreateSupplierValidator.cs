@@ -4,35 +4,25 @@ namespace Client.Infrastructure.Validators.Suppliers
 {
     public class CreateSupplierValidator : AbstractValidator<CreateSupplierRequest>
     {
-        private readonly ISupplierService Service;
+       
 
-        public CreateSupplierValidator(ISupplierService service)
+        public CreateSupplierValidator()
         {
-            Service = service;
+           
             RuleFor(x => x.Name).NotEmpty().WithMessage("Supplier Name must be defined!");
+            RuleFor(x => x.Name).NotNull().WithMessage("Supplier Name must be defined!");
             RuleFor(x => x.TaxCodeLD).NotEmpty().NotNull().WithMessage("Tax Code LD must be defined!");
             RuleFor(x => x.TaxCodeLP).NotEmpty().NotNull().WithMessage("Tax Code LP must be defined!");
             RuleFor(x => x.SupplierCurrency).NotEqual(Shared.Models.Currencies.CurrencyEnum.None).WithMessage("Supplier Currency must be defined!");
-            RuleFor(x => x.Name).MustAsync(ReviewIfNameExist).WithMessage($"Supplier Name Already exist");
-            RuleFor(x => x.VendorCode).MustAsync(ReviewIfVendorCodeExist).WithMessage($"Vendor Code Already exist");
-
-
+           
+            RuleFor(x => x.VendorCode).NotEmpty().WithMessage("Supplier vendor Code must be defined!");
+            RuleFor(x => x.VendorCode).NotNull().WithMessage("Supplier vendor Code must be defined!");
+            RuleFor(customer => customer.VendorCode).Matches("^[0-9]*$").WithMessage("Supplier vendor Code must be number!");
+            RuleFor(customer => customer.TaxCodeLP).Matches("^[0-9]*$").WithMessage("Supplier vendor Code must be number!");
+            RuleFor(customer => customer.TaxCodeLD).Matches("^[0-9]*$").WithMessage("Supplier vendor Code must be number!");
+       
         }
 
-        async Task<bool> ReviewIfNameExist(string name, CancellationToken cancellationToken)
-        {
-            var result = await Service.ReviewIfNameExist(name);
-            return !result;
-        }
-        async Task<bool> ReviewIfVendorCodeExist(string vendorcode, CancellationToken cancellationToken)
-        {
-            var result = await Service.ReviewIfVendorCodeExist(vendorcode);
-            return !result;
-        }
-        async Task<bool> ReviewIfEmailExist(string? email, CancellationToken cancellationToken)
-        {
-            var result = await Service.ReviewIfEmailExist(email);
-            return !result;
-        }
+        
     }
 }

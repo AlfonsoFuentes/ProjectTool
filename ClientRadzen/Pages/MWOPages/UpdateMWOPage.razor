@@ -3,7 +3,12 @@
 <PageTitle>Update MWO @mwoName</PageTitle>
 
 <RadzenStack Orientation="Orientation.Vertical">
-    <div>Update MWO @mwoName</div>
+        <RadzenRow>
+            <RadzenText TextStyle="TextStyle.DisplayH5" Text="@($"Update MWO {mwoName} ")"></RadzenText>
+        </RadzenRow>
+        <RadzenRow>
+            <AlertMessage Messages="@Model.ValidationErrors"></AlertMessage>
+        </RadzenRow>
     <RadzenRow>
         <RadzenColumn SizeXS="8" SizeSM="4">
             <RadzenStack Orientation="Orientation.Vertical">
@@ -12,17 +17,46 @@
                    
                     <RadzenFormField Text="Name" Style="width: 100%;">
                         <RadzenTextBox @bind-Value=@Model.Name AutoComplete class="w-100"
-                                        Change=ChangeName Name="name" />
+                                        @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
+                                      Name="name" />
 
                      </RadzenFormField>
                      <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
-                     <ValidationMessage For="() => Model" style="color:red; font-size:x-small;" />
+                   
                      <RadzenFormField Text="Type" Style="width: 100%;">
                          <RadzenDropDown @bind-Value=@Model.Type Data=@MWOTypeEnum.List Style="width: 100%; max-width: 400px;"
                                          Name="type" TextProperty="Name"
                                          TValue="MWOTypeEnum" />
                      </RadzenFormField>
                      <ValidationMessage For="() => Model.Type" style="color:red; font-size:x-small;" />
+                     <RadzenFormField Text="Capitalized Salaries" Style="width: 100%;">
+                         <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageEngineering Style="width:100%"
+                                        @oninput="@((arg)=>Model.ChangePercentageEngineering(arg.Value!.ToString()!))"
+                                        Name="salaries" />
+
+                     </RadzenFormField>
+                     <ValidationMessage For="() => Model.PercentageEngineering" style="color:red; font-size:x-small;" />
+                     <RadzenFormField Text="Contingency" Style="width: 100%;">
+                         <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageContingency Style="width:100%"
+                                        @oninput="@((arg)=>Model.ChangePercentageContingency(arg.Value!.ToString()!))"
+                                        Name="contingency" />
+
+                     </RadzenFormField>
+                     <ValidationMessage For="() => Model.PercentageContingency" style="color:red; font-size:x-small;" />
+                     <RadzenLabel Text="Is Asset real Productive?" Component="True" />
+                     <RadzenSwitch @bind-Value=@Model.IsAssetProductive
+                                   InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})"></RadzenSwitch>
+                     @if (!Model.IsAssetProductive)
+                    {
+                        <RadzenFormField Text="Taxes No Productive" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageAssetNoProductive Style="width:100%"
+                            @oninput="@((arg)=>Model.ChangePercentageTaxes(arg.Value!.ToString()!))"
+                                           Name="taxesnoproductive" />
+
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.PercentageAssetNoProductive" style="color:red; font-size:x-small;" />
+
+                    }
                  </RadzenTemplateForm>
              </RadzenStack>
          </RadzenColumn>
@@ -38,11 +72,6 @@
  </RadzenStack>
 
  @code {
-    async Task ChangeName(string name)
-    {
-        Model.Name = name;
-      
-   
-    }
+    
 }
 

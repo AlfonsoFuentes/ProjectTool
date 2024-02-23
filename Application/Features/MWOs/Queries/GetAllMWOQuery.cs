@@ -1,8 +1,10 @@
 ﻿using Application.Interfaces;
+using Client.Infrastructure.Managers.CostCenter;
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Commons.UserManagement;
+using Shared.Models.BudgetItemTypes;
 using Shared.Models.MWO;
 using Shared.Models.MWOStatus;
 using Shared.Models.MWOTypes;
@@ -30,7 +32,7 @@ namespace Application.Features.MWOs.Queries
 
         public async Task<IResult<List<MWOResponse>>> Handle(GetAllMWOQuery request, CancellationToken cancellationToken)
         {
-            Expression<Func<MWO, bool>> filteruser = CurrentUser.IsSuperAdmin? p => p.CreatedBy !=null: p => p.CreatedBy == CurrentUser.UserId;
+            Expression<Func<MWO, bool>> filteruser = CurrentUser.IsSuperAdmin ? p => p.CreatedBy != null : p => p.CreatedBy == CurrentUser.UserId;
 
             var result = await Repository.GetMWOList();
             Expression<Func<MWO, MWOResponse>> expression = e => new MWOResponse
@@ -39,10 +41,12 @@ namespace Application.Features.MWOs.Queries
                 Name = e.Name,
                 CreatedBy = e.CreatedByUserName,
                 CreatedOn = e.CreatedDate.ToString(),
+                CECName = e.Status == MWOStatusEnum.Approved.Id ? $"CEC0000{e.MWONumber}" : "",
+                CostCenter = CostCenterEnum.GetName(e.CostCenter),
                 Type = MWOTypeEnum.GetName(e.Type),
-                Status= MWOStatusEnum.GetName(e.Status),
-                
-
+                Status = MWOStatusEnum.GetType(e.Status),
+                Capital = e.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+                Expenses = e.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
             };
 
 

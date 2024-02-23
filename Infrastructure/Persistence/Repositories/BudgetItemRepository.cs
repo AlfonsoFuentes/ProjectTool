@@ -4,6 +4,7 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItemTypes;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Infrastructure.Persistence.Repositories
@@ -24,26 +25,85 @@ namespace Infrastructure.Persistence.Repositories
 
         }
 
-        public async Task<bool> ReviewNameExist(string name)
+        public async Task<bool> ReviewNameExist(Guid MWOId, int budgetType, string name)
         {
 
-            return await Context.BudgetItems.AnyAsync(x => x.Name == name);
+            return await Context.BudgetItems.AnyAsync(x => x.MWOId == MWOId && x.Type == budgetType && x.Name == name);
         }
-        public async Task<bool> ReviewNameExist(Guid Id, string name)
+        public async Task<bool> ReviewNameExist(Guid Id, Guid MWOId, int budgetType, string name)
         {
 
-            return await Context.BudgetItems.Where(x => x.Id != Id).AnyAsync(x => x.Name == name);
+            return await Context.BudgetItems.Where(x => x.Id != Id && x.MWOId == MWOId && x.Type == budgetType).AnyAsync(x => x.Name == name);
         }
         public Task<IQueryable<BudgetItem>> GetBudgetItemList(Guid MWOId)
         {
             var BudgetItems = Context.BudgetItems.
+               Include(x => x.Brand).
                 AsNoTracking().
                 AsSplitQuery().
                 AsQueryable()
                 .Where(x => x.MWOId == MWOId);
             return Task.FromResult(BudgetItems);
         }
-
+        public async Task<List<BudgetItem>> GetBudgetItemForTaxesList(Guid MWOId)
+        {
+            var allitems = await Context.BudgetItems
+                .Where(x => x.MWOId == MWOId &&
+                !(x.Type == BudgetItemTypeEnum.Engineering.Id
+                || x.Type == BudgetItemTypeEnum.Contingency.Id
+                || x.Type == BudgetItemTypeEnum.Taxes.Id
+                || x.Type == BudgetItemTypeEnum.Alterations.Id))
+                .AsNoTracking()
+                .AsQueryable()
+                .AsSplitQuery().ToListAsync();
+            return allitems;
+        }
+        public async Task<List<BudgetItem>> GetEngContingencyItemsList(Guid MWOId)
+        {
+            var allitems = await
+                Context.BudgetItems
+                .Where(x => x.MWOId == MWOId && x.Percentage > 0 &&
+                (x.Type == BudgetItemTypeEnum.Engineering.Id
+                || x.Type == BudgetItemTypeEnum.Contingency.Id))
+                .AsQueryable().ToListAsync();
+            return allitems;
+        }
+        public async Task<List<BudgetItem>> GetBudgetItemForApplyEngContList(Guid MWOId)
+        {
+            var allitems = await Context.BudgetItems
+                .Where(x => x.MWOId == MWOId &&
+                !(x.Type == BudgetItemTypeEnum.Alterations.Id
+                || x.Type == BudgetItemTypeEnum.Engineering.Id
+                || x.Type == BudgetItemTypeEnum.Contingency.Id))
+                .AsNoTracking()
+                .AsQueryable()
+                .AsSplitQuery().ToListAsync();
+            return allitems;
+        }
+        public async Task<List<BudgetItem>> GetBudgetItemEngWithoutPercentageContList(Guid MWOId)
+        {
+            var allitems = await Context.BudgetItems
+                .Where(x => x.MWOId == MWOId &&
+                (x.Type == BudgetItemTypeEnum.Engineering.Id && x.Percentage == 0))
+                .AsNoTracking()
+                .AsQueryable()
+                .AsSplitQuery()
+                .ToListAsync();
+            return allitems;
+        }
+        public async Task<MWO> GetMWOWithItemsById(Guid MWOId)
+        {
+            return (await Context.MWOs
+                .Include(x => x.BudgetItems)
+                .AsNoTracking()
+                .AsQueryable()
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(x => x.Id == MWOId))!;
+        }
+        public async Task<MWO> GetMWOById(Guid MWOId)
+        {
+            return (await Context.MWOs.FindAsync(MWOId))!;
+        }
         public Task UpdateBudgetItem(BudgetItem entity)
         {
             Context.BudgetItems.Update(entity);
@@ -54,108 +114,160 @@ namespace Infrastructure.Persistence.Repositories
         {
             return (await Context.BudgetItems.FindAsync(id))!;
         }
-
-        public async Task<MWO> GetMWOWithItemsById(Guid MWOId)
+        public async Task<BudgetItem> GetBudgetItemWithBrandById(Guid id)
         {
-            return (await Context.MWOs
-                .Include(x => x.BudgetItems)
-                .AsNoTracking()
-                .AsQueryable()
+            return (await Context.BudgetItems
+                .Include(x => x.MWO)
+                .Include(x => x.Brand)
                 .AsSplitQuery()
-                .FirstOrDefaultAsync(x => x.Id == MWOId))!;
+                .SingleOrDefaultAsync(x => x.Id == id))!;
         }
-
-        public async Task UpdateEngCostContingency(Guid Mwoid)
+        public async Task<BudgetItem> GetBudgetItemWithTaxesById(Guid id)
         {
-            var allitems = await Context.BudgetItems
-                 .Where(x => x.MWOId == Mwoid &&
-                 (x.Type != BudgetItemTypeEnum.Engineering.Id
-                 || x.Type != BudgetItemTypeEnum.Contingency.Id
-                 || x.Type != BudgetItemTypeEnum.Alterations.Id))
-                 .AsNoTracking()
-                 .AsQueryable()
-                 .AsSplitQuery()
-                 .ToListAsync();
-
-            var sumBudget = allitems.Sum(x => x.Budget);
-
-            var engContItems = await Context.BudgetItems
-                .Where(x => x.MWOId == Mwoid &&
-                (x.Type == BudgetItemTypeEnum.Engineering.Id
-                || x.Type == BudgetItemTypeEnum.Contingency.Id))
-                .ToListAsync();
-
-            var sumPercEngCont = engContItems.Sum(x => x.Percentage);
-
-            foreach (var item in engContItems)
-            {
-                item.Budget = sumBudget * item.Percentage / (100-sumPercEngCont);
-                await UpdateBudgetItem(item);
-            }
-          
+            return (await Context.BudgetItems
+                .Include(x => x.MWO)
+                .Include(x => x.TaxesItems).ThenInclude(x => x.Selected)
+                .AsSplitQuery()
+                .SingleOrDefaultAsync(x => x.Id == id))!;
         }
-        public async Task CalculateTaxes(Guid Mwoid)
-        {
-            var allitems = await Context.BudgetItems.
-                Include(x => x.Selecteds)
-                 .Where(x => x.MWOId == Mwoid &&
-                 (x.Type == BudgetItemTypeEnum.Taxes.Id))
-                 .AsNoTracking()
-                 .AsQueryable()
-                 .AsSplitQuery()
-                 .ToListAsync();
 
-            var sum = 0;
-        }
+
+
+
 
         public async Task<double> GetSumEngConPercentage(Guid MWOId)
         {
-            var allitems = await Context.BudgetItems
-                 .Where(x => x.MWOId == MWOId &&
-                 (x.Type == BudgetItemTypeEnum.Engineering.Id
-                 || x.Type != BudgetItemTypeEnum.Contingency.Id))
-                 .AsNoTracking()
-                 .AsQueryable()
-                 .AsSplitQuery()
-                 .ToListAsync();
+            var allitems = await GetEngContingencyItemsList(MWOId);
             return allitems.Sum(x => x.Percentage);
         }
 
         public async Task<double> GetSumBudget(Guid MWOId)
         {
-            var allitems = await Context.BudgetItems
-                             .Where(x => x.MWOId == MWOId &&
-                             (x.Type != BudgetItemTypeEnum.Engineering.Id
-                             || x.Type != BudgetItemTypeEnum.Contingency.Id
-                             || x.Type != BudgetItemTypeEnum.Alterations.Id))
-                             .AsNoTracking()
-                             .AsQueryable()
-                             .AsSplitQuery()
-                             .ToListAsync();
-
-            return allitems.Sum(x => x.Budget);
+            var allitems = await GetBudgetItemForApplyEngContList(MWOId);
+            var itemsEngWithoutPercentage = await GetBudgetItemEngWithoutPercentageContList(MWOId);
+            var budget = allitems.Sum(x => x.Budget);
+            var EngCost = itemsEngWithoutPercentage.Sum(x => x.Budget);
+            var retorno = budget + EngCost;
+            return retorno;
         }
 
-        public async Task<double> GetSumTaxes(Guid BudgetItemId)
+        public Task<double> GetSumTaxes(Guid BudgetItemId)
         {
-            var allitems = await Context.TaxesItems
+            var allitems = Context.TaxesItems
                 .Include(x => x.Selected)
                 .Where(x => x.BudgetItemId == BudgetItemId)
                               .AsNoTracking()
                               .AsQueryable()
-                              .AsSplitQuery()
-                              .ToListAsync();
+                              .AsSplitQuery();
 
-            return allitems.Sum(x => x.Selected.Budget);
+
+            return Task.FromResult(allitems.Sum(x => x.Selected.Budget));
         }
 
         public async Task<string> GetMWOName(Guid MWOId)
         {
-            if(await Context.MWOs.AnyAsync(x=>x.Id==MWOId))
+            if (await Context.MWOs.AnyAsync(x => x.Id == MWOId))
             {
                 return (await Context.MWOs.FindAsync(MWOId))!.Name;
             }
             return string.Empty;
+        }
+       
+
+        public async Task AddTaxSelectedItem(TaxesItem BudgetItem)
+        {
+            await Context.TaxesItems.AddAsync(BudgetItem);
+        }
+        public Task UpdateTaxSelectedItem(TaxesItem BudgetItem)
+        {
+            Context.TaxesItems.Update(BudgetItem);
+            return Task.CompletedTask;
+        }
+        public async Task<TaxesItem> GetTaxesItemById(Guid Id)
+        {
+            return (await Context.TaxesItems
+            .SingleOrDefaultAsync(x => x.SelectedId == Id))!;
+        }
+        public Task<List<TaxesItem>> GetBudgetItemSelectedTaxesList(Guid Id)
+        {
+            var result = Context.TaxesItems
+                .Include(x => x.Selected)
+                .Where(x => x.BudgetItemId == Id)
+
+                .AsNoTracking().
+                AsQueryable().
+                AsSplitQuery()
+                .ToListAsync();
+            return result;
+        }
+        public async Task<List<BudgetItem>> GetItemToApplyTaxes(Guid MWOId)
+        {
+            var ExtractAlterationAndTaxes = await Context.BudgetItems
+                .Where(x => x.MWOId == MWOId &&
+                (x.Type != BudgetItemTypeEnum.Alterations.Id && x.Type != BudgetItemTypeEnum.Taxes.Id)).
+                AsNoTracking().
+                AsQueryable()
+                .ToListAsync();
+
+            var ExtractEngineering = ExtractAlterationAndTaxes.
+                Where(x => x.Percentage == 0).ToList();
+
+            return ExtractEngineering;
+
+        }
+        public async Task<BudgetItem> GetMainBudgetTaxItemByMWO(Guid MWOId)
+        {
+            return (await Context.BudgetItems.
+                Include(x => x.TaxesItems).
+                SingleOrDefaultAsync(x => x.IsMainItemTaxesNoProductive == true && x.MWOId == MWOId))!;
+
+        }
+
+        public async Task UpdateEngCostContingency(Guid Mwoid)
+        {
+
+            var mwo = await Context.MWOs.FindAsync(Mwoid);
+
+            var sumBudget = await GetSumBudget(Mwoid);
+
+            var engContItems = await GetEngContingencyItemsList(Mwoid);
+
+            var sumPercEngCont = engContItems.Sum(x => x.Percentage);
+
+            foreach (var item in engContItems)
+            {
+                item.Percentage = item.Type == BudgetItemTypeEnum.Engineering.Id ? 
+                    mwo!.PercentageEngineering : 
+                    mwo!.PercentageContingency;
+                item.Budget = sumBudget * item.Percentage / (100 - sumPercEngCont);
+                await UpdateBudgetItem(item);
+            }
+
+        }
+        public async Task UpdateTaxes(Guid MWOId)
+        {
+            var allItemsTaxes = await Context.BudgetItems
+                .Include(x => x.TaxesItems)
+                .ThenInclude(x => x.Selected)
+                .Where(x => x.MWOId == MWOId && x.Type == BudgetItemTypeEnum.Taxes.Id).
+                ToListAsync();
+
+
+            foreach (var item in allItemsTaxes)
+            {
+                var sumbudgetTaxesSelectedItems = item.TaxesItems.Sum(x => x.Selected.Budget);
+                item.Budget = item.Percentage / 100 * sumbudgetTaxesSelectedItems;
+                await UpdateBudgetItem(item);
+            }
+
+        }
+        public async Task UpdateTaxesAndEngineeringContingencyItems(Guid MWOId, CancellationToken cancellationToken)
+        {
+            await UpdateTaxes(MWOId);
+            await Context.SaveChangesAsync(cancellationToken);
+
+            await UpdateEngCostContingency(MWOId);
+            await Context.SaveChangesAsync(cancellationToken);
         }
     }
 }

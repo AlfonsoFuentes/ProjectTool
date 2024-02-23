@@ -1,0 +1,185 @@
+﻿@page "/UpdateBudgetItem/{Id:guid}"
+<PageTitle>Update Item @Model.Name</PageTitle>
+
+    <RadzenStack Orientation="Orientation.Vertical">
+        <RadzenRow>
+            <RadzenText TextStyle="TextStyle.DisplayH5" Text="@($"Update Item: {Model.Name} in MWO: {Model.MWOName}")"></RadzenText>
+        </RadzenRow>
+        <RadzenRow>
+            <AlertMessage Messages="@Model.ValidationErrors"></AlertMessage>
+        </RadzenRow>
+
+        
+    <AlertMessage Messages="@Model.ValidationErrors"></AlertMessage>
+    <RadzenRow>
+        <RadzenColumn SizeXS="8" SizeSM="4">
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenTemplateForm TItem="UpdateBudgetItemRequest" Data="@Model">
+                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                    <RadzenFormField Text="Type" Style="width: 100%;">
+                        <RadzenDropDown @bind-Value=@Model.Type Data=@BudgetItemTypeEnum.List Style="width: 100%;"
+                                        Disabled=@(Model.Type != BudgetItemTypeEnum.None)
+                                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
+                                        AllowFiltering="true"
+                                        Name="type" TextProperty="Name"
+                                        TValue="BudgetItemTypeEnum" />
+                    </RadzenFormField>
+
+                    @if (Model.Type != BudgetItemTypeEnum.None)
+                    {
+                        <RadzenFormField Text="Name" Style="width: 100%;">
+                            <RadzenTextBox @bind-Value=@Model.Name class="w-100"
+                                           @oninput="@(args=>Model.ChangeName(args.Value!.ToString()!))" Name="name" />
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+
+                        @if (Model.IsRegularData || Model.IsEquipmentData || Model.IsAlteration)
+                        {
+
+                            <RadzenFormField Text="Quantity" Style="width: 100%;">
+                                <RadzenNumeric @bind-Value=@Model.Quantity class="w-100" TValue=double
+                                ShowUpDown=false
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="Quantity" @oninput=@(args =>Model.ChangeQuantity(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+
+                            <RadzenFormField Text="Unitary Cost, USD" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" @bind-Value=@Model.UnitaryCost class="w-100" TValue=double
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="UnitaryCost" @oninput=@(args =>Model.ChangeUnitaryCost(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+
+                        }
+                        @if (Model.IsEquipmentData)
+                        {
+                            <RadzenLabel Text="Is Existing in Plant?" Component="True" />
+                            <RadzenSwitch @bind-Value=@Model.Existing
+                                          InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})"></RadzenSwitch>
+                        }
+                        if (Model.IsTaxesData)
+                        {
+                            <RadzenFormField Text="Percentage" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" Value=@Model.Percentage class="w-100" TValue=double
+                                               Max=100 Min=0
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="Percentage" @oninput=@(args =>Model.ChangePercentage(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+                        }
+                        if (Model.IsEngineeringData)
+                        {
+                            @if (Model.Percentage > 0)
+                            {
+                                <RadzenFormField Text="Percentage" Style="width: 100%;">
+                                    <RadzenNumeric ShowUpDown="false" Value=@Model.Percentage class="w-100" TValue=double
+                                                   Max=100 Min=0
+                                                   InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                                   Name="Percentage" @oninput=@(args =>Model.ChangePercentage(args.Value!.ToString()!)) />
+
+                                </RadzenFormField>
+                            }
+                            else
+                            {
+                                <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                                    <RadzenNumeric ShowUpDown="false" Value=@Model.Budget class="w-100" TValue=double
+                                                   InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                                   Name="Budget" @oninput=@(args =>Model.ChangeBudget(args.Value!.ToString()!)) />
+
+                                </RadzenFormField>
+                            }
+
+
+                        }
+                        if (Model.IsContingencyData)
+                        {
+                            <RadzenFormField Text="Percentage" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" Value=@Model.Percentage class="w-100" TValue=double
+                                               Max=100 Min=0
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="Percentage" @oninput=@(args =>Model.ChangePercentage(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+
+
+                        }
+
+                        <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown="false" Value=@Model.Budget class="w-100" TValue=double
+                                           Name="Budget" Disabled=true />
+
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Budget" style="color:red; font-size:x-small;" />
+                    }
+                </RadzenTemplateForm>
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn SizeXS="8" SizeSM="4">
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenTemplateForm TItem="UpdateBudgetItemRequest" Data="@Model">
+                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                    @if (Model.IsEquipmentData)
+                    {
+                        <RadzenFormField Text="Brand" Style="width: 100%;">
+                            <RadzenDropDown @bind-Value=@Model.Brand Data=@Brands Style="width: 100%;"
+                                            Name="type" TextProperty="Name"
+                                            TValue="BrandResponse" />
+                        </RadzenFormField>
+                        <RadzenFormField Text="Model" Style="width: 100%;">
+                            <RadzenTextBox @bind-Value=@Model.Model class="w-100" Name="Model" />
+                        </RadzenFormField>
+
+                        <RadzenFormField Text="Reference" Style="width: 100%;">
+                            <RadzenTextBox @bind-Value=@Model.Reference class="w-100" Name="Reference" />
+                        </RadzenFormField>
+
+                    }
+                    else if (Model.IsTaxesData)
+                    {
+                        @if (Model.BudgetItemDtos.Count == 0)
+                        {
+                            <AlertMessage Message="There is no items to apply Taxes"></AlertMessage>
+                        }
+                        else
+                        {
+                            <RadzenFormField Text="Sum taxes applied, USD" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" Value=@Model.SumBudgetTaxes class="w-100" TValue=double
+                                               Name="Budget" Disabled=true />
+
+                            </RadzenFormField>
+                            <RadzenText Text="Items to apply taxes" Style="width: 100%;"></RadzenText>
+                            <RadzenListBox @bind-Value=@Model.SelectedIdBudgetItemDtos Data=@Model.BudgetItemDtos TextProperty="Name"
+                                           ValueProperty="Id" Change="Model.ChangeTaxesItemList" 
+                                           Multiple=true AllowClear=true Placeholder="Select items" Style="width: 100%;height: 200px"
+                                           InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select Items" }})" />
+
+
+                            <ValidationMessage For="() => Model.SelectedBudgetItemDtos" style="color:red; font-size:x-small;" />
+                        }
+
+
+
+
+                    }
+                    else if (Model.IsEngContData)
+                    {
+
+                    }
+
+
+                </RadzenTemplateForm>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Disabled=@DisableCreateButton Click="SaveAsync">Update</RadzenButton>
+            <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync">Cancel</RadzenButton>
+        </RadzenStack>
+
+    </RadzenRow>
+</RadzenStack>
+@code {
+
+}

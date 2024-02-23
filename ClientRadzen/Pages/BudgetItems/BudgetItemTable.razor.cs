@@ -4,22 +4,23 @@ using Microsoft.AspNetCore.Components;
 using Radzen.Blazor;
 using Radzen;
 using Shared.Models.BudgetItems;
+using Azure;
 
 namespace ClientRadzen.Pages.BudgetItems
 {
-    public partial  class BudgetItemTable
+    public partial class BudgetItemTable
     {
         [Inject]
         private IBudgetItemService Service { get; set; }
         IList<BudgetItemResponse> selectedBudgetItems;
-        List<BudgetItemResponse> OriginalData { get; set; } = new();
-        private bool _trapFocus = true;
-        private bool _modal = true;
+
+
+        ListBudgetItemResponse Response { get; set; } = new();
         string nameFilter = string.Empty;
-        string MWOName = "";
+
         [Parameter]
         public Guid MWOId { get; set; }
-        IQueryable<BudgetItemResponse>? FilteredItems => OriginalData?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
+        IQueryable<BudgetItemResponse> FilteredItems => Response.BudgetItems?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
         protected override async Task OnInitializedAsync()
         {
             var user = CurrentUser.UserId;
@@ -39,11 +40,11 @@ namespace ClientRadzen.Pages.BudgetItems
         async Task UpdateAll()
         {
             var result = await Service.GetAllBudgetItemByMWO(MWOId);
-            
+
             if (result.Succeeded)
             {
-                OriginalData = result.Data.BudgetItems;
-                MWOName = result.Data.MWOName;
+                Response = result.Data;
+
 
             }
         }
@@ -56,8 +57,22 @@ namespace ClientRadzen.Pages.BudgetItems
         {
             _NavigationManager.NavigateTo($"/UpdateBudgetItem/{BudgetItemResponse.Id}");
         }
+        void GotoMWOTable()
+        {
+            _NavigationManager.NavigateTo($"/mwotable");
+        }
+        void GoToCreatePurchaseOrder(BudgetItemResponse BudgetItemResponse)
+        {
+            _NavigationManager.NavigateTo($"/CreatePurchaseOrder/{BudgetItemResponse.Id}");
+        }
         async Task Delete(BudgetItemResponse BudgetItemResponse)
         {
+            if (BudgetItemResponse.IsNotAbleToEditDelete)
+            {
+                await DialogService.Alert($"Can not remove {BudgetItemResponse.Name}", "Project Tool", new AlertOptions() { OkButtonText = "Yes" });
+
+                return;
+            }
             var resultDialog = await DialogService.Confirm($"Are you sure delete {BudgetItemResponse.Name}?", "Confirm Delete",
                 new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
             if (resultDialog.Value)
@@ -96,5 +111,6 @@ namespace ClientRadzen.Pages.BudgetItems
 
             selectedRow = args.Data == null ? null! : args.Data == selectedRow ? null! : args.Data;
         }
+        bool DisableCreatePurchaseOrderButton => selectedRow == null ? true : selectedRow.IsMainItemTaxesNoProductive;
     }
 }

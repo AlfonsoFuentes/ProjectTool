@@ -23,7 +23,7 @@ namespace ClientRadzen.Pages.MWOPages
                 var result = await Service.CreateMWO(Model);
                 if (result.Succeeded)
                 {
-                    ShowNotification(new NotificationMessage
+                    NotificationService.Notify(new NotificationMessage
                     {
                         Severity = NotificationSeverity.Success,
                         Summary = "Success",
@@ -35,23 +35,12 @@ namespace ClientRadzen.Pages.MWOPages
                 }
                 else
                 {
-                    ShowNotification(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Error,
-                        Summary = "Error Summary",
-                        Detail = result.Message,
-                        Duration = 4000
-                    });
+                    Model.ValidationErrors = result.Messages;
                 }
             }
 
         }
-        void ShowNotification(NotificationMessage message)
-        {
-            NotificationService.Notify(message);
-
-
-        }
+       
         private void CancelAsync()
         {
             _NavigationManager.NavigateTo("/mwotable");

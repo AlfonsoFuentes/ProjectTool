@@ -41,6 +41,10 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("InternalRole")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -145,6 +149,12 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("Existing")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsMainItemTaxesNoProductive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsNotAbleToEditDelete")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(128)");
 
@@ -188,10 +198,268 @@ namespace Infrastructure.Migrations
                     b.ToTable("BudgetItems");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Data.DownPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Approved")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ApprovedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CBSRequesNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CBSRequesText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeliveryDueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("DownPaymentAmount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("DownPaymentDueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DownpaymentJustification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DownpaymentName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DownpaymentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Incotherm")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ManagerEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Payterms")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Percentage")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ProformaInvoice")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PurchaseOrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("RealDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RequestDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PurchaseOrderId");
+
+                    b.ToTable("DownPayments");
+                });
+
             modelBuilder.Entity("Domain.Entities.Data.MWO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CostCenter")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAssetProductive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MWONumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PercentageAssetNoProductive")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PercentageContingency")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PercentageEngineering")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MWOs");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Data.PurchaseOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AccountAssigment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Actual")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Currency")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CurrencyDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("DiscountPercentage")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("IsAlteration")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDiscountApplied")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("MWOId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MainBudgetItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("POApprovedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("POClosedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("POExpectedDateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PONumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("POValueUSD")
+                        .HasColumnType("float");
+
+                    b.Property<int>("PurchaseOrderStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PurchaseRequisition")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PurchaseorderName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuoteCurrency")
+                        .HasColumnType("int");
+
+                    b.Property<string>("QuoteNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SPL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TaxCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("USDCOP")
+                        .HasColumnType("float");
+
+                    b.Property<double>("USDEUR")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MWOId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.ToTable("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Data.PurchaseOrderItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Actual")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("BudgetItemId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
@@ -205,6 +473,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsTaxNoProductive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(128)");
 
@@ -215,15 +486,22 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<double>("POValueUSD")
+                        .HasColumnType("float");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PurchaseOrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.ToTable("MWOs");
+                    b.HasIndex("BudgetItemId");
+
+                    b.HasIndex("PurchaseOrderId");
+
+                    b.ToTable("PurchaseOrderItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.Data.Supplier", b =>
@@ -474,6 +752,55 @@ namespace Infrastructure.Migrations
                     b.Navigation("MWO");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Data.DownPayment", b =>
+                {
+                    b.HasOne("Domain.Entities.Data.PurchaseOrder", "PurchaseOrder")
+                        .WithMany("DownPayments")
+                        .HasForeignKey("PurchaseOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PurchaseOrder");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Data.PurchaseOrder", b =>
+                {
+                    b.HasOne("Domain.Entities.Data.MWO", "MWO")
+                        .WithMany("PurchaseOrders")
+                        .HasForeignKey("MWOId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Data.Supplier", "Supplier")
+                        .WithMany("PurchaseOrders")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MWO");
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Data.PurchaseOrderItem", b =>
+                {
+                    b.HasOne("Domain.Entities.Data.BudgetItem", "BudgetItem")
+                        .WithMany("PurchaseOrderItems")
+                        .HasForeignKey("BudgetItemId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Data.PurchaseOrder", "PurchaseOrder")
+                        .WithMany("PurchaseOrderItems")
+                        .HasForeignKey("PurchaseOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BudgetItem");
+
+                    b.Navigation("PurchaseOrder");
+                });
+
             modelBuilder.Entity("Domain.Entities.Data.TaxesItem", b =>
                 {
                     b.HasOne("Domain.Entities.Data.BudgetItem", "BudgetItem")
@@ -551,6 +878,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Data.BudgetItem", b =>
                 {
+                    b.Navigation("PurchaseOrderItems");
+
                     b.Navigation("Selecteds");
 
                     b.Navigation("TaxesItems");
@@ -559,6 +888,20 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Data.MWO", b =>
                 {
                     b.Navigation("BudgetItems");
+
+                    b.Navigation("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Data.PurchaseOrder", b =>
+                {
+                    b.Navigation("DownPayments");
+
+                    b.Navigation("PurchaseOrderItems");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Data.Supplier", b =>
+                {
+                    b.Navigation("PurchaseOrders");
                 });
 #pragma warning restore 612, 618
         }

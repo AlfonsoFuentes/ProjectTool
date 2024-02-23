@@ -9,7 +9,7 @@ namespace Shared.Models.Suppliers
         public string TaxCodeLD { get; set; } = "751245";
 
         public string TaxCodeLP { get; set; } = "721031";
-
+        public List<string> ValidationErrors { get; set; } = new();
 
         public string? PhoneNumber { get; set; } = string.Empty;
         public string? ContactName { get; set; } = string.Empty;

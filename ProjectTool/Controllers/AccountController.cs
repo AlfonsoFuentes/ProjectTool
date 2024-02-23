@@ -19,15 +19,15 @@ namespace Server.Controllers
         private SignInManager<AplicationUser> signInManager;
         private UserManager<AplicationUser> userManager;
         private IUserStore<AplicationUser> userStore;
-        private RoleManager<IdentityRole> roleManager;
+
         private CurrentUser CurrentUser;
-        public AccountController(RoleManager<IdentityRole> roleManager,
+        public AccountController(
             IUserStore<AplicationUser> userStore,
             UserManager<AplicationUser> userManager,
             SignInManager<AplicationUser> signInManager,
             CurrentUser currentUser)
         {
-            this.roleManager = roleManager;
+
             this.userStore = userStore;
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -126,16 +126,17 @@ namespace Server.Controllers
         {
             SuperAdminRequest superAdminRequest = new()
             {
-                Name = "alfonsofuen@gmail.com",
+                Name = "Alfonso Fuentes",
+                Email = "alfonsofuen@gmail.com",
                 Password = "1506*Afd1974*"
 
             };
 
             var identity = new AplicationUser();
             await userManager.SetUserNameAsync(identity, superAdminRequest.Name);
-
+            identity.InternalRole = "SuperAdmin";
             var emailStore = (IUserEmailStore<AplicationUser>)userStore;
-            await emailStore.SetEmailAsync(identity, superAdminRequest.Name,
+            await emailStore.SetEmailAsync(identity, superAdminRequest.Email,
                 CancellationToken.None);
 
             var result = await userManager.CreateAsync(identity, superAdminRequest.Password);
@@ -143,16 +144,15 @@ namespace Server.Controllers
             var claims = new List<Claim>
             {
                              new(ClaimTypes.Name, superAdminRequest.Name),
-                             new(ClaimTypes.Email, superAdminRequest.Name),
+                             new(ClaimTypes.Email, superAdminRequest.Email),
                              new(ClaimTypes.Role, "SuperAdmin")
                          };
 
             await userManager.AddClaimsAsync(identity, claims);
-            var superAdminRole = new IdentityRole("SuperAdmin");
-            await roleManager.CreateAsync(superAdminRole);
-            await userManager.AddToRoleAsync(identity, "SuperAdmin");
 
-            return Ok(Result.Success());
+
+
+            return Ok(Result<IdentityResult>.Success(result));
         }
         [HttpGet("{email}")]
         public async Task<IActionResult> ReviewEmailExist(string email)
@@ -168,7 +168,7 @@ namespace Server.Controllers
 
             CurrentUser.UserId = result!.Id.ToString();
             CurrentUser.UserName = result!.UserName!;
-            CurrentUser.Roles = await userManager.GetRolesAsync(result);
+            CurrentUser.Role = result!.InternalRole!;
             var retorno = Result<CurrentUser>.Success(CurrentUser);
             return Ok(retorno);
         }
@@ -177,8 +177,8 @@ namespace Server.Controllers
             try
             {
                 var identity = new AplicationUser();
-                await userManager.SetUserNameAsync(identity, registerRequest.UserName);
-
+                await userManager.SetUserNameAsync(identity, registerRequest.Email);
+                identity.InternalRole = registerRequest.Role;
                 var emailStore = (IUserEmailStore<AplicationUser>)userStore;
                 await emailStore.SetEmailAsync(identity, registerRequest.Email,
                     CancellationToken.None);
@@ -187,23 +187,16 @@ namespace Server.Controllers
 
                 var claims = new List<Claim>
                          {
-                             new(ClaimTypes.Name, registerRequest.UserName),
+                             new(ClaimTypes.Name, registerRequest.Email),
                              new(ClaimTypes.Email, registerRequest.Email),
                              new(ClaimTypes.Role, registerRequest.Role)
                          };
 
                 await userManager.AddClaimsAsync(identity, claims);
-                var roleExist = await roleManager.RoleExistsAsync(registerRequest.Role);
-                if (!roleExist)
-                {
-                    var NewRole = new IdentityRole(registerRequest.Role);
-                    await roleManager.CreateAsync(NewRole);
 
-
-                }
-                await userManager.AddToRoleAsync(identity, registerRequest.Role);
                 RegisterResponse response = new()
                 {
+                    Email = registerRequest.Email,
                     Name = registerRequest.Email,
                     Password = registerRequest.Password,
                 };
@@ -212,8 +205,28 @@ namespace Server.Controllers
             catch (Exception ex)
             {
                 string message = ex.Message;
+                return Result<RegisterResponse>.Fail(message);
+
             }
-            return Result<RegisterResponse>.Fail();
+
+        }
+
+        [HttpGet("GetUserList")]
+        public async Task<IActionResult> GetUserList()
+        {
+            var resultManager = userManager.Users.ToList();
+            UsersResponse result = new()
+            {
+                Users = resultManager.Select(x => new CurrentUser()
+                {
+                    UserId = x.Id,
+                    UserName = x.Email!,
+                    Role = x.InternalRole,
+
+                }).ToList(),
+            };
+            var retorno = Result<UsersResponse>.Success(result);
+            return Ok(await Task.FromResult(retorno));
         }
     }
 }

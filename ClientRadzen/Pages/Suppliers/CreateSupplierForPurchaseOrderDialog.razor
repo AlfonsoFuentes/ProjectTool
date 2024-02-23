@@ -1,0 +1,66 @@
+﻿<RadzenStack Orientation="Orientation.Vertical">
+
+    <RadzenRow>
+        <AlertMessage Messages="@Model.ValidationErrors"></AlertMessage>
+    </RadzenRow>
+
+    <RadzenRow>
+       
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenTemplateForm TItem="CreateSupplierRequest" Data="@Model">
+                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                    <RadzenFormField Text="Name" Style="width: 100%;">
+                        <RadzenTextArea Rows="2" @bind-Value=@Model.Name class="w-100"
+                                        Change=ChangeName Name="name" />
+
+                    </RadzenFormField>
+                    <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                    <RadzenFormField Text="Vendor Code" Style="width: 100%;">
+                        <RadzenTextBox @bind-Value=@Model.VendorCode class="w-100" AutoComplete AutoCompleteType="AutoCompleteType.GivenName"
+                                        Name="vendorcode" />
+
+                     </RadzenFormField>
+
+                     <ValidationMessage For="() => Model.VendorCode" style="color:red; font-size:x-small;" />
+                     <RadzenFormField Text="Tax Code LD" Style="width: 100%;">
+                         <RadzenTextBox @bind-Value=@Model.TaxCodeLD class="w-100" AutoComplete AutoCompleteType="AutoCompleteType.GivenName"
+                                        Name="taxcodeld" />
+
+                     </RadzenFormField>
+                     <ValidationMessage For="() => Model.TaxCodeLD" style="color:red; font-size:x-small;" />
+
+                     <RadzenFormField Text="Tax Code LP" Style="width: 100%;">
+                         <RadzenTextBox @bind-Value=@Model.TaxCodeLP class="w-100" AutoComplete AutoCompleteType="AutoCompleteType.GivenName"
+                                        Name="taxcodelp" />
+
+                     </RadzenFormField>
+                     <ValidationMessage For="() => Model.TaxCodeLP" style="color:red; font-size:x-small;" />
+                     <RadzenFormField Text="Supplier Currency for purchase orders" Style="width: 100%;">
+                         <RadzenDropDown @bind-Value=@Model.SupplierCurrency Data=@CurrencyEnum.List Style="width: 100%;"
+                                         Name="suppliercurrency" TextProperty="Name"
+                                         TValue="CurrencyEnum" />
+
+
+
+                     </RadzenFormField>
+                     <ValidationMessage For="() => Model.SupplierCurrency" style="color:red; font-size:x-small;" />
+                 </RadzenTemplateForm>
+             </RadzenStack>
+  
+
+     </RadzenRow>
+     <RadzenRow>
+         <RadzenStack Orientation="Orientation.Horizontal">
+             <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Click="SaveAsync">Create</RadzenButton>
+             <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync">Cancel</RadzenButton>
+         </RadzenStack>
+
+     </RadzenRow>
+ </RadzenStack>
+
+@code {
+    void ChangeName(string name)
+    {
+        Model.Name = name;
+    }
+}

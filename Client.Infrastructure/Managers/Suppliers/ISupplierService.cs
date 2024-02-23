@@ -15,6 +15,7 @@ namespace Client.Infrastructure.Managers.Suppliers
         Task<IResult<UpdateSupplierRequest>> GetSupplierById(Guid id);
 
         Task<IResult> Delete(SupplierResponse request);
+        Task<IResult<SupplierResponse>> CreateSupplierForPurchaseOrder(CreateSupplierRequest request);
     }
     public class SupplierService : ISupplierService
     {
@@ -38,6 +39,21 @@ namespace Client.Infrastructure.Managers.Suppliers
                 string message = ex.Message;
             }
             return await Result.FailAsync();
+
+        }
+        public async Task<IResult<SupplierResponse>> CreateSupplierForPurchaseOrder(CreateSupplierRequest request)
+        {
+            try
+            {
+                var httpresult = await Http.PostAsJsonAsync("Supplier/CreateSupplierForPurchaseorder", request);
+
+                return await httpresult.ToResult<SupplierResponse>();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+            return await Result<SupplierResponse>.FailAsync();
 
         }
         public async Task<IResult> UpdateSupplier(UpdateSupplierRequest request)

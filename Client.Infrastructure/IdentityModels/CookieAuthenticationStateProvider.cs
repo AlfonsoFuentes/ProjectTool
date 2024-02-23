@@ -160,7 +160,7 @@ namespace Client.Infrastructure.IdentityModels
             if (retorno.Succeeded)
             {
                 _currentUser.UserId = retorno.Data.UserId;
-                _currentUser.Roles = retorno.Data.Roles;
+                _currentUser.Role = retorno.Data.Role;
                 _currentUser.UserName = retorno.Data.UserName;
                 return Result.Success();
             }

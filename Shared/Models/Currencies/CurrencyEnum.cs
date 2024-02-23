@@ -2,6 +2,10 @@
 {
     public class CurrencyEnum
     {
+        public override string ToString()
+        {
+            return Name;
+        }
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public static CurrencyEnum Create(int id, string name) => new CurrencyEnum() { Id = id, Name = name };

@@ -23,8 +23,8 @@
 
                 <RadzenStack Orientation="Orientation.Vertical">
 
-                    <RadzenFormField Text="Email" Variant="Variant.Text" Style="width: 100%;">
-                        <RadzenTextBox @bind-Value=@Input.Email AutoComplete class="w-100" aria-label="Default TextBox"
+                    <RadzenFormField Text="Email"  Style="width: 100%;">
+                        <RadzenTextBox @bind-Value=@Input.Email AutoComplete=true AutoCompleteType=AutoCompleteType.Email class="w-100" aria-label="Default TextBox"
                                         Placeholder="name@example.com" Name="email" Change="@((arg)=>ReviewIfMustChangePassword(arg))" />
 
                      </RadzenFormField>
@@ -32,8 +32,9 @@
                     {
                         @if (UserExist)
                         {
-                            <RadzenFormField Text="Password" Variant="Variant.Text" Style="width: 100%;">
-                                <RadzenPassword @bind-Value=@Input.Password AutoComplete class="w-100" aria-label="Default TextBox" Name="password" />
+                            <RadzenFormField Text="Password" Style="width: 100%;">
+                                <RadzenPassword @bind-Value=@Input.Password AutoComplete=true 
+                                class="w-100" aria-label="Default TextBox" Name="password"  AutoCompleteType="AutoCompleteType.CurrentPassword"/>
 
                              </RadzenFormField>
 
