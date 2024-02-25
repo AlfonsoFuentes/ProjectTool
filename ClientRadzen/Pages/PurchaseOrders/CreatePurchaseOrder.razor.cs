@@ -92,7 +92,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
                 new DialogOptions() { Width = "700px", Height = "512px", Resizable = true, Draggable = true });
             if (result != null)
             {
-                Supplier= result as SupplierResponse;
+                Supplier = result as SupplierResponse;
                 var resultData = await SupplierService.GetAllSupplier();
                 if (resultData.Succeeded)
                 {

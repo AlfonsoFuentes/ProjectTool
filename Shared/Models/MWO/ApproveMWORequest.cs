@@ -10,9 +10,7 @@ namespace Shared.Models.MWO
         public string Name { get; set; } = string.Empty;
         public string MWONumber { get; set; } = string.Empty;
         public CostCenterEnum CostCenter { get; set; } = CostCenterEnum.None;
-
-
-
+        public double PercentageTaxForAlterations { get; set; }
         public bool IsAssetProductive { get; set; } = true;
         public double PercentageAssetNoProductive { get; set; } = 19;
         public double PercentageEngineering { get; set; } = 6;
@@ -88,6 +86,16 @@ namespace Shared.Models.MWO
                 return;
 
             PercentageEngineering = percentage;
+
+        }
+        public void ChangeTaxForAlterations(string stringpercentage)
+        {
+            ValidationErrors.Clear();
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+                return;
+
+            PercentageTaxForAlterations = percentage;
 
         }
         public void ChangePercentageContingency(string stringpercentage)

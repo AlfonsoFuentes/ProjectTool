@@ -51,10 +51,10 @@ namespace Application.Features.PurchaseOrders.Queries
                 Currency = CurrencyEnum.GetType(purchaseOrder.Currency),
                 USDCOP = purchaseOrder.USDCOP,
                 USDEUR = purchaseOrder.USDEUR,
-                
-
+                IsAlteration = purchaseOrder.IsAlteration,
+                PercentageAlteration = purchaseOrder.MWO == null ? 0 : purchaseOrder.MWO.PercentageTaxForAlterations,
                 ItemsInPurchaseorder = purchaseOrder.PurchaseOrderItems
-                .Where(x => x.BudgetItem.Type != BudgetItemTypeEnum.Taxes.Id).Select(x => new ReceivePurchaseorderItemRequest()
+                .Where(x => x.BudgetItem.Type != BudgetItemTypeEnum.Taxes.Id && x.IsAlteration == false).Select(x => new ReceivePurchaseorderItemRequest()
                 {
                     PurchaseOrderItemName = x.Name,
                     PurchaseOrderItemId = x.Id,

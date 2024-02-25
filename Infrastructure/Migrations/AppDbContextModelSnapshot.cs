@@ -328,6 +328,9 @@ namespace Infrastructure.Migrations
                     b.Property<double>("PercentageEngineering")
                         .HasColumnType("float");
 
+                    b.Property<double>("PercentageTaxForAlterations")
+                        .HasColumnType("float");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -428,7 +431,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("SupplierId")
+                    b.Property<Guid?>("SupplierId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TaxCode")
@@ -472,6 +475,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAlteration")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsTaxNoProductive")
                         .HasColumnType("bit");
@@ -774,8 +780,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Data.Supplier", "Supplier")
                         .WithMany("PurchaseOrders")
                         .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("MWO");
 

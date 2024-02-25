@@ -33,7 +33,8 @@
         
     </RadzenRow>
     <RadzenDataGrid @ref="grid" AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced"
-                    AllowGrouping="true" AllowSorting="true" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                    AllowGrouping="true" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                    AllowVirtualization=true Style="height:800px" Responsive=true
                     Density="Density.Default" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterCleared=@FilterCleared
                     FilterPopupRenderMode="PopupRenderMode.OnDemand" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedPurchaseOrders
                     Data="@FilteredItems" TItem="PurchaseOrderResponse" ColumnWidth="300px" RowClick=OnRowClick
@@ -69,6 +70,8 @@
                                    Sortable=true Frozen="false" Width="120px" TextAlign="TextAlign.Left" Groupable=false />
 
              <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.PONumber)" Filterable="false" Title="PO#"
+                                   Sortable=true Frozen="false" Width="120px" TextAlign="TextAlign.Left" Groupable=false />
+             <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.PurchaseorderName)" Filterable="false" Title="PO#"
                                    Sortable=true Frozen="false" Width="120px" TextAlign="TextAlign.Left" Groupable=false />
 
              <RadzenDataGridColumn TItem="PurchaseOrderResponse" Property="@nameof(PurchaseOrderResponse.PurchaseOrderValue)"

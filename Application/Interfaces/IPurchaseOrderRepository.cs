@@ -21,8 +21,11 @@ namespace Application.Interfaces
         Task UpdatePurchaseOrderItem(PurchaseOrderItem purchaseOrderItem);
         Task<bool> ReviewIfPurchaseRequisitionExist(Guid PurchaseorderId,string pr); 
         Task<bool> ReviewIfPurchaseOrderExist(Guid PurchaseorderId, string po);
-
+        Task<PurchaseOrderItem> GetPurchaseOrderItemForTaxesForAlterationById(Guid PurchaseorderId,Guid BudgetItemId);
         Task<PurchaseOrderItem> GetPurchaseOrderItemForTaxesItemById(Guid purchaseOrderId);
         Task<PurchaseOrder> GetPurchaseOrderToEditById(Guid PurchaseOrderId);
+        Task<bool> ReviewIfNameExist(Guid PurchaseorderId, string name);
+        Task<PurchaseOrder> GetPurchaseOrderToApproveAlterationById(Guid PurchaseOrderId);
+        Task<PurchaseOrder> GetPurchaseOrderClosedById(Guid PurchaseOrderId);
     }
 }

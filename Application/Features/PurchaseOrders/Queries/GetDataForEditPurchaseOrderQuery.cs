@@ -52,10 +52,19 @@ namespace Application.Features.PurchaseOrders.Queries
                 Name = budgetItem.Name,
                 Type = BudgetItemTypeEnum.GetType(budgetItem.Type),
                 Nomenclatore = $"{BudgetItemTypeEnum.GetLetter(budgetItem.Type)}{budgetItem.Order}",
-                Assigned = budgetItem.PurchaseOrderItems.Count == 0 ? 0 :
-               budgetItem.PurchaseOrderItems.Where(x => x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
-                PotencialAssigned = budgetItem.PurchaseOrderItems.Count == 0 ? 0 :
-               budgetItem.PurchaseOrderItems.Where(x => x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                PurchaseOrders = budgetItem.PurchaseOrderItems.Count == 0 ? new() :
+                budgetItem.PurchaseOrderItems.Select(x => new PurchaseOrderItemForBudgetItemResponse()
+                {
+                    Actual = x.Actual,
+                    BudgetItemId = x.BudgetItemId,
+                    POValueUSD = x.POValueUSD,
+                    PurchaseorderItemId = x.PurchaseOrderId,
+                    PurchaseorderName = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.PurchaseorderName,
+                    PurchaseorderNumber = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.PONumber,
+                    Supplier = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.Supplier == null ? string.Empty : x.PurchaseOrder.Supplier.Name,
+                    PurchaseOrderStatus = x.PurchaseOrder == null ? PurchaseOrderStatusEnum.None : PurchaseOrderStatusEnum.GetType(x.PurchaseOrder.PurchaseOrderStatus),
+
+                }).ToList(),
             };
 
             MWOResponse mWOResponse = new()
@@ -78,17 +87,26 @@ namespace Application.Features.PurchaseOrders.Queries
                 x.Type != BudgetItemTypeEnum.Contingency.Id &&
                 x.Type != BudgetItemTypeEnum.Taxes.Id &&
                 x.Type != BudgetItemTypeEnum.Engineering.Id);
-            var BudgetItems = mwo.BudgetItems.Where(Criteria).Select(x => new BudgetItemResponse()
+            var BudgetItems = mwo.BudgetItems.Where(Criteria).Select(z => new BudgetItemResponse()
             {
-                Id = x.Id,
-                Name = x.Name,
-                Budget = x.Budget,
-                Nomenclatore = $"{BudgetItemTypeEnum.GetLetter(x.Type)}{x.Order}",
-                Type = BudgetItemTypeEnum.GetType(x.Type),
-                Assigned = x.PurchaseOrderItems.Count == 0 ? 0 : x.PurchaseOrderItems.Where(x =>
-                x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
-                PotencialAssigned = x.PurchaseOrderItems.Count == 0 ? 0 : x.PurchaseOrderItems.Where(x =>
-                x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                Id = z.Id,
+                Name = z.Name,
+                Budget = z.Budget,
+                Nomenclatore = $"{BudgetItemTypeEnum.GetLetter(z.Type)}{z.Order}",
+                Type = BudgetItemTypeEnum.GetType(z.Type),
+                PurchaseOrders = budgetItem.PurchaseOrderItems.Count == 0 ? new() :
+                budgetItem.PurchaseOrderItems.Select(x => new PurchaseOrderItemForBudgetItemResponse()
+                {
+                    Actual = x.Actual,
+                    BudgetItemId = x.BudgetItemId,
+                    POValueUSD = x.POValueUSD,
+                    PurchaseorderItemId = x.PurchaseOrderId,
+                    PurchaseorderName = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.PurchaseorderName,
+                    PurchaseorderNumber = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.PONumber,
+                    Supplier = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.Supplier == null ? string.Empty : x.PurchaseOrder.Supplier.Name,
+                    PurchaseOrderStatus = x.PurchaseOrder == null ? PurchaseOrderStatusEnum.None : PurchaseOrderStatusEnum.GetType(x.PurchaseOrder.PurchaseOrderStatus),
+
+                }).ToList(),
             }).OrderBy(x => x.Nomenclatore).ToList();
             EditPurchaseOrderCreatedRequest PurchaseOrder = new()
             {
@@ -100,7 +118,7 @@ namespace Application.Features.PurchaseOrders.Queries
                 CurrencyDate = purchaseOrder.CurrencyDate,
                 PurchaseorderId = purchaseOrder.Id,
                 QuoteNo = purchaseOrder.QuoteNo,
-                SupplierId = purchaseOrder.SupplierId,
+                SupplierId = purchaseOrder.Supplier == null ? Guid.Empty : purchaseOrder.Supplier.Id,
                 TaxCode = purchaseOrder.TaxCode,
                 USDCOP = purchaseOrder.USDCOP,
                 USDEUR = purchaseOrder.USDEUR,
@@ -114,7 +132,7 @@ namespace Application.Features.PurchaseOrders.Queries
                 PurchaseOrderStatusEnum = PurchaseOrderStatusEnum.GetType(purchaseOrder.PurchaseOrderStatus),
                 Supplier = purchaseOrder.Supplier == null ? new() : new()
                 {
-                    Id = purchaseOrder.SupplierId,
+                    Id = purchaseOrder.Supplier.Id,
                     Name = purchaseOrder.Supplier.Name,
                 },
                 PurchaseOrderItems = purchaseOrder.PurchaseOrderItems.Select(x =>

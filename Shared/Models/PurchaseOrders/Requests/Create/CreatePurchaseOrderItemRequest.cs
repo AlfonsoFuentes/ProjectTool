@@ -17,7 +17,7 @@ namespace Shared.Models.PurchaseOrders.Requests.Create
             USDCOP = usdcop;
             USDEUR = usdeur;
         }
-        public DateTime CurrencyDate { get; set; }
+     
 
         public string Name { get; set; } = string.Empty;
         public double Budget { get; set; }
@@ -82,6 +82,7 @@ namespace Shared.Models.PurchaseOrders.Requests.Create
             }
             CurrencyValue = currencyvalue;
         }
+     
         public double TotalValueUSDItem => Quantity * UnitaryCostInUSD;
         public double UnitaryCostInUSD => QuoteCurrency.Id == CurrencyEnum.USD.Id ?
             CurrencyValue : QuoteCurrency.Id == CurrencyEnum.COP.Id ?
@@ -90,4 +91,5 @@ namespace Shared.Models.PurchaseOrders.Requests.Create
         public double USDEUR { get; set; } = 1;
 
     }
+
 }

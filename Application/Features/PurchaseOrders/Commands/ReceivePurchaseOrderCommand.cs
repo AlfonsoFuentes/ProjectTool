@@ -42,7 +42,7 @@ namespace Application.Features.PurchaseOrders.Commands
                 }
 
             }
-            if (request.Data.IsNoAssetProductive)
+            if (request.Data.IsNoAssetProductive && !request.Data.IsAlteration)
             {
                 var PurchaseorderItemTax = await Repository.GetPurchaseOrderItemForTaxesItemById(purchaseorder.Id);
                 if (PurchaseorderItemTax != null)
@@ -50,11 +50,24 @@ namespace Application.Features.PurchaseOrders.Commands
                     var sumActualPOUSD = request.Data.SumActualUSD;
                     PurchaseorderItemTax.Actual = sumActualPOUSD * PurchaseorderItemTax.BudgetItem.Percentage / 100;
                     await Repository.UpdatePurchaseOrderItem(PurchaseorderItemTax);
-                    
+
                 }
-                
+            }
+            if (request.Data.IsAlteration)
+            {
+                foreach (var row in request.Data.ItemsInPurchaseorder)
+                {
+                    var purchaseorderItemTaxForAlteration = await Repository.GetPurchaseOrderItemForTaxesForAlterationById(purchaseorder.Id, row.BudgetItemId);
+                    if (purchaseorderItemTaxForAlteration != null)
+                    {
+                        purchaseorderItemTaxForAlteration.Actual = row.ActualUSD * request.Data.PercentageAlteration / 100.0;
+                        await Repository.UpdatePurchaseOrderItem(purchaseorderItemTaxForAlteration);
+                    }
+
+                }
 
             }
+
 
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);

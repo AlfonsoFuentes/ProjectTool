@@ -6,8 +6,8 @@
         public MWO MWO { get; set; } = null!;
 
         public Guid MainBudgetItemId { get; set; }
-        public Guid SupplierId { get; set; }
-        public Supplier Supplier { get; set; } = null!;
+        public Guid? SupplierId { get; set; }
+        public Supplier? Supplier { get; set; } = null!;
         public ICollection<DownPayment> DownPayments { get; set; } = new List<DownPayment>();
         public ICollection<PurchaseOrderItem> PurchaseOrderItems { get; set; } = new List<PurchaseOrderItem>();
         public static PurchaseOrder Create(Guid mwoid)
@@ -30,6 +30,14 @@
             var row = PurchaseOrderItem.Create(Id, mwobudgetitemid);
             row.Name = name;
             row.IsTaxNoProductive = true;
+            return row;
+        }
+        public PurchaseOrderItem AddPurchaseOrderItemForAlteration(Guid mwobudgetitemid, string name)
+        {
+            var row = PurchaseOrderItem.Create(Id, mwobudgetitemid);
+            row.Name = name;
+            row.IsTaxNoProductive = true;
+            row.IsAlteration = true;
             return row;
         }
         public string QuoteNo { get; set; } = "";

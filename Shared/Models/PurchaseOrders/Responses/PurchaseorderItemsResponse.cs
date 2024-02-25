@@ -4,7 +4,6 @@
     {
         public double POValueUSD { get; set; }
         public Guid BudgetItemId { get; set; }
-
         public Guid PurchaseorderItemId { get; set; }
 
     }

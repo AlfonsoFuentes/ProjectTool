@@ -16,7 +16,8 @@ namespace Shared.Models.PurchaseOrders.Requests.Receives
         public string MWOName { get; set; } = string.Empty;
         public string PONumber { get; set; } = string.Empty;
         public bool IsNoAssetProductive { get; set; }
-
+        public bool IsAlteration { get; set; }
+        public double PercentageAlteration {  get; set; }
         public void ChangePONumber(string ponumber)
         {
             ValidationErrors.Clear();

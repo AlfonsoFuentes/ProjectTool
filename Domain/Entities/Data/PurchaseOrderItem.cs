@@ -6,7 +6,7 @@
         public BudgetItem BudgetItem { get; set; } = null!;
         public Guid PurchaseOrderId { get; private set; }
         public PurchaseOrder PurchaseOrder { get; set; } = null!;
-
+        public bool IsAlteration { get; set; }
         public bool IsTaxNoProductive {  get;  set; }
         public static PurchaseOrderItem Create(Guid purchasorderid, Guid mwobudgetitemid)
         {

@@ -31,7 +31,8 @@
     </RadzenRow>
     <RadzenRow>
         <RadzenDataGrid @ref="grid" AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
-                        AllowGrouping="true" AllowSorting="true" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                        AllowGrouping="true" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                        AllowVirtualization=true Style="height:800px" Responsive=true
                         Density="Density.Default" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterCleared=@FilterCleared
                         FilterPopupRenderMode="PopupRenderMode.OnDemand" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedMWOs RowClick=OnRowClick
                         Data="@FilteredItems" TItem="MWOResponse" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">

@@ -27,7 +27,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
         {
             if (await _fluentValidationValidator.ValidateAsync())
             {
-                var result = await Service.ApprovePurchaseOrder(Model);
+                var result = Model.IsAlteration ? await Service.ApprovePurchaseOrderForAlteration(Model) : await Service.ApprovePurchaseOrder(Model);
                 if (result.Succeeded)
                 {
                     NotificationService.Notify(new NotificationMessage

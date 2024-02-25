@@ -30,5 +30,6 @@ namespace Application.Interfaces
         Task<BudgetItem> GetMainBudgetTaxItemByMWO(Guid MWOId);
         
         Task UpdateTaxesAndEngineeringContingencyItems(Guid MWOId, CancellationToken cancellationToken);
+        Task<List<PurchaseOrderItem>> GetPurchaseOrderItemsByMWOId(Guid MWOId);
     }
 }

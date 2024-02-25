@@ -11,6 +11,7 @@ namespace Shared.Models.MWO
         public double PercentageAssetNoProductive { get; set; } = 19;
         public double PercentageEngineering { get; set; } = 6;
         public double PercentageContingency { get; set; } = 10;
+        public double PercentageTaxForAlterations {  get; set; } = 19;
         public void ChangeName(string name)
         {
             ValidationErrors.Clear();
@@ -47,6 +48,16 @@ namespace Shared.Models.MWO
 
 
             PercentageContingency = percentage;
+
+        }
+        public void ChangeTaxForAlterations(string stringpercentage)
+        {
+            ValidationErrors.Clear();
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+                return;
+
+            PercentageTaxForAlterations = percentage;
 
         }
 

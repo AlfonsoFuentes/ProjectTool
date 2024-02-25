@@ -51,10 +51,19 @@ namespace Application.Features.PurchaseOrders.Queries
                 Name = budgetItem.Name,
                 Type = BudgetItemTypeEnum.GetType(budgetItem.Type),
                 Nomenclatore = $"{BudgetItemTypeEnum.GetLetter(budgetItem.Type)}{budgetItem.Order}",
-                Assigned = budgetItem.PurchaseOrderItems.Count == 0 ? 0 : 
-                budgetItem.PurchaseOrderItems.Where(x=>x.PurchaseOrder.PurchaseOrderStatus!=PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
-                PotencialAssigned= budgetItem.PurchaseOrderItems.Count == 0 ? 0 :
-                budgetItem.PurchaseOrderItems.Where(x => x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                PurchaseOrders = budgetItem.PurchaseOrderItems.Count == 0 ? new() :
+                budgetItem.PurchaseOrderItems.Select(x => new PurchaseOrderItemForBudgetItemResponse()
+                {
+                    Actual = x.Actual,
+                    BudgetItemId = x.BudgetItemId,
+                    POValueUSD = x.POValueUSD,
+                    PurchaseorderItemId = x.PurchaseOrderId,
+                    PurchaseorderName = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.PurchaseorderName,
+                    PurchaseorderNumber = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.PONumber,
+                    Supplier = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.Supplier == null ? string.Empty : x.PurchaseOrder.Supplier.Name,
+                    PurchaseOrderStatus = x.PurchaseOrder == null ? PurchaseOrderStatusEnum.None : PurchaseOrderStatusEnum.GetType(x.PurchaseOrder.PurchaseOrderStatus),
+
+                }).ToList(),
             };
 
 
@@ -85,10 +94,19 @@ namespace Application.Features.PurchaseOrders.Queries
                 Budget = x.Budget,
                 Nomenclatore = $"{BudgetItemTypeEnum.GetLetter(x.Type)}{x.Order}",
                 Type = BudgetItemTypeEnum.GetType(x.Type),
-                Assigned = x.PurchaseOrderItems.Count == 0 ? 0 : x.PurchaseOrderItems.Where(x=>
-                x.PurchaseOrder.PurchaseOrderStatus!=PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
-                PotencialAssigned = x.PurchaseOrderItems.Count == 0 ? 0 : x.PurchaseOrderItems.Where(x =>
-                x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                PurchaseOrders = budgetItem.PurchaseOrderItems.Count == 0 ? new() :
+                budgetItem.PurchaseOrderItems.Select(x => new PurchaseOrderItemForBudgetItemResponse()
+                {
+                    Actual = x.Actual,
+                    BudgetItemId = x.BudgetItemId,
+                    POValueUSD = x.POValueUSD,
+                    PurchaseorderItemId = x.PurchaseOrderId,
+                    PurchaseorderName = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.PurchaseorderName,
+                    PurchaseorderNumber = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.PONumber,
+                    Supplier = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.Supplier == null ? string.Empty : x.PurchaseOrder.Supplier.Name,
+                    PurchaseOrderStatus = x.PurchaseOrder == null ? PurchaseOrderStatusEnum.None : PurchaseOrderStatusEnum.GetType(x.PurchaseOrder.PurchaseOrderStatus),
+
+                }).ToList(),
             }).OrderBy(x => x.Nomenclatore).ToList();
             var suppliers = await _purchaseOrderRepository.GetSuppliers();
             Expression<Func<Supplier, SupplierResponse>> expressionSupplier = e => new SupplierResponse

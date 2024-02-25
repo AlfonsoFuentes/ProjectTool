@@ -28,6 +28,7 @@ namespace Application.Features.MWOs.Commands
             row.IsAssetProductive = request.Data.IsAssetProductive;
             row.PercentageEngineering = request.Data.PercentageEngineering;
             row.PercentageContingency = request.Data.PercentageContingency;
+            row.PercentageTaxForAlterations= request.Data.PercentageTaxForAlterations;
             if (!row.IsAssetProductive)
             {
                 row.PercentageAssetNoProductive = request.Data.PercentageAssetNoProductive;

@@ -35,6 +35,13 @@
 
                      </RadzenFormField>
                      <ValidationMessage For="() => Model.CostCenter" style="color:red; font-size:x-small;" />
+                     <RadzenFormField Text="Tax for Alterations" Style="width: 100%;">
+                         <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageTaxForAlterations Style="width:100%"
+                                        @oninput="@((arg)=>Model.ChangeTaxForAlterations(arg.Value!.ToString()!))"
+                                        Name="TaxAlterations" />
+
+                     </RadzenFormField>
+                     <ValidationMessage For="() => Model.PercentageTaxForAlterations" style="color:red; font-size:x-small;" />
                      <RadzenFormField Text="Capitalized Salaries" Style="width: 100%;">
                          <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageEngineering Style="width:100%"
                                         @oninput="@((arg)=>Model.ChangePercentageEngineering(arg.Value!.ToString()!))"
@@ -101,6 +108,7 @@
     {
         if (await _fluentValidationValidator.ValidateAsync())
         {
+           
             var result = await Service.ApproveMWO(Model);
             if (result.Succeeded)
             {

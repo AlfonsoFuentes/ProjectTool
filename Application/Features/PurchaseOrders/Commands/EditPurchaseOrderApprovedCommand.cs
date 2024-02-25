@@ -3,30 +3,24 @@ using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.PurchaseOrders.Requests.Approves;
-using Shared.Models.PurchaseorderStatus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.PurchaseOrders.Commands
 {
-    public record EditPurchaseOrderApproovedCommand(ApprovePurchaseOrderRequest Data) : IRequest<IResult>;
+    public record EditPurchaseOrderApprovedCommand(ApprovePurchaseOrderRequest Data) : IRequest<IResult>;
 
 
-    internal class EditPurchaseOrderApproovedCommandHandler:IRequestHandler<EditPurchaseOrderApproovedCommand,IResult>
+    internal class EditPurchaseOrderApprovedCommandHandler:IRequestHandler<EditPurchaseOrderApprovedCommand,IResult>
     {
         private IPurchaseOrderRepository Repository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
 
-        public EditPurchaseOrderApproovedCommandHandler(IAppDbContext appDbContext, IPurchaseOrderRepository repository)
+        public EditPurchaseOrderApprovedCommandHandler(IAppDbContext appDbContext, IPurchaseOrderRepository repository)
         {
             AppDbContext = appDbContext;
             Repository = repository;
         }
 
-        public async Task<IResult> Handle(EditPurchaseOrderApproovedCommand request, CancellationToken cancellationToken)
+        public async Task<IResult> Handle(EditPurchaseOrderApprovedCommand request, CancellationToken cancellationToken)
         {
             var validator = new ApprovePurchaseOrderValidator(Repository);
             var validationResult = await validator.ValidateAsync(request.Data, cancellationToken);

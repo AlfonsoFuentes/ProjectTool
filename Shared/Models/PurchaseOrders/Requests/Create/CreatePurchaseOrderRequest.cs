@@ -3,9 +3,11 @@ using Shared.Models.BudgetItemTypes;
 using Shared.Models.Currencies;
 using Shared.Models.MWO;
 using Shared.Models.Suppliers;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shared.Models.PurchaseOrders.Requests.Create
 {
+
     public class CreatePurchaseOrderRequest
     {
         public CreatePurchaseOrderRequest()
@@ -34,7 +36,7 @@ namespace Shared.Models.PurchaseOrders.Requests.Create
         public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.None;
         public Guid MWOId { get; set; }
 
-       
+
         CurrencyEnum _QuoteCurrency = CurrencyEnum.COP;
         public List<string> ValidationErrors { get; set; } = new();
 
@@ -125,6 +127,7 @@ namespace Shared.Models.PurchaseOrders.Requests.Create
         public double SumBudget => ItemsToCreate.Count == 0 ? 0 : ItemsToCreate.Sum(x => x.Budget);
         public double SumBudgetAssigned => ItemsToCreate.Count == 0 ? 0 : ItemsToCreate.Sum(x => x.BudgetAssigned);
         public double SumBudgetPotencialAssigned => ItemsToCreate.Count == 0 ? 0 : ItemsToCreate.Sum(x => x.BudgetPotencialAssigned);
+        public double SumPendingUSD => ItemsToCreate.Count == 0 ? 0 : ItemsToCreate.Sum(x => x.Pending);
 
     }
 

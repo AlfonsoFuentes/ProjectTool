@@ -40,7 +40,7 @@ namespace Application.Features.MWOs.Commands
             mwo.Status = MWOStatusEnum.Approved.Id;
             mwo.MWONumber = request.Data.MWONumber;
             mwo.CostCenter = request.Data.CostCenter.Id;
-    
+            mwo.PercentageTaxForAlterations = request.Data.PercentageTaxForAlterations;
             mwo.PercentageContingency = request.Data.PercentageContingency;
             mwo.PercentageEngineering = request.Data.PercentageEngineering;
             if (mwo.IsAssetProductive && !request.Data.IsAssetProductive)

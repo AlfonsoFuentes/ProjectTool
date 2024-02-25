@@ -5,6 +5,8 @@ using Radzen.Blazor;
 using Radzen;
 using Shared.Models.BudgetItems;
 using Azure;
+using Shared.Models.BudgetItemTypes;
+using Shared.Models.PurchaseOrders.Responses;
 
 namespace ClientRadzen.Pages.BudgetItems
 {
@@ -13,11 +15,11 @@ namespace ClientRadzen.Pages.BudgetItems
         [Inject]
         private IBudgetItemService Service { get; set; }
         IList<BudgetItemResponse> selectedBudgetItems;
-
-
+        IList<PurchaseOrderItemForBudgetItemResponse> selectedPurchaseOrders;
+        
         ListBudgetItemResponse Response { get; set; } = new();
         string nameFilter = string.Empty;
-
+      
         [Parameter]
         public Guid MWOId { get; set; }
         IQueryable<BudgetItemResponse> FilteredItems => Response.BudgetItems?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
@@ -45,7 +47,7 @@ namespace ClientRadzen.Pages.BudgetItems
             {
                 Response = result.Data;
 
-
+                isLoading = false;
             }
         }
         private void AddNewBudgetItem()
@@ -63,7 +65,30 @@ namespace ClientRadzen.Pages.BudgetItems
         }
         void GoToCreatePurchaseOrder(BudgetItemResponse BudgetItemResponse)
         {
-            _NavigationManager.NavigateTo($"/CreatePurchaseOrder/{BudgetItemResponse.Id}");
+            if(BudgetItemResponse.Type.Id==BudgetItemTypeEnum.Taxes.Id)
+            {
+                _NavigationManager.NavigateTo($"/CreateTaxPurchaseOrder/{BudgetItemResponse.Id}");
+            }
+            else if(BudgetItemResponse.Type.Id == BudgetItemTypeEnum.Engineering.Id)
+            {
+                _NavigationManager.NavigateTo($"/CreateCapitalizedSalary/{BudgetItemResponse.Id}");
+            }
+            else
+            {
+                _NavigationManager.NavigateTo($"/CreatePurchaseOrder/{BudgetItemResponse.Id}");
+            }
+
+        }
+        async Task Approve()
+        {
+            var resultDialog = await DialogService.Confirm($"Are you sure Approved {Response.MWO.Name}?", "Confirm",
+                new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+            if (resultDialog.Value)
+            {
+                _NavigationManager.NavigateTo($"/ApproveMWO/{Response.MWO.Id}");
+
+            }
+
         }
         async Task Delete(BudgetItemResponse BudgetItemResponse)
         {
@@ -105,11 +130,18 @@ namespace ClientRadzen.Pages.BudgetItems
 
         }
         RadzenDataGrid<BudgetItemResponse> grid;
+        RadzenDataGrid<PurchaseOrderItemForBudgetItemResponse> gridPurchaseOrder;
         BudgetItemResponse selectedRow = null!;
+        PurchaseOrderItemForBudgetItemResponse selectedPurchaseorder = null!;
         void OnRowClick(DataGridRowMouseEventArgs<BudgetItemResponse> args)
         {
 
             selectedRow = args.Data == null ? null! : args.Data == selectedRow ? null! : args.Data;
+        }
+        void OnRowClickPurchaseOrder(DataGridRowMouseEventArgs<PurchaseOrderItemForBudgetItemResponse> args)
+        {
+
+            selectedPurchaseorder = args.Data == null ? null! : args.Data == selectedPurchaseorder ? null! : args.Data;
         }
         bool DisableCreatePurchaseOrderButton => selectedRow == null ? true : selectedRow.IsMainItemTaxesNoProductive;
     }

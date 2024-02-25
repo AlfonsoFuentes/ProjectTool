@@ -37,9 +37,9 @@ namespace Infrastructure.Persistence.Repositories
         }
         public Task<IQueryable<BudgetItem>> GetBudgetItemList(Guid MWOId)
         {
-            var BudgetItems = Context.BudgetItems.
-               Include(x => x.Brand).
-                AsNoTracking().
+            var BudgetItems = Context.BudgetItems
+       
+                .AsNoTracking().
                 AsSplitQuery().
                 AsQueryable()
                 .Where(x => x.MWOId == MWOId);
@@ -103,6 +103,17 @@ namespace Infrastructure.Persistence.Repositories
         public async Task<MWO> GetMWOById(Guid MWOId)
         {
             return (await Context.MWOs.FindAsync(MWOId))!;
+        }
+        public async Task<List<PurchaseOrderItem>> GetPurchaseOrderItemsByMWOId(Guid MWOId)
+        {
+            var result = await Context.PurchaseOrderItems
+                .Include(x => x.PurchaseOrder).ThenInclude(x => x.Supplier)
+                
+                .AsNoTracking()
+                .AsQueryable().AsSplitQuery()
+                .Where(x=>x.PurchaseOrder.MWOId== MWOId)
+                .ToListAsync();
+            return result!;
         }
         public Task UpdateBudgetItem(BudgetItem entity)
         {
@@ -172,7 +183,7 @@ namespace Infrastructure.Persistence.Repositories
             }
             return string.Empty;
         }
-       
+
 
         public async Task AddTaxSelectedItem(TaxesItem BudgetItem)
         {
@@ -236,8 +247,8 @@ namespace Infrastructure.Persistence.Repositories
 
             foreach (var item in engContItems)
             {
-                item.Percentage = item.Type == BudgetItemTypeEnum.Engineering.Id ? 
-                    mwo!.PercentageEngineering : 
+                item.Percentage = item.Type == BudgetItemTypeEnum.Engineering.Id ?
+                    mwo!.PercentageEngineering :
                     mwo!.PercentageContingency;
                 item.Budget = sumBudget * item.Percentage / (100 - sumPercEngCont);
                 await UpdateBudgetItem(item);

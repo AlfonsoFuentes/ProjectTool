@@ -8,6 +8,7 @@
         public int Type { get; set; }
         public int Status { get; set; }
         public bool IsAssetProductive { get; set; }
+        public double PercentageTaxForAlterations { get; set; }
         public double PercentageAssetNoProductive { get; set; }
         public double PercentageEngineering { get; set; }
         public double PercentageContingency { get; set; }
