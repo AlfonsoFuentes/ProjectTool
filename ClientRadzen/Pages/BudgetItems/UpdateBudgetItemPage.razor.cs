@@ -68,7 +68,7 @@ namespace ClientRadzen.Pages.BudgetItems
                     Duration = 4000
                 });
 
-                _NavigationManager.NavigateTo($"/BudgetItemtable/{Model.MWOId}");
+                _NavigationManager.NavigateTo($"/BudgetItemsDataList/{Model.MWOId}");
             }
             else
             {
@@ -78,7 +78,7 @@ namespace ClientRadzen.Pages.BudgetItems
 
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo($"/BudgetItemtable/{Model.MWOId}");
+            _NavigationManager.NavigateTo($"/BudgetItemsDataList/{Model.MWOId}");
         }
     }
 }

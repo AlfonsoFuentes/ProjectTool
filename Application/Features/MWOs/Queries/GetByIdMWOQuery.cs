@@ -36,6 +36,7 @@ namespace Application.Features.MWOs.Queries
                 PercentageAssetNoProductive = mwo.PercentageAssetNoProductive,
                 PercentageContingency = mwo.PercentageContingency,
                 PercentageEngineering = mwo.PercentageEngineering,
+                Type=MWOTypeEnum.GetType(mwo.Type),
                 BudgetItems = mwo.BudgetItems.Select(x =>
                 new BudgetItemResponse()
                 {

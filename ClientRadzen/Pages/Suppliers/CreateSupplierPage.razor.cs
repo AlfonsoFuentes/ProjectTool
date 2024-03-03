@@ -13,39 +13,32 @@ namespace ClientRadzen.Pages.Suppliers
 
 
 
-        FluentValidationValidator _fluentValidationValidator = null!;
+
         [Inject]
         private ISupplierService Service { get; set; } = null!;
 
         private async Task SaveAsync()
         {
-            if (await _fluentValidationValidator!.ValidateAsync())
+
+
+            var result = await Service.CreateSupplier(Model);
+            if (result.Succeeded)
             {
+                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
-                var result = await Service.CreateSupplier(Model);
-                if (result.Succeeded)
-                {
-                    NotificationService.Notify(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Success,
-                        Summary = "Success",
-                        Detail = result.Message,
-                        Duration = 4000
-                    });
-
-                    _NavigationManager.NavigateTo("/Supplierstable");
-                }
-                else
-                {
-                    Model.ValidationErrors = result.Messages;
-                }
+                _NavigationManager.NavigateTo("/SupplierDatalist");
             }
+            else
+            {
+                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+            }
+
 
         }
 
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo("/Supplierstable");
+            _NavigationManager.NavigateTo("/SupplierDatalist");
         }
 
     }

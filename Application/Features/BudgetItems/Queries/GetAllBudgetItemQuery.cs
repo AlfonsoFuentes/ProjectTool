@@ -39,17 +39,13 @@ namespace Application.Features.BudgetItems.Queries
 
             var purchaseorderitems = await Repository.GetPurchaseOrderItemsByMWOId(request.MWOId);
             var rows = await Repository.GetBudgetItemList(request.MWOId);
+           
+         
             Expression<Func<BudgetItem, BudgetItemResponse>> expression = e => new BudgetItemResponse
             {
                 MWOId = e.MWOId,
                 Id = e.Id,
-                Name = (e.Type == BudgetItemTypeEnum.Equipments.Id || e.Type == BudgetItemTypeEnum.Instruments.Id) ?
-                e.Brand != null ? $"{e.Name} {e.Brand!.Name} Qty: {e.Quantity}" : $"{e.Name} Qty: {e.Quantity}" :
-                e.Type == BudgetItemTypeEnum.Contingency.Id ? $"{e.Name} {e.Percentage}%" :
-                e.Type == BudgetItemTypeEnum.Engineering.Id ? e.Percentage > 0 ? $"{e.Name} {e.Percentage}%" :
-                e.Name :
-                e.Type == BudgetItemTypeEnum.Taxes.Id ? $"{e.Name} {e.Percentage}%" :
-                e.Name,
+                Name = e.Name,
                 MWOApproved = mwo.Status == MWOStatusEnum.Approved.Id,
                 Type = BudgetItemTypeEnum.GetType(e.Type),
                 Nomenclatore = $"{BudgetItemTypeEnum.GetLetter(e.Type)}{e.Order}",
@@ -58,39 +54,23 @@ namespace Application.Features.BudgetItems.Queries
                 CreatedOn = e.CreatedDate.ToString(),
                 IsNotAbleToEditDelete = e.IsNotAbleToEditDelete,
                 IsMainItemTaxesNoProductive = e.IsMainItemTaxesNoProductive,
-
+                Quantity = e.Quantity,
+                UnitaryCost = e.UnitaryCost,
+                MWOName = mwo.Name,
+                Percentage = e.Percentage,
+              
+               
+                Brand = e.Brand == null ? string.Empty : e.Brand.Name,
+                //Parent=response,
 
             };
             var result = rows.Select(expression).ToList();
-            if (mwo.Status == MWOStatusEnum.Approved.Id)
-            {
-                result.ForEach(row =>
-                {
-
-                    row.PurchaseOrders = purchaseorderitems.Where(x => x.BudgetItemId == row.Id).ToList().Count == 0 ? new() :
-                        purchaseorderitems.Where(x => x.BudgetItemId == row.Id).Select(x => new PurchaseOrderItemForBudgetItemResponse()
-                        {
-                            Actual = x.Actual,
-                            BudgetItemId = x.BudgetItemId,
-                            POValueUSD = x.POValueUSD,
-                            PurchaseorderItemId = x.PurchaseOrderId,
-                            PurchaseorderName = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.PurchaseorderName,
-                            PurchaseorderNumber = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.PONumber,
-                            Supplier = x.PurchaseOrder == null ? string.Empty : x.PurchaseOrder.Supplier == null ? string.Empty : x.PurchaseOrder.Supplier.Name,
-                            PurchaseOrderStatus = x.PurchaseOrder == null ? PurchaseOrderStatusEnum.None : PurchaseOrderStatusEnum.GetType(x.PurchaseOrder.PurchaseOrderStatus),
-
-                        }).ToList();
-                });
-            }
-
-
-
-
+            
 
             result = result.OrderBy(x => x.Nomenclatore).ToList();
             response.BudgetItems = result;
-            response.Capital = response.BudgetItems.Where(x => x.Type.Id != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget);
-            response.Expenses = response.BudgetItems.Where(x => x.Type.Id == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget);
+          
+            
             return Result<ListBudgetItemResponse>.Success(response);
         }
 

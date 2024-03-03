@@ -4,6 +4,7 @@ namespace Application.Interfaces
 {
     public interface IBudgetItemRepository : IRepository
     {
+        Task UpdateMWO(MWO entity);
         Task UpdateBudgetItem(BudgetItem entity);
         Task AddBudgetItem(BudgetItem BudgetItem);
         Task AddTaxSelectedItem(TaxesItem BudgetItem);

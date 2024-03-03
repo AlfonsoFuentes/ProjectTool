@@ -16,7 +16,7 @@
         <RadzenColumn SizeXS="8" SizeSM="4">
             <RadzenStack Orientation="Orientation.Vertical">
                 <RadzenTemplateForm TItem="CreateBudgetItemRequest" Data="@Model">
-                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                 
                     <RadzenFormField Text="Type" Style="width: 100%;">
                         <RadzenDropDown @bind-Value=@Model.Type Data=@BudgetItemTypeEnum.ListForCreateItem Style="width: 100%;"
                                         Disabled=@(Model.Type != BudgetItemTypeEnum.None)
@@ -32,7 +32,7 @@
                             <RadzenTextBox @bind-Value=@Model.Name class="w-100"
                                            @oninput=@(args =>Model.ChangeName(args.Value!.ToString()!)) Name="name" />
                         </RadzenFormField>
-                        <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                    
 
                         @if (Model.IsRegularData || Model.IsEquipmentData || Model.IsAlteration)
                         {
@@ -80,11 +80,11 @@
                         }
                         
                         <RadzenFormField Text="Budget, USD" Style="width: 100%;">
-                            <RadzenNumeric ShowUpDown="false" Value=@Model.Budget class="w-100" TValue=double
-                                           Name="Budget" Disabled=true />
+                            <RadzenText class="rz-p-2"> @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.Budget)}")</RadzenText>
+                        
 
                         </RadzenFormField>
-                        <ValidationMessage For="() => Model.Budget" style="color:red; font-size:x-small;" />
+                      
                     }
                 </RadzenTemplateForm>
             </RadzenStack>
@@ -92,7 +92,7 @@
         <RadzenColumn SizeXS="8" SizeSM="4">
             <RadzenStack Orientation="Orientation.Vertical">
                 <RadzenTemplateForm TItem="CreateBudgetItemRequest" Data="@Model">
-                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                   
                     @if (Model.IsEquipmentData)
                     {
                         <RadzenFormField Text="Brand" Style="width: 100%;">
@@ -128,7 +128,7 @@
                                            Change="Model.ChangeTaxesItemList"
                                            InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select items" }})" />
 
-                            <ValidationMessage For="() => Model.BudgetItemDtos" style="color:red; font-size:x-small;" />
+                           
                         }
 
 
@@ -155,5 +155,19 @@
 </RadzenStack>
 
 @code {
+    void NotifyMessage(NotificationSeverity Severity, string Leyend, List<string> messages)
+    {
+        AlertStyle alertStyle = Severity == NotificationSeverity.Success ? AlertStyle.Success : AlertStyle.Danger;
 
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = Severity,
+                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">@Leyend</RadzenText>,
+            DetailContent = ns =>@<SimpleAlertMessage AlertStyle="@alertStyle" Messages=@messages></SimpleAlertMessage>,
+
+
+            Duration = Severity == NotificationSeverity.Success ? 2000 : 4000,
+        });
+
+    }
 }

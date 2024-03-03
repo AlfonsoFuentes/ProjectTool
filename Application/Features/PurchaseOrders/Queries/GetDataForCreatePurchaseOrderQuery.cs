@@ -43,7 +43,7 @@ namespace Application.Features.PurchaseOrders.Queries
             {
                 return Result<DataForCreatePurchaseOrder>.Fail("MWO Not found!");
             }
-            BudgetItemResponse budgetItemResponse = new()
+            BudgetItemApprovedResponse budgetItemResponse = new()
             {
                 Id = budgetItem.Id,
                 Budget = budgetItem.Budget,
@@ -75,7 +75,7 @@ namespace Application.Features.PurchaseOrders.Queries
                 Capital = mwo.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
                 Expenses = mwo.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
                 CostCenter = CostCenterEnum.GetName(mwo.CostCenter),
-                Type = MWOTypeEnum.GetName(mwo.Type),
+                MWOType = MWOTypeEnum.GetType(mwo.Type),
                 IsRealProductive = mwo.IsAssetProductive,
 
 
@@ -87,7 +87,7 @@ namespace Application.Features.PurchaseOrders.Queries
                 x.Type != BudgetItemTypeEnum.Contingency.Id &&
                 x.Type != BudgetItemTypeEnum.Taxes.Id &&
                 x.Type != BudgetItemTypeEnum.Engineering.Id && x.Id != budgetItem.Id);
-            var BudgetItems = mwo.BudgetItems.Where(Criteria).Select(x => new BudgetItemResponse()
+            var BudgetItems = mwo.BudgetItems.Where(Criteria).Select(x => new BudgetItemApprovedResponse()
             {
                 Id = x.Id,
                 Name = x.Name,

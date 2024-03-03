@@ -25,6 +25,13 @@ namespace Server.Controllers
 
             return Ok( await Mediator.Send(new CreateMWOCommand(request)));
         }
+        
+        [HttpPost("updateMWOMinimal")]
+        public async Task<IActionResult> UpdateMWOMinimal(UpdateMWOMinimalRequest request)
+        {
+
+            return Ok(await Mediator.Send(new UpdateMWOMinimalCommand(request)));
+        }
         [HttpPost("updateMWO")]
         public async Task<IActionResult> UpdateMWO(UpdateMWORequest request)
         {

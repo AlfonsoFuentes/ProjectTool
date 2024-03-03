@@ -1,0 +1,25 @@
+﻿@foreach (var row in Messages)
+{
+    <RadzenAlert Variant="@variant" AlertStyle="@AlertStyle" Size="@size" Shade="@shade" AllowClose=false>
+        @row
+    </RadzenAlert>
+}
+
+@code {
+    Variant variant = Variant.Text;
+    AlertSize size = AlertSize.ExtraSmall;
+    [Parameter]
+    public AlertStyle AlertStyle { get; set; } = AlertStyle.Danger;
+    Shade shade = Shade.Darker;
+    [Parameter]
+    public string Message { get; set; } = string.Empty;
+    [Parameter]
+    public List<string> Messages { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        if (Messages.Count == 0 && !string.IsNullOrEmpty(Message))
+        {
+            Messages.Add(Message);
+        }
+    }
+}

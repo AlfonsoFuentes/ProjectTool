@@ -38,7 +38,7 @@ namespace Infrastructure.Persistence.Repositories
         public Task<IQueryable<BudgetItem>> GetBudgetItemList(Guid MWOId)
         {
             var BudgetItems = Context.BudgetItems
-       
+                .Include(x => x.Brand)
                 .AsNoTracking().
                 AsSplitQuery().
                 AsQueryable()
@@ -108,10 +108,10 @@ namespace Infrastructure.Persistence.Repositories
         {
             var result = await Context.PurchaseOrderItems
                 .Include(x => x.PurchaseOrder).ThenInclude(x => x.Supplier)
-                
+
                 .AsNoTracking()
                 .AsQueryable().AsSplitQuery()
-                .Where(x=>x.PurchaseOrder.MWOId== MWOId)
+                .Where(x => x.PurchaseOrder.MWOId == MWOId)
                 .ToListAsync();
             return result!;
         }
@@ -237,7 +237,6 @@ namespace Infrastructure.Persistence.Repositories
         public async Task UpdateEngCostContingency(Guid Mwoid)
         {
 
-            var mwo = await Context.MWOs.FindAsync(Mwoid);
 
             var sumBudget = await GetSumBudget(Mwoid);
 
@@ -247,9 +246,7 @@ namespace Infrastructure.Persistence.Repositories
 
             foreach (var item in engContItems)
             {
-                item.Percentage = item.Type == BudgetItemTypeEnum.Engineering.Id ?
-                    mwo!.PercentageEngineering :
-                    mwo!.PercentageContingency;
+
                 item.Budget = sumBudget * item.Percentage / (100 - sumPercEngCont);
                 await UpdateBudgetItem(item);
             }
@@ -279,6 +276,12 @@ namespace Infrastructure.Persistence.Repositories
 
             await UpdateEngCostContingency(MWOId);
             await Context.SaveChangesAsync(cancellationToken);
+        }
+
+        public Task UpdateMWO(MWO entity)
+        {
+            Context.MWOs.Update(entity);
+            return Task.CompletedTask;
         }
     }
 }

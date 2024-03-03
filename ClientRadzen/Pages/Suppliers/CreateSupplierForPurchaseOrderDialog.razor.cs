@@ -12,14 +12,13 @@ namespace ClientRadzen.Pages.Suppliers
 
 
 
-        FluentValidationValidator _fluentValidationValidator = null!;
+      
         [Inject]
         private ISupplierService Service { get; set; } = null!;
 
         private async Task SaveAsync()
         {
-            if (await _fluentValidationValidator!.ValidateAsync())
-            {
+            
 
                 var result = await Service.CreateSupplierForPurchaseOrder(Model);
                 if (result.Succeeded)
@@ -28,9 +27,9 @@ namespace ClientRadzen.Pages.Suppliers
                 }
                 else
                 {
-                    Model.ValidationErrors = result.Messages;
+                    NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
                 }
-            }
+           
 
         }
 

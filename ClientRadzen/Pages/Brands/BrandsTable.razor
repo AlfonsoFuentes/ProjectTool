@@ -15,13 +15,13 @@
 
     <RadzenDataGrid @ref="grid" AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
                     AllowGrouping="false" AllowSorting="true" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
-                    Density="Density.Default" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+                    Density="Density.Default" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                     FilterPopupRenderMode="PopupRenderMode.OnDemand" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedBrands RowClick=OnRowClick
                     Data="@FilteredItems" TItem="BrandResponse" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
         <Columns>
             <RadzenDataGridColumn TItem="BrandResponse" Property="@nameof(BrandResponse.Name)" Filterable="false" Title="Name" Frozen="false" Width="100px"
                                   TextAlign="TextAlign.Left" Groupable=false />
-                                  @if(CurrentUser.IsSuperAdmin)
+            @if (CurrentUser.IsSuperAdmin)
             {
                 <RadzenDataGridColumn TItem="BrandResponse" Property="@nameof(BrandResponse.CreatedBy)" Filterable="false" Title="Created By" Frozen="false" Width="100px"
                                       TextAlign="TextAlign.Left" Groupable=false />
@@ -29,7 +29,7 @@
                                       TextAlign="TextAlign.Left" Groupable=false />
 
             }
-           
+
 
         </Columns>
     </RadzenDataGrid>

@@ -33,7 +33,14 @@ namespace Infrastructure.Persistence.Repositories
         {
             if (string.IsNullOrEmpty(name)) return false;
 
-            var retorno= await Context.Suppliers.AnyAsync(x => x.Name == name);
+            var retorno = await Context.Suppliers.AnyAsync(x => x.Name == name);
+            return retorno;
+        }
+        public async Task<bool> ReviewNameExist(Guid Id, string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+
+            var retorno = await Context.Suppliers.Where(x => x.Id != Id).AnyAsync(x => x.Name == name);
             return retorno;
         }
 
@@ -43,10 +50,20 @@ namespace Infrastructure.Persistence.Repositories
             var retorno = await Context.Suppliers.AnyAsync(x => x.VendorCode == vendorcode);
             return retorno;
         }
+        public async Task<bool> ReviewVendorCodeExist(Guid Id, string vendorcode)
+        {
+            if (string.IsNullOrEmpty(vendorcode)) return false;
+            var retorno = await Context.Suppliers.Where(x => x.Id != Id).AnyAsync(x => x.VendorCode == vendorcode);
+            return retorno;
+        }
 
         public async Task<bool> ReviewEmailExist(string? email)
         {
             return await Context.Suppliers.AnyAsync(x => x.ContactEmail == email);
+        }
+        public async Task<bool> ReviewEmailExist(Guid Id, string? email)
+        {
+            return await Context.Suppliers.Where(x => x.Id != Id).AnyAsync(x => x.ContactEmail == email);
         }
 
         public Task<IQueryable<Supplier>> GetSupplierList()

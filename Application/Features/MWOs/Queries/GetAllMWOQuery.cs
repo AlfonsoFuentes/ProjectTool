@@ -8,6 +8,7 @@ using Shared.Models.BudgetItemTypes;
 using Shared.Models.MWO;
 using Shared.Models.MWOStatus;
 using Shared.Models.MWOTypes;
+using Shared.Models.PurchaseorderStatus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,16 +44,21 @@ namespace Application.Features.MWOs.Queries
                 CreatedOn = e.CreatedDate.ToString(),
                 CECName = e.Status == MWOStatusEnum.Approved.Id ? $"CEC0000{e.MWONumber}" : "",
                 CostCenter = CostCenterEnum.GetName(e.CostCenter),
-                Type = MWOTypeEnum.GetName(e.Type),
+
+                MWOType = MWOTypeEnum.GetType(e.Type),
                 Status = MWOStatusEnum.GetType(e.Status),
                 Capital = e.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
                 Expenses = e.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+                Actual = e.PurchaseOrders.Sum(x => x.Actual),
+                Potencial = e.PurchaseOrders.Where(x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                Assigned= e.PurchaseOrders.Where(x => x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
             };
 
 
 
 
             List<MWOResponse> retorno = result.Where(filteruser).Select(expression).ToList();
+            retorno = retorno.OrderBy(x => x.Status.Id).ToList();
             return Result<List<MWOResponse>>.Success(retorno);
 
         }

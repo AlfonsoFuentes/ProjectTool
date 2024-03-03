@@ -75,7 +75,7 @@ namespace Application.Features.PurchaseOrders.Queries
                 Capital = mwo.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
                 Expenses = mwo.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
                 CostCenter = CostCenterEnum.GetName(mwo.CostCenter),
-                Type = MWOTypeEnum.GetName(mwo.Type),
+                MWOType = MWOTypeEnum.GetType(mwo.Type),
                 IsRealProductive = mwo.IsAssetProductive,
 
 

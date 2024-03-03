@@ -1,7 +1,87 @@
 ﻿@page "/"
 
 <PageTitle>Home</PageTitle>
+@if(CurrentUser.IsSuperAdmin)
+{
+    <RadzenRow class="rz-text-align-center rz-p-2" Gap="1rem">
+        <RadzenColumn Size="12" SizeLG=4 class="rz-background-color-info-lighter rz-color-on-info-lighter rz-p-1">
+            <RadzenCard Class="rz-my-0 rz-mx-0" Style="width: 100%; height:100%">
+                <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween">
 
-<h1>Hello, world!</h1>
+                    <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Brands</RadzenText>
+                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
+                        <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/BrandDatalist"))" />
+                        <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateBrand"))" />
+                    </RadzenStack>
+                </RadzenStack>
 
-Welcome to your new app.
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeLG=4 class="rz-background-color-info-lighter rz-color-on-info-lighter rz-p-1">
+            <RadzenCard Class="rz-my-0 rz-mx-0" Style="width: 100%; height:100%">
+                <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween">
+
+                    <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Suppliers</RadzenText>
+                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
+                        <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/SupplierDatalist"))" />
+                        <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateSupplier"))" />
+                    </RadzenStack>
+                </RadzenStack>
+
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeLG=4 class ="rz-background-color-info-lighter rz-color-on-info-lighter rz-p-1">
+            <RadzenCard Class="rz-my-0 rz-mx-0" Style="width: 100%; height:100%">
+                <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Users</RadzenText>
+                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
+                        <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/SupplierDatalist"))" />
+                        <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateSupplier"))" />
+                    </RadzenStack>
+                </RadzenStack>
+
+            </RadzenCard>
+        </RadzenColumn>
+    </RadzenRow>
+}
+<RadzenRow class="rz-text-align-center rz-p-2" Gap="1rem">
+    <RadzenColumn Size="12" SizeLG=4 class ="rz-background-color-info-lighter rz-color-on-info-lighter rz-p-1">
+        <RadzenCard Class="rz-my-0 rz-mx-0" Style="width: 100%; height:100%">
+            <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween">
+
+                <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Mechanical Work orders</RadzenText>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
+                    <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/MWODataList"))" />
+                    <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateMWO"))" />
+                </RadzenStack>
+            </RadzenStack>
+
+        </RadzenCard>
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeLG=4 class="rz-background-color-info-lighter rz-color-on-info-lighter rz-p-1">
+        <RadzenCard Class="rz-my-0 rz-mx-0" Style="width: 100%; height:100%">
+            <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween">
+
+                <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Purchase orders</RadzenText>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
+                    <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/SupplierDatalist"))" />
+                    <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateSupplier"))" />
+                </RadzenStack>
+            </RadzenStack>
+
+        </RadzenCard>
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeLG=4 class="rz-background-color-info-lighter rz-color-on-info-lighter rz-p-1">
+        <RadzenCard Class="rz-my-0 rz-mx-0" Style="width: 100%; height:100%">
+            <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween">
+                <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Users</RadzenText>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
+                    <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/SupplierDatalist"))" />
+                    <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateSupplier"))" />
+                </RadzenStack>
+            </RadzenStack>
+
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
+

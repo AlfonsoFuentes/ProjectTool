@@ -16,7 +16,7 @@ namespace Application.Features.Brands.Queries
 
         public async Task<bool> Handle(BrandCreateNameExistQuery request, CancellationToken cancellationToken)
         {
-            return await repository.ReviewNameExist(request.Name);
+            return await repository.ReviewIfNameExist(request.Name);
         }
     }
 

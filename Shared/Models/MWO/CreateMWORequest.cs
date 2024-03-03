@@ -60,6 +60,11 @@ namespace Shared.Models.MWO
             PercentageTaxForAlterations = percentage;
 
         }
+        public void ChangeType()
+        {
+            ValidationErrors.Clear();
+       
+        }
 
     }
 }

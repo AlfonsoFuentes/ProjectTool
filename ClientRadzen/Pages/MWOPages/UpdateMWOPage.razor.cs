@@ -16,7 +16,7 @@ namespace ClientRadzen.Pages.MWOPages
         private IMWOService Service { get; set; }
       
         UpdateMWORequest Model { get; set; } = new();
-        FluentValidationValidator _fluentValidationValidator = null!;
+      
         string mwoName=string.Empty;
         protected override async Task OnInitializedAsync()
         {
@@ -29,40 +29,25 @@ namespace ClientRadzen.Pages.MWOPages
         }
         private async Task SaveAsync()
         {
-            if (await _fluentValidationValidator!.ValidateAsync())
+            var result = await Service.UpdateMWO(Model);
+            if (result.Succeeded)
             {
+                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
-                var result = await Service.UpdateMWO(Model);
-                if (result.Succeeded)
-                {
-                    ShowNotification(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Success,
-                        Summary = "Success",
-                        Detail = result.Message,
-                        Duration = 4000
-                    });
-
-                    _NavigationManager.NavigateTo("/mwotable");
-                }
-                else
-                {
-                    ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error,
-                        Summary = "Error Summary", Detail = result.Message, Duration = 4000 });
-                }
+                _NavigationManager.NavigateTo("/MWODataList");
+            }
+            else
+            {
+                Model.ValidationErrors = result.Messages;
+                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
             }
 
         }
-        void ShowNotification(NotificationMessage message)
-        {
-            NotificationService.Notify(message);
-
-           
-        }
+       
 
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo("/mwotable");
+            _NavigationManager.NavigateTo("/MWODataList");
         }
     }
 }

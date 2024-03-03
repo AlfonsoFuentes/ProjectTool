@@ -106,11 +106,11 @@
                         }
 
                         <RadzenFormField Text="Budget, USD" Style="width: 100%;">
-                            <RadzenNumeric ShowUpDown="false" Value=@Model.Budget class="w-100" TValue=double
-                                           Name="Budget" Disabled=true />
+                            <RadzenText class="rz-p-2"> @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.Budget)}")</RadzenText>
+
 
                         </RadzenFormField>
-                        <ValidationMessage For="() => Model.Budget" style="color:red; font-size:x-small;" />
+                       
                     }
                 </RadzenTemplateForm>
             </RadzenStack>

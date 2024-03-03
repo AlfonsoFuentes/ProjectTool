@@ -16,7 +16,7 @@ namespace ClientRadzen.Pages.MWOPages
         private bool _trapFocus = true;
         private bool _modal = true;
         string nameFilter = string.Empty;
-        IQueryable<MWOResponse>? FilteredItems => OriginalData?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
+        IQueryable<MWOResponse> FilteredItems => OriginalData?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
         protected override async Task OnInitializedAsync()
         {
             var user = CurrentUser.UserId;

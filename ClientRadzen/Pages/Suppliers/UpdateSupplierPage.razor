@@ -9,55 +9,59 @@
         <RadzenColumn SizeXS="8" SizeSM="4">
             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.Normal">
                 <RadzenTemplateForm TItem="UpdateSupplierRequest" Data="@Model">
-                    <FluentValidationValidator @ref="_fluentValidationValidator" />
-
-                    <RadzenFormField Text="Email" Style="width: 100%;">
-                        <RadzenTextBox @bind-Value=@Model.ContactEmail AutoComplete=true AutoCompleteType="AutoCompleteType.Email" />
-
-                    </RadzenFormField>
-                    <ValidationMessage For="() => Model.ContactEmail" style="color:red; font-size:x-small;" />
-                    <RadzenFormField Text="Contact Name" Style="width: 100%;">
-                        <RadzenTextBox @bind-Value=@Model.ContactName AutoComplete=true AutoCompleteType="AutoCompleteType.Name" />
-
-                    </RadzenFormField>
-                    <RadzenFormField Text="Mobile" Style="width: 100%;">
-                        <RadzenTextBox @bind-Value=@Model.PhoneNumber AutoComplete=true AutoCompleteType="AutoCompleteType.Tel" />
-
-                    </RadzenFormField>
-                    <RadzenFormField Text="Address" Style="width: 100%;">
-                        <RadzenTextBox @bind-Value=@Model.Address />
-
-                    </RadzenFormField>
-                </RadzenTemplateForm>
-
-            </RadzenStack>
-        </RadzenColumn>
-        <RadzenColumn SizeXS="8" SizeSM="4">
-            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.Normal">
-                <RadzenTemplateForm TItem="UpdateSupplierRequest" Data="@Model">
                     <RadzenFormField Text="Name" Style="width: 100%;">
-                        <RadzenTextBox Value=@Model.Name Disabled=true />
+                        <RadzenTextBox @bind-Value=@Model.Name @oninput="@((arg)=>Model.Name=arg.Value!.ToString()!)" />
 
                     </RadzenFormField>
                     <RadzenFormField Text="Vendor Code" Style="width: 100%;">
 
-                        <RadzenTextBox Value=@Model.VendorCode Disabled=true />
+                        <RadzenTextBox @bind-Value=@Model.VendorCode @oninput="@((arg)=>Model.VendorCode=arg.Value!.ToString()!)" />
                     </RadzenFormField>
                     <RadzenFormField Text="Tax Code LD" Style="width: 100%;">
 
-                        <RadzenTextBox Value=@Model.TaxCodeLD Disabled=true />
+                        <RadzenTextBox @bind-Value=@Model.TaxCodeLD @oninput="@((arg)=>Model.TaxCodeLD=arg.Value!.ToString()!)" />
                     </RadzenFormField>
                     <RadzenFormField Text="Tax Code LP" Style="width: 100%;">
 
-                        <RadzenTextBox Value=@Model.TaxCodeLP Disabled=true />
+                        <RadzenTextBox @bind-Value=@Model.TaxCodeLP @oninput="@((arg)=>Model.TaxCodeLP=arg.Value!.ToString()!)" />
                     </RadzenFormField>
-                    <RadzenFormField Text="Currency" Style="width: 100%;">
+                    <RadzenFormField Text="Supplier Currency for purchase orders" Style="width: 100%;">
+                        <RadzenDropDown @bind-Value=@Model.SupplierCurrency Data=@CurrencyEnum.List Style="width: 100%; max-width: 400px;"
+                                        Name="suppliercurrency" TextProperty="Name"
+                                        TValue="CurrencyEnum" />
 
-                        <RadzenTextBox Value=@Model.SupplierCurrency.Name Disabled=true />
+
+
                     </RadzenFormField>
                 </RadzenTemplateForm>
             </RadzenStack>
 
+        </RadzenColumn>
+        <RadzenColumn SizeXS="8" SizeSM="4">
+            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.Normal">
+
+
+
+                <RadzenFormField Text="Email" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.ContactEmail AutoComplete=true AutoCompleteType="AutoCompleteType.Email" />
+
+                </RadzenFormField>
+
+                <RadzenFormField Text="Contact Name" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.ContactName AutoComplete=true AutoCompleteType="AutoCompleteType.Name" />
+
+                </RadzenFormField>
+                <RadzenFormField Text="Mobile" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.PhoneNumber AutoComplete=true AutoCompleteType="AutoCompleteType.Tel" />
+
+                </RadzenFormField>
+                <RadzenFormField Text="Address" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.Address />
+
+                </RadzenFormField>
+
+
+            </RadzenStack>
         </RadzenColumn>
 
     </RadzenRow>
@@ -71,10 +75,25 @@
 </RadzenStack>
 
 @code {
-    async Task ChangeName(string name)
+    void ChangeName(string name)
     {
         Model.Name = name;
 
+
+    }
+    void NotifyMessage(NotificationSeverity Severity, string Leyend, List<string> messages)
+    {
+        AlertStyle alertStyle = Severity == NotificationSeverity.Success ? AlertStyle.Success : AlertStyle.Danger;
+
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = Severity,
+                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">@Leyend</RadzenText>,
+            DetailContent = ns =>@<SimpleAlertMessage AlertStyle="@alertStyle" Messages=@messages></SimpleAlertMessage>,
+
+
+            Duration = Severity == NotificationSeverity.Success ? 2000 : 4000,
+        });
 
     }
 }

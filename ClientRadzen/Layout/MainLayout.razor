@@ -1,11 +1,11 @@
 ﻿@inherits LayoutComponentBase
 
 <RadzenLayout Style="width:100%">
-    <RadzenHeader >
+    <RadzenHeader>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.SpaceBetween>
 
-            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
-
+            @*  <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" /> *@
+            <div></div>
             <AuthorizeView>
                 <Authorized>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.SpaceBetween Gap="1">
@@ -24,9 +24,9 @@
 
         </RadzenStack>
     </RadzenHeader>
-    <RadzenSidebar @bind-Expanded="@sidebar1Expanded" Responsive=true>
-        <NavMenu sidebarExpanded=@sidebar1Expanded></NavMenu>
-    </RadzenSidebar>
+    @*   <RadzenSidebar @bind-Expanded="@sidebar1Expanded" Responsive=true>
+    <NavMenu sidebarExpanded=@sidebar1Expanded></NavMenu>
+    </RadzenSidebar> *@
     <RadzenBody>
         <div class="rz-p-1">
             @Body

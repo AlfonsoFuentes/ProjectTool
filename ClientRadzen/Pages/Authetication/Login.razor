@@ -88,6 +88,10 @@
         {
             Message = result.Messages.FirstOrDefault()!;
         }
+        else
+        {
+            _NavigationManager.NavigateTo("/");
+        }
 
     }
     bool UserExist;

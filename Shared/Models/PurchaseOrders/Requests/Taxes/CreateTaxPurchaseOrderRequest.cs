@@ -51,14 +51,14 @@ namespace Shared.Models.PurchaseOrders.Requests.Taxes
             Name = name;
 
         }
-        public void SetMWOBudgetItem(MWOResponse mWO, BudgetItemResponse budgetItem)
+        public void SetMWOBudgetItem(MWOResponse mWO, BudgetItemApprovedResponse budgetItem)
         {
             MWOId = mWO.Id;
             MWOCECName = mWO.CECName;
             AddBudgetItem(budgetItem);
         }
 
-        public void AddBudgetItem(BudgetItemResponse response)
+        public void AddBudgetItem(BudgetItemApprovedResponse response)
         {
             PurchaseOrderItem.SetBudgetItem(response, USDCOP, USDEUR);
 

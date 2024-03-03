@@ -6,7 +6,7 @@ namespace Shared.Models.PurchaseOrders.Requests.Create
     public class CreatePurchaseOrderItemRequest
     {
         public CreatePurchaseOrderItemRequest() { }
-        public void SetBudgetItem(BudgetItemResponse _BudgetItem, double usdcop, double usdeur)
+        public void SetBudgetItem(BudgetItemApprovedResponse _BudgetItem, double usdcop, double usdeur)
         {
             BudgetItemName = _BudgetItem.NomenclatoreName;
             Name = _BudgetItem.Name;

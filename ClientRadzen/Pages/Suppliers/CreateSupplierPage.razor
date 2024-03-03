@@ -6,41 +6,39 @@
 
 <RadzenStack Orientation="Orientation.Vertical">
     <div>Create Supplier</div>
-    <RadzenRow>
-        <AlertMessage Messages="@Model.ValidationErrors"></AlertMessage>
-    </RadzenRow>
+ 
     
     <RadzenRow>
         <RadzenColumn SizeXS="8" SizeSM="4">
             <RadzenStack Orientation="Orientation.Vertical">
                 <RadzenTemplateForm TItem="CreateSupplierRequest" Data="@Model">
-                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                   
                     <RadzenFormField Text="Name" Style="width: 100%;">
                         <RadzenTextArea Rows="2" @bind-Value=@Model.Name  class="w-100" 
                                         Change=ChangeName Name="name" />
 
                      </RadzenFormField>
-                     <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                    
                     <RadzenFormField Text="Vendor Code" Style="width: 100%;">
                         <RadzenTextBox  @bind-Value=@Model.VendorCode class="w-100" AutoComplete AutoCompleteType="AutoCompleteType.GivenName"
                                         Name="vendorcode" />
 
                     </RadzenFormField>
 
-                     <ValidationMessage For="() => Model.VendorCode" style="color:red; font-size:x-small;" />
+                   
                      <RadzenFormField Text="Tax Code LD" Style="width: 100%;">
                          <RadzenTextBox @bind-Value=@Model.TaxCodeLD class="w-100" AutoComplete AutoCompleteType="AutoCompleteType.GivenName"
                                         Name="taxcodeld" />
 
                      </RadzenFormField>
-                     <ValidationMessage For="() => Model.TaxCodeLD" style="color:red; font-size:x-small;" />
+                    
 
                      <RadzenFormField Text="Tax Code LP" Style="width: 100%;">
                          <RadzenTextBox @bind-Value=@Model.TaxCodeLP class="w-100" AutoComplete AutoCompleteType="AutoCompleteType.GivenName"
                                         Name="taxcodelp" />
 
                      </RadzenFormField>
-                     <ValidationMessage For="() => Model.TaxCodeLP" style="color:red; font-size:x-small;" />
+                   
                      <RadzenFormField Text="Supplier Currency for purchase orders" Style="width: 100%;">
                          <RadzenDropDown @bind-Value=@Model.SupplierCurrency Data=@CurrencyEnum.List Style="width: 100%; max-width: 400px;"
                                          Name="suppliercurrency" TextProperty="Name"
@@ -49,7 +47,7 @@
                      
 
                      </RadzenFormField>
-                     <ValidationMessage For="() => Model.SupplierCurrency" style="color:red; font-size:x-small;" />
+                    
                  </RadzenTemplateForm>
              </RadzenStack>
          </RadzenColumn>
@@ -68,5 +66,20 @@
     void ChangeName(string name)
     {
         Model.Name = name;
+    }
+    void NotifyMessage(NotificationSeverity Severity, string Leyend, List<string> messages)
+    {
+        AlertStyle alertStyle = Severity == NotificationSeverity.Success ? AlertStyle.Success : AlertStyle.Danger;
+
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = Severity,
+                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">@Leyend</RadzenText>,
+            DetailContent = ns =>@<SimpleAlertMessage AlertStyle="@alertStyle" Messages=@messages></SimpleAlertMessage>,
+
+
+            Duration = Severity == NotificationSeverity.Success ? 2000 : 4000,
+        });
+
     }
 }

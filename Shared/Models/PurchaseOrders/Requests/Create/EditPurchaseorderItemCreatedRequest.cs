@@ -84,7 +84,7 @@ namespace Shared.Models.PurchaseOrders.Requests.Create
            USDCOP == 0 ? 0 : CurrencyValue / USDCOP : USDEUR == 0 ? 0 : CurrencyValue / USDEUR;
         public double USDCOP { get; set; } = 1;
         public double USDEUR { get; set; } = 1;
-        public void SetBudgetItem(BudgetItemResponse _BudgetItem)
+        public void SetBudgetItem(BudgetItemApprovedResponse _BudgetItem)
         {
             BudgetItemName = _BudgetItem.Name;
             Nomenclatore = _BudgetItem.Nomenclatore;

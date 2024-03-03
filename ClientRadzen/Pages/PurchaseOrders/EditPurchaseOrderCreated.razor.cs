@@ -19,7 +19,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
         
         EditPurchaseOrderCreatedRequest Model = new();
         FluentValidationValidator _fluentValidationValidator = null!;
-        BudgetItemResponse ItemToChange;
+        BudgetItemApprovedResponse ItemToChange;
 
 
         DataForEditPurchaseOrder CommonData { get; set; } = new();

@@ -30,10 +30,10 @@ namespace Application.Features.Brands.Queries
                 Id = e.Id,
                 Name = e.Name,
                 CreatedBy = e.CreatedByUserName,
-                CreatedOn =e.CreatedDate.ToString(),
+                CreatedOn =e.CreatedDate.ToShortDateString(),
                
             };
-            var result=rows.Select(expression).ToList();
+            var result=rows.Select(expression).OrderBy(x=>x.Name).ToList();
             return Result<List<BrandResponse>>.Success(result);
         }
     }

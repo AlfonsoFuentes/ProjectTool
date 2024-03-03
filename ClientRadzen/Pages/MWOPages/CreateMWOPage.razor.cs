@@ -11,39 +11,30 @@ namespace ClientRadzen.Pages.MWOPages
     
 
 
-        FluentValidationValidator _fluentValidationValidator = null!;
+      
         [Inject]
         private IMWOService Service { get; set; } = null!;
 
         private async Task SaveAsync()
         {
-            if (await _fluentValidationValidator!.ValidateAsync())
+            var result = await Service.CreateMWO(Model);
+            if (result.Succeeded)
             {
+                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
-                var result = await Service.CreateMWO(Model);
-                if (result.Succeeded)
-                {
-                    NotificationService.Notify(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Success,
-                        Summary = "Success",
-                        Detail = result.Message,
-                        Duration = 4000
-                    });
-
-                    _NavigationManager.NavigateTo("/mwotable");
-                }
-                else
-                {
-                    Model.ValidationErrors = result.Messages;
-                }
+                _NavigationManager.NavigateTo("/MWODataList");
+            }
+            else
+            {
+                Model.ValidationErrors = result.Messages;
+                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
             }
 
         }
        
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo("/mwotable");
+            _NavigationManager.NavigateTo("/MWODataList");
         }
 
     }

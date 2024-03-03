@@ -16,6 +16,7 @@ namespace Shared.Models.MWO
         public double PercentageEngineering { get; set; } = 6;
         public double PercentageContingency { get; set; } = 10;
         public List<BudgetItemResponse> BudgetItems { get; set; } = new();
+        public double PercentageTaxForAlterations { get; set; } = 19;
         public double SumBudgetForTaxesItems => GetItemsForTaxes();
         public double SumAlterations => GetSumAlterations();
         public double SumEngContingency => GetSumEngContingency();
@@ -60,6 +61,10 @@ namespace Shared.Models.MWO
 
 
         }
+        public void ChangeType(MWOTypeEnum type)
+        {
+            Type = type;
+        }
 
         public void ChangePercentageTaxes(string stringpercentage)
         {
@@ -89,6 +94,16 @@ namespace Shared.Models.MWO
 
 
             PercentageContingency = percentage;
+
+        }
+        public void ChangeTaxForAlterations(string stringpercentage)
+        {
+            ValidationErrors.Clear();
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+                return;
+
+            PercentageTaxForAlterations = percentage;
 
         }
     }

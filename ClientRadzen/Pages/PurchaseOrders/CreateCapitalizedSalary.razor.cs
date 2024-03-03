@@ -28,8 +28,8 @@ namespace ClientRadzen.Pages.PurchaseOrders
 
         CreateCapitalizedSalaryPurchaseOrderRequest Model { get; set; } = new();
         ConversionRate RateList { get; set; }
-       
-        BudgetItemResponse BudgetItemToCreatePO = new();
+
+        BudgetItemApprovedResponse BudgetItemToCreatePO = new();
         MWOResponse MWO = new();
         protected override async Task OnInitializedAsync()
         {

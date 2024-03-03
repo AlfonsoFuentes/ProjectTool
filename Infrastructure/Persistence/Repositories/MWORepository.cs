@@ -21,12 +21,12 @@ namespace Infrastructure.Persistence.Repositories
 
         }
 
-        public async Task<bool> ReviewNameExist(string name)
+        public async Task<bool> ReviewIfNameExist(string name)
         {
 
             return await Context.MWOs.AnyAsync(x => x.Name == name);
         }
-        public async Task<bool> ReviewNameExist(Guid Id, string name)
+        public async Task<bool> ReviewIfNameExist(Guid Id, string name)
         {
 
             return await Context.MWOs.Where(x => x.Id != Id).AnyAsync(x => x.Name == name);
@@ -35,6 +35,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             var mwos = Context.MWOs.
                 Include(x => x.BudgetItems).
+                Include(x=>x.PurchaseOrders).
                 AsNoTracking().
                 AsSplitQuery().
                 AsQueryable();

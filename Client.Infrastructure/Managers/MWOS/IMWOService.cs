@@ -1,14 +1,9 @@
-﻿using Client.Infrastructure.Managers;
-using Shared.Commons.Results;
-using Shared.Models.MWO;
-using System.Net.Http.Json;
-using System.Xml.Linq;
-
-namespace Client.Infrastructure.Managers.MWOS
+﻿namespace Client.Infrastructure.Managers.MWOS
 {
     public interface IMWOService : IManager
     {
         Task<IResult<ApproveMWORequest>> GetMWOByIdToApprove(Guid MWOId);
+        Task<IResult> UpdateMWOMinimal(UpdateMWOMinimalRequest request);
         Task<IResult> UpdateMWO(UpdateMWORequest request);
         Task<IResult> CreateMWO(CreateMWORequest request);
         Task<IResult> ApproveMWO(ApproveMWORequest request);
@@ -111,6 +106,21 @@ namespace Client.Infrastructure.Managers.MWOS
             var httpresult = await Http.GetAsync($"mwo/GetMWOToApprove/{MWOId}");
             return await httpresult.ToResult<ApproveMWORequest>();
 
+        }
+
+        public async Task<IResult> UpdateMWOMinimal(UpdateMWOMinimalRequest request)
+        {
+            try
+            {
+                var httpresult = await Http.PostAsJsonAsync("MWO/updateMWOMinimal", request);
+
+                return await httpresult.ToResult();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+            return await Result.FailAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Features.Brands.Validators;
+using Application.Interfaces;
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
@@ -26,6 +27,12 @@ namespace Application.Features.Brands.Command
 
         public async Task<IResult> Handle(CreateBrandCommand request, CancellationToken cancellationToken)
         {
+            var validator = new CreateBrandValidator(Repository);
+            var validationresult = await validator.ValidateAsync(request.Data);
+            if (!validationresult.IsValid)
+            {
+                return Result.Fail(validationresult.Errors.Select(x=>x.ErrorMessage).ToList());
+            }
             var row = Brand.Create(request.Data.Name);
             await Repository.AddBrand(row);
             var result=await AppDbContext.SaveChangesAsync(cancellationToken);

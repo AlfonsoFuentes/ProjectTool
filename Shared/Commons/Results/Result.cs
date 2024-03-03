@@ -25,7 +25,7 @@ namespace Shared.Commons.Results
         }
 
         public List<string> Messages { get; set; } = new List<string>();
-        public string Message { get; set; }=string.Empty;
+        public string Message { get; set; } = string.Empty;
         public bool Succeeded { get; set; }
 
         public static IResult Fail()
@@ -74,7 +74,8 @@ namespace Shared.Commons.Results
 
         public static IResult Success(string message)
         {
-            return new Result { Succeeded = true, Message = message };
+
+            return new Result { Succeeded = true, Message = message, Messages = new() { message } };
         }
 
         public static Task<IResult> SuccessAsync()

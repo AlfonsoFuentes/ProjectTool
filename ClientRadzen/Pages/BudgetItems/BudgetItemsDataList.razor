@@ -1,0 +1,207 @@
+﻿@page "/BudgetItemsDataList/{MWOId:guid}"
+<RadzenStack Orientation="Orientation.Vertical">
+
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeLG="8">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1 rz-ml-4" Click="@(()=>AddNewBudgetItem())"
+                              MouseEnter="@(args => ShowTooltip(args,$"Add new Item") )" />
+                <RadzenButton Icon="home" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1 rz-ml-1" Click="@(()=>GoToHome())"
+                              MouseEnter="@(args => ShowTooltip(args,$"Go to Home Page") )" />
+                <RadzenButton Icon="list_alt" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1 rz-ml-1" Click="@(()=>GoToMWOPage())"
+                              MouseEnter="@(args => ShowTooltip(args,$"Go to MWO's page") )" />
+            </RadzenStack>
+
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeLG="4">
+            <RadzenTextBox Class="rz-ml-4" Style="width:100%;" Placeholder="Search..." @bind-Value="@nameFilter" @oninput=@((arg)=>nameFilter=arg.Value!.ToString()!)></RadzenTextBox>
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeLG="12">
+            <RadzenDataList AllowVirtualization=true Style="height:700px;overflow:auto;"
+                            WrapItems="false" AllowPaging="true" Density="Density.Compact"
+                            Data="@FilteredItems" TItem="BudgetItemResponse"  PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                <Template Context="product">
+                    <RadzenCard Style="width: 100%; padding: 0;">
+                        <RadzenRow Gap="0">
+                            <RadzenColumn Size="12" SizeLG="3" Class="rz-p-4">
+                                @if (!(EditRow && product == selectedRow))
+                                {
+
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-primary" Style="width:100%;"
+                                                @ondblclick="@(()=>OnDoubleClick(product))">@(product.ComposedName)</RadzenText>
+                                }
+                                else
+                                {
+                                    @if (!(product.Type.Id == BudgetItemTypeEnum.Engineering.Id || product.Type.Id == BudgetItemTypeEnum.Contingency.Id))
+                                    {
+                                        <RadzenFormField Text="Item Name" Style="width:100%;">
+                                            <RadzenTextBox @bind-Value=@product.Name class="rz-mr-1"
+                                                           @oninput="@((arg)=>product.Name=arg.Value!.ToString()!)"
+                                                           @onkeydown="@((arg)=>OnKeyDown(arg,product))"></RadzenTextBox>
+                                        </RadzenFormField>
+                                    }
+                                    else
+                                    {
+                                        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-primary" Style="width:100%;"
+                                                    @ondblclick="@(()=>OnDoubleClick(product))">@(product.ComposedName)</RadzenText>
+                                    }
+
+
+                                }
+
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeLG="7" Class="rz-p-4">
+                                <RadzenRow Gap="0">
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="2" class="rz-p-1">
+                                        <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H5" Class="rz-mb-0">Type</RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body2"
+                                                    @ondblclick="@(()=>OnDoubleClick(product))">@(product.Type.Name)</RadzenText>
+
+
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="2" class="rz-p-1">
+                                        @if (!(EditRow && product == selectedRow))
+                                        {
+                                            @if (!(product.Type.Id == BudgetItemTypeEnum.Engineering.Id || product.Type.Id == BudgetItemTypeEnum.Contingency.Id))
+                                            {
+                                                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H5" Class="rz-mb-0">Quantity</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2"
+                                                            @ondblclick="@(()=>OnDoubleClick(product))">@(product.Quantity)</RadzenText>
+                                            }
+                                            else
+                                            {
+                                                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H5" Class="rz-mb-0">Percentage</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2"
+                                                            @ondblclick="@(()=>OnDoubleClick(product))">@($"{product.Percentage}%")</RadzenText>
+                                            }
+
+
+                                        }
+                                        else
+                                        {
+                                            @if (!(product.Type.Id == BudgetItemTypeEnum.Engineering.Id || product.Type.Id == BudgetItemTypeEnum.Contingency.Id))
+                                            {
+                                                <RadzenFormField Text="Quantity">
+                                                    <RadzenNumeric @bind-Value=@product.Quantity ShowUpDown=false
+                                                                   @oninput="@((arg)=>Response.ChangeQuantity(product,arg.Value!.ToString()!))"
+                                                                   @onkeydown="@((arg) => OnKeyDown(arg, product))">
+                                                    </RadzenNumeric>
+
+                                                </RadzenFormField>
+                                            }
+                                            else
+                                            {
+                                                <RadzenFormField Text="Percentage">
+                                                    <RadzenNumeric @bind-Value=@product.Percentage ShowUpDown=false
+                                                                   @oninput="@((arg)=>Response.ChangePercentage(product,arg.Value!.ToString()!))"
+                                                                   @onkeydown="@((arg) => OnKeyDown(arg, product))">
+                                                    </RadzenNumeric>
+
+                                                </RadzenFormField>
+                                            }
+
+                                        }
+
+
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" class="rz-p-1">
+                                        @if (!(EditRow && product == selectedRow))
+                                        {
+                                            @if (!(product.Type.Id == BudgetItemTypeEnum.Engineering.Id || product.Type.Id == BudgetItemTypeEnum.Contingency.Id))
+                                            {
+                                                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H5" Class="rz-mb-0">Unitary Cost</RadzenText>
+                                                <RadzenText TextStyle="TextStyle.Body2"
+                                                            @ondblclick="@(()=>OnDoubleClick(product))">
+                                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", product.UnitaryCost)}")
+                                                </RadzenText>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            @if (!(product.Type.Id == BudgetItemTypeEnum.Engineering.Id || product.Type.Id == BudgetItemTypeEnum.Contingency.Id))
+                                            {
+                                                <RadzenFormField Text="Unitary Cost, USD/EA">
+                                                    <RadzenNumeric @bind-Value=@product.UnitaryCost ShowUpDown=false
+                                                                   @oninput="@((arg)=>Response.ChangeUnitaryCost(product,arg.Value!.ToString()!))"
+                                                                   @onkeydown="@((arg) => OnKeyDown(arg, product))">
+                                                    </RadzenNumeric>
+
+                                                </RadzenFormField>
+                                            }
+
+                                        }
+
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="2">
+                                        <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H5" Class="rz-mb-0">Budget, USD</RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Body2"
+                                                    @ondblclick="@(()=>OnDoubleClick(product))">
+                                            @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", product.Budget)}")
+                                        </RadzenText>
+
+
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
+                                       
+
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
+
+
+                                    </RadzenColumn>
+                                </RadzenRow>
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeLG="2" Class="rz-p-4">
+                                <RadzenStack Orientation="Orientation.Horizontal">
+                                    @if (EditRow && product == selectedRow)
+                                    {
+                                        <RadzenButton Icon="save" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1" Click="@(()=>SaveAsync(product))" />
+                                        <RadzenButton Icon="cancel" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2" Click="@(()=>CancelAsync())" />
+                                    }
+                                    else
+                                    {
+                                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1" Click="@(()=>Edit(product))" />
+                                        <RadzenButton Icon="dynamic_form" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1 rz-ml-2" Click="@(()=>EditByForm(product))" />
+                                        @if (!product.IsNotAbleToEditDelete)
+                                        {
+                                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2" Click="@(()=>Delete(product))" />
+                                        }
+
+                                    }
+                                </RadzenStack>
+                            </RadzenColumn>
+                        </RadzenRow>
+                    </RadzenCard>
+                </Template>
+
+            </RadzenDataList>
+        </RadzenColumn>
+    </RadzenRow>
+
+
+
+
+</RadzenStack>
+@code {
+    void ShowTooltip(ElementReference elementReference, string text) =>
+     TooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Right });
+    void NotifyMessage(NotificationSeverity Severity, string Leyend, List<string> messages)
+    {
+        AlertStyle alertStyle = Severity == NotificationSeverity.Success ? AlertStyle.Success : AlertStyle.Danger;
+
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = Severity,
+                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">@Leyend</RadzenText>,
+            DetailContent = ns =>@<SimpleAlertMessage AlertStyle="@alertStyle" Messages=@messages></SimpleAlertMessage>,
+
+
+            Duration = Severity == NotificationSeverity.Success ? 2000 : 4000,
+        });
+
+    }
+}

@@ -9,6 +9,7 @@ namespace Client.Infrastructure.Managers.BudgetItems
 
         Task<IResult> CreateBudgetItem(CreateBudgetItemRequest request);
         Task<IResult> UpdateBudgetItem(UpdateBudgetItemRequest request);
+        Task<IResult> UpdateBudgetItemMinimal(UpdateBudgetItemMinimalRequest request);
         Task<IResult<ListBudgetItemResponse>> GetAllBudgetItemByMWO(Guid MWOId);
         Task<IResult<UpdateBudgetItemRequest>> GetBudgetItemById(Guid Id);
 
@@ -120,6 +121,12 @@ namespace Client.Infrastructure.Managers.BudgetItems
         {
             var httpresult = await Http.GetAsync($"BudgetItem/GetDataForCreateBudget/{MWOId}");
             return await httpresult.ToResult<DataforCreateBudgetItemResponse>();
+        }
+
+        public async Task<IResult> UpdateBudgetItemMinimal(UpdateBudgetItemMinimalRequest request)
+        {
+            var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateMinimalItem", request);
+            return await httpresult.ToResult();
         }
     }
 }

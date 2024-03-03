@@ -93,7 +93,7 @@ namespace Shared.Models.PurchaseOrders.Requests.Create
             PurchaseOrderCurrency = _Supplier.SupplierCurrency;
         }
 
-        public void SetMWOBudgetItem(MWOResponse mWO, BudgetItemResponse budgetItem)
+        public void SetMWOBudgetItem(MWOResponse mWO, BudgetItemApprovedResponse budgetItem)
         {
             MWOId = mWO.Id;
             IsAlteration = budgetItem.Type.Id == BudgetItemTypeEnum.Alterations.Id;
@@ -104,7 +104,7 @@ namespace Shared.Models.PurchaseOrders.Requests.Create
             AddBlankItem();
         }
 
-        public void AddBudgetItem(BudgetItemResponse response)
+        public void AddBudgetItem(BudgetItemApprovedResponse response)
         {
             if (ItemsForm.Count == 0)
                 ItemsForm.Add(new CreatePurchaseOrderItemRequest());

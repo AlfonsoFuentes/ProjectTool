@@ -16,7 +16,7 @@ namespace Application.Features.MWOs.Queries
 
         public async Task<bool> Handle(MWOUpdateNameExistQuery request, CancellationToken cancellationToken)
         {
-            return await repository.ReviewNameExist(request.Item.Id,request.Item.Name);
+            return await repository.ReviewIfNameExist(request.Item.Id,request.Item.Name);
         }
     }
 

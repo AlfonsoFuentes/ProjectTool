@@ -18,7 +18,7 @@ namespace ClientRadzen.Pages.BudgetItems
         [Parameter]
         public Guid MWOId { get; set; }
 
-        FluentValidationValidator _fluentValidationValidator = null!;
+       
         [Inject]
         private IBudgetItemService Service { get; set; } = null!;
         [Inject]
@@ -76,25 +76,20 @@ namespace ClientRadzen.Pages.BudgetItems
             var result = await Service.CreateBudgetItem(Model);
             if (result.Succeeded)
             {
-                NotificationService.Notify(new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Success,
-                    Summary = "Success",
-                    Detail = result.Message,
-                    Duration = 4000
-                });
+                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
-                _NavigationManager.NavigateTo($"/BudgetItemtable/{MWOId}");
+                _NavigationManager.NavigateTo($"/BudgetItemsDataList/{MWOId}");
             }
             else
             {
                 Model.ValidationErrors = result.Messages;
+                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
             }
         }
 
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo($"/BudgetItemtable/{MWOId}");
+            _NavigationManager.NavigateTo($"/BudgetItemsDataList/{MWOId}");
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Features.MWOs.Validators;
+using Application.Interfaces;
 using Domain.Entities.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,12 @@ namespace Application.Features.MWOs.Commands
 
         public async Task<IResult> Handle(UpdateMWOCommand request, CancellationToken cancellationToken)
         {
+            var validator = new UpdateMWOValidator(Repository);
+            var validatorResult = await validator.ValidateAsync(request.Data);
+            if (!validatorResult.IsValid)
+            {
+                return Result.Fail(validatorResult.Errors.Select(x => x.ErrorMessage).ToList());
+            }
             var mwo = await AppDbContext.MWOs.SingleOrDefaultAsync(x => x.Id == request.Data.Id);
             if (mwo == null)
             {
@@ -35,7 +42,7 @@ namespace Application.Features.MWOs.Commands
             mwo.PercentageContingency = request.Data.PercentageContingency;
             mwo.PercentageEngineering = request.Data.PercentageEngineering;
             mwo.PercentageAssetNoProductive = request.Data.PercentageAssetNoProductive;
-
+            mwo.PercentageTaxForAlterations=request.Data.PercentageTaxForAlterations;
             if (mwo.IsAssetProductive && !request.Data.IsAssetProductive)
             {
                 mwo.IsAssetProductive = false;

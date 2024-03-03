@@ -83,8 +83,9 @@ namespace ClientRadzen.Pages.Brands
             }
 
         }
-        RadzenDataGrid<BrandResponse> grid;
         BrandResponse selectedRow = null!;
+        RadzenDataGrid<BrandResponse> grid;
+        
         void OnRowClick(DataGridRowMouseEventArgs<BrandResponse> args)
         {
 

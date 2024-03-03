@@ -16,7 +16,7 @@ namespace ClientRadzen.Pages.Suppliers
         private ISupplierService Service { get; set; }
 
         UpdateSupplierRequest Model { get; set; } = new();
-        FluentValidationValidator _fluentValidationValidator = null!;
+     
         string SupplierName = string.Empty;
         protected override async Task OnInitializedAsync()
         {
@@ -29,39 +29,25 @@ namespace ClientRadzen.Pages.Suppliers
         }
         private async Task SaveAsync()
         {
-            if (await _fluentValidationValidator!.ValidateAsync())
-            {
+            
 
                 var result = await Service.UpdateSupplier(Model);
                 if (result.Succeeded)
                 {
-                    NotificationService.Notify(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Success,
-                        Summary = "Success",
-                        Detail = result.Message,
-                        Duration = 4000
-                    });
-
-                    _NavigationManager.NavigateTo("/Supplierstable");
+                    NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+                    _NavigationManager.NavigateTo("/SupplierDatalist");
                 }
                 else
                 {
-                    NotificationService.Notify(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Error,
-                        Summary = "Error Summary",
-                        Detail = result.Message,
-                        Duration = 4000
-                    });
+                    NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
                 }
-            }
+           
 
         }
 
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo("/Supplierstable");
+            _NavigationManager.NavigateTo("/SupplierDatalist");
         }
     }
 }

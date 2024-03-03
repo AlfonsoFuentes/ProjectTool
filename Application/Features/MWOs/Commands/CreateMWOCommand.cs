@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Features.MWOs.Validators;
+using Application.Interfaces;
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
@@ -24,6 +25,12 @@ namespace Application.Features.MWOs.Commands
 
         public async Task<IResult> Handle(CreateMWOCommand request, CancellationToken cancellationToken)
         {
+            var validator = new CreateMWOValidator(Repository);
+            var validatorResult = await validator.ValidateAsync(request.Data);
+            if (!validatorResult.IsValid)
+            {
+                return Result.Fail(validatorResult.Errors.Select(x => x.ErrorMessage).ToList());
+            }
             var row = MWO.Create(request.Data.Name, request.Data.Type!.Id);
             row.IsAssetProductive = request.Data.IsAssetProductive;
             row.PercentageEngineering = request.Data.PercentageEngineering;

@@ -30,9 +30,9 @@ namespace ClientRadzen.Pages.PurchaseOrders
         CreatePurchaseOrderRequest Model { get; set; } = new();
         ConversionRate RateList { get; set; }
         DateOnly CurrentDate => DateOnly.FromDateTime(DateTime.UtcNow);
-        BudgetItemResponse ItemToAdd;
+        BudgetItemApprovedResponse ItemToAdd;
         SupplierResponse Supplier;
-        BudgetItemResponse BudgetItemToCreatePO = new();
+        BudgetItemApprovedResponse BudgetItemToCreatePO = new();
         MWOResponse MWO = new();
         protected override async Task OnInitializedAsync()
         {

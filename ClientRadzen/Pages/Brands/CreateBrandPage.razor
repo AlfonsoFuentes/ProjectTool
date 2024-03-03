@@ -8,13 +8,13 @@
         <RadzenColumn SizeXS="8" SizeSM="4">
             <RadzenStack Orientation="Orientation.Vertical">
                 <RadzenTemplateForm TItem="CreateBrandRequest" Data="@Model">
-                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                   
                     <RadzenFormField Text="Name" Style="width: 100%;">
                         <RadzenTextArea Rows="2" @bind-Value=@Model.Name class="w-100"  
                                         Change=ChangeName Name="name" />
 
                      </RadzenFormField>
-                     <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                    
                     
                  </RadzenTemplateForm>
              </RadzenStack>
@@ -34,5 +34,20 @@
     void ChangeName(string name)
     {
         Model.Name = name;
+    }
+    void NotifyMessage(NotificationSeverity Severity, string Leyend, List<string> messages)
+    {
+        AlertStyle alertStyle = Severity == NotificationSeverity.Success ? AlertStyle.Success : AlertStyle.Danger;
+
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = Severity,
+                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">@Leyend</RadzenText>,
+            DetailContent = ns =>@<SimpleAlertMessage AlertStyle="@alertStyle" Messages=@messages></SimpleAlertMessage>,
+
+
+            Duration = Severity == NotificationSeverity.Success ? 2000 : 4000,
+        });
+
     }
 }

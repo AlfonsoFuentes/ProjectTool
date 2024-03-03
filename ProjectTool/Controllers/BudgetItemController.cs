@@ -84,6 +84,12 @@ namespace Server.Controllers
 
             return Ok(await Mediator.Send(new UpdateRegularBudgetItemCommand(request)));
         }
+        [HttpPost("UpdateMinimalItem")]
+        public async Task<IActionResult> UpdateRegularBudgetItem(UpdateBudgetItemMinimalRequest request)
+        {
+
+            return Ok(await Mediator.Send(new UpdateBudgetItemMinimalCommand(request)));
+        }
         [HttpPost("UpdateEquipmentItem")]
         public async Task<IActionResult> UpdateEquipmentItem(UpdateBudgetItemRequest request)
         {
