@@ -1,6 +1,4 @@
-﻿using Application.Features.BudgetItems.Validators;
-using Application.Interfaces;
-using Domain.Entities.Data;
+﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
@@ -21,12 +19,7 @@ namespace Application.Features.BudgetItems.Command
 
         public async Task<IResult> Handle(UpdateEquipmentInstrumentsItemCommand request, CancellationToken cancellationToken)
         {
-            var validator = new UpdateBudgetItemValidator(Repository);
-            var validatorresult = await validator.ValidateAsync(request.Data);
-            if (!validatorresult.IsValid)
-            {
-                return Result.Fail(validatorresult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
+           
             var row = await Repository.GetBudgetItemWithBrandById(request.Data.Id);
            
             row.Name = request.Data.Name;

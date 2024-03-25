@@ -24,10 +24,4 @@
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Validators\Brands\" />
-    <Folder Include="Validators\MWOs\" />
-    <Folder Include="Validators\Suppliers\" />
-  </ItemGroup>
-
 </Project>

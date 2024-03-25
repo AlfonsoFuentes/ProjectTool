@@ -25,15 +25,15 @@ namespace Infrastructure.Persistence.Repositories
 
         }
 
-        public async Task<bool> ReviewNameExist(Guid MWOId, int budgetType, string name)
+        public async Task<bool> ReviewIfNameExist(Guid MWOId, string name)
         {
 
-            return await Context.BudgetItems.AnyAsync(x => x.MWOId == MWOId && x.Type == budgetType && x.Name == name);
+            return await Context.BudgetItems.AnyAsync(x => x.MWOId == MWOId && x.Name == name);
         }
-        public async Task<bool> ReviewNameExist(Guid Id, Guid MWOId, int budgetType, string name)
+        public async Task<bool> ReviewIfNameExist(Guid Id, Guid MWOId, string name)
         {
 
-            return await Context.BudgetItems.Where(x => x.Id != Id && x.MWOId == MWOId && x.Type == budgetType).AnyAsync(x => x.Name == name);
+            return await Context.BudgetItems.Where(x => x.Id != Id && x.MWOId == MWOId).AnyAsync(x => x.Name == name);
         }
         public Task<IQueryable<BudgetItem>> GetBudgetItemList(Guid MWOId)
         {
@@ -115,6 +115,7 @@ namespace Infrastructure.Persistence.Repositories
                 .ToListAsync();
             return result!;
         }
+
         public Task UpdateBudgetItem(BudgetItem entity)
         {
             Context.BudgetItems.Update(entity);
@@ -282,6 +283,33 @@ namespace Infrastructure.Persistence.Repositories
         {
             Context.MWOs.Update(entity);
             return Task.CompletedTask;
+        }
+
+        public Task<IQueryable<BudgetItem>> GetBudgetItemsWithPurchaseordersList(Guid MWOId)
+        {
+            var BudgetItems = Context.BudgetItems
+
+                .Include(x => x.PurchaseOrderItems)
+                .ThenInclude(x => x.PurchaseOrder)
+                .ThenInclude(x => x.Supplier)
+
+                .AsNoTracking().
+                AsSplitQuery().
+                AsQueryable()
+                .Where(x => x.MWOId == MWOId);
+            return Task.FromResult(BudgetItems);
+        }
+        public Task<IQueryable<PurchaseOrder>> GetPurchaseOrdersByMWOId(Guid MWOId)
+        {
+            var BudgetItems = Context.PurchaseOrders
+                .Include(x => x.PurchaseOrderItems)
+                .Include(x => x.Supplier)
+
+                .AsNoTracking().
+                AsSplitQuery().
+                AsQueryable()
+                .Where(x => x.MWOId == MWOId);
+            return Task.FromResult(BudgetItems);
         }
     }
 }

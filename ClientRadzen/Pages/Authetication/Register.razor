@@ -19,12 +19,15 @@
                 <ValidationMessage For="() => Input.Email" style="color:red; font-size:x-small;" />
                 <RadzenFormField Text="Role" Style="width: 100%;">
                     <RadzenDropDown @bind-Value=@Input.Role Data=@RolesDto.Roles Style="width: 100%;" Name="role" TextProperty="Name"
+                                    AllowClear=true
+                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
+                                    AllowFiltering="true"
                                     ValueProperty="Name" />
 
                 </RadzenFormField>
                 <ValidationMessage For="() => Input.Role" style="color:red; font-size:x-small;" />
 
-                <RadzenButton ButtonType="ButtonType.Submit">Register new user</RadzenButton>
+                <RadzenButton ButtonType="ButtonType.Submit" MouseEnter="@(args => ShowTooltip(args,$"Register new user") )">Register new user</RadzenButton>
             </RadzenStack>
         </EditForm>
     </RadzenColumn>
@@ -43,9 +46,11 @@
             var result = await Acct.RegisterAsync(Input);
             if (result.Succeeded)
             {
-                _NavigationManager.NavigateTo("/RegisterSuccesfull");
+                _NavigationManager.NavigateTo("/UserDataList");
             }
         }
 
     }
+    void ShowTooltip(ElementReference elementReference, string text) =>
+     TooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Right });
 }

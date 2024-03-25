@@ -1,0 +1,10 @@
+﻿<RadzenRow JustifyContent="JustifyContent.SpaceBetween">
+    <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5"><b>@Label</b></RadzenText>
+    <RadzenText TextStyle="TextStyle.Caption">@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Value)}")</RadzenText>
+</RadzenRow>
+@code {
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+    [Parameter]
+    public double Value { get; set; } 
+}

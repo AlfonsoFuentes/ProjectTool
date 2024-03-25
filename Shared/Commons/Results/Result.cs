@@ -35,7 +35,9 @@ namespace Shared.Commons.Results
 
         public static IResult Fail(string message)
         {
-            return new Result { Succeeded = false, Message = message };
+            List<string> messages = new();
+            messages.Add(message);
+            return new Result { Succeeded = false, Message = message, Messages = messages };
         }
 
         public static IResult Fail(List<string> messages)

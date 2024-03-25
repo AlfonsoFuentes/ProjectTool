@@ -5,11 +5,12 @@ namespace Shared.Models.BudgetItems
 {
     public class UpdateBudgetItemRequest
     {
+        public Func<Task<bool>> Validator { get; set; } = null!;
         public Guid MWOId { get; set; }
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string MWOName { get; set; } = string.Empty;
-        public string Nomenclatore {  get; set; } = string.Empty;
+        public string Nomenclatore { get; set; } = string.Empty;
         public BudgetItemTypeEnum Type { get; set; } = BudgetItemTypeEnum.None;
         public double UnitaryCost { get; set; }
         public double Budget { get; set; }
@@ -21,11 +22,11 @@ namespace Shared.Models.BudgetItems
         public string? Reference { get; set; } = string.Empty;
         public double Percentage { get; set; }
         public List<BudgetItemDto> SelectedBudgetItemDtos { get; set; } = new List<BudgetItemDto>();
-        public List<BudgetItemDto> BudgetItemDtos { get; set; } = new List<BudgetItemDto>();
+       
         public List<Guid> SelectedIdBudgetItemDtos { get; set; } = new List<Guid>();
-
+        public List<BudgetItemDto> BudgetItemDtos { get; set; } = new List<BudgetItemDto>();
         public double SumBudgetTaxes => Math.Round(SelectedBudgetItemDtos.Sum(x => x.Budget), 2);
-        public List<string> ValidationErrors { get; set; } = new();
+    
 
         public bool IsRegularData => Type.Id == BudgetItemTypeEnum.EHS.Id
             || Type.Id == BudgetItemTypeEnum.Structural.Id
@@ -45,25 +46,26 @@ namespace Shared.Models.BudgetItems
         public bool IsAlteration => Type.Id == BudgetItemTypeEnum.Alterations.Id;
         public double SumPercentage { get; set; }
         public BrandResponse? Brand { get; set; }
-        public void ChangeQuantity(string stringquantity)
+        public async Task ChangeQuantity(string stringquantity)
         {
-            ValidationErrors.Clear();
+           
             double quantity = 0;
             if (!double.TryParse(stringquantity, out quantity))
-                return;
+            { }
 
             if (IsRegularData || IsEquipmentData || IsAlteration)
             {
                 Quantity = quantity;
                 Budget = Quantity * UnitaryCost;
             }
+            if (Validator != null) await Validator();
         }
-        public void ChangeUnitaryCost(string stringunitaryCost)
+        public async Task ChangeUnitaryCost(string stringunitaryCost)
         {
-            ValidationErrors.Clear();
+           
             double unitarycost = 0;
             if (!double.TryParse(stringunitaryCost, out unitarycost))
-                return;
+            { }
 
 
             if (IsRegularData || IsEquipmentData || IsAlteration)
@@ -71,24 +73,26 @@ namespace Shared.Models.BudgetItems
                 UnitaryCost = unitarycost;
                 Budget = Quantity * UnitaryCost;
             }
+            if (Validator != null) await Validator();
         }
-        public void ChangeTaxesItemList(object objeto)
+        public async Task ChangeTaxesItemList(object objeto)
         {
-            ValidationErrors.Clear();
+           
             SelectedBudgetItemDtos.Clear();
             foreach (var item in SelectedIdBudgetItemDtos)
             {
-                SelectedBudgetItemDtos.Add(BudgetItemDtos.Single(x => x.Id == item));
+                SelectedBudgetItemDtos.Add(BudgetItemDtos.Single(x => x.BudgetItemId == item));
             }
             Budget = Math.Round(SumBudgetTaxes * Percentage / 100.0, 2);
+            if (Validator != null) await Validator();
         }
         public double SumBudgetItems { get; set; }
-        public void ChangePercentage(string stringpercentage)
+        public async Task ChangePercentage(string stringpercentage)
         {
-            ValidationErrors.Clear();
+           
             double percentage = 0;
             if (!double.TryParse(stringpercentage, out percentage))
-                return;
+            { }
             if (IsEngContData)
             {
                 SumPercentage -= Percentage;
@@ -101,27 +105,29 @@ namespace Shared.Models.BudgetItems
                 Percentage = percentage;
                 Budget = Math.Round(SumBudgetTaxes * Percentage / 100, 2);
             }
-
+            if (Validator != null) await Validator();
         }
-        public void ChangeBudget(string stringbudget)
+        public async Task ChangeBudget(string stringunitarycost)
         {
-            ValidationErrors.Clear();
-            double budget = 0;
-            if (!double.TryParse(stringbudget, out budget))
-                return;
+           
+            double Unitarycost = 0;
+            if (!double.TryParse(stringunitarycost, out Unitarycost))
+            { }
             if (IsEngineeringData)
             {
                 Percentage = 0;
-                Budget = budget;
+                UnitaryCost = Unitarycost;
+                Quantity = 1;
+                Budget = UnitaryCost * Quantity;
             }
-
+            if (Validator != null) await Validator();
 
 
         }
-        public void ChangeName(string name)
+        public async Task ChangeName(string name)
         {
             Name = name;
-            ValidationErrors.Clear();
+            if (Validator != null) await Validator();
 
         }
     }

@@ -27,12 +27,12 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<bool> ReviewIfNameExist(string name)
         {
-            return await Context.Brands.AnyAsync(x => x.Name == name);
+            return await Context.Brands.AnyAsync(x => x.Name.ToLower() == name);
         }
 
         public async Task<bool> ReviewIfNameExist(Guid Id, string name)
         {
-            return await Context.Brands.Where(x => x.Id != Id).AnyAsync(x => x.Name == name);
+            return await Context.Brands.Where(x => x.Id != Id).AnyAsync(x => x.Name.ToLower() == name);
         }
 
         public Task<IQueryable<Brand>> GetBrandList()

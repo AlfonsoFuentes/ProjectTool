@@ -2,96 +2,115 @@
 using Blazored.FluentValidation;
 using Client.Infrastructure.Managers.Brands;
 using Client.Infrastructure.Managers.BudgetItems;
+using ClientRadzen.Pages.Brands;
 using Microsoft.AspNetCore.Components;
 using Radzen;
-using Shared.Commons.Results;
 using Shared.Models.Brands;
 using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
 
 namespace ClientRadzen.Pages.BudgetItems
 {
     public partial class CreateBudgetItemPage
     {
+        [CascadingParameter]
+        private App MainApp { get; set; }
         CreateBudgetItemRequest Model { get; set; } = new();
 
         [Parameter]
         public Guid MWOId { get; set; }
 
-       
+
         [Inject]
         private IBudgetItemService Service { get; set; } = null!;
         [Inject]
         private IBrandService BrandService { get; set; }
-        [Inject]
-        private IMWOService MWOService { get; set; }    
 
-        UpdateMWORequest CurrentMWO { get; set; }
+        ListBudgetItemResponse Response { get; set; } = new();
+
         List<BrandResponse> Brands { get; set; } = new();
-        List<BudgetItemDto> BudgetItemDtos { get; set; } = new();
-        bool DisableCreateButton => Model.Type == BudgetItemTypeEnum.None ? true :
-      Model.Type == BudgetItemTypeEnum.Taxes && Model.BudgetItemDtos.Count == 0 ? true : Model.ValidationErrors.Count > 0;
-  
+
+      
+
         protected override async Task OnInitializedAsync()
         {
-            var resultDataForCreateBudget = await Service.GetDataForCreateBudgetItem(MWOId);
-            if (resultDataForCreateBudget.Succeeded)
+            var resultBudgetItems = await Service.GetAllBudgetItemByMWO(MWOId);
+            if (resultBudgetItems.Succeeded)
             {
-                Model.SumBudgetItems = resultDataForCreateBudget.Data.SumBudget;
-                Model.SumPercentage = resultDataForCreateBudget.Data.SumEngContPercentage;
-                BudgetItemDtos = resultDataForCreateBudget.Data.BudgetItems;
+                Response = resultBudgetItems.Data;
+                Model.MWO = Response.MWO;
+                Model.Validator += ValidateAsync;
             }
-            else
-            {
-                Model.ValidationErrors = resultDataForCreateBudget.Messages;
-            }
-            var resultMWO=await MWOService.GetMWOById(MWOId);
-            if (resultMWO.Succeeded)
-            {
-                CurrentMWO = resultMWO.Data;
-                Model.MWOName = CurrentMWO.Name;
-                Model.MWOId = MWOId;
-            }
-            else
-            {
-                Model.ValidationErrors = resultMWO.Messages;
-            }
-            
-
             
             var resultbrands = await BrandService.GetAllBrand();
             if (resultbrands.Succeeded)
             {
                 Brands = resultbrands.Data;
             }
-            else
-            {
-                Model.ValidationErrors = resultbrands.Messages;
-            }
+           
         }
         private async Task SaveAsync()
         {
-            Model.ValidationErrors.Clear();
+          
 
             var result = await Service.CreateBudgetItem(Model);
             if (result.Succeeded)
             {
-                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+               MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
-                _NavigationManager.NavigateTo($"/BudgetItemsDataList/{MWOId}");
+                CancelAsync();
             }
             else
             {
-                Model.ValidationErrors = result.Messages;
-                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+
+                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
             }
         }
 
+       
+        async Task CreateBrand()
+        {
+            var result = await DialogService.OpenAsync<CreateBrandDialog>($"Create New Brand",
+                new Dictionary<string, object>() { },
+                new DialogOptions() { Width = "500px", Height = "312px", Resizable = true, Draggable = true });
+            if (result != null && result is BrandResponse)
+            {
+                Model.Brand = result as BrandResponse;
+                var resultData = await BrandService.GetAllBrand();
+                if (resultData.Succeeded)
+                {
+                    Brands = resultData.Data;
+
+                }
+
+
+            }
+        }
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo($"/BudgetItemsDataList/{MWOId}");
-        }
+            Navigation.NavigateBack();
 
+        }
+        FluentValidationValidator _fluentValidationValidator = null!;
+        async Task<bool> ValidateAsync()
+        {
+            try
+            {
+                NotValidated = !(await _fluentValidationValidator.ValidateAsync());
+                return NotValidated;
+            }
+            catch (Exception ex)
+            {
+                string exm = ex.Message;
+            }
+            return false;
+
+        }
+        bool NotValidated = true;
+
+        public void Dispose()
+        {
+            Model.Validator -= ValidateAsync;
+        }
     }
 
 }

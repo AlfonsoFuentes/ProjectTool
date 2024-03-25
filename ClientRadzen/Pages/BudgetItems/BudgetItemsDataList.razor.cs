@@ -14,6 +14,8 @@ namespace ClientRadzen.Pages.BudgetItems
 {
     public partial class BudgetItemsDataList
     {
+        [CascadingParameter]
+        public App MainApp { get; set; }
         [Inject]
         private IBudgetItemService Service { get; set; }
 
@@ -24,8 +26,8 @@ namespace ClientRadzen.Pages.BudgetItems
         [Parameter]
         public Guid MWOId { get; set; }
         Func<BudgetItemResponse, bool> fiterexpresion => x =>
-        x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) || 
-        x.Nomenclatore.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)||
+        x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
+        x.Nomenclatore.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
         x.Brand.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
         x.Type.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase);
         IQueryable<BudgetItemResponse> FilteredItems => Response.BudgetItems?.Where(fiterexpresion).AsQueryable();
@@ -54,31 +56,9 @@ namespace ClientRadzen.Pages.BudgetItems
             _NavigationManager.NavigateTo($"/CreateBudgetItem/{MWOId}");
         }
 
-        void Edit(BudgetItemResponse Response)
-        {
-            OnDoubleClick(Response);
 
-        }
-        void GotoMWOTable()
-        {
-            _NavigationManager.NavigateTo($"/mwotable");
-        }
-        void GoToCreatePurchaseOrder(BudgetItemResponse BudgetItemResponse)
-        {
-            if (BudgetItemResponse.Type.Id == BudgetItemTypeEnum.Taxes.Id)
-            {
-                _NavigationManager.NavigateTo($"/CreateTaxPurchaseOrder/{BudgetItemResponse.Id}");
-            }
-            else if (BudgetItemResponse.Type.Id == BudgetItemTypeEnum.Engineering.Id)
-            {
-                _NavigationManager.NavigateTo($"/CreateCapitalizedSalary/{BudgetItemResponse.Id}");
-            }
-            else
-            {
-                _NavigationManager.NavigateTo($"/CreatePurchaseOrder/{BudgetItemResponse.Id}");
-            }
 
-        }
+
 
         async Task Delete(BudgetItemResponse BudgetItemResponse)
         {
@@ -95,94 +75,32 @@ namespace ClientRadzen.Pages.BudgetItems
                 var result = await Service.Delete(BudgetItemResponse);
                 if (result.Succeeded)
                 {
-                    NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+                    MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
                     await UpdateAll();
-                    EditRow = false;
-                    selectedRow = null!;
+
                 }
                 else
                 {
-                    NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+                    MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
                 }
 
             }
 
         }
 
-        BudgetItemResponse selectedRow = null!;
 
-        private void GoToHome()
+        async Task Approve()
         {
-            _NavigationManager.NavigateTo("/");
-        }
-        private void GoToMWOPage()
-        {
-            _NavigationManager.NavigateTo("/MWODataList");
-        }
-        bool EditRow = false;
-
-        void OnDoubleClick(BudgetItemResponse _selectedRow)
-        {
-            EditRow = true;
-            selectedRow = _selectedRow;
-
-
-        }
-        async Task OnKeyDown(KeyboardEventArgs arg, BudgetItemResponse order)
-        {
-            if (arg.Key == "Enter")
+            var resultDialog = await DialogService.Confirm($"Are you want to approved {Response.MWO.Name}?", "Confirm",
+                new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+            if (resultDialog.Value)
             {
-                await SaveAsync(order);
-
+                _NavigationManager.NavigateTo($"/ApproveMWO/{Response.MWO.Id}");
 
             }
-            else if (arg.Key == "Escape")
-            {
-                EditRow = false;
-            }
-        }
-        async Task SaveAsync(BudgetItemResponse order)
-        {
-            if (EditRow)
-            {
-                await UpdateAsync(order);
 
-            }
         }
-        async Task UpdateAsync(BudgetItemResponse order)
-        {
-            UpdateBudgetItemMinimalRequest Model = new()
-            {
-                Id = order.Id,
-                Name = order.Name,
-                UnitaryCost = order.UnitaryCost,
-                MWOId = order.MWOId,
-                MWOName = order.MWOName,
-                Quantity = order.Quantity,
-                Type = order.Type,
-                Percentage = order.Percentage,
-                Budget = order.Budget,
 
-
-            };
-            var result = await Service.UpdateBudgetItemMinimal(Model);
-            if (result.Succeeded)
-            {
-                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
-                await UpdateAll();
-                EditRow = false;
-                selectedRow = null!;
-            }
-            else
-            {
-                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
-
-            }
-        }
-        async Task CancelAsync()
-        {
-            await UpdateAll();
-        }
         void EditByForm(BudgetItemResponse Response)
         {
             _NavigationManager.NavigateTo($"/UpdateBudgetItem/{Response.Id}");

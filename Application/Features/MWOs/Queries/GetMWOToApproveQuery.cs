@@ -4,6 +4,7 @@ using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.MWO;
+using Shared.Models.MWOTypes;
 
 namespace Application.Features.MWOs.Queries
 {
@@ -26,6 +27,7 @@ namespace Application.Features.MWOs.Queries
             {
                 Id = mwo.Id,
                 Name = mwo.Name,
+                Type=MWOTypeEnum.GetType(mwo.Type),
                 IsAssetProductive = mwo.IsAssetProductive,
                 PercentageAssetNoProductive = mwo.PercentageAssetNoProductive,
                 PercentageContingency = mwo.PercentageContingency,

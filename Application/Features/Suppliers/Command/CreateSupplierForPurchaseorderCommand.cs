@@ -1,5 +1,4 @@
-﻿using Application.Features.Suppliers.Validators;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
@@ -8,7 +7,7 @@ using Shared.Models.Suppliers;
 
 namespace Application.Features.Suppliers.Command
 {
-    public record CreateSupplierForPurchaseorderCommand(CreateSupplierRequest Data) : IRequest<IResult<SupplierResponse>>;
+    public record CreateSupplierForPurchaseorderCommand(CreateSupplierRequestDto Data) : IRequest<IResult<SupplierResponse>>;
     public class CreateSupplierForPurchaseorderCommandHandler : IRequestHandler<CreateSupplierForPurchaseorderCommand, IResult<SupplierResponse>>
     {
         private ISupplierRepository Repository { get; set; }
@@ -23,24 +22,17 @@ namespace Application.Features.Suppliers.Command
         public async Task<IResult<SupplierResponse>> Handle(CreateSupplierForPurchaseorderCommand request, CancellationToken cancellationToken)
         {
 
-            var validator = new CreateSupplierValidator(Repository);
-            var validationresult = await validator.ValidateAsync(request.Data);
-            if (!validationresult.IsValid)
-            {
-                return Result<SupplierResponse>.Fail(validationresult.Errors.Select(x => x.ErrorMessage).ToArray());
-            }
-
-
             var row = Supplier.Create(request.Data.Name, request.Data.VendorCode, request.Data.TaxCodeLD,
-                request.Data.TaxCodeLP, request.Data.SupplierCurrency.Id);
+                request.Data.TaxCodeLP, request.Data.SupplierCurrency);
 
-
+            row.NickName = request.Data.NickName;
             await Repository.AddSupplier(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
             SupplierResponse response = new SupplierResponse()
             {
                 Id = row.Id,
                 Name = row.Name,
+                NickName = row.NickName,
                 VendorCode = row.VendorCode,
                 TaxCodeLD = row.TaxCodeLD,
                 TaxCodeLP = row.TaxCodeLP,

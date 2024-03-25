@@ -1,12 +1,11 @@
-﻿using Application.Features.Brands.Validators;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.Brands;
 
 namespace Application.Features.Brands.Command
 {
-    public record UpdateBrandCommand(UpdateBrandRequest Data) : IRequest<IResult>;
+    public record UpdateBrandCommand(UpdateBrandRequestDto Data) : IRequest<IResult>;
     public class UpdateBrandCommandHandler : IRequestHandler<UpdateBrandCommand, IResult>
     {
         private IBrandRepository Repository { get; set; }
@@ -20,12 +19,7 @@ namespace Application.Features.Brands.Command
 
         public async Task<IResult> Handle(UpdateBrandCommand request, CancellationToken cancellationToken)
         {
-            var validator = new UpdateBrandValidator(Repository);
-            var validationresult = await validator.ValidateAsync(request.Data);
-            if (!validationresult.IsValid)
-            {
-                return Result.Fail(validationresult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
+           
             var row = await Repository.GetBrandById(request.Data.Id);
             if (row == null) return Result.Fail($"{request.Data.Name} was not found!");
 

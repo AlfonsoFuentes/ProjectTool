@@ -5,10 +5,11 @@ namespace Shared.Models.Suppliers
     public class SupplierResponse
     {
         public Guid Id { get; set; }
+        
         public string Name { get; set; } = string.Empty;
         public string VendorCode { get; set; } = string.Empty;
         public string TaxCodeLD { get; set; } = "751545";
-
+        public string NickName { get; set; } = string.Empty;
         public string TaxCodeLP { get; set; } = "721031";
 
 

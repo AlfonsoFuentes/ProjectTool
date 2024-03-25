@@ -1,4 +1,6 @@
-﻿using Blazored.FluentValidation;
+﻿#nullable disable
+using Blazored.FluentValidation;
+using Client.Infrastructure.Managers.BudgetItems;
 using Client.Infrastructure.Managers.CurrencyApis;
 using Client.Infrastructure.Managers.PurchaseOrders;
 using Client.Infrastructure.Managers.Suppliers;
@@ -7,81 +9,88 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.BudgetItems;
 using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
-using Shared.Models.PurchaseOrders.Requests.Create;
-using Shared.Models.PurchaseOrders.Responses;
+using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
 using Shared.Models.Suppliers;
-#nullable disable
+
 namespace ClientRadzen.Pages.PurchaseOrders
 {
     public partial class CreateCapitalizedSalary
     {
+        [CascadingParameter]
+        public App MainApp { get; set; }
         [Parameter]
         public Guid BudgetItemId { get; set; }
-
         [Inject]
         private IPurchaseOrderService Service { get; set; }
-        [Inject] public IRate _CurrencyService { get; set; }
+
+       
         [Inject]
-        private ISupplierService SupplierService { get; set; }
+        private IBudgetItemService BudgetItemService { get; set; }
 
-        DataForCreatePurchaseOrder CommonData { get; set; } = new();
+        CreateCapitalizedSalaryPurchaseOrderRequest Model = null;
+       
+       
 
-        CreateCapitalizedSalaryPurchaseOrderRequest Model { get; set; } = new();
-        ConversionRate RateList { get; set; }
+        FluentValidationValidator _fluentValidationValidator = null!;
 
-        BudgetItemApprovedResponse BudgetItemToCreatePO = new();
-        MWOResponse MWO = new();
+
+
+      
         protected override async Task OnInitializedAsync()
         {
-
-            RateList = await _CurrencyService.GetRates();
-            var result = await Service.GetDataForCreatePurchaseOrder(BudgetItemId);
+           
+            var result = await BudgetItemService.GetApprovedBudgetItemsById(BudgetItemId);
             if (result.Succeeded)
             {
-                CommonData = result.Data;
                 Model = new();
-                Model.USDCOP = RateList == null ? 4000 : Math.Round(RateList.COP, 2);
-                Model.USDEUR = RateList == null ? 1 : Math.Round(RateList.EUR, 2);
-                Model.SetMWOBudgetItem(CommonData.MWO, CommonData.BudgetItem);
-                MWO = CommonData.MWO;
-                Model.MainBudgetItemId = BudgetItemId;
-                BudgetItemToCreatePO = CommonData.BudgetItem;
+                Model.SetMainBudgetItem(result.Data);
+                Model.Validator += ValidateAsync;
 
+                Model.TRMUSDCOP = MainApp.RateList == null ? 4000 : Math.Round(MainApp.RateList.COP, 2);
+                Model.TRMUSDEUR = MainApp.RateList == null ? 1 : Math.Round(MainApp.RateList.EUR, 2);
 
             }
 
 
+
+
+            StateHasChanged();
         }
-        FluentValidationValidator _fluentValidationValidator = null!;
+
+
+        async Task<bool> ValidateAsync()
+        {
+            Validated = await _fluentValidationValidator.ValidateAsync();
+            return Validated;
+        }
+        bool Validated = false;
         public async Task SaveAsync()
         {
-            if (await _fluentValidationValidator.ValidateAsync())
+            var result = await Service.CreatePurchaseOrderCapitalizedSalary(Model);
+            if (result.Succeeded)
             {
-                var result = await Service.CreatePurchaseOrderCapitalizedSalary(Model);
-                if (result.Succeeded)
-                {
-                    NotificationService.Notify(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Success,
-                        Summary = "Success",
-                        Detail = result.Message,
-                        Duration = 4000
-                    });
+                MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
-                    _NavigationManager.NavigateTo($"/BudgetItemtable/{MWO.Id}");
-                }
-                else
-                {
-                    Model.ValidationErrors = result.Messages;
-                    StateHasChanged();
-                }
+               Cancel();
+            }
+            else
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+
+
             }
 
         }
+
         void Cancel()
         {
-            _NavigationManager.NavigateTo($"/BudgetItemtable/{MWO.Id}");
+            Navigation.NavigateBack();
         }
-        
+       
+        public void Dispose()
+        {
+            Model.Validator -= ValidateAsync;
+        }
+
     }
 }

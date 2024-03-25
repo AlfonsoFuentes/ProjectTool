@@ -9,46 +9,59 @@ namespace ClientRadzen.Pages.Brands
     public partial class UpdateBrandPage
     {
         [Parameter]
-        public Guid Id { get; set; }
+        public Guid BrandId { get; set; }
+        [CascadingParameter]
+        private App MainApp { get; set; }
+        UpdateBrandRequest Model { get; set; } = new();
 
         [Inject]
-        private IBrandService Service { get; set; }
-
-        UpdateBrandRequest Model { get; set; } = new();
-     
-        string BrandName = string.Empty;
-      
-        protected override async Task OnInitializedAsync()
+        private IBrandService Service { get; set; } = null!;
+        protected override async void OnInitialized()
         {
-            var result = await Service.GetBrandById(Id);
-            if (result.Succeeded)
+            var result=await Service.GetBrandById(BrandId);
+            if(result.Succeeded)
             {
                 Model = result.Data;
-                BrandName = Model.Name;
             }
+            Model.Validator += ValidateAsync;
+            StateHasChanged();
         }
+
         private async Task SaveAsync()
         {
-           
 
-                var result = await Service.UpdateBrand(Model);
-                if (result.Succeeded)
-                {
-                    NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
-                    _NavigationManager.NavigateTo("/BrandDatalist");
-                }
-                else
-                {
-                    NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
-                }
-            
+            var result = await Service.UpdateBrand(Model);
+            if (result.Succeeded)
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+
+                CancelAsync();
+            }
+            else
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+            }
+
 
         }
-       
+
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo("/BrandDatalist");
+            Navigation.NavigateBack();
+
+        }
+        FluentValidationValidator _fluentValidationValidator = null!;
+        async Task<bool> ValidateAsync()
+        {
+            NotValidated = !(await _fluentValidationValidator.ValidateAsync());
+            return NotValidated;
+        }
+        bool NotValidated = true;
+
+        public void Dispose()
+        {
+            Model.Validator -= ValidateAsync;
         }
     }
 }

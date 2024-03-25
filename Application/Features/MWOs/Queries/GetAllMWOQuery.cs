@@ -1,20 +1,15 @@
 ﻿using Application.Interfaces;
-using Client.Infrastructure.Managers.CostCenter;
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Commons.UserManagement;
 using Shared.Models.BudgetItemTypes;
+using Shared.Models.CostCenter;
 using Shared.Models.MWO;
 using Shared.Models.MWOStatus;
 using Shared.Models.MWOTypes;
 using Shared.Models.PurchaseorderStatus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.MWOs.Queries
 {
@@ -44,14 +39,24 @@ namespace Application.Features.MWOs.Queries
                 CreatedOn = e.CreatedDate.ToString(),
                 CECName = e.Status == MWOStatusEnum.Approved.Id ? $"CEC0000{e.MWONumber}" : "",
                 CostCenter = CostCenterEnum.GetName(e.CostCenter),
+                BudgetItems=e.BudgetItems.Select(x=>new Shared.Models.BudgetItems.BudgetItemResponse()
+                {
+                     Id=x.Id,
+                     Name=x.Name,
+                     Type=BudgetItemTypeEnum.GetType(x.Type),
 
+                }).ToList(),
                 MWOType = MWOTypeEnum.GetType(e.Type),
                 Status = MWOStatusEnum.GetType(e.Status),
-                Capital = e.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
-                Expenses = e.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
-                Actual = e.PurchaseOrders.Sum(x => x.Actual),
-                Potencial = e.PurchaseOrders.Where(x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
-                Assigned= e.PurchaseOrders.Where(x => x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                Capital = Math.Round(e.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget)),
+                Expenses = Math.Round(e.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget)),
+                AssignedExpenses = Math.Round(e.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.POValueUSD)),
+                ActualExpenses = Math.Round(e.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.Actual)),
+                PotencialExpenses = Math.Round(e.PurchaseOrders.Where(x => x.IsAlteration == true && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.Actual)),
+
+                AssignedCapital = Math.Round(e.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.POValueUSD)),
+                ActualCapital = Math.Round(e.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.Actual)),
+                PotencialCapital = Math.Round(e.PurchaseOrders.Where(x => x.IsAlteration == false && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.Actual)),
             };
 
 

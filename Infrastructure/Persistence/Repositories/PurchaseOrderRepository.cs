@@ -33,6 +33,7 @@ namespace Infrastructure.Persistence.Repositories
         public async Task<BudgetItem> GetBudgetItemWithPurchaseOrdersById(Guid BudgetItemId)
         {
             var budgetItem = await Context.BudgetItems
+
                .Include(x => x.PurchaseOrderItems)
                .ThenInclude(x => x.PurchaseOrder)
                .AsNoTracking()
@@ -40,7 +41,21 @@ namespace Infrastructure.Persistence.Repositories
                .FirstOrDefaultAsync(x => x.Id == BudgetItemId);
             return budgetItem!;
         }
-
+        public async Task<BudgetItem> GetBudgetItemById(Guid BudgetItemId)
+        {
+            var budgetItem = await Context.BudgetItems.FindAsync(BudgetItemId);
+            return budgetItem!;
+        }
+        public async Task<BudgetItem> GetBudgetItemWithMWOById(Guid BudgetItemId)
+        {
+            var budgetItem = await Context.BudgetItems
+                .Include(x => x.MWO)
+                .Include(x => x.PurchaseOrderItems).ThenInclude(x => x.PurchaseOrder)
+                .AsNoTracking()
+                .AsSplitQuery()
+                .SingleOrDefaultAsync(x => x.Id == BudgetItemId);
+            return budgetItem!;
+        }
         public async Task AddPurchaseOrder(PurchaseOrder purchaseOrder)
         {
             await Context.PurchaseOrders.AddAsync(purchaseOrder);
@@ -97,14 +112,20 @@ namespace Infrastructure.Persistence.Repositories
         {
             return (await Context.PurchaseOrders
                 .Include(x => x.PurchaseOrderItems)
+                .Include(x => x.MWO)
 
                 .SingleOrDefaultAsync(x => x.Id == PurchaseOrderId))!;
+        }
+        public async Task<PurchaseOrderItem> GetPurchaseOrderItemsAlterationsById(Guid PurchaseOrderId, Guid BudgetItemId)
+        {
+            return (await Context.PurchaseOrderItems
+                .SingleOrDefaultAsync(x => x.PurchaseOrderId == PurchaseOrderId && x.BudgetItemId == BudgetItemId && x.IsTaxAlteration))!;
         }
         public async Task<PurchaseOrder> GetPurchaseOrderClosedById(Guid PurchaseOrderId)
         {
             return (await Context.PurchaseOrders
                 .Include(x => x.PurchaseOrderItems)
-                
+
 
                 .SingleOrDefaultAsync(x => x.Id == PurchaseOrderId))!;
         }
@@ -179,7 +200,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             return (await Context.PurchaseOrderItems
                .Include(x => x.BudgetItem)
-                .Where(x => x.PurchaseOrderId == PurchaseOrderId && x.BudgetItemId == BudgetItemId && x.IsAlteration == true).SingleOrDefaultAsync())!;
+                .Where(x => x.PurchaseOrderId == PurchaseOrderId && x.BudgetItemId == BudgetItemId && x.IsTaxAlteration == true).SingleOrDefaultAsync())!;
         }
         public async Task<BudgetItem> GetTaxBudgetItemNoProductive(Guid MWOId)
         {
@@ -187,5 +208,10 @@ namespace Infrastructure.Persistence.Repositories
             return result!;
         }
 
+        public async Task<PurchaseOrderItem> GetPurchaseOrderMainTaxItemById(Guid TaxBudgetItemId, Guid MWOId)
+        {
+            var result = await Context.PurchaseOrderItems.SingleOrDefaultAsync(x => x.BudgetItemId == TaxBudgetItemId && x.IsTaxNoProductive == true);
+            return result!;
+        }
     }
 }

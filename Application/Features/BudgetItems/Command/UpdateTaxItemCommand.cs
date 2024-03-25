@@ -1,5 +1,4 @@
-﻿using Application.Features.BudgetItems.Validators;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
@@ -20,19 +19,28 @@ namespace Application.Features.BudgetItems.Command
 
         public async Task<IResult> Handle(UpdateTaxItemCommand request, CancellationToken cancellationToken)
         {
-            var validator = new UpdateBudgetItemValidator(Repository);
-            var validatorresult = await validator.ValidateAsync(request.Data);
-            if (!validatorresult.IsValid)
-            {
-                return Result.Fail(validatorresult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
+           
             var row = await Repository.GetBudgetItemWithTaxesById(request.Data.Id);
+            var mwo = await Repository.GetMWOById(row.MWOId);
+            if (row == null)
+            {
+                return Result.Fail($"Budget Item not found");
+            }
+
+            if (mwo == null)
+            {
+                return Result.Fail($"MWO not found");
+            }
             row.Name = request.Data.Name;
             row.Percentage = request.Data.Percentage;
-
+            if(row.IsMainItemTaxesNoProductive)
+            {
+                mwo.PercentageAssetNoProductive = row.Percentage;
+                await Repository.UpdateMWO(mwo);
+            }
             foreach (var taxitem in row.TaxesItems)
             {
-                if (!request.Data.SelectedBudgetItemDtos.Any(x => x.Id == taxitem.SelectedId))
+                if (!request.Data.SelectedBudgetItemDtos.Any(x => x.SelectedItemId == taxitem.SelectedId))
                 {
                     AppDbContext.TaxesItems.Remove(taxitem);
                 }
@@ -41,9 +49,9 @@ namespace Application.Features.BudgetItems.Command
             foreach (var itemdto in request.Data.SelectedBudgetItemDtos)
             {
                 sumBudget += itemdto.Budget * row.Percentage / 100.0;
-                if (!row.TaxesItems.Any(x => x.SelectedId == itemdto.Id))
+                if (!row.TaxesItems.Any(x => x.SelectedId == itemdto.SelectedItemId))
                 {
-                    var taxItem = row.AddTaxItem(itemdto.Id);
+                    var taxItem = row.AddTaxItem(itemdto.BudgetItemId);
                     await Repository.AddTaxSelectedItem(taxItem);
                 }
 

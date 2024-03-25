@@ -2,42 +2,91 @@
 
 <RadzenLayout Style="width:100%">
     <RadzenHeader>
+      @*   <div class="rz-p-1 rz-text-align-center">
+            <RadzenLink Path="CreateSuperAdmin" Text="CreateSuperAdmin" />
+        </div> *@
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.SpaceBetween>
+            <div>
+                <AuthorizeView>
+                    <Authorized>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.Start class="m-2 ms-lg-5">
+                            <RadzenButton Icon="home" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Medium" Click="@(()=>GoToHome())"
+                                          MouseEnter="@(args => ShowTooltip(args,$"Go to Home Page") )" />
+                            @if (CurrentUser.IsSuperAdmin)
+                            {
+                                <RadzenButton Icon="store" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Medium" Click="@(()=>GoToBrands())"
+                                              MouseEnter="@(args => ShowTooltip(args,$"Go to Brands") )" />
+                                <RadzenButton Icon="support" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Medium" Click="@(()=>GoToSupplier())"
+                                              MouseEnter="@(args => ShowTooltip(args,$"Go to Suppliers") )" />
+                                <RadzenButton Icon="support" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Medium" Click="@(()=>GoToUsers())"
+                                              MouseEnter="@(args => ShowTooltip(args,$"Go to Users") )" />
+                            }
+                            <RadzenButton Icon="article" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Medium" Click="@(()=>GoToMWOs())"
+                                          MouseEnter="@(args => ShowTooltip(args,$"Go to MWOs") )" />
+                            <RadzenButton Icon="shopping_cart" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Medium" Click="@(()=>GoToPurchaseorders())"
+                                          MouseEnter="@(args => ShowTooltip(args,$"Go to Purchase Orders") )" />
+                        </RadzenStack>
 
-            @*  <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" /> *@
-            <div></div>
-            <AuthorizeView>
-                <Authorized>
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.SpaceBetween Gap="1">
-                        <div class="rz-ml-2 rz-mr-3">
-                            @context.User.Identity?.Name
-                        </div>
-                        <RadzenLink Path="logout" class="rz-ml-2 rz-mr-3">Logout</RadzenLink>
-                    </RadzenStack>
-                </Authorized>
-                <NotAuthorized>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+            <div class="m-2">
+                <AuthorizeView>
+                    <Authorized>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.SpaceBetween Gap="1">
+                            <div class="rz-ml-2 rz-mr-3">
+                                @context.User.Identity?.Name
+                            </div>
+                            <RadzenLink Path="logout" class="rz-ml-2 rz-mr-3">Logout</RadzenLink>
+                        </RadzenStack>
+                    </Authorized>
+                    <NotAuthorized>
 
-                    <RadzenLink Path="login" class="rz-ml-2 rz-mr-3">Login</RadzenLink>
+                        <RadzenLink Path="login" class="rz-ml-2 rz-mr-3">Login</RadzenLink>
 
-                </NotAuthorized>
-            </AuthorizeView>
-
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
         </RadzenStack>
     </RadzenHeader>
-    @*   <RadzenSidebar @bind-Expanded="@sidebar1Expanded" Responsive=true>
-    <NavMenu sidebarExpanded=@sidebar1Expanded></NavMenu>
-    </RadzenSidebar> *@
+
     <RadzenBody>
         <div class="rz-p-1">
             @Body
         </div>
     </RadzenBody>
     <RadzenFooter>
-        Footer
+
     </RadzenFooter>
 </RadzenLayout>
 
 <RadzenComponents />
 @code {
     bool sidebar1Expanded = true;
+    void ShowTooltip(ElementReference elementReference, string text) =>
+       TooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Bottom });
+    private void GoToHome()
+    {
+        _NavigationManager.NavigateTo("/");
+    }
+    private void GoToBrands()
+    {
+        _NavigationManager.NavigateTo("/BrandDatalist");
+    }
+    private void GoToSupplier()
+    {
+        _NavigationManager.NavigateTo("/SupplierDatalist");
+    }
+    private void GoToUsers()
+    {
+        _NavigationManager.NavigateTo("/UserDataList");
+    }
+    private void GoToMWOs()
+    {
+        _NavigationManager.NavigateTo("/MWODataMain");
+    }
+    private void GoToPurchaseorders()
+    {
+        _NavigationManager.NavigateTo("/PurchaseOrdersDataList");
+    }
 }

@@ -39,6 +39,7 @@ namespace Application.Features.Suppliers.Queries
                 VendorCode = e.VendorCode,
                 CreatedBy = e.CreatedByUserName,
                 CreatedOn = e.CreatedDate.ToString(),
+                NickName=e.NickName,
 
             };
             var result = rows.Select(expression).ToList();

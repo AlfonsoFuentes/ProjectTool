@@ -31,22 +31,18 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<bool> ReviewNameExist(string name)
         {
-            if (string.IsNullOrEmpty(name)) return false;
-
-            var retorno = await Context.Suppliers.AnyAsync(x => x.Name == name);
+           var retorno = await Context.Suppliers.AnyAsync(x => x.Name == name);
             return retorno;
         }
         public async Task<bool> ReviewNameExist(Guid Id, string name)
         {
-            if (string.IsNullOrEmpty(name)) return false;
-
-            var retorno = await Context.Suppliers.Where(x => x.Id != Id).AnyAsync(x => x.Name == name);
+          var retorno = await Context.Suppliers.Where(x => x.Id != Id).AnyAsync(x => x.Name == name);
             return retorno;
         }
 
         public async Task<bool> ReviewVendorCodeExist(string vendorcode)
         {
-            if (string.IsNullOrEmpty(vendorcode)) return false;
+           
             var retorno = await Context.Suppliers.AnyAsync(x => x.VendorCode == vendorcode);
             return retorno;
         }

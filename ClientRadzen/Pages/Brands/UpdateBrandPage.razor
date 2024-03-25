@@ -1,34 +1,40 @@
-﻿@page "/UpdateBrand/{Id:guid}"
+﻿@page "/UpdateBrand/{BrandId:guid}"
 
-<PageTitle>Update @BrandName</PageTitle>Brand
-  
+<PageTitle>Update Brand</PageTitle>
+
 <RadzenStack Orientation="Orientation.Vertical">
-    <div>Update Brand @BrandName</div>
+    <RadzenRow>
+        <RadzenText TextStyle="TextStyle.DisplayH5" Text="@($"Update Brand {Model.Name}")"></RadzenText>
+    </RadzenRow>
     <RadzenRow>
         <RadzenColumn SizeXS="8" SizeSM="4">
             <RadzenStack Orientation="Orientation.Vertical">
-                <RadzenTemplateForm TItem="UpdateBrandRequest" Data="@Model">
-                   
+                <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
+                    <FluentValidationValidator @ref="_fluentValidationValidator" />
 
                     <RadzenFormField Text="Name" Style="width: 100%;">
-                        <RadzenTextBox @bind-Value=@Model.Name AutoComplete class="w-100"
-                                        Change=ChangeName Name="name" />
+                        <RadzenTextArea Rows="2" @bind-Value=@Model.Name class="w-100"
+                                        @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
+                                        Name="name" />
 
-                     </RadzenFormField>
-                    
-                 </RadzenTemplateForm>
-             </RadzenStack>
-         </RadzenColumn>
+                    </RadzenFormField>
+                    <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
 
-     </RadzenRow>
-     <RadzenRow>
-         <RadzenStack Orientation="Orientation.Horizontal">
-             <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Click="SaveAsync">Save</RadzenButton>
-             <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync">Cancel</RadzenButton>
-         </RadzenStack>
+                </EditForm>
+            </RadzenStack>
+        </RadzenColumn>
 
-     </RadzenRow>
- </RadzenStack>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Click="SaveAsync" Disabled=@NotValidated
+                          MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Create",TooltipPosition.Top) )">Update</RadzenButton>
+            <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync"
+                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
+        </RadzenStack>
+
+    </RadzenRow>
+</RadzenStack>
 
  @code {
     void ChangeName(string name)
@@ -52,5 +58,7 @@
         });
 
     }
+    void ShowTooltip(ElementReference elementReference, string text) =>
+      TooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Right });
 }
 

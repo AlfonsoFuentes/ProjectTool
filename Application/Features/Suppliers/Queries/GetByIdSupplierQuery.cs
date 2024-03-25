@@ -38,6 +38,7 @@ namespace Application.Features.Suppliers.Queries
                 TaxCodeLD = row.TaxCodeLD,
                 TaxCodeLP = row.TaxCodeLP,
                 VendorCode= row.VendorCode!,
+                NickName = row.NickName,
             };
             return Result<UpdateSupplierRequest>.Success(response);
         }

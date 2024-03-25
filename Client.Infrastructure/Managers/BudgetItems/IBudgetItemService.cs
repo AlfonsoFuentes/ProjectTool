@@ -15,7 +15,8 @@ namespace Client.Infrastructure.Managers.BudgetItems
 
         Task<IResult> Delete(BudgetItemResponse request);
         Task<IResult<DataforCreateBudgetItemResponse>> GetDataForCreateBudgetItem(Guid MWOId);
-       
+        Task<IResult<ListApprovedBudgetItemsResponse>> GetApprovedBudgetItemsByMWO(Guid MWOId);
+        Task<IResult<BudgetItemApprovedResponse>> GetApprovedBudgetItemsById(Guid BudgetItemId);
 
     }
     public class BudgetItemService : IBudgetItemService
@@ -28,30 +29,33 @@ namespace Client.Infrastructure.Managers.BudgetItems
         }
         public async Task<IResult> CreateBudgetItem(CreateBudgetItemRequest request)
         {
+            var model = request.ConvertTodDto();
             if (request.IsRegularData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateRegularItem", request);
+               
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateRegularItem", model);
                 return await httpresult.ToResult();
             }
             else if (request.IsEquipmentData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEquipmentItem", request);
+              
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEquipmentItem", model);
                 return await httpresult.ToResult();
             }
             else if (request.IsTaxesData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateTaxItem", request);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateTaxItem", model);
                 return await httpresult.ToResult();
             }
             else if (request.IsEngContData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEngContItem", request);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEngContItem", model);
                 return await httpresult.ToResult();
 
             }
             else if (request.IsAlteration)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateAlterationItem", request);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateAlterationItem", model);
                 return await httpresult.ToResult();
             }
             return await Result.FailAsync();
@@ -127,6 +131,34 @@ namespace Client.Infrastructure.Managers.BudgetItems
         {
             var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateMinimalItem", request);
             return await httpresult.ToResult();
+        }
+
+        public async Task<IResult<ListApprovedBudgetItemsResponse>> GetApprovedBudgetItemsByMWO(Guid MWOId)
+        {
+            try
+            {
+                var httpresult = await Http.GetAsync($"BudgetItem/GetAllApprovedItems/{MWOId}");
+                return await httpresult.ToResult<ListApprovedBudgetItemsResponse>();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+            return Result<ListApprovedBudgetItemsResponse>.Fail();
+        }
+
+        public async Task<IResult<BudgetItemApprovedResponse>> GetApprovedBudgetItemsById(Guid BudgetItemId)
+        {
+            try
+            {
+                var httpresult = await Http.GetAsync($"BudgetItem/GetApprovedItemById/{BudgetItemId}");
+                return await httpresult.ToResult<BudgetItemApprovedResponse>();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+            return Result<BudgetItemApprovedResponse>.Fail();
         }
     }
 }

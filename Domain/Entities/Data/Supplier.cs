@@ -5,6 +5,7 @@
         public string Name { get; set; } = string.Empty;
         public string VendorCode { get; set; } = string.Empty;
         public string TaxCodeLD { get; set; } = string.Empty;
+        public string NickName { get; set; } = string.Empty;
 
         public string TaxCodeLP { get; set; } = string.Empty;
 

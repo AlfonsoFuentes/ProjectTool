@@ -15,13 +15,22 @@
 
         public async Task<ConversionRate> GetRates()
         {
-            string URLString = "https://v6.exchangerate-api.com/v6/634bdff9683829177dafb6e4/latest/USD";
-            var response = await _httpClient.GetAsync(URLString);
-            var result = await response.ToObject<API_Obj>();
-            var rates = new ConversionRate();
-            rates.COP = result != null && result.result == "success" ? result.conversion_rates.COP : 4000;
-            rates.EUR = result != null && result.result == "success" ? result.conversion_rates.EUR : 1;
-            return rates;
+            try
+            {
+                string URLString = "https://v6.exchangerate-api.com/v6/634bdff9683829177dafb6e4/latest/USD";
+                var response = await _httpClient.GetAsync(URLString);
+                var result = await response.ToObject<API_Obj>();
+                var rates = new ConversionRate();
+                rates.COP = result != null && result.result == "success" ? result.conversion_rates.COP : 4000;
+                rates.EUR = result != null && result.result == "success" ? result.conversion_rates.EUR : 1;
+                return rates;
+            }
+            catch (Exception ex)
+            {
+                string exm = ex.Message;
+                return null!;
+            }
+            
         }
     }
     public class API_Obj
@@ -37,7 +46,7 @@
     public class ConversionRate
     {
         public double COP { get; set; }
-
+       
 
         public double EUR { get; set; }
 

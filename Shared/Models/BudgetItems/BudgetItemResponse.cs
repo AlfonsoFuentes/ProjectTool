@@ -1,14 +1,14 @@
 ﻿using Shared.Models.BudgetItemTypes;
+using Shared.Models.MWO;
 using Shared.Models.PurchaseOrders.Responses;
 
 namespace Shared.Models.BudgetItems
 {
     public class BudgetItemResponse
     {
-        public ListBudgetItemResponse Parent { get; set; } = new();
+
         public List<string> ValidationErrors { get; set; } = new();
-        public Guid MWOId { get; set; }
-        public string MWOName { get; set; } = string.Empty;
+        public MWOResponse MWO { get; set; } = new MWOResponse();
         public Guid Id { get; set; }
         public string Nomenclatore { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
@@ -26,25 +26,30 @@ namespace Shared.Models.BudgetItems
         public bool IsNotAbleToEditDelete { get; set; }
         public bool IsMainItemTaxesNoProductive { get; set; }
 
+        public bool IsEngineeringData => Type.Id == BudgetItemTypeEnum.Engineering.Id;
+        public bool IsContingencyData => Type.Id == BudgetItemTypeEnum.Contingency.Id;
+        public bool IsTaxesData => Type.Id == BudgetItemTypeEnum.Taxes.Id;
+        public bool IsEngContData => IsContingencyData || IsEngineeringData;
+        public bool IsEngineeringBudget => Type.Id == BudgetItemTypeEnum.Engineering.Id && !IsNotAbleToEditDelete;
         public double Budget { get; set; }
-        
+
+        public double SumBudgetForTaxes => SelectedBudgetItemForTaxes.Sum(x => x.Budget);
         public int Order { get; set; }
         public bool Existing { get; set; }
-        public double Quantity { get; set; }
-        
+        public double Quantity { get; set; } = 1;
+
         public double UnitaryCost { get; set; }
-        
+
         public string? Brand { get; set; }
 
-        public bool MWOApproved { get; set; }
         public string? Model { get; set; } = string.Empty;
         public string? Reference { get; set; } = string.Empty;
         public double Percentage { get; set; }
-        
-       
+
+
         public string CreatedBy { get; set; } = string.Empty;
         public string CreatedOn { get; set; } = string.Empty;
 
-        
+        public List<BudgetItemDto> SelectedBudgetItemForTaxes { get; set; } = new List<BudgetItemDto>();
     }
 }

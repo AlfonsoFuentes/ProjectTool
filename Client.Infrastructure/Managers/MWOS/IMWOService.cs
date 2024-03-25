@@ -3,16 +3,16 @@
     public interface IMWOService : IManager
     {
         Task<IResult<ApproveMWORequest>> GetMWOByIdToApprove(Guid MWOId);
-        Task<IResult> UpdateMWOMinimal(UpdateMWOMinimalRequest request);
+    
         Task<IResult> UpdateMWO(UpdateMWORequest request);
         Task<IResult> CreateMWO(CreateMWORequest request);
         Task<IResult> ApproveMWO(ApproveMWORequest request);
-        Task<bool> ReviewIfNameExist(string name);
-        Task<bool> ReviewIfNameExist(UpdateMWORequest name);
+ 
         Task<IResult<List<MWOResponse>>> GetAllMWO();
-        Task<IResult<UpdateMWORequest>> GetMWOById(Guid id);
-
+        Task<IResult<UpdateMWORequest>> GetMWOToUpdateById(Guid id);
+       
         Task<IResult> Delete(MWOResponse request);
+        Task<IResult<MWOApprovedResponse>> GetMWOApprovedById(Guid id);
     }
     public class MWOService : IMWOService
     {
@@ -27,7 +27,8 @@
         {
             try
             {
-                var httpresult = await Http.PostAsJsonAsync("MWO/createMWO", request);
+                var model=request.ConvertToDto();
+                var httpresult = await Http.PostAsJsonAsync("MWO/createMWO", model);
 
                 return await httpresult.ToResult();
             }
@@ -42,7 +43,8 @@
         {
             try
             {
-                var httpresult = await Http.PostAsJsonAsync("MWO/updateMWO", request);
+                var model=request.ConvertToDto();
+                var httpresult = await Http.PostAsJsonAsync("MWO/updateMWO", model);
 
                 return await httpresult.ToResult();
             }
@@ -54,12 +56,7 @@
 
         }
 
-        public async Task<bool> ReviewIfNameExist(string name)
-        {
-            var httpresult = await Http.GetAsync($"mwo/CreateNameExist?name={name}");
-
-            return await httpresult.ToObject<bool>();
-        }
+      
 
         public async Task<IResult<List<MWOResponse>>> GetAllMWO()
         {
@@ -67,16 +64,11 @@
             return await httpresult.ToResult<List<MWOResponse>>();
         }
 
-        public async Task<bool> ReviewIfNameExist(UpdateMWORequest request)
-        {
-            var httpresult = await Http.PostAsJsonAsync($"mwo/UpdateNameExist", request);
+       
 
-            return await httpresult.ToObject<bool>();
-        }
-
-        public async Task<IResult<UpdateMWORequest>> GetMWOById(Guid id)
+        public async Task<IResult<UpdateMWORequest>> GetMWOToUpdateById(Guid id)
         {
-            var httpresult = await Http.GetAsync($"mwo/{id}");
+            var httpresult = await Http.GetAsync($"mwo/GetMWOToUpdate/{id}");
             return await httpresult.ToResult<UpdateMWORequest>();
         }
 
@@ -90,7 +82,8 @@
         {
             try
             {
-                var httpresult = await Http.PostAsJsonAsync("MWO/approveMWO", request);
+                var model=request.ConvertToDto();   
+                var httpresult = await Http.PostAsJsonAsync("MWO/approveMWO", model);
 
                 return await httpresult.ToResult();
             }
@@ -108,19 +101,12 @@
 
         }
 
-        public async Task<IResult> UpdateMWOMinimal(UpdateMWOMinimalRequest request)
+      
+       
+        public async Task<IResult<MWOApprovedResponse>> GetMWOApprovedById(Guid id)
         {
-            try
-            {
-                var httpresult = await Http.PostAsJsonAsync("MWO/updateMWOMinimal", request);
-
-                return await httpresult.ToResult();
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-            }
-            return await Result.FailAsync();
+            var httpresult = await Http.GetAsync($"mwo/GetMWOApproved/{id}");
+            return await httpresult.ToResult<MWOApprovedResponse>();
         }
     }
 }

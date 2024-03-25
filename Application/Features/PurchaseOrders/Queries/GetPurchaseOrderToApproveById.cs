@@ -1,15 +1,19 @@
 ﻿using Application.Interfaces;
+using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Models.PurchaseOrders;
-using Shared.Models.PurchaseOrders.Requests.Approves;
+using Shared.Models.BudgetItemTypes;
+using Shared.Models.CostCenter;
+using Shared.Models.Currencies;
+using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
+using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
 using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Queries
 {
-    public record GetPurchaseOrderToApproveById(Guid PurchaseOrderId) : IRequest<IResult<ApprovePurchaseOrderRequest>>;
+    public record GetPurchaseOrderToApproveById(Guid PurchaseOrderId) : IRequest<IResult<ApprovedRegularPurchaseOrderRequest>>;
 
-    internal class GetPurchaseOrderToApproveByIdHandler : IRequestHandler<GetPurchaseOrderToApproveById, IResult<ApprovePurchaseOrderRequest>>
+    internal class GetPurchaseOrderToApproveByIdHandler : IRequestHandler<GetPurchaseOrderToApproveById, IResult<ApprovedRegularPurchaseOrderRequest>>
     {
         private IPurchaseOrderRepository _purchaseOrderRepository;
 
@@ -18,46 +22,76 @@ namespace Application.Features.PurchaseOrders.Queries
             _purchaseOrderRepository = purchaseOrderRepository;
         }
 
-        public async Task<IResult<ApprovePurchaseOrderRequest>> Handle(GetPurchaseOrderToApproveById request, CancellationToken cancellationToken)
+        public async Task<IResult<ApprovedRegularPurchaseOrderRequest>> Handle(GetPurchaseOrderToApproveById request, CancellationToken cancellationToken)
         {
             var purchaseOrder = await _purchaseOrderRepository.GetPurchaseOrderWithItemsAndSupplierById(request.PurchaseOrderId);
+            var budgtitem = await _purchaseOrderRepository.GetBudgetItemWithMWOById(purchaseOrder.MainBudgetItemId);
             if (purchaseOrder == null)
             {
-                return Result<ApprovePurchaseOrderRequest>.Fail("Not found");
+                return Result<ApprovedRegularPurchaseOrderRequest>.Fail("Not found");
             }
-            ApprovePurchaseOrderRequest result = new()
+            ApprovedRegularPurchaseOrderRequest result = new()
             {
-                AccountAssigment = purchaseOrder.AccountAssigment,
                 MWOId = purchaseOrder.MWOId,
-                MWOName = purchaseOrder.MWO == null ? string.Empty : purchaseOrder.MWO.Name,
+                CostCenter = CostCenterEnum.GetName(purchaseOrder.MWO.CostCenter),
+                IsAssetProductive = purchaseOrder.MWO.IsAssetProductive,
+                MWOCECName = $"CEC0000{purchaseOrder.MWO.MWONumber}",
+                MWOName = purchaseOrder.MWO.Name,
+
+
+                MainBudgetItem = new()
+                {
+                    Budget = budgtitem.Budget,
+                    Brand = budgtitem.Brand == null ? string.Empty : budgtitem.Brand.Name,
+                    BudgetItemId = budgtitem.Id,
+                    Name = budgtitem.Name,
+                    Type = BudgetItemTypeEnum.GetType(budgtitem.Type),
+                    IsMainItemTaxesNoProductive = budgtitem.IsMainItemTaxesNoProductive,
+
+
+                },
                 PurchaseorderName = purchaseOrder.PurchaseorderName,
-                PurchaseorderId = purchaseOrder.Id,
+                PurchaseOrderId = purchaseOrder.Id,
                 PurchaseRequisition = purchaseOrder.PurchaseRequisition,
                 QuoteNo = purchaseOrder.QuoteNo,
-                MWOCode = purchaseOrder.MWO == null ? string.Empty : $"CEC0000{purchaseOrder.MWO.MWONumber}",
-                ItemsInPurchaseorder = purchaseOrder.PurchaseOrderItems.Select(x => new PurchaseorderItemsToApproveRequest()
+                PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
+                QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
+                TRMUSDCOP = purchaseOrder.USDCOP,
+                TRMUSDEUR = purchaseOrder.USDEUR,
+                CurrencyDate = purchaseOrder.CurrencyDate,
+                PurchaseOrderItems = purchaseOrder.PurchaseOrderItems.Select(x => new PurchaseOrderItemRequest()
                 {
+                  
                     BudgetItemId = x.BudgetItemId,
-                    POValueUSD = x.POValueUSD,
-                    BudgetItemName=x.BudgetItem.Name,
+                    PurchaseOrderItemId = x.Id,
+                    Name = x.Name,
+                    Quantity = x.Quantity,
+                    BudgetItemName = x.BudgetItem.Name,
+                    TRMUSDCOP = purchaseOrder.USDCOP,
+                    TRMUSDEUR = purchaseOrder.USDEUR,
+                    QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
+                    CurrencyUnitaryValue = (purchaseOrder.Currency == CurrencyEnum.USD.Id ? x.POValueUSD :
+                    purchaseOrder.Currency == CurrencyEnum.COP.Id ? x.POValueUSD * purchaseOrder.USDCOP :
+                    x.POValueUSD * purchaseOrder.USDEUR) / x.Quantity,
+                    Budget = x.BudgetItem.Budget,
+                    BudgetAssigned = x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id ? x.BudgetItem.PurchaseOrderItems.Sum(x => x.POValueUSD) : 0,
+                    BudgetPotencial = x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id ? x.BudgetItem.PurchaseOrderItems.Sum(x => x.POValueUSD) : 0,
+                    POItemActualUSD = x.Actual,
 
                 }).ToList(),
-                IsMWONoProductive = purchaseOrder.MWO == null ? false : !purchaseOrder.MWO.IsAssetProductive,
-                Supplier = purchaseOrder.Supplier.Name,
-                VendorCode = purchaseOrder.Supplier.VendorCode,
-                TaxCode = purchaseOrder.TaxCode,
-                SupplierId = purchaseOrder.SupplierId,
-                CreatedBy = purchaseOrder.CreatedByUserName,
-                CreatedOn = purchaseOrder.CreatedDate,
-                ExpetedOn = purchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Approved.Id ? 
-                            purchaseOrder.POExpectedDateDate : DateTime.UtcNow,
-                PONumber = purchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Approved.Id ? 
-                            purchaseOrder.PONumber : string.Empty,
-                PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(purchaseOrder.PurchaseOrderStatus),
-                PurchaseOrderValue = purchaseOrder.POValueUSD,
-                IsAlteration = purchaseOrder.IsAlteration,
+
+                Supplier = purchaseOrder.Supplier == null ? new() : new()
+                {
+                    Id = purchaseOrder.Supplier.Id,
+                    Name = purchaseOrder.Supplier.Name,
+                    VendorCode = purchaseOrder.Supplier.VendorCode,
+                    TaxCodeLD = purchaseOrder.Supplier.TaxCodeLD,
+                    TaxCodeLP = purchaseOrder.Supplier.TaxCodeLP,
+                    NickName = purchaseOrder.Supplier.NickName,
+
+                },
             };
-            return Result<ApprovePurchaseOrderRequest>.Success(result);
+            return Result<ApprovedRegularPurchaseOrderRequest>.Success(result);
         }
     }
 

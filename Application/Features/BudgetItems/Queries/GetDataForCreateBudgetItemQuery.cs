@@ -29,9 +29,9 @@ namespace Application.Features.BudgetItems.Queries
             var rows = await Repository.GetBudgetItemForTaxesList(request.MWOId);
             Expression<Func<BudgetItem, BudgetItemDto>> expression = e => new BudgetItemDto
             {
-                Id = e.Id,
+                
                 Name = $"{e.Name} {String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", e.Budget)}",
-               
+                BudgetItemId = e.Id,
                 Nomenclatore = $"{BudgetItemTypeEnum.GetLetter(e.Type)}{e.Order}",
                 Budget = e.Budget,
 

@@ -3,15 +3,18 @@ using Application.Interfaces;
 using Domain.Entities.Account;
 using Infrastructure;
 using Infrastructure.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Shared.Commons.UserManagement;
+using System.Text;
 namespace Server.Services
 {
     public static class RegisterServices
     {
-        
-        public static WebApplicationBuilder AddServerServices(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder AddServerServices2(this WebApplicationBuilder builder)
         {
             // Add services to the container.
             // cookie authentication
@@ -61,6 +64,48 @@ namespace Server.Services
             builder.Services.AddApplication();
             builder.Services.AddInfrastructure();
             return builder;
+        }
+        public static IServiceCollection AddServerServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            // Add services to the container.
+            services.AddDbContext<AppDbContext>(options =>
+
+                  options.UseSqlServer(configuration.GetConnectionString("Default"),
+                     b => b.MigrationsAssembly(typeof(RegisterServices).Assembly.FullName)),
+                     ServiceLifetime.Scoped
+             );
+
+            //Add Identity & JWT authentication
+            //Identity
+            services.AddIdentity<AplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddSignInManager()
+                .AddRoles<IdentityRole>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
+                };
+
+            });
+            services.AddSingleton<CurrentUser>();
+            services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
+            services.AddApplication();
+            services.AddInfrastructure();
+            return services;
         }
     }
 }

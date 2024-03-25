@@ -10,44 +10,61 @@ namespace ClientRadzen.Pages.Suppliers
     public partial class UpdateSupplierPage
     {
         [Parameter]
-        public Guid Id { get; set; }
+        public Guid SupplierId { get; set; }
+
+        [CascadingParameter]
+        private App MainApp { get; set; }
+        UpdateSupplierRequest Model { get; set; } = new();
 
         [Inject]
-        private ISupplierService Service { get; set; }
-
-        UpdateSupplierRequest Model { get; set; } = new();
-     
-        string SupplierName = string.Empty;
-        protected override async Task OnInitializedAsync()
+        private ISupplierService Service { get; set; } = null!;
+        protected override async void OnInitialized()
         {
-            var result = await Service.GetSupplierById(Id);
-            if (result.Succeeded)
+            var result=await Service.GetSupplierById(SupplierId);
+            if(result.Succeeded)
             {
                 Model = result.Data;
-                SupplierName = Model.Name;
             }
+            Model.Validator += ValidateAsync;
+            StateHasChanged();
         }
+
         private async Task SaveAsync()
         {
-            
 
-                var result = await Service.UpdateSupplier(Model);
-                if (result.Succeeded)
-                {
-                    NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
-                    _NavigationManager.NavigateTo("/SupplierDatalist");
-                }
-                else
-                {
-                    NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
-                }
-           
+
+            var result = await Service.UpdateSupplier(Model);
+            if (result.Succeeded)
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+
+                CancelAsync();
+            }
+            else
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+            }
+
 
         }
 
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo("/SupplierDatalist");
+            Navigation.NavigateBack();
+
         }
+        FluentValidationValidator _fluentValidationValidator = null!;
+        async Task<bool> ValidateAsync()
+        {
+            NotValidated = !(await _fluentValidationValidator.ValidateAsync());
+            return NotValidated;
+        }
+        bool NotValidated = true;
+
+        public void Dispose()
+        {
+            Model.Validator -= ValidateAsync;
+        }
+
     }
 }

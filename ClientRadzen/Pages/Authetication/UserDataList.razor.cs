@@ -5,13 +5,16 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.Suppliers;
 using Client.Infrastructure.Managers.Accounts;
+using Shared.Models.Brands;
 
 namespace ClientRadzen.Pages.Authetication
 {
     public partial class UserDataList
     {
+        [CascadingParameter]
+        public App MainApp { get; set; }
         [Inject]
-        private IAccountManager Service { get; set; } = null!;
+        public IAccountManager Service { get; set; } = null!;
         UsersResponse Model = new();
 
         List<CurrentUser> OriginalData => Model.Users;
@@ -25,7 +28,7 @@ namespace ClientRadzen.Pages.Authetication
             await UpdateAll();
         }
 
-        async Task UpdateAll()
+        public async Task UpdateAll()
         {
             var result = await Service.GetUsersAsync();
             if (result.Succeeded)
@@ -43,76 +46,37 @@ namespace ClientRadzen.Pages.Authetication
             _NavigationManager.NavigateTo("/");
         }
 
-        void Edit(SupplierResponse Response)
-        {
-            OnDoubleClick(Response);
 
-        }
-        void EditByForm(SupplierResponse Response)
-        {
-            _NavigationManager.NavigateTo($"/UpdateSupplier/{Response.Id}");
-
-        }
-        async Task Delete(SupplierResponse response)
-        {
-            var resultDialog = await DialogService.Confirm($"Are you sure delete {response.Name}?", "Confirm Delete",
-                new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
-            if (resultDialog.Value)
-            {
-                //var result = await Service.Delete(response);
-                //if (result.Succeeded)
-                //{
-                //    NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
-
-                //    await UpdateAll();
-                //}
-                //else
-                //{
-                //    NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
-                //}
-
-            }
-
-        }
-        SupplierResponse selectedRow = null!;
-        void OnClick(SupplierResponse _selectedRow)
+        public CurrentUser selectedRow = null!;
+        void OnClick(CurrentUser _selectedRow)
         {
             selectedRow = _selectedRow;
             EditRow = false;
         }
         bool EditRow = false;
 
-        void OnDoubleClick(SupplierResponse _selectedRow)
+        void OnDoubleClick(CurrentUser _selectedRow)
         {
             EditRow = true;
             selectedRow = _selectedRow;
 
 
         }
-        async Task AddAsync(SupplierResponse order)
+        async Task AddAsync(CurrentUser order)
         {
-            CreateSupplierRequest Model = new()
-            {
-                Name = order.Name,
+            //CreateBrandRequest Model = new()
+            //{
+            //    Name = order.Name,
 
-                Address = order.Address,
-                ContactEmail = order.ContactEmail,
-                ContactName = order.ContactName,
-                PhoneNumber = order.PhoneNumber,
-                SupplierCurrency = order.SupplierCurrency,
-                TaxCodeLD = order.TaxCodeLD,
-                TaxCodeLP = order.TaxCodeLP,
-                VendorCode = order.VendorCode,
-
-            };
-            //var result = await Service.CreateSupplier(Model);
+            //};
+            //var result = await Service.CreateBrand(Model);
             //if (result.Succeeded)
             //{
             //    NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
             //    await UpdateAll();
             //    EditRow = false;
-            //    AddRow = false;
+            //    Add = false;
             //    selectedRow = null!;
             //}
             //else
@@ -123,22 +87,14 @@ namespace ClientRadzen.Pages.Authetication
             //}
         }
 
-        async Task UpdateAsync(SupplierResponse order)
+        async Task UpdateAsync(CurrentUser order)
         {
-            UpdateSupplierRequest Model = new()
-            {
-                Id = order.Id,
-                Name = order.Name,
-                Address = order.Address,
-                ContactEmail = order.ContactEmail,
-                ContactName = order.ContactName,
-                PhoneNumber = order.PhoneNumber,
-                SupplierCurrency = order.SupplierCurrency,
-                TaxCodeLD = order.TaxCodeLD,
-                TaxCodeLP = order.TaxCodeLP,
-                VendorCode = order.VendorCode,
-            };
-            //var result = await Service.UpdateSupplier(Model);
+            //UpdateBrandRequest Model = new()
+            //{
+            //    Name = order.Name,
+            //    Id = order.Id,
+            //};
+            //var result = await Service.UpdateBrand(Model);
             //if (result.Succeeded)
             //{
             //    NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
@@ -156,7 +112,7 @@ namespace ClientRadzen.Pages.Authetication
         {
             await UpdateAll();
         }
-        async Task SaveAsync(SupplierResponse order)
+        async Task SaveAsync(CurrentUser order)
         {
             if (AddRow)
             {
@@ -167,7 +123,7 @@ namespace ClientRadzen.Pages.Authetication
                 await UpdateAsync(order);
             }
         }
-        async Task OnKeyDown(KeyboardEventArgs arg, SupplierResponse order)
+        async Task OnKeyDown(KeyboardEventArgs arg, CurrentUser order)
         {
             if (arg.Key == "Enter")
             {
@@ -181,15 +137,16 @@ namespace ClientRadzen.Pages.Authetication
             }
         }
 
-        bool AddRow = false;
+        public bool AddRow = false;
         private void AddNew()
         {
             nameFilter = string.Empty;
-            AddRow = true;
-            EditRow = true;
-            selectedRow = new();
 
-            //OriginalData.Insert(0, selectedRow);
+
+            _NavigationManager.NavigateTo("/register");
+
+
         }
+
     }
 }

@@ -1,11 +1,31 @@
-﻿using Client.Infrastructure.Managers.CostCenter;
-using Shared.Models.BudgetItems;
+﻿using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
+using Shared.Models.CostCenter;
+using Shared.Models.MWOTypes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Shared.Models.MWO
 {
     public class ApproveMWORequest
     {
+        public ApproveMWORequestDto ConvertToDto()
+        {
+
+            return new ApproveMWORequestDto()
+            {
+                Id = Id,
+                PercentageTaxForAlterations = PercentageTaxForAlterations,
+                CostCenter = CostCenter.Id,
+                IsAssetProductive = IsAssetProductive,
+                MWONumber = MWONumber,
+                Name = Name,
+                PercentageAssetNoProductive = PercentageAssetNoProductive,
+                PercentageContingency = PercentageContingency,
+                PercentageEngineering = PercentageEngineering,
+
+            };
+        }
+        public Func<Task<bool>> Validator { get; set; } = null!;
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string MWONumber { get; set; } = string.Empty;
@@ -15,12 +35,8 @@ namespace Shared.Models.MWO
         public double PercentageAssetNoProductive { get; set; } = 19;
         public double PercentageEngineering { get; set; } = 6;
         public double PercentageContingency { get; set; } = 10;
-        public List<string> ValidationErrors { get; set; } = new();
-        public void ChangeMWONumber(string _mwonumber)
-        {
-            ValidationErrors.Clear();
-            MWONumber = _mwonumber;
-        }
+
+        public MWOTypeEnum Type { get; set; } = MWOTypeEnum.None;
         List<BudgetItemResponse> BudgetItemsDiferentsMandatory => BudgetItems.Count == 0 ? new List<BudgetItemResponse>() :
             BudgetItems.Where(x =>
             !(x.Type.Id == BudgetItemTypeEnum.Alterations.Id ||
@@ -66,57 +82,72 @@ namespace Shared.Models.MWO
 
             return sumBudget + sumDrawings;
         }
-
-
-
-        public void ChangePercentageTaxes(string stringpercentage)
+        public async Task ChangeMWONumber(string _mwonumber)
         {
-            ValidationErrors.Clear();
+
+            MWONumber = _mwonumber;
+            if (Validator != null) await Validator();
+        }
+
+
+        public async Task ChangePercentageTaxes(string stringpercentage)
+        {
+            
             double percentage = 0;
             if (!double.TryParse(stringpercentage, out percentage))
                 return;
 
             PercentageAssetNoProductive = percentage;
+            if (Validator != null) await Validator();
         }
-        public void ChangePercentageEngineering(string stringpercentage)
+        public async Task ChangePercentageEngineering(string stringpercentage)
         {
-            ValidationErrors.Clear();
+            
             double percentage = 0;
             if (!double.TryParse(stringpercentage, out percentage))
                 return;
 
             PercentageEngineering = percentage;
-
+            if (Validator != null) await Validator();
         }
-        public void ChangeTaxForAlterations(string stringpercentage)
+        public async Task ChangeTaxForAlterations(string stringpercentage)
         {
-            ValidationErrors.Clear();
+            
             double percentage = 0;
             if (!double.TryParse(stringpercentage, out percentage))
                 return;
 
             PercentageTaxForAlterations = percentage;
+            if (Validator != null) await Validator();
 
         }
-        public void ChangePercentageContingency(string stringpercentage)
+        public async Task ChangePercentageContingency(string stringpercentage)
         {
-            ValidationErrors.Clear();
+            
             double percentage = 0;
             if (!double.TryParse(stringpercentage, out percentage))
                 return;
 
 
             PercentageContingency = percentage;
+            if (Validator != null) await Validator();
 
         }
-        public void ChangeName(string name)
+        public async Task ChangeName(string name)
         {
-            ValidationErrors.Clear();
+            
             Name = name;
-
+            if (Validator != null) await Validator();
 
         }
+        public async Task ChangeCostCenter()
+        {
+            if (Validator != null) await Validator();
+        }
+        public async Task ChangeType()
+        {
 
-
+            if (Validator != null) await Validator();
+        }
     }
 }

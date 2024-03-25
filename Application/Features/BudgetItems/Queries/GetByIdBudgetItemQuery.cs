@@ -53,7 +53,7 @@ namespace Application.Features.BudgetItems.Queries
 
                 Expression<Func<TaxesItem, BudgetItemDto>> expression = e => new BudgetItemDto
                 {
-                    Id = e.SelectedId,
+                    SelectedItemId = e.SelectedId,
                     BudgetItemId = e.BudgetItemId,
                     Budget = e.Selected.Budget,
                     Name = e.Selected.Name,
@@ -63,7 +63,7 @@ namespace Application.Features.BudgetItems.Queries
                 var taxesList = await Repository.GetBudgetItemSelectedTaxesList(row.Id);
 
                 response.SelectedBudgetItemDtos = taxesList.AsQueryable().Select(expression).ToList();
-                response.SelectedIdBudgetItemDtos = response.SelectedBudgetItemDtos.Select(x => x.Id).ToList();
+                response.SelectedIdBudgetItemDtos = response.SelectedBudgetItemDtos.Select(x => x.BudgetItemId).ToList();
 
 
             }

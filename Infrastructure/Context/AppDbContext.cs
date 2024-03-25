@@ -30,6 +30,8 @@ namespace Infrastructure.Context
                     case EntityState.Modified:
                         entry.Entity.LastModifiedOn = DateTime.UtcNow;
                         entry.Entity.LastModifiedBy = CurrentUser.UserId;
+                        //entry.Entity.CreatedBy = CurrentUser.UserId; se agrego esta linea para cambiar de usuario
+                        //entry.Entity.CreatedByUserName = CurrentUser.UserName;
                         break;
                 }
             }

@@ -24,21 +24,22 @@ namespace Infrastructure.Persistence.Repositories
         public async Task<bool> ReviewIfNameExist(string name)
         {
 
-            return await Context.MWOs.AnyAsync(x => x.Name == name);
+            return await Context.MWOs.AnyAsync(x => x.Name.ToLower() == name.ToLower());
         }
         public async Task<bool> ReviewIfNameExist(Guid Id, string name)
         {
 
-            return await Context.MWOs.Where(x => x.Id != Id).AnyAsync(x => x.Name == name);
+            return await Context.MWOs.Where(x => x.Id != Id).AnyAsync(x => x.Name.ToLower() == name.ToLower());
         }
         public Task<IQueryable<MWO>> GetMWOList()
         {
-            var mwos = Context.MWOs.
-                Include(x => x.BudgetItems).
-                Include(x=>x.PurchaseOrders).
-                AsNoTracking().
-                AsSplitQuery().
-                AsQueryable();
+            var mwos = Context.MWOs
+               .Include(x=>x.PurchaseOrders)
+               .Include(x=>x.BudgetItems)
+             
+               .AsNoTracking()
+               .AsSplitQuery()
+               .AsQueryable();
             return Task.FromResult(mwos);
         }
 
@@ -67,8 +68,27 @@ namespace Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(x => x.Id == id))!;
         }
 
+        public Task<IQueryable<PurchaseOrder>> GetPurchaseOrdersByMWOId(Guid MWOId)
+        {
+            var BudgetItems = Context.PurchaseOrders
+                .Include(x => x.PurchaseOrderItems)
+                .Include(x => x.Supplier)
 
-
+                .AsNoTracking().
+                AsSplitQuery().
+                AsQueryable()
+                .Where(x => x.MWOId == MWOId);
+            return Task.FromResult(BudgetItems);
+        }
+        public Task<IQueryable<BudgetItem>> GetBudgetItemsByMWOId(Guid MWOId)
+        {
+            var BudgetItems = Context.BudgetItems
+                .AsNoTracking().
+                AsSplitQuery().
+                AsQueryable()
+                .Where(x => x.MWOId == MWOId);
+            return Task.FromResult(BudgetItems);
+        }
 
     }
 }

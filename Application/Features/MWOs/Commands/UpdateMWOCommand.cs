@@ -1,5 +1,4 @@
-﻿using Application.Features.MWOs.Validators;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Entities.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +8,7 @@ using Shared.Models.MWO;
 
 namespace Application.Features.MWOs.Commands
 {
-    public record UpdateMWOCommand(UpdateMWORequest Data) : IRequest<IResult>;
+    public record UpdateMWOCommand(UpdateMWORequestDto Data) : IRequest<IResult>;
     public class UpdateMWOCommandHandler : IRequestHandler<UpdateMWOCommand, IResult>
     {
         private IMWORepository Repository { get; set; }
@@ -26,19 +25,14 @@ namespace Application.Features.MWOs.Commands
 
         public async Task<IResult> Handle(UpdateMWOCommand request, CancellationToken cancellationToken)
         {
-            var validator = new UpdateMWOValidator(Repository);
-            var validatorResult = await validator.ValidateAsync(request.Data);
-            if (!validatorResult.IsValid)
-            {
-                return Result.Fail(validatorResult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
+            
             var mwo = await AppDbContext.MWOs.SingleOrDefaultAsync(x => x.Id == request.Data.Id);
             if (mwo == null)
             {
                 return Result.Fail($"{request.Data.Name} was not found.");
             }
             mwo.Name = request.Data.Name;
-            mwo.Type = request.Data.Type.Id;
+            mwo.Type = request.Data.Type;
             mwo.PercentageContingency = request.Data.PercentageContingency;
             mwo.PercentageEngineering = request.Data.PercentageEngineering;
             mwo.PercentageAssetNoProductive = request.Data.PercentageAssetNoProductive;
@@ -71,7 +65,7 @@ namespace Application.Features.MWOs.Commands
 
             return Result.Fail($"{request.Data.Name} was not updated succesfully");
         }
-        async Task CreateTaxesForNoProductive(MWO mwo, UpdateMWORequest Data)
+        async Task CreateTaxesForNoProductive(MWO mwo, UpdateMWORequestDto Data)
         {
             var taxitem = mwo.AddBudgetItem(BudgetItemTypeEnum.Taxes.Id);
 

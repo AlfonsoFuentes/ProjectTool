@@ -6,18 +6,23 @@ using Shared.Models.Suppliers;
 using Client.Infrastructure.Managers.Brands;
 using Microsoft.AspNetCore.Components.Web;
 using Shared.Models.Brands;
+using Azure;
 #nullable disable
 namespace ClientRadzen.Pages.Suppliers
 {
     public partial class SuppliersDataList
     {
+        [CascadingParameter]
+        private App MainApp { get; set; }
         [Inject]
         private ISupplierService Service { get; set; }
 
         List<SupplierResponse> OriginalData { get; set; } = new();
 
         string nameFilter = string.Empty;
-        IQueryable<SupplierResponse>? FilteredItems => OriginalData?.Where(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
+        IQueryable<SupplierResponse> FilteredItems => OriginalData?.Where(x => 
+        x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)||
+        x.NickName.Contains(nameFilter,StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
         protected override async Task OnInitializedAsync()
         {
 
@@ -37,16 +42,7 @@ namespace ClientRadzen.Pages.Suppliers
 
 
 
-        private void GoToHome()
-        {
-            _NavigationManager.NavigateTo("/");
-        }
-
-        void Edit(SupplierResponse Response)
-        {
-            OnDoubleClick(Response);
-
-        }
+      
         void EditByForm(SupplierResponse Response)
         {
             _NavigationManager.NavigateTo($"/UpdateSupplier/{Response.Id}");
@@ -61,134 +57,22 @@ namespace ClientRadzen.Pages.Suppliers
                 var result = await Service.Delete(response);
                 if (result.Succeeded)
                 {
-                    NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+                   MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
                     await UpdateAll();
                 }
                 else
                 {
-                    NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+                    MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
                 }
 
             }
 
         }
-        SupplierResponse selectedRow = null!;
-        void OnClick(SupplierResponse _selectedRow)
-        {
-            selectedRow = _selectedRow;
-            EditRow = false;
-        }
-        bool EditRow = false;
-
-        void OnDoubleClick(SupplierResponse _selectedRow)
-        {
-            EditRow = true;
-            selectedRow = _selectedRow;
-
-
-        }
-        async Task AddAsync(SupplierResponse order)
-        {
-            CreateSupplierRequest Model = new()
-            {
-                Name = order.Name,
-                
-                Address = order.Address,
-                ContactEmail = order.ContactEmail,
-                ContactName = order.ContactName,
-                PhoneNumber = order.PhoneNumber,
-                SupplierCurrency = order.SupplierCurrency,
-                TaxCodeLD = order.TaxCodeLD,
-                TaxCodeLP = order.TaxCodeLP,
-                VendorCode = order.VendorCode,
-
-            };
-            var result = await Service.CreateSupplier(Model);
-            if (result.Succeeded)
-            {
-                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
-
-                await UpdateAll();
-                EditRow = false;
-                AddRow = false;
-                selectedRow = null!;
-            }
-            else
-            {
-                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
-
-
-            }
-        }
-
-        async Task UpdateAsync(SupplierResponse order)
-        {
-            UpdateSupplierRequest Model = new()
-            {
-                Id = order.Id,
-                Name = order.Name,
-                Address = order.Address,
-                ContactEmail = order.ContactEmail,
-                ContactName = order.ContactName,
-                PhoneNumber = order.PhoneNumber,
-                SupplierCurrency = order.SupplierCurrency,
-                TaxCodeLD = order.TaxCodeLD,
-                TaxCodeLP = order.TaxCodeLP,
-                VendorCode = order.VendorCode,
-            };
-            var result = await Service.UpdateSupplier(Model);
-            if (result.Succeeded)
-            {
-                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
-                await UpdateAll();
-                EditRow = false;
-                selectedRow = null!;
-            }
-            else
-            {
-                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
-
-            }
-        }
-        async Task CancelAsync()
-        {
-            await UpdateAll();
-        }
-        async Task SaveAsync(SupplierResponse order)
-        {
-            if (AddRow)
-            {
-                await AddAsync(order);
-            }
-            else
-            {
-                await UpdateAsync(order);
-            }
-        }
-        async Task OnKeyDown(KeyboardEventArgs arg, SupplierResponse order)
-        {
-            if (arg.Key == "Enter")
-            {
-                await SaveAsync(order);
-
-
-            }
-            else if (arg.Key == "Escape")
-            {
-                EditRow = false;
-            }
-        }
-
-        bool AddRow = false;
+      
         private void AddNew()
         {
-            nameFilter = string.Empty;
-            AddRow = true;
-            EditRow = true;
-            selectedRow = new();
-
-            OriginalData.Insert(0, selectedRow);
+            _NavigationManager.NavigateTo($"/CreateSupplier");
         }
 
     }

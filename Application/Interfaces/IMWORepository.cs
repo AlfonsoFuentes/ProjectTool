@@ -15,5 +15,7 @@ namespace Application.Interfaces
         Task<IQueryable<MWO>> GetMWOList();
         Task<MWO> GetMWOById(Guid id);
         Task<MWO> GetMWOWithItemsById(Guid id);
+        Task<IQueryable<PurchaseOrder>> GetPurchaseOrdersByMWOId(Guid MWOId);
+        Task<IQueryable<BudgetItem>> GetBudgetItemsByMWOId(Guid MWOId);
     }
 }

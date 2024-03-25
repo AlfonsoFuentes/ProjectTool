@@ -1,15 +1,13 @@
 using Domain.Entities.Account;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Net.Http.Headers;
 using Server.Services;
 using System.Security.Claims;
 var builder = WebApplication.CreateBuilder(args);
 
 
-
-builder.AddServerServices();
-
-
-
+builder.AddServerServices2();
+//builder.Services.AddServerServices(builder.Configuration);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

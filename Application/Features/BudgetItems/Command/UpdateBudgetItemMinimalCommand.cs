@@ -1,5 +1,5 @@
-﻿using Application.Features.BudgetItems.Validators;
-using Application.Interfaces;
+﻿using Application.Interfaces;
+using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
@@ -21,25 +21,25 @@ namespace Application.Features.BudgetItems.Command
 
         public async Task<IResult> Handle(UpdateBudgetItemMinimalCommand request, CancellationToken cancellationToken)
         {
-            var validator = new UpdateBudgetItemMinimalValidator(Repository);
-            var validatorresult = await validator.ValidateAsync(request.Data);
-            if (!validatorresult.IsValid)
-            {
-                return Result.Fail(validatorresult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
+           
             var row = await Repository.GetBudgetItemById(request.Data.Id);
-
+            var mwo = await Repository.GetMWOById(row.MWOId);
             if (row == null)
             {
-                return Result.Fail($"Not found");
+                return Result.Fail($"Budget Item not found");
             }
-            var mwo = await Repository.GetMWOById(row.MWOId);
+           
+            if (mwo == null)
+            {
+                return Result.Fail($"MWO not found");
+            }
             row.Name = request.Data.Name;
             row.UnitaryCost = request.Data.UnitaryCost;
             row.Budget = request.Data.Budget;
             row.Percentage = request.Data.Percentage;
             row.Quantity = request.Data.Quantity;
-           
+
+            await UpdatePercentageMWO(row, mwo);
             await Repository.UpdateBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
 
@@ -51,6 +51,23 @@ namespace Application.Features.BudgetItems.Command
             }
             return Result.Fail($"{request.Data.Name} was not updated succesfully!");
         }
-
+        async Task UpdatePercentageMWO(BudgetItem budgetitem, MWO mwo)
+        {
+            if (budgetitem.Type == BudgetItemTypeEnum.Taxes.Id && budgetitem.IsMainItemTaxesNoProductive)
+            {
+                mwo.PercentageAssetNoProductive = budgetitem.Percentage;
+                await Repository.UpdateMWO(mwo);
+            }
+            if (budgetitem.Type == BudgetItemTypeEnum.Engineering.Id)
+            {
+                mwo.PercentageEngineering = budgetitem.Percentage;
+                await Repository.UpdateMWO(mwo);
+            }
+            if (budgetitem.Type == BudgetItemTypeEnum.Contingency.Id)
+            {
+                mwo.PercentageContingency = budgetitem.Percentage;
+                await Repository.UpdateMWO(mwo);
+            }
+        }
     }
 }

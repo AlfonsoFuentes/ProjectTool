@@ -1,10 +1,8 @@
-﻿using Application.Features.BudgetItems.Validators;
-using Application.Interfaces;
-using Domain.Entities.Data;
+﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Shared.Models.BudgetItemTypes;
 
 namespace Application.Features.BudgetItems.Command
 {
@@ -22,22 +20,32 @@ namespace Application.Features.BudgetItems.Command
 
         public async Task<IResult> Handle(UpdateEngContingencyCommand request, CancellationToken cancellationToken)
         {
-            var validator = new UpdateBudgetItemValidator(Repository);
-            var validatorresult = await validator.ValidateAsync(request.Data);
-            if (!validatorresult.IsValid)
-            {
-                return Result.Fail(validatorresult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
-            var row = await Repository.GetBudgetItemById(request.Data.Id);
            
+            var row = await Repository.GetBudgetItemById(request.Data.Id);
+            var mwo = await Repository.GetMWOById(row.MWOId);
             if (row == null )
             {
                 return Result.Fail($"Not found");
             }
-
+            if (row == null)
+            {
+                return Result.Fail($"Budget Item not found");
+            }
             row.Name = request.Data.Name;
             row.Percentage = request.Data.Percentage;
+            row.UnitaryCost = request.Data.UnitaryCost;
+            row.Quantity = request.Data.Quantity;
             row.Budget = request.Data.Percentage == 0 ? request.Data.Budget : 0;
+            if(row.Type==BudgetItemTypeEnum.Engineering.Id)
+            {
+                mwo.PercentageEngineering = row.Percentage;
+                await Repository.UpdateMWO(mwo);
+            }
+            if (row.Type == BudgetItemTypeEnum.Contingency.Id)
+            {
+                mwo.PercentageContingency = row.Percentage;
+                await Repository.UpdateMWO(mwo);
+            }
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
            
             await AppDbContext.SaveChangesAsync(cancellationToken);

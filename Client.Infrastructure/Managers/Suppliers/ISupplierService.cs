@@ -15,7 +15,7 @@ namespace Client.Infrastructure.Managers.Suppliers
         Task<IResult<UpdateSupplierRequest>> GetSupplierById(Guid id);
 
         Task<IResult> Delete(SupplierResponse request);
-        Task<IResult<SupplierResponse>> CreateSupplierForPurchaseOrder(CreateSupplierRequest request);
+        Task<IResult<SupplierResponse>> CreateSupplierForPurchaseOrder(CreateSupplierForPurchaseOrderRequest request);
     }
     public class SupplierService : ISupplierService
     {
@@ -30,7 +30,9 @@ namespace Client.Infrastructure.Managers.Suppliers
         {
             try
             {
-                var httpresult = await Http.PostAsJsonAsync("Supplier/CreateSupplier", request);
+                var model = new CreateSupplierRequestDto();
+                model.ConvertToDto(request);
+                var httpresult = await Http.PostAsJsonAsync("Supplier/CreateSupplier", model);
 
                 return await httpresult.ToResult();
             }
@@ -41,11 +43,13 @@ namespace Client.Infrastructure.Managers.Suppliers
             return await Result.FailAsync();
 
         }
-        public async Task<IResult<SupplierResponse>> CreateSupplierForPurchaseOrder(CreateSupplierRequest request)
+        public async Task<IResult<SupplierResponse>> CreateSupplierForPurchaseOrder(CreateSupplierForPurchaseOrderRequest request)
         {
             try
             {
-                var httpresult = await Http.PostAsJsonAsync("Supplier/CreateSupplierForPurchaseorder", request);
+                var model = new CreateSupplierRequestDto();
+                model.ConvertToDto(request);
+                var httpresult = await Http.PostAsJsonAsync("Supplier/CreateSupplierForPurchaseorder", model);
 
                 return await httpresult.ToResult<SupplierResponse>();
             }
@@ -60,7 +64,10 @@ namespace Client.Infrastructure.Managers.Suppliers
         {
             try
             {
-                var httpresult = await Http.PostAsJsonAsync("Supplier/UpdateSupplier", request);
+                UpdateSupplierRequestDto model = new();
+                model.ConvertToDto(request);
+                
+                var httpresult = await Http.PostAsJsonAsync("Supplier/UpdateSupplier", model);
 
                 return await httpresult.ToResult();
             }

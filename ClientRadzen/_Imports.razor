@@ -1,5 +1,6 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using ClientRadzen.Services
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
@@ -12,13 +13,14 @@
 @inject DialogService DialogService
 @inject NotificationService NotificationService
 @inject TooltipService TooltipService
+@inject NavigationBack Navigation
 @attribute [Authorize] 
 
 @using System.Globalization
 @using ClientRadzen
 @using ClientRadzen.Layout
 @using ClientRadzen.Pages.Commons
-
+@using Shared.Models.CostCenter
 @using Radzen 
 @using Radzen.Blazor
 @using Microsoft.AspNetCore.Components.Authorization
@@ -40,5 +42,11 @@
 @using Shared.Models.PurchaseOrders
 @using Shared.Models.Currencies
 @using Shared.Models.MWOStatus
-
-
+@using Shared.Models.PurchaseOrders.Responses
+@using Shared.Models.PurchaseorderStatus
+@using Shared.Models.PurchaseOrders.Requests
+@using Shared.Models.WayToReceivePurchaseOrdersEnums
+@using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems
+@using ClientRadzen.UISettings
+@using Shared.Models.Views
+@using ClientRadzen.Pages.Templates

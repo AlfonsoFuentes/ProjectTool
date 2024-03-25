@@ -2,7 +2,7 @@
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.Currencies;
 using Shared.Models.MWO;
-using Shared.Models.PurchaseOrders.Requests.Create;
+using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 
 namespace Shared.Models.PurchaseOrders.Requests.Taxes
 {
@@ -13,20 +13,34 @@ namespace Shared.Models.PurchaseOrders.Requests.Taxes
 
         }
 
+        public BudgetItemApprovedResponse MainBudgetItem { get; set; } = new();
 
-        public Guid MainBudgetItemId { get; set; }
+        public void SetMainBudgetItem(BudgetItemApprovedResponse budgetItem)
+        {
+            MWOId=budgetItem.MWOId;
+            MWOName=budgetItem.MWOName;
+            MWOCECName = budgetItem.MWOCECName;
+            CostCenter = budgetItem.CostCenter;
+            MainBudgetItem = budgetItem;
+            AddBudgetItem(budgetItem);
 
-
+        }
         public string Name { get; set; } = string.Empty;
         public double USDCOP { get; set; }
         public double USDEUR { get; set; }
+        public DateTime CurrencyDate { get; set; } = DateTime.UtcNow;
+        public string CurrencyDateOnly => CurrencyDate.ToShortDateString();
         public string PONumber { get; set; } = string.Empty;
+        public Guid MWOId { get; set; }
+        public string MWOName { get; set; } = string.Empty;
+
+        public string CostCenter { get; set; } = string.Empty;
         public string MWOCECName { get; set; } = string.Empty;
 
         public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.COP;
-        public Guid MWOId { get; set; }
 
-        public CreatePurchaseOrderItemRequest PurchaseOrderItem { get; set; } = new();
+
+        public PurchaseOrderItemRequest PurchaseOrderItem { get; set; } = new();
 
         public List<string> ValidationErrors { get; set; } = new();
 
@@ -44,19 +58,14 @@ namespace Shared.Models.PurchaseOrders.Requests.Taxes
             PONumber = ponumber;
 
         }
-        public void ChangeName(CreatePurchaseOrderItemRequest model, string name)
+        public void ChangeName(PurchaseOrderItemRequest model, string name)
         {
             ValidationErrors.Clear();
             model.Name = name;
             Name = name;
 
         }
-        public void SetMWOBudgetItem(MWOResponse mWO, BudgetItemApprovedResponse budgetItem)
-        {
-            MWOId = mWO.Id;
-            MWOCECName = mWO.CECName;
-            AddBudgetItem(budgetItem);
-        }
+
 
         public void AddBudgetItem(BudgetItemApprovedResponse response)
         {
@@ -64,12 +73,12 @@ namespace Shared.Models.PurchaseOrders.Requests.Taxes
 
 
         }
-        public double SumPOValueUSD => PurchaseOrderItem.TotalValueUSDItem;
-        public double SumPOValueCurrency => PurchaseOrderItem.TotalCurrencyValue;
+        public double SumPOValueUSD => PurchaseOrderItem.POItemValueUSD;
+        public double SumPOValueCurrency => PurchaseOrderItem.POItemCurrencyValue;
         public double SumBudget => PurchaseOrderItem.Budget;
         public double SumBudgetAssigned => PurchaseOrderItem.BudgetAssigned;
-        public double SumBudgetPotencialAssigned => PurchaseOrderItem.BudgetPotencialAssigned;
-        public double SumPendingUSD => PurchaseOrderItem.Pending;
+        public double SumBudgetPotencialAssigned => PurchaseOrderItem.BudgetPotencial;
+        public double SumPendingUSD => PurchaseOrderItem.POItemPendingUSD;
     }
 
 }

@@ -1,12 +1,11 @@
-﻿using Application.Features.Suppliers.Validators;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.Suppliers;
 
 namespace Application.Features.Suppliers.Command
 {
-    public record UpdateSupplierCommand(UpdateSupplierRequest Data) : IRequest<IResult>;
+    public record UpdateSupplierCommand(UpdateSupplierRequestDto Data) : IRequest<IResult>;
     public class UpdateSupplierCommandHandler:IRequestHandler<UpdateSupplierCommand,IResult>
     {
         private ISupplierRepository Repository { get; set; }
@@ -20,12 +19,7 @@ namespace Application.Features.Suppliers.Command
 
         public async Task<IResult> Handle(UpdateSupplierCommand request, CancellationToken cancellationToken)
         {
-            var validator = new UpdateSupplierValidator(Repository);
-            var validationresult = await validator.ValidateAsync(request.Data);
-            if (!validationresult.IsValid)
-            {
-                return Result.Fail(validationresult.Errors.Select(x => x.ErrorMessage).ToArray());
-            }
+           
             var row = await Repository.GetSupplierById(request.Data.Id);
             if (row == null) return Result.Fail($"{request.Data.Name} was not found!");
 
@@ -37,9 +31,9 @@ namespace Application.Features.Suppliers.Command
             row.VendorCode=request.Data.VendorCode;
             row.TaxCodeLD=request.Data.TaxCodeLD;
             row.TaxCodeLP=request.Data.TaxCodeLP;
-            row.SupplierCurrency=request.Data.SupplierCurrency.Id;
-       
-            
+            row.SupplierCurrency=request.Data.SupplierCurrency;
+
+            row.NickName = request.Data.NickName;
             await Repository.UpdateSupplier(row);
             var result=await Context.SaveChangesAsync(cancellationToken);
             if(result>0)

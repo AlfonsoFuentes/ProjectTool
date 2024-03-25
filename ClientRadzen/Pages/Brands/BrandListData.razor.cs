@@ -1,18 +1,17 @@
-﻿using Client.Infrastructure.Managers.Brands;
+﻿using Blazored.FluentValidation;
+using Client.Infrastructure.Managers.Brands;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 using Radzen;
-using Radzen.Blazor;
-using Shared.Commons.Results;
 using Shared.Models.Brands;
-using Shared.Models.PurchaseOrders.Requests.Create;
-using static System.Net.Mime.MediaTypeNames;
 #nullable disable
 namespace ClientRadzen.Pages.Brands
 {
     public partial class BrandListData
     {
+        [CascadingParameter]
+        private App MainApp { get; set; }
+    
         [Inject]
         private IBrandService Service { get; set; }
   
@@ -23,6 +22,7 @@ namespace ClientRadzen.Pages.Brands
         protected override async Task OnInitializedAsync()
         {
             await UpdateAll();
+    
         }
        
 
@@ -37,15 +37,10 @@ namespace ClientRadzen.Pages.Brands
             }
         }
       
-        private void GoToHome()
-        {
-            _NavigationManager.NavigateTo("/");
-        }
-
+       
         void Edit(BrandResponse BrandResponse)
         {
-            OnDoubleClick(BrandResponse);
-
+            _NavigationManager.NavigateTo($"/UpdateBrand/{BrandResponse.Id}");
         }
         async Task Delete(BrandResponse BrandResponse)
         {
@@ -80,105 +75,12 @@ namespace ClientRadzen.Pages.Brands
             }
 
         }
-        BrandResponse selectedRow = null!;
-        void OnClick(BrandResponse _selectedRow)
-        {
-            selectedRow = _selectedRow;
-            EditRow = false;
-        }
-        bool EditRow = false;
-         
-        void OnDoubleClick(BrandResponse _selectedRow)
-        {
-            EditRow = true;
-            selectedRow = _selectedRow;
-            
-          
-        }
-        async Task AddAsync(BrandResponse order)
-        {
-            CreateBrandRequest Model = new()
-            {
-                Name = order.Name,
-              
-            };
-            var result = await Service.CreateBrand(Model);
-            if (result.Succeeded)
-            {
-                 NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
-               
-                await UpdateAll();
-                EditRow = false;
-                Add = false;
-                selectedRow = null!;
-            }
-            else
-            {
-                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
-               
-
-            }
-        }
-       
-        async Task UpdateAsync(BrandResponse order)
-        {
-            UpdateBrandRequest Model = new()
-            {
-                Name = order.Name,
-                Id = order.Id,
-            };
-            var result = await Service.UpdateBrand(Model);
-            if (result.Succeeded)
-            {
-                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
-                await UpdateAll();
-                EditRow = false;
-                selectedRow = null!;
-            }
-            else
-            {
-                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
-
-            }
-        }
-        async Task CancelAsync()
-        {
-            await UpdateAll();
-        }
-        async Task SaveAsync(BrandResponse order)
-        {
-            if (Add)
-            {
-                await AddAsync(order);
-            }
-            else
-            {
-                await UpdateAsync(order);
-            }
-        }
-        async Task OnKeyDown(KeyboardEventArgs arg, BrandResponse order)
-        {
-            if (arg.Key == "Enter")
-            {
-                await SaveAsync(order); 
-
-
-            }
-            else if (arg.Key == "Escape")
-            {
-                EditRow = false;
-            }
-        }
         
-        bool Add = false;
         private void AddNew()
         {
-            nameFilter = string.Empty;
-            Add = true;
-            EditRow = true;
-            selectedRow = new();
-          
-            OriginalData.Insert(0,selectedRow);
+            _NavigationManager.NavigateTo($"/CreateBrand");
         }
+
+        
     }
 }

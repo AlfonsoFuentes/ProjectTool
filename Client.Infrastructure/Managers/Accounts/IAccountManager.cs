@@ -1,5 +1,6 @@
 ﻿using Shared.Models.ChangePasswords;
 using Shared.Models.Logins;
+using Shared.Models.UserManagement;
 
 namespace Client.Infrastructure.Managers.Accounts
 {
@@ -11,6 +12,7 @@ namespace Client.Infrastructure.Managers.Accounts
 
         Task<IResult> ChangePassWord(ChangePasswordRequest changePasswordRequest);
         Task<IResult> ReviewChangePassWord(LoginRequest loginRequest);
+        Task<IResult> Delete(CurrentUser loginRequest);
     }
     public class AccountManager : IAccountManager
     {
@@ -74,6 +76,11 @@ namespace Client.Infrastructure.Managers.Accounts
             var httpresult = await Http.GetAsync($"Account/GetUserList");
             var result = await httpresult.ToResult<UsersResponse>();
             return result;
+        }
+
+        public Task<IResult> Delete(CurrentUser loginRequest)
+        {
+            throw new NotImplementedException();
         }
     }
 }

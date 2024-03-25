@@ -1,8 +1,6 @@
-﻿using Application.Features.MWOs.Validators;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Entities.Data;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.MWO;
@@ -10,7 +8,7 @@ using Shared.Models.MWOStatus;
 
 namespace Application.Features.MWOs.Commands
 {
-    public record ApproveMWOCommand(ApproveMWORequest Data) : IRequest<IResult>;
+    public record ApproveMWOCommand(ApproveMWORequestDto Data) : IRequest<IResult>;
     public class ApproveMWOCommandHandler : IRequestHandler<ApproveMWOCommand, IResult>
     {
         private IMWORepository Repository { get; set; }
@@ -26,12 +24,7 @@ namespace Application.Features.MWOs.Commands
 
         public async Task<IResult> Handle(ApproveMWOCommand request, CancellationToken cancellationToken)
         {
-            var validator = new ApproveMWOValidator(Repository);
-            var validationresult = await validator.ValidateAsync(request.Data);
-            if (!validationresult.IsValid)
-            {
-                return Result.Fail(validationresult.Errors.Select(x => x.ErrorMessage).ToArray());
-            }
+           
             var mwo = await Repository.GetMWOById(request.Data.Id);
             if (mwo == null)
             {
@@ -39,7 +32,7 @@ namespace Application.Features.MWOs.Commands
             }
             mwo.Status = MWOStatusEnum.Approved.Id;
             mwo.MWONumber = request.Data.MWONumber;
-            mwo.CostCenter = request.Data.CostCenter.Id;
+            mwo.CostCenter = request.Data.CostCenter;
             mwo.PercentageTaxForAlterations = request.Data.PercentageTaxForAlterations;
             mwo.PercentageContingency = request.Data.PercentageContingency;
             mwo.PercentageEngineering = request.Data.PercentageEngineering;
@@ -70,7 +63,7 @@ namespace Application.Features.MWOs.Commands
 
             return Result.Fail($"{request.Data.Name} was not approved succesfully");
         }
-        async Task CreateTaxesForNoProductive(MWO mwo, ApproveMWORequest Data)
+        async Task CreateTaxesForNoProductive(MWO mwo, ApproveMWORequestDto Data)
         {
             var taxitem = mwo.AddBudgetItem(BudgetItemTypeEnum.Taxes.Id);
 

@@ -24,7 +24,8 @@
                 <RadzenStack Orientation="Orientation.Vertical">
 
                     <RadzenFormField Text="Email"  Style="width: 100%;">
-                        <RadzenTextBox @bind-Value=@Input.Email AutoComplete=true AutoCompleteType=AutoCompleteType.Email class="w-100" aria-label="Default TextBox"
+                        <RadzenTextBox @bind-Value=@Input.Email AutoComplete=true AutoCompleteType=AutoCompleteType.Email
+                                       class="w-100" aria-label="Default TextBox" MouseEnter="@(args => ShowTooltip(args,$"Login") )"
                                         Placeholder="name@example.com" Name="email" Change="@((arg)=>ReviewIfMustChangePassword(arg))" />
 
                      </RadzenFormField>
@@ -52,7 +53,8 @@
                             }
                             else
                             {
-                                <RadzenButton ButtonType="ButtonType.Submit" Click="ChangePassword">Change Password</RadzenButton>
+                                <RadzenButton ButtonType="ButtonType.Submit" Click="ChangePassword"
+                                              MouseEnter="@(args => ShowTooltip(args,$"Change Password") )">Change Password</RadzenButton>
 
 
                             }
@@ -111,6 +113,8 @@
 
         ShowData = true;
     }
+    void ShowTooltip(ElementReference elementReference, string text) =>
+     TooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Right });
     public async Task ChangePassword()
     {
         ChangePasswordRequest changePasswordRequest = new()

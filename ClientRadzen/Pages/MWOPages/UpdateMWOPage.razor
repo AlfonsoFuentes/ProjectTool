@@ -1,53 +1,77 @@
 ﻿@page "/UpdateMWO/{Id:guid}"
 
-<PageTitle>Update MWO @mwoName</PageTitle>
+<PageTitle>Update MWO @Model.Name</PageTitle>
 
     <RadzenStack Orientation="Orientation.Vertical">
         <RadzenRow>
-            <RadzenText TextStyle="TextStyle.DisplayH5" Text="@($"Update MWO {mwoName} ")"></RadzenText>
+            <RadzenText TextStyle="TextStyle.DisplayH5" Text="@($"Update MWO {Model.Name} ")"></RadzenText>
         </RadzenRow>
 
-        <RadzenRow>
-            <RadzenColumn SizeXS="8" SizeSM="4">
-                <RadzenStack Orientation="Orientation.Vertical">
-
-
+        <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <RadzenRow>
+                <RadzenColumn SizeXS="8" SizeSM="4">
                     <RadzenFormField Text="Name" Style="width: 100%;">
                         <RadzenTextBox @bind-Value=@Model.Name AutoComplete class="w-100"
                                     @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
                                     Name="name" />
 
                  </RadzenFormField>
-
-
+                 <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+             </RadzenColumn>
+         </RadzenRow>
+         <RadzenRow>
+             <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenFormField Text="Type" Style="width: 100%;">
-                     <RadzenDropDown @bind-Value=@Model.Type Data=@MWOTypeEnum.List Style="width: 100%;"
-                                     Name="type" TextProperty="Name"
+                     <RadzenDropDown @bind-Value=@Model.Type Data=@MWOTypeEnum.List Style="width: 100%; "
+                                     Name="type" TextProperty="Name" Change="@(()=>Model.ChangeType())"
                                      TValue="MWOTypeEnum" />
                  </RadzenFormField>
+                 <ValidationMessage For="() => Model.Type.Id" style="color:red; font-size:x-small;" />
+             </RadzenColumn>
+         </RadzenRow>
+         <RadzenRow>
+             <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenFormField Text="Tax for Alterations" Style="width: 100%;">
                      <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageTaxForAlterations Style="width:100%"
                                     @oninput="@((arg)=>Model.ChangeTaxForAlterations(arg.Value!.ToString()!))"
                                     Name="TaxAlterations" />
 
                  </RadzenFormField>
+                 <ValidationMessage For="() => Model.PercentageTaxForAlterations" style="color:red; font-size:x-small;" />
+             </RadzenColumn>
+         </RadzenRow>
+         <RadzenRow>
+             <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenFormField Text="Capitalized Salaries" Style="width: 100%;">
                      <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageEngineering Style="width:100%"
                                     @oninput="@((arg)=>Model.ChangePercentageEngineering(arg.Value!.ToString()!))"
                                     Name="salaries" />
 
                  </RadzenFormField>
-
+                 <ValidationMessage For="() => Model.PercentageEngineering" style="color:red; font-size:x-small;" />
+             </RadzenColumn>
+         </RadzenRow>
+         <RadzenRow>
+             <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenFormField Text="Contingency" Style="width: 100%;">
                      <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageContingency Style="width:100%"
                                     @oninput="@((arg)=>Model.ChangePercentageContingency(arg.Value!.ToString()!))"
                                     Name="contingency" />
 
                  </RadzenFormField>
-
+                 <ValidationMessage For="() => Model.PercentageContingency" style="color:red; font-size:x-small;" />
+             </RadzenColumn>
+         </RadzenRow>
+         <RadzenRow>
+             <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenLabel Text="Is Asset real Productive?" Component="True" />
                  <RadzenSwitch @bind-Value=@Model.IsAssetProductive
                                InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})"></RadzenSwitch>
+             </RadzenColumn>
+         </RadzenRow>
+         <RadzenRow>
+             <RadzenColumn SizeXS="8" SizeSM="4">
                  @if (!Model.IsAssetProductive)
                 {
                     <RadzenFormField Text="Taxes No Productive" Style="width: 100%;">
@@ -56,40 +80,27 @@
                                        Name="taxesnoproductive" />
 
                     </RadzenFormField>
+                    <ValidationMessage For="() => Model.PercentageAssetNoProductive" style="color:red; font-size:x-small;" />
 
 
                 }
+            </RadzenColumn>
+        </RadzenRow>
 
-            </RadzenStack>
-        </RadzenColumn>
-        <RadzenColumn SizeXS="8" SizeSM="4">
-            <AlertMessage Messages="Model.ValidationErrors"></AlertMessage>
-        </RadzenColumn>
-    </RadzenRow>
+    </EditForm>
+
     <RadzenRow>
         <RadzenStack Orientation="Orientation.Horizontal">
-            <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Click="SaveAsync">Save</RadzenButton>
-            <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync">Cancel</RadzenButton>
+            <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Click="SaveAsync" Disabled=@NotValidated
+                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Update MWO {Model.Name}",TooltipPosition.Top) )">Update</RadzenButton>
+            <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync"
+                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
         </RadzenStack>
 
     </RadzenRow>
 </RadzenStack>
 
 @code {
-    void NotifyMessage(NotificationSeverity Severity, string Leyend, List<string> messages)
-    {
-        AlertStyle alertStyle = Severity == NotificationSeverity.Success ? AlertStyle.Success : AlertStyle.Danger;
 
-        NotificationService.Notify(new NotificationMessage
-            {
-                Severity = Severity,
-                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">@Leyend</RadzenText>,
-            DetailContent = ns =>@<SimpleAlertMessage AlertStyle="@alertStyle" Messages=@messages></SimpleAlertMessage>,
-
-
-            Duration = Severity == NotificationSeverity.Success ? 2000 : 4000,
-        });
-
-    }
 }
 

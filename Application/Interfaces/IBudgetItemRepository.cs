@@ -8,9 +8,10 @@ namespace Application.Interfaces
         Task UpdateBudgetItem(BudgetItem entity);
         Task AddBudgetItem(BudgetItem BudgetItem);
         Task AddTaxSelectedItem(TaxesItem BudgetItem);
-        Task<bool> ReviewNameExist(Guid MWOId,int budgetType, string name);
-        Task<bool> ReviewNameExist(Guid id, Guid MWOId, int budgetType, string name);
+        Task<bool> ReviewIfNameExist(Guid MWOId, string name);
+        Task<bool> ReviewIfNameExist(Guid id, Guid MWOId, string name);
         Task<IQueryable<BudgetItem>> GetBudgetItemList(Guid MWOId);
+        Task<IQueryable<BudgetItem>> GetBudgetItemsWithPurchaseordersList(Guid MWOId);
         Task<BudgetItem> GetBudgetItemById(Guid id);
         Task<string> GetMWOName(Guid MWOId);
         Task<MWO> GetMWOWithItemsById(Guid MWOId);
@@ -32,5 +33,6 @@ namespace Application.Interfaces
         
         Task UpdateTaxesAndEngineeringContingencyItems(Guid MWOId, CancellationToken cancellationToken);
         Task<List<PurchaseOrderItem>> GetPurchaseOrderItemsByMWOId(Guid MWOId);
+        Task<IQueryable<PurchaseOrder>> GetPurchaseOrdersByMWOId(Guid MWOId);
     }
 }

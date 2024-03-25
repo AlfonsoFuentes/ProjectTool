@@ -7,11 +7,14 @@ namespace ClientRadzen.Pages.MWOPages
 {
     public partial class CreateMWOPage
     {
+        [CascadingParameter]
+        private App MainApp { get; set; }
         CreateMWORequest Model { get; set; } = new();
-    
 
-
-      
+        protected override void OnInitialized()
+        {
+            Model.Validator += ValidateAsync;
+        }
         [Inject]
         private IMWOService Service { get; set; } = null!;
 
@@ -20,21 +23,43 @@ namespace ClientRadzen.Pages.MWOPages
             var result = await Service.CreateMWO(Model);
             if (result.Succeeded)
             {
-                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+                MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
-                _NavigationManager.NavigateTo("/MWODataList");
+                CancelAsync();
             }
             else
             {
-                Model.ValidationErrors = result.Messages;
-                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+
+                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
             }
 
         }
-       
+
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo("/MWODataList");
+            Navigation.NavigateBack();
+
+        }
+        FluentValidationValidator _fluentValidationValidator = null!;
+        async Task<bool> ValidateAsync()
+        {
+            try
+            {
+                NotValidated = !(await _fluentValidationValidator.ValidateAsync());
+                return NotValidated;
+            }
+            catch (Exception ex)
+            {
+                string exm = ex.Message;
+            }
+            return false;
+
+        }
+        bool NotValidated = true;
+
+        public void Dispose()
+        {
+            Model.Validator -= ValidateAsync;
         }
 
     }

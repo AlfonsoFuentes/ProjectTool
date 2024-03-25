@@ -1,21 +1,15 @@
 ﻿using Application.Interfaces;
 using Domain.Entities.Data;
 using MediatR;
-using Microsoft.EntityFrameworkCore.Update.Internal;
 using Shared.Commons.Results;
 using Shared.Commons.UserManagement;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
-using Shared.Models.MWO;
-using Shared.Models.MWOStatus;
-using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
 using System.Globalization;
 using System.Linq.Expressions;
 
 namespace Application.Features.BudgetItems.Queries
 {
-
     public record GetAllBudgetItemQuery(Guid MWOId) : IRequest<IResult<ListBudgetItemResponse>>;
 
     public class GetAllBudgetItemQueryHandler : IRequestHandler<GetAllBudgetItemQuery, IResult<ListBudgetItemResponse>>
@@ -30,23 +24,33 @@ namespace Application.Features.BudgetItems.Queries
 
         public async Task<IResult<ListBudgetItemResponse>> Handle(GetAllBudgetItemQuery request, CancellationToken cancellationToken)
         {
-            CultureInfo ci = new CultureInfo("en-US");
+
             ListBudgetItemResponse response = new ListBudgetItemResponse();
             var mwo = await Repository.GetMWOById(request.MWOId);
             if (mwo == null) Result<ListBudgetItemResponse>.Fail("MWO Not found");
 
-            response.MWO = new MWOResponse() { Id = mwo!.Id, Name = mwo.Name, Status = MWOStatusEnum.GetType(mwo.Status) };
+            response.MWO = new()
+            {
+                Id = mwo!.Id,
+                Name = mwo!.Name,
+                IsAssetProductive = mwo!.IsAssetProductive,
+                PercentageAssetNoProductive = mwo!.PercentageAssetNoProductive,
+                PercentageContingency = mwo!.PercentageContingency,
+                PercentageEngineering = mwo!.PercentageEngineering,
+                PercentageTaxForAlterations = mwo!.PercentageTaxForAlterations,
 
-            var purchaseorderitems = await Repository.GetPurchaseOrderItemsByMWOId(request.MWOId);
+
+            };
+
             var rows = await Repository.GetBudgetItemList(request.MWOId);
-           
-         
+
+
             Expression<Func<BudgetItem, BudgetItemResponse>> expression = e => new BudgetItemResponse
             {
-                MWOId = e.MWOId,
+
                 Id = e.Id,
                 Name = e.Name,
-                MWOApproved = mwo.Status == MWOStatusEnum.Approved.Id,
+
                 Type = BudgetItemTypeEnum.GetType(e.Type),
                 Nomenclatore = $"{BudgetItemTypeEnum.GetLetter(e.Type)}{e.Order}",
                 Budget = e.Budget,
@@ -56,22 +60,50 @@ namespace Application.Features.BudgetItems.Queries
                 IsMainItemTaxesNoProductive = e.IsMainItemTaxesNoProductive,
                 Quantity = e.Quantity,
                 UnitaryCost = e.UnitaryCost,
-                MWOName = mwo.Name,
+                MWO = response.MWO,
                 Percentage = e.Percentage,
-              
-               
                 Brand = e.Brand == null ? string.Empty : e.Brand.Name,
-                //Parent=response,
+
 
             };
             var result = rows.Select(expression).ToList();
-            
+            var resultTaxes = result.Where(x => !(x.Type.Id == BudgetItemTypeEnum.Engineering.Id
+                || x.Type.Id == BudgetItemTypeEnum.Contingency.Id
+                || x.Type.Id == BudgetItemTypeEnum.Taxes.Id
+                || x.Type.Id == BudgetItemTypeEnum.Alterations.Id)).Select(z => new BudgetItemDto()
+                {
+                    
+                    Budget = z.Budget,
+                    BudgetItemId = z.Id,
+                    Name = z.Name,
+                    Nomenclatore = z.Nomenclatore,
+
+                }).ToList();
+            await GetDataForTaxes(result);
 
             result = result.OrderBy(x => x.Nomenclatore).ToList();
             response.BudgetItems = result;
-          
-            
+            response.BudgetItemsToApplyTaxes = resultTaxes;
+
             return Result<ListBudgetItemResponse>.Success(response);
+        }
+        async Task GetDataForTaxes(List<BudgetItemResponse> result)
+        {
+            Expression<Func<TaxesItem, BudgetItemDto>> expression = e => new BudgetItemDto
+            {
+                SelectedItemId = e.SelectedId,
+                BudgetItemId = e.BudgetItemId,
+                Budget = e.Selected.Budget,
+                Name = e.Selected.Name,
+
+            };
+            var Taxes = result.Where(x => x.Type.Id == BudgetItemTypeEnum.Taxes.Id && !x.IsMainItemTaxesNoProductive).ToList();
+            foreach (var row in Taxes)
+            {
+                var taxesList = await Repository.GetBudgetItemSelectedTaxesList(row.Id);
+                row.SelectedBudgetItemForTaxes = taxesList.AsQueryable().Select(expression).ToList();
+            }
+
         }
 
     }

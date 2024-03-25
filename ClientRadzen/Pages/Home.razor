@@ -10,21 +10,26 @@
 
                     <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Brands</RadzenText>
                     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
-                        <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/BrandDatalist"))" />
-                        <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateBrand"))" />
+                        <RadzenButton Variant="Variant.Text" Icon="list" MouseEnter="@(args => ShowTooltip(args,$"View Brand List") )"
+                            Click="@(()=>_NavigationManager.NavigateTo("/BrandDatalist"))" />
+                        <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateBrand"))"
+                                      MouseEnter="@(args => ShowTooltip(args,$"Add new Brand") )" />
                     </RadzenStack>
                 </RadzenStack>
 
             </RadzenCard>
         </RadzenColumn>
+       
         <RadzenColumn Size="12" SizeLG=4 class="rz-background-color-info-lighter rz-color-on-info-lighter rz-p-1">
             <RadzenCard Class="rz-my-0 rz-mx-0" Style="width: 100%; height:100%">
                 <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween">
 
                     <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Suppliers</RadzenText>
                     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
-                        <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/SupplierDatalist"))" />
-                        <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateSupplier"))" />
+                        <RadzenButton Variant="Variant.Text" Icon="list" MouseEnter="@(args => ShowTooltip(args,$"View Supplier list") )"
+                            Click="@(()=>_NavigationManager.NavigateTo("/SupplierDatalist"))" />
+                        <RadzenButton Variant="Variant.Text" Icon="add" MouseEnter="@(args => ShowTooltip(args,$"Add new Supplier") )" 
+                            Click="@(()=>_NavigationManager.NavigateTo("/CreateSupplier"))" />
                     </RadzenStack>
                 </RadzenStack>
 
@@ -35,8 +40,10 @@
                 <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween">
                     <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Users</RadzenText>
                     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
-                        <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/SupplierDatalist"))" />
-                        <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateSupplier"))" />
+                        <RadzenButton Variant="Variant.Text" Icon="list" MouseEnter="@(args => ShowTooltip(args,$"View user list") )"
+                                      Click="@(()=>_NavigationManager.NavigateTo("/UserDataList"))" />
+                        <RadzenButton Variant="Variant.Text" Icon="add" MouseEnter="@(args => ShowTooltip(args,$"Add new user") )"
+                                      Click="@(()=>_NavigationManager.NavigateTo("/register"))" />
                     </RadzenStack>
                 </RadzenStack>
 
@@ -51,8 +58,10 @@
 
                 <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Mechanical Work orders</RadzenText>
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
-                    <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/MWODataList"))" />
-                    <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateMWO"))" />
+                    <RadzenButton Variant="Variant.Text" Icon="list" MouseEnter="@(args => ShowTooltip(args,$"View MWOs list") )" 
+                        Click="@(()=>_NavigationManager.NavigateTo("/MWODataMain"))" />
+                    <RadzenButton Variant="Variant.Text" Icon="add" MouseEnter="@(args => ShowTooltip(args,$"Add new MWO") )"
+                        Click="@(()=>_NavigationManager.NavigateTo("/CreateMWO"))" />
                 </RadzenStack>
             </RadzenStack>
 
@@ -64,8 +73,10 @@
 
                 <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Purchase orders</RadzenText>
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
-                    <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/SupplierDatalist"))" />
-                    <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateSupplier"))" />
+                    <RadzenButton Variant="Variant.Text" Icon="list" MouseEnter="@(args => ShowTooltip(args,$"View POs list") )" 
+                        Click="@(()=>_NavigationManager.NavigateTo("/PurchaseOrdersDataList"))" />
+                    <RadzenButton Variant="Variant.Text" Icon="add" MouseEnter="@(args => ShowTooltip(args,$"Add new PO") )" 
+                        Click="@(()=>_NavigationManager.NavigateTo("/CreateSupplier"))" />
                 </RadzenStack>
             </RadzenStack>
 
@@ -74,10 +85,11 @@
     <RadzenColumn Size="12" SizeLG=4 class="rz-background-color-info-lighter rz-color-on-info-lighter rz-p-1">
         <RadzenCard Class="rz-my-0 rz-mx-0" Style="width: 100%; height:100%">
             <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween">
-                <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Users</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1" class="rz-display-flex rz-mt-0 rz-my-0">Cash Spending tool</RadzenText>
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
-                    <RadzenButton Variant="Variant.Text" Icon="list" Click="@(()=>_NavigationManager.NavigateTo("/SupplierDatalist"))" />
-                    <RadzenButton Variant="Variant.Text" Icon="add" Click="@(()=>_NavigationManager.NavigateTo("/CreateSupplier"))" />
+                    <RadzenButton Variant="Variant.Text" Icon="list" MouseEnter="@(args => ShowTooltip(args,$"View Cash spending tool") )" 
+                        Click="@(()=>_NavigationManager.NavigateTo("/SupplierDatalist"))" />
+                    
                 </RadzenStack>
             </RadzenStack>
 
@@ -85,3 +97,7 @@
     </RadzenColumn>
 </RadzenRow>
 
+@code{
+    void ShowTooltip(ElementReference elementReference, string text) =>
+     TooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Right });
+}

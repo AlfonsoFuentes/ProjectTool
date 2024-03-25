@@ -6,8 +6,8 @@ namespace Client.Infrastructure.Managers.Brands
     {
         Task<IResult> UpdateBrand(UpdateBrandRequest request);
         Task<IResult> CreateBrand(CreateBrandRequest request);
-        Task<bool> ReviewIfNameExist(string name);
-        Task<bool> ReviewIfNameExist(UpdateBrandRequest name);
+        Task<IResult<BrandResponse>> CreateBrandForBudgetItem(CreateBrandRequest request);
+       
         Task<IResult<List<BrandResponse>>> GetAllBrand();
         Task<IResult<UpdateBrandRequest>> GetBrandById(Guid id);
 
@@ -26,7 +26,9 @@ namespace Client.Infrastructure.Managers.Brands
         {
             try
             {
-                var httpresult = await Http.PostAsJsonAsync("Brand/CreateBrand", request);
+                CreateBrandRequestDto model = new CreateBrandRequestDto();
+                model.ConvertToDto(request);
+                var httpresult = await Http.PostAsJsonAsync("Brand/CreateBrand", model);
 
                 return await httpresult.ToResult();
             }
@@ -41,7 +43,9 @@ namespace Client.Infrastructure.Managers.Brands
         {
             try
             {
-                var httpresult = await Http.PostAsJsonAsync("Brand/UpdateBrand", request);
+                UpdateBrandRequestDto model = new();
+                model.ConvertToDto(request);
+                var httpresult = await Http.PostAsJsonAsync("Brand/UpdateBrand", model);
 
                 return await httpresult.ToResult();
             }
@@ -53,25 +57,14 @@ namespace Client.Infrastructure.Managers.Brands
 
         }
 
-        public async Task<bool> ReviewIfNameExist(string name)
-        {
-            var httpresult = await Http.GetAsync($"Brand/CreateNameExist?name={name}");
-
-            return await httpresult.ToObject<bool>();
-        }
-
+      
         public async Task<IResult<List<BrandResponse>>> GetAllBrand()
         {
             var httpresult = await Http.GetAsync($"Brand/GetAll");
             return await httpresult.ToResult<List<BrandResponse>>();
         }
 
-        public async Task<bool> ReviewIfNameExist(UpdateBrandRequest request)
-        {
-            var httpresult = await Http.PostAsJsonAsync($"Brand/UpdateNameExist", request);
-
-            return await httpresult.ToObject<bool>();
-        }
+       
 
         public async Task<IResult<UpdateBrandRequest>> GetBrandById(Guid id)
         {
@@ -83,6 +76,23 @@ namespace Client.Infrastructure.Managers.Brands
         {
             var httpresult = await Http.PostAsJsonAsync($"Brand/DeleteBrand", request);
             return await httpresult.ToResult();
+        }
+
+        public async Task<IResult<BrandResponse>> CreateBrandForBudgetItem(CreateBrandRequest request)
+        {
+            try
+            {
+                CreateBrandRequestDto model = new CreateBrandRequestDto();
+                model.ConvertToDto(request);
+                var httpresult = await Http.PostAsJsonAsync("Brand/CreateBrandForBudgetItem", model);
+
+                return await httpresult.ToResult<BrandResponse>();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+            return await Result<BrandResponse>.FailAsync();
         }
     }
 }

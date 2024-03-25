@@ -1,13 +1,11 @@
-﻿using Application.Features.BudgetItems.Validators;
-using Application.Interfaces;
-using Domain.Entities.Data;
+﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
 
 namespace Application.Features.BudgetItems.Command
 {
-    public record CreateRegularBudgetItemCommand(CreateBudgetItemRequest Data) : IRequest<IResult>;
+    public record CreateRegularBudgetItemCommand(CreateBudgetItemRequestDto Data) : IRequest<IResult>;
 
     public class CreateRegularBudgetItemCommandHandler : IRequestHandler<CreateRegularBudgetItemCommand, IResult>
     {
@@ -22,17 +20,12 @@ namespace Application.Features.BudgetItems.Command
 
         public async Task<IResult> Handle(CreateRegularBudgetItemCommand request, CancellationToken cancellationToken)
         {
-            var validator = new CreateBudgetItemValidator(Repository);
-            var validatorresult = await validator.ValidateAsync(request.Data);
-            if (!validatorresult.IsValid)
-            {
-                return Result.Fail(validatorresult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
+          
             var mwo = await Repository.GetMWOWithItemsById(request.Data.MWOId);
 
             if (mwo == null) return Result.Fail("MWO not found!");
 
-            var row = mwo.AddBudgetItem(request.Data.Type.Id);
+            var row = mwo.AddBudgetItem(request.Data.Type);
             row.Name = request.Data.Name;
             row.UnitaryCost = request.Data.UnitaryCost;
             row.Budget = request.Data.UnitaryCost * request.Data.Quantity;

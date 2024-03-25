@@ -15,7 +15,8 @@ namespace Infrastructure
             services.AddScoped<IMWORepository, MWORepository>();
             services.AddScoped<IBudgetItemRepository, BudgetItemRepository>();
             services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
-       
+            services.AddScoped<IPurchaseOrderValidatorRepository, PurchaseOrderValidatorRepository>();
+
             //services.AddRepositories();
             return services;
         }

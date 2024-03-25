@@ -13,14 +13,11 @@
         public double Quantity { get; set; }
         public Guid? BrandId { get; set; }
         public Brand? Brand { get; set; } = null!;
-
         public bool IsMainItemTaxesNoProductive {  get; set; }
-
         public string? Model { get; set; } = string.Empty;
         public string? Reference { get; set; } = string.Empty;
         public double Percentage { get; set; }
         public bool IsNotAbleToEditDelete {  get; set; }
- 
         public ICollection<PurchaseOrderItem> PurchaseOrderItems { get; set; } = new List<PurchaseOrderItem>();
         public ICollection<TaxesItem> TaxesItems { get; set; } = new List<TaxesItem>();
         public ICollection<TaxesItem> Selecteds { get; set; } = new List<TaxesItem>();
@@ -43,5 +40,7 @@
 
             return result;
         }
+
+        
     }
 }

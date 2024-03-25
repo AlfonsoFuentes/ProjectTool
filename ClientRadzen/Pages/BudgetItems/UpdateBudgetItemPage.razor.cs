@@ -1,6 +1,7 @@
 ﻿using Blazored.FluentValidation;
 using Client.Infrastructure.Managers.Brands;
 using Client.Infrastructure.Managers.BudgetItems;
+using ClientRadzen.Pages.Brands;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.Brands;
@@ -11,6 +12,8 @@ namespace ClientRadzen.Pages.BudgetItems
 {
     public partial class UpdateBudgetItemPage
     {
+        [CascadingParameter]
+        private App MainApp { get; set; }
         UpdateBudgetItemRequest Model { get; set; } = new();
         [Parameter]
         public Guid Id { get; set; }
@@ -19,18 +22,17 @@ namespace ClientRadzen.Pages.BudgetItems
         [Inject]
         private IBrandService BrandService { get; set; }
 
-        FluentValidationValidator _fluentValidationValidator = null!;
-       
+        ListBudgetItemResponse Response { get; set; } = new();
+
         List<BrandResponse> Brands { get; set; } = new();
-        bool DisableCreateButton => Model.Type == BudgetItemTypeEnum.None ? true :
-     Model.Type == BudgetItemTypeEnum.Taxes && Model.SelectedBudgetItemDtos.Count == 0 ? true :
-            Model.ValidationErrors.Count > 0;
+     
         protected override async Task OnInitializedAsync()
         {
             var resultModel = await Service.GetBudgetItemById(Id);
             if (resultModel.Succeeded)
             {
                 Model = resultModel.Data;
+                Model.Validator += ValidateAsync;
             }
             var resultDataForCreateBudget = await Service.GetDataForCreateBudgetItem(Model.MWOId);
             if (resultDataForCreateBudget.Succeeded)
@@ -39,46 +41,82 @@ namespace ClientRadzen.Pages.BudgetItems
                 Model.SumPercentage = resultDataForCreateBudget.Data.SumEngContPercentage;
                 Model.BudgetItemDtos = resultDataForCreateBudget.Data.BudgetItems;
             }
-            else
+            var resultBudgetItems = await Service.GetAllBudgetItemByMWO(Model.MWOId);
+            if (resultBudgetItems.Succeeded)
             {
-                Model.ValidationErrors = resultDataForCreateBudget.Messages;
+                Response = resultBudgetItems.Data;
+               
             }
+
+
             var resultbrands = await BrandService.GetAllBrand();
             if (resultbrands.Succeeded)
             {
                 Brands = resultbrands.Data;
             }
-            else
-            {
-                Model.ValidationErrors = resultbrands.Messages;
-            }
+           
         }
         private async Task SaveAsync()
         {
-            Model.ValidationErrors.Clear();
+           
 
             var result = await Service.UpdateBudgetItem(Model);
             if (result.Succeeded)
             {
-                NotificationService.Notify(new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Success,
-                    Summary = "Success",
-                    Detail = result.Message,
-                    Duration = 4000
-                });
+                MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
-                _NavigationManager.NavigateTo($"/BudgetItemsDataList/{Model.MWOId}");
+                CancelAsync();
             }
             else
             {
-                Model.ValidationErrors = result.Messages;
+
+                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
             }
         }
 
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo($"/BudgetItemsDataList/{Model.MWOId}");
+            Navigation.NavigateBack();
+
+        }
+        FluentValidationValidator _fluentValidationValidator = null!;
+        async Task<bool> ValidateAsync()
+        {
+            try
+            {
+                NotValidated = !(await _fluentValidationValidator.ValidateAsync());
+                return NotValidated;
+            }
+            catch (Exception ex)
+            {
+                string exm = ex.Message;
+            }
+            return false;
+
+        }
+        bool NotValidated = true;
+
+        public void Dispose()
+        {
+            Model.Validator -= ValidateAsync;
+        }
+        async Task CreateBrand()
+        {
+            var result = await DialogService.OpenAsync<CreateBrandDialog>($"Create New Brand",
+                new Dictionary<string, object>() { },
+                new DialogOptions() { Width = "500px", Height = "512px", Resizable = true, Draggable = true });
+            if (result != null && result is BrandResponse)
+            {
+                Model.Brand = result as BrandResponse;
+                var resultData = await BrandService.GetAllBrand();
+                if (resultData.Succeeded)
+                {
+                    Brands = resultData.Data;
+
+                }
+
+
+            }
         }
     }
 }

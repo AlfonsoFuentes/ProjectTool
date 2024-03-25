@@ -67,6 +67,7 @@ namespace Server.Controllers
             var emailconfirmed = await userManager.ConfirmEmailAsync(user, token);
             if (emailconfirmed.Succeeded)
             {
+                //loginRequest.OldPassword = "1506*Afd1974*";
                 var changePasswordResult = await userManager.ChangePasswordAsync(user, loginRequest.OldPassword, loginRequest.Password);
 
 
@@ -133,7 +134,7 @@ namespace Server.Controllers
             };
 
             var identity = new AplicationUser();
-            await userManager.SetUserNameAsync(identity, superAdminRequest.Name);
+            await userManager.SetUserNameAsync(identity, superAdminRequest.Email);
             identity.InternalRole = "SuperAdmin";
             var emailStore = (IUserEmailStore<AplicationUser>)userStore;
             await emailStore.SetEmailAsync(identity, superAdminRequest.Email,
@@ -214,6 +215,7 @@ namespace Server.Controllers
         [HttpGet("GetUserList")]
         public async Task<IActionResult> GetUserList()
         {
+            var resultstore = userManager.Users;
             var resultManager = userManager.Users.ToList();
             UsersResponse result = new()
             {

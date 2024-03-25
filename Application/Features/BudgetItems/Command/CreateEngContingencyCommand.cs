@@ -1,13 +1,11 @@
-﻿using Application.Features.BudgetItems.Validators;
-using Application.Interfaces;
-using Domain.Entities.Data;
+﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
 
 namespace Application.Features.BudgetItems.Command
 {
-    public record CreateEngContingencyCommand(CreateBudgetItemRequest Data) : IRequest<IResult>;
+    public record CreateEngContingencyCommand(CreateBudgetItemRequestDto Data) : IRequest<IResult>;
     public class CreateEngContingencyCommandHandler : IRequestHandler<CreateEngContingencyCommand, IResult>
     {
         private IBudgetItemRepository Repository { get; set; }
@@ -21,19 +19,16 @@ namespace Application.Features.BudgetItems.Command
 
         public async Task<IResult> Handle(CreateEngContingencyCommand request, CancellationToken cancellationToken)
         {
-            var validator = new CreateBudgetItemValidator(Repository);
-            var validatorresult = await validator.ValidateAsync(request.Data);
-            if (!validatorresult.IsValid)
-            {
-                return Result.Fail(validatorresult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
+           
             var mwo = await Repository.GetMWOWithItemsById(request.Data.MWOId);
 
             if (mwo == null) return Result.Fail("MWO not found!");
 
-            var row = mwo.AddBudgetItem(request.Data.Type.Id);
+            var row = mwo.AddBudgetItem(request.Data.Type);
             row.Name = request.Data.Name;
             row.Percentage = request.Data.Percentage;
+            row.UnitaryCost = request.Data.UnitaryCost;
+            row.Quantity = request.Data.Quantity;
             row.Budget = request.Data.Percentage == 0 ? request.Data.Budget : 0;
 
             if (!mwo.IsAssetProductive && request.Data.Budget > 0 && request.Data.Percentage == 0)

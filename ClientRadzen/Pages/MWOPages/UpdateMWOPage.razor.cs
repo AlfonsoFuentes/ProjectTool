@@ -9,6 +9,8 @@ namespace ClientRadzen.Pages.MWOPages
 {
     public partial class UpdateMWOPage
     {
+        [CascadingParameter]
+        private App MainApp { get; set; }
         [Parameter]
         public Guid Id { get; set; }
 
@@ -17,14 +19,14 @@ namespace ClientRadzen.Pages.MWOPages
       
         UpdateMWORequest Model { get; set; } = new();
       
-        string mwoName=string.Empty;
+       
         protected override async Task OnInitializedAsync()
         {
-            var result=await Service.GetMWOById(Id);
+            var result=await Service.GetMWOToUpdateById(Id);
             if(result.Succeeded)
             {
                 Model = result.Data;
-                mwoName=Model.Name;
+                Model.Validator += ValidateAsync;
             }
         }
         private async Task SaveAsync()
@@ -32,22 +34,44 @@ namespace ClientRadzen.Pages.MWOPages
             var result = await Service.UpdateMWO(Model);
             if (result.Succeeded)
             {
-                NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+                MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
-                _NavigationManager.NavigateTo("/MWODataList");
+                CancelAsync();
             }
             else
             {
-                Model.ValidationErrors = result.Messages;
-                NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+
+                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
             }
 
         }
-       
+
 
         private void CancelAsync()
         {
-            _NavigationManager.NavigateTo("/MWODataList");
+            Navigation.NavigateBack();
+
+        }
+        FluentValidationValidator _fluentValidationValidator = null!;
+        async Task<bool> ValidateAsync()
+        {
+            try
+            {
+                NotValidated = !(await _fluentValidationValidator.ValidateAsync());
+                return NotValidated;
+            }
+            catch (Exception ex)
+            {
+                string exm = ex.Message;
+            }
+            return false;
+
+        }
+        bool NotValidated = true;
+
+        public void Dispose()
+        {
+            Model.Validator -= ValidateAsync;
         }
     }
 }

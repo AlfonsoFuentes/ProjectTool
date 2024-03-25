@@ -22,7 +22,7 @@
         {
             var row = PurchaseOrderItem.Create(Id, mwobudgetitemid);
             row.Name = name;
-         
+
             return row;
         }
         public PurchaseOrderItem AddPurchaseOrderItemForNoProductiveTax(Guid mwobudgetitemid, string name)
@@ -36,8 +36,8 @@
         {
             var row = PurchaseOrderItem.Create(Id, mwobudgetitemid);
             row.Name = name;
-            row.IsTaxNoProductive = true;
-            row.IsAlteration = true;
+
+            row.IsTaxAlteration = true;
             return row;
         }
         public string QuoteNo { get; set; } = "";
@@ -45,7 +45,7 @@
         public int Currency { get; set; }
         public int PurchaseOrderStatus { get; set; }
         public string PurchaseRequisition { get; set; } = "";
-      
+
 
         public DateTime? POApprovedDate { get; set; }
         public DateTime? POExpectedDateDate { get; set; }
@@ -57,13 +57,15 @@
         public double USDEUR { get; set; }
         public DateTime CurrencyDate { get; set; }
         public string AccountAssigment { get; set; } = "";
-        public bool IsAlteration { get; set; } = false;
+
         public double POValueUSD { get; set; }
         public string PurchaseorderName { get; set; } = string.Empty;
-        public bool IsDiscountApplied { get; set; }
-        public double DiscountPercentage { get; set; }
+       
         public double Actual { get; set; }
-        
 
+        public bool IsAlteration { get; set; } = false;
+        public bool IsCapitalizedSalary { get; set; } = false;
+       
+        public bool IsTaxEditable { get; set; } = false;
     }
 }

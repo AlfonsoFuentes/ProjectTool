@@ -1,0 +1,144 @@
+﻿@page "/EditTaxPurchaseOrder/{PurchaseOrderId:guid}"
+
+@using Shared.Models.Currencies
+@using Shared.Models.PurchaseOrders
+@using System.Globalization
+<PageTitle>Edit Purchase Order </PageTitle>
+@if (debug)
+{
+
+}
+<RadzenStack Orientation="Orientation.Vertical">
+    <RadzenRow>
+        <RadzenText TextStyle="TextStyle.DisplayH5"
+                    Text="@($"Edit Purchase Order in {Model.PurchaseorderName} in {Model.MWO.Name} ")"></RadzenText>
+    </RadzenRow>
+    <RadzenRow>
+        <AlertMessage Messages="@Model.ValidationErrors"></AlertMessage>
+    </RadzenRow>
+
+    <EditForm Model="@Model" OnValidSubmit="SaveAsync">
+        <FluentValidationValidator @ref="_fluentValidationValidator" />
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="@MediumColumn">
+                <RadzenFormField Text="Purchase order Name" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.PurchaseorderName class="w-100"
+                                   @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
+                                   Name="name" />
+
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.PurchaseorderName" style="color:red; font-size:x-small;" />
+                <ValidationMessage For="() => Model.SumPOValueUSD" style="color:red; font-size:x-small;" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="@MediumColumn">
+
+                <RadzenFormField Text="PO Number" Style="width: 100%;">
+
+                    <RadzenTextBox Value=@Model.PONumber class="w-100" Style="width: 100%;"
+                                   Name="ponumber" @oninput="@((arg)=>Model.ChangePOnumber(arg.Value!.ToString()!))" />
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.PONumber" style="color:red; font-size:x-small;" />
+                <RadzenFormField Text="MWO" Style="width: 100%;">
+
+                    <RadzenTextBox Value=@Model.MWO.CECName class="w-100" Style="width: 100%;"
+                                   Name="account" Disabled=true />
+                </RadzenFormField>
+
+                <RadzenFormField Text="PO Currency" Style="width: 100%;">
+                    <RadzenTextBox Value=@Model.PurchaseOrderCurrency.Name class="w-100"
+                                   Name="POCurrency" Disabled=true />
+
+                </RadzenFormField>
+                <RadzenFormField Text=@($"TRM COP to USD {Model.CurrencyDateOnly}") Style="width: 100%;">
+                    <RadzenNumeric ShowUpDown=false @bind-Value=@Model.USDCOP class="w-100" Disabled=true
+                                   Name="usdcop" />
+
+                </RadzenFormField>
+                <RadzenFormField Text="PO Value, COP" Style="width: 100%;">
+                    <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PurchaseOrderItem.CurrencyUnitaryValue
+                                   @oninput="@((arg)=>Model.PurchaseOrderItem.ChangeCurrencyValue(arg.Value!.ToString()!))"></RadzenNumeric>
+
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.PurchaseOrderItem.CurrencyUnitaryValue" style="color:red; font-size:x-small;" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="@MediumColumn">
+
+
+
+
+
+
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="@MaxColumn" Class="rz-p-2 rz-mt-2 rz-mb-1 rz-border-radius-1" Style="border: var(--rz-grid-cell-border)">
+                <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenRow>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenText TextStyle="TextStyle.Body1" Style="width:100%" Class="rz-m-0">Budget, USD</RadzenText>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenBadge BadgeStyle="BadgeStyle.Primary"
+                                         Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.SumBudget)}") />
+
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenText TextStyle="TextStyle.Body1" Style="width:100%" Class="rz-m-0">Budget Assigned, USD</RadzenText>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenBadge BadgeStyle="BadgeStyle.Primary"
+                                         Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.SumBudgetAssigned)}") />
+
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenText TextStyle="TextStyle.Body1" Style="width:100%" Class="rz-m-0">PO Value, USD</RadzenText>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenBadge BadgeStyle="BadgeStyle.Primary"
+                                         Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.SumPOValueUSD)}") />
+
+                        </RadzenColumn>
+
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenText TextStyle="TextStyle.Body1" Style="width:100%" Class="rz-m-0">Pending, USD</RadzenText>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenBadge BadgeStyle="BadgeStyle.Primary"
+                                         Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.SumPendingUSD)}") />
+
+                        </RadzenColumn>
+
+                    </RadzenRow>
+
+
+
+
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="@MediumColumn" Class="rz-p-2 rz-mt-1 rz-mb-1">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem">
+                    <RadzenButton Click="@Cancel" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 100%"
+                                  MouseEnter="@(args => ShowTooltip(args,$"Cancel") )" />
+                    <RadzenButton Click="@SaveAsync" Variant="Variant.Flat" Text="Create PO for tax" Style="width: 100%;"
+                                  MouseEnter="@(args => ShowTooltip(args,$"Create PO for Taxes") )" />
+                </RadzenStack>
+            </RadzenColumn>
+
+        </RadzenRow>
+
+
+    </EditForm>
+</RadzenStack>
+@code {
+    bool debug = true;
+    int MaxColumn = 12;
+    int MediumColumn = 6;
+
+    void ShowTooltip(ElementReference elementReference, string text) =>
+    TooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Right });
+}

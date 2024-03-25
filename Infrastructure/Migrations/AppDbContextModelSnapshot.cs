@@ -17,7 +17,7 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -372,13 +372,13 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CurrencyDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("DiscountPercentage")
-                        .HasColumnType("float");
-
                     b.Property<bool>("IsAlteration")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDiscountApplied")
+                    b.Property<bool>("IsCapitalizedSalary")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTaxEditable")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedBy")
@@ -476,7 +476,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsAlteration")
+                    b.Property<bool>("IsTaxAlteration")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsTaxNoProductive")
@@ -543,6 +543,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NickName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
