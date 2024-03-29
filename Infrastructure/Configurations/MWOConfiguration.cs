@@ -1,11 +1,6 @@
 ﻿using Domain.Entities.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Configurations
 {
@@ -16,6 +11,7 @@ namespace Infrastructure.Configurations
             builder.HasKey(ci => ci.Id);
             builder.HasMany(c => c.BudgetItems).WithOne(t => t.MWO).HasForeignKey(e => e.MWOId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(c => c.PurchaseOrders).WithOne(t => t.MWO).HasForeignKey(e => e.MWOId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(c => c.SapAdjusts).WithOne(t => t.MWO).HasForeignKey(e => e.MWOId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
 
     }

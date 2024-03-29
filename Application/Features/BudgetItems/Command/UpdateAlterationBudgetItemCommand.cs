@@ -5,16 +5,17 @@ using Shared.Models.BudgetItems;
 
 namespace Application.Features.BudgetItems.Command
 {
-    public record UpdateAlterationBudgetItemCommand(UpdateBudgetItemRequest Data) : IRequest<IResult>;
+    public record UpdateAlterationBudgetItemCommand(UpdateBudgetItemRequestDto Data) : IRequest<IResult>;
     public class UpdateAlterationBudgetItemCommandHandler : IRequestHandler<UpdateAlterationBudgetItemCommand, IResult>
     {
         private IBudgetItemRepository Repository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
-
-        public UpdateAlterationBudgetItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository)
+        private IMWORepository MWORepository { get; set; }
+        public UpdateAlterationBudgetItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository, IMWORepository mWORepository)
         {
             AppDbContext = appDbContext;
             Repository = repository;
+            MWORepository = mWORepository;
         }
 
         public async Task<IResult> Handle(UpdateAlterationBudgetItemCommand request, CancellationToken cancellationToken)
@@ -30,6 +31,7 @@ namespace Application.Features.BudgetItems.Command
 
             await Repository.UpdateBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
+            await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
 
             if (result > 0)
             {

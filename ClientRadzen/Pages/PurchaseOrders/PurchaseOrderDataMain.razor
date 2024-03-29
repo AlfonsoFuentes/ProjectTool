@@ -1,0 +1,40 @@
+﻿@page "/PurchaseOrdersDataList"
+<RadzenStack Orientation="Orientation.Vertical">
+
+    <RadzenRow JustifyContent="JustifyContent.SpaceBetween">
+        
+        <div></div>
+        <RadzenColumn Size="12" SizeLG="4">
+            <RadzenFormField Text="Search...." Style="width:100%;">
+                <RadzenTextBox Placeholder="Search..." @bind-Value="@nameFilter" @oninput=@((arg)=>nameFilter=arg.Value!.ToString()!)></RadzenTextBox>
+            </RadzenFormField>
+
+        </RadzenColumn>
+    </RadzenRow>
+
+    <CascadingValue Value=this>
+        <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Server">
+            <Tabs>
+                <RadzenTabsItem Text="Created">
+                    <PurchaseordersCreated></PurchaseordersCreated>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="To receive">
+                    <PurchaseOrderReceive></PurchaseOrderReceive>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Closed">
+                    <PurchaseOrderClosed></PurchaseOrderClosed>
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+
+    </CascadingValue>
+
+
+
+
+
+
+</RadzenStack>
+@code {
+    public string nameFilter = string.Empty;
+}

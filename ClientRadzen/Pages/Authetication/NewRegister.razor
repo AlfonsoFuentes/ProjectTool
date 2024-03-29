@@ -1,0 +1,51 @@
+﻿@page "/NewRegister"
+
+<PageTitle>Register new User</PageTitle>
+<h2>Register new User</h2>
+
+<RadzenStack Orientation="Orientation.Vertical">
+
+
+    <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
+        <FluentValidationValidator @ref="_fluentValidationValidator" />
+        <RadzenRow>
+            <RadzenColumn SizeXS="8" SizeSM="4">
+                <RadzenFormField Text="Email" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.Email class="w-100" aria-label="Default TextBox"
+                                   AutoComplete=true AutoCompleteType="AutoCompleteType.Email"
+                                   @oninput=@((arg)=>Model.ChangeEmail(arg.Value!.ToString()!))
+                                   Placeholder="name@example.com" Name="email" />
+
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.Email" style="color:red; font-size:x-small;" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn SizeXS="8" SizeSM="4">
+                <RadzenFormField Text="Role" Style="width: 100%;">
+
+
+                    <RadzenDropDown @bind-Value=@Model.Role Data=@RolesEnum.Roles Style="width: 100%; "
+                                    Name="role" TextProperty="Name" Change="@(()=>Model.ChangeRole())"
+                                    TValue="RolesEnum" />
+
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.Role.Name" style="color:red; font-size:x-small;" />
+            </RadzenColumn>
+        </RadzenRow>
+
+
+    </EditForm>
+
+    <RadzenRow>
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenButton MouseEnter="@(args => MainApp.ShowTooltip(args,$"Register new user",TooltipPosition.Top) )"
+                          Disabled=@NotValidated Click="RegisterUserAsync">Register new user</RadzenButton>
+        </RadzenStack>
+
+    </RadzenRow>
+</RadzenStack>
+
+@code {
+
+}

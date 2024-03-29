@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Brands.Validators
+﻿namespace Client.Infrastructure.Validators.Brands
 {
     public class CreateBrandValidator : AbstractValidator<CreateBrandRequest>
     {
@@ -11,8 +11,8 @@
 
 
             RuleFor(x => x.Name).MustAsync(ReviewIfNameExist)
-                .When(x=>!string.IsNullOrEmpty(x.Name))
-                .WithMessage(x=>$"{x.Name} already exist");
+                .When(x => !string.IsNullOrEmpty(x.Name))
+                .WithMessage(x => $"{x.Name} already exist");
 
         }
 

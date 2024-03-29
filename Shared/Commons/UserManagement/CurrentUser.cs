@@ -9,8 +9,8 @@ namespace Shared.Commons.UserManagement
         public string UserName { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
 
-        public bool IsSuperAdmin => Role.Contains("SuperAdmin");
-        public bool IsViewer => Role.Contains(RolesDto.ViewerUser.Name);
-        public bool IsRegularUser => Role.Contains(RolesDto.RegularUser.Name) || Role.Contains("SuperAdmin");
+        public bool IsSuperAdmin => Role.Contains("Administrator");
+        public bool IsViewer => Role.Contains(RolesEnum.ViewerUser.Name);
+        public bool IsRegularUser => Role.Contains(RolesEnum.RegularUser.Name) || Role.Contains("SuperAdmin");
     }
 }

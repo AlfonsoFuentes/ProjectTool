@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
+using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
 using Shared.Models.PurchaseOrders.Requests.Taxes;
 
 namespace Server.Controllers.PurchaseOrders
@@ -129,6 +130,6 @@ namespace Server.Controllers.PurchaseOrders
         {
             return Ok(await Mediator.Send(new GetAllPurchaseOrderQuery()));
         }
-
+        
     }
 }

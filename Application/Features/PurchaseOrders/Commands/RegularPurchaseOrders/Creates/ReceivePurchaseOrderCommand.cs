@@ -11,11 +11,12 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
     {
         private IPurchaseOrderRepository Repository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
-
-        public ReceivePurchaseOrderCommandHandler(IAppDbContext appDbContext, IPurchaseOrderRepository repository)
+        private IMWORepository MWORepository { get; set; }
+        public ReceivePurchaseOrderCommandHandler(IAppDbContext appDbContext, IPurchaseOrderRepository repository, IMWORepository mWORepository)
         {
             AppDbContext = appDbContext;
             Repository = repository;
+            MWORepository = mWORepository;
         }
 
         public async Task<IResult> Handle(ReceivePurchaseOrderCommand request, CancellationToken cancellationToken)
@@ -69,6 +70,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
 
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
+            await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"Purchase order: {purchaseorder.PONumber} was received succesfully"); ;

@@ -1,49 +1,73 @@
 ﻿using Application.Interfaces;
+using Domain.Entities.Account;
+using Infrastructure.Context;
+using Infrastructure.GenerateTokens;
 using Infrastructure.Persistence.Repositories;
+using Infrastructure.Persistence.Repositories.Suppliers;
+using Infrastructure.Persistence.Repositories.UserAccounts;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Infrastructure
 {
     public static class RegisterServices
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services,IConfiguration configuration)
         {
+            services.AddDbContext<AppDbContext>(options =>
 
+                options.UseSqlServer(configuration.GetConnectionString("Default"),
+                   b => b.MigrationsAssembly(typeof(RegisterServices).Assembly.FullName)),
+                   ServiceLifetime.Scoped
+           );
+
+           
+            services.AddIdentity<AplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddSignInManager()
+                .AddRoles<IdentityRole>();
+
+            var frontend = configuration["FrontendUrl"];
+            var backend = configuration["BackendUrl"];
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
+                };
+
+            });
+          
+
+            services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
             services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<IMWORepository, MWORepository>();
             services.AddScoped<IBudgetItemRepository, BudgetItemRepository>();
             services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
             services.AddScoped<IPurchaseOrderValidatorRepository, PurchaseOrderValidatorRepository>();
-
-            //services.AddRepositories();
+            services.AddScoped<IUserAccountRepository, UserAccountRepository>();
+            services.AddScoped<IGenerateToken, GenerateToken>();
+            services.AddScoped<ISapAdjustRepository, SapAdjustRepository>();
             return services;
         }
-        public static IServiceCollection AddRepositories(this IServiceCollection services)
-        {
-            var managers = typeof(Application.Interfaces.IRepository);
-
-            var types = managers
-                .Assembly
-                .GetExportedTypes()
-                .Where(t => t.IsClass && !t.IsAbstract)
-                .Select(t => new
-                {
-                    Service = t.GetInterface($"I{t.Name}"),
-                    Implementation = t
-                })
-                .Where(t => t.Service != null).ToList();
-
-            foreach (var type in types)
-            {
-                if (managers.IsAssignableFrom(type.Service))
-                {
-                    services.AddTransient(type.Service, type.Implementation);
-                }
-            }
-
-            return services;
-        }
+      
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
+﻿using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
+
+namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits
 {
     public class EditPurchaseOrderRegularCreatedRequestDto : CreatedRegularPurchaseOrderRequestDto
     {
@@ -8,7 +10,7 @@
         }
         public void ConvertToDto(EditPurchaseOrderRegularCreatedRequest request)
         {
-            this.PurchaseOrderId = request.PurchaseOrderId;
+            PurchaseOrderId = request.PurchaseOrderId;
             base.ConvertToDto(request);
         }
         public Guid PurchaseOrderId { get; set; }

@@ -5,16 +5,17 @@ using Shared.Models.BudgetItems;
 
 namespace Application.Features.BudgetItems.Command
 {
-    public record UpdateEquipmentInstrumentsItemCommand(UpdateBudgetItemRequest Data) : IRequest<IResult>;
+    public record UpdateEquipmentInstrumentsItemCommand(UpdateBudgetItemRequestDto Data) : IRequest<IResult>;
     public class UpdateEquipmentInstrumentsItemCommandHandler : IRequestHandler<UpdateEquipmentInstrumentsItemCommand, IResult>
     {
         private IBudgetItemRepository Repository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
-
-        public UpdateEquipmentInstrumentsItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository)
+        private IMWORepository MWORepository { get; set; }
+        public UpdateEquipmentInstrumentsItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository, IMWORepository mWORepository)
         {
             AppDbContext = appDbContext;
             Repository = repository;
+            MWORepository = mWORepository;
         }
 
         public async Task<IResult> Handle(UpdateEquipmentInstrumentsItemCommand request, CancellationToken cancellationToken)
@@ -29,12 +30,13 @@ namespace Application.Features.BudgetItems.Command
             row.Quantity = request.Data.Quantity;
             row.Model = request.Data.Model;
             row.Reference = request.Data.Reference;
-            row.BrandId = request.Data.Brand?.Id;
+            row.BrandId = request.Data.BrandId;
 
             await Repository.UpdateBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
 
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
+            await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} updated succesfully!");

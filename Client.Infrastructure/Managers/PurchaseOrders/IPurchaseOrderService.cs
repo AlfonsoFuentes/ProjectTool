@@ -1,5 +1,6 @@
 ﻿using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
+using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
 using Shared.Models.PurchaseOrders.Requests.Taxes;
 using Shared.Models.PurchaseOrders.Responses;
 
@@ -12,7 +13,7 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         Task<IResult> ApprovePurchaseOrderForAlteration(ApprovedRegularPurchaseOrderRequest request);
         Task<IResult> EditPurchaseOrderCreated(EditPurchaseOrderRegularCreatedRequest request);
 
-        //Task<IResult> UpdatePurchaseOrderMinimal(UpdatePurchaseOrderMinimalRequest request);
+       
         Task<IResult> EditPurchaseOrderApproved(EditPurchaseOrderRegularApprovedRequest request);
         Task<IResult> EditPurchaseOrderClosed(EditPurchaseOrderRegularClosedRequest request);
         Task<IResult> EditPurchaseOrderTax(EditTaxPurchaseOrderRequest request);
@@ -21,8 +22,9 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         Task<IResult> CreatePurchaseOrderCapitalizedSalary(CreateCapitalizedSalaryPurchaseOrderRequest request);
         Task<IResult> CreateTaxPurchaseOrder(CreateTaxPurchaseOrderRequest request);
         Task<IResult<BudgetItemsListForPurchaseordersResponse>> GetBudgetItemsToCreatePurchaseOrder(Guid BudgetItemId);
-
+       
         Task<IResult<PurchaseOrdersListResponse>> GetAllPurchaseOrders();
+       
         Task<IResult<ApprovedRegularPurchaseOrderRequest>> GetPurchaseOrderToApproveById(Guid PurchaseOrderId);
         Task<IResult<ReceiveRegularPurchaseOrderRequest>> GetPurchaseOrderToReceiveById(Guid PurchaseOrderId);
 
@@ -183,10 +185,6 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
             return await httpresult.ToResult();
         }
 
-        //public async Task<IResult> UpdatePurchaseOrderMinimal(UpdatePurchaseOrderMinimalRequest request)
-        //{
-        //    var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/UpdatePurchaseOrderMinimal", request);
-        //    return await httpresult.ToResult();
-        //}
+       
     }
 }

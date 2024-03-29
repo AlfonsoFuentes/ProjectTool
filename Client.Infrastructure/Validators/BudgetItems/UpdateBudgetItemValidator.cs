@@ -1,7 +1,7 @@
 ﻿using Client.Infrastructure.Managers.BudgetItems;
 using Shared.Models.BudgetItems;
 
-namespace Application.Features.BudgetItems.Validators
+namespace Client.Infrastructure.Validators.BudgetItems
 {
     public class UpdateBudgetItemValidator : AbstractValidator<UpdateBudgetItemRequest>
     {
@@ -12,11 +12,11 @@ namespace Application.Features.BudgetItems.Validators
             RuleFor(x => x.Name)
                .NotEmpty().WithMessage("Name must be defined")
                .NotNull().WithMessage("Name must be defined");
-           
+
             RuleFor(x => x.Name).MustAsync(ReviewIfNameExist)
                       .WithMessage(data => $"{data.Name} already exist in item types in MWO: {data.MWOName}");
         }
-        private async Task<bool> ReviewIfNameExist(UpdateBudgetItemRequest request,string name, CancellationToken cancellation)
+        private async Task<bool> ReviewIfNameExist(UpdateBudgetItemRequest request, string name, CancellationToken cancellation)
         {
             var result = await _service.ValidateNameExist(request.Id, request.MWOId, request.Name);
             return !result;

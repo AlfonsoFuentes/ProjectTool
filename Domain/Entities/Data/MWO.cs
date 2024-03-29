@@ -1,4 +1,7 @@
-﻿namespace Domain.Entities.Data
+﻿using Shared.Models.BudgetItemTypes;
+using Shared.Models.PurchaseorderStatus;
+
+namespace Domain.Entities.Data
 {
     public class MWO : BaseEntity
     {
@@ -14,6 +17,7 @@
         public double PercentageContingency { get; set; }
         public ICollection<BudgetItem> BudgetItems { get; set; } = new List<BudgetItem>();
         public ICollection<PurchaseOrder> PurchaseOrders { get; set; } = new List<PurchaseOrder>();
+        public ICollection<SapAdjust> SapAdjusts { get; set; } = new List<SapAdjust>();
         public static MWO Create(string name, int type)
         {
             return new MWO()
@@ -44,6 +48,46 @@
 
 
             return item;
+        }
+
+        public SapAdjust AddAdjust()
+        {
+            return SapAdjust.Create(Id);
+        }
+        public DateTime ApprovedDate { get; set; }
+        public double Capital { get; private set; }
+        public double Expenses { get; private set; }
+        public double ActualCapital { get; private set; }
+        public double CommitmentCapital { get; private set; }
+        public double PotentialCommitmentCapital { get; private set; }
+        public double ActualExpenses { get; private set; }
+        public double CommitmentExpenses { get; private set; }
+        public double PotentialCommitmentExpenses { get; private set; }
+
+        public void SetDataNotApproved()
+        {
+            if (BudgetItems != null && BudgetItems.Count() > 0)
+            {
+                Expenses = BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget);
+                Capital = BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget);
+            }
+        }
+        public void SetDataApproved()
+        {
+            if (PurchaseOrders != null && PurchaseOrders.Count() > 0)
+            {
+                ActualCapital = PurchaseOrders.Where(x => !x.IsAlteration).Sum(x => x.Actual);
+                ActualExpenses = PurchaseOrders.Where(x => x.IsAlteration).Sum(x => x.Actual);
+
+                var povalueCapital= PurchaseOrders.Where(x => !x.IsAlteration && x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD);
+                var povalueExpenses = PurchaseOrders.Where(x => x.IsAlteration && x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD);
+
+                CommitmentCapital = povalueCapital - ActualCapital;
+                CommitmentExpenses = povalueExpenses - ActualExpenses;
+
+                PotentialCommitmentCapital = PurchaseOrders.Where(x => !x.IsAlteration && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD);
+                PotentialCommitmentExpenses = PurchaseOrders.Where(x => x.IsAlteration && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD);
+            }
         }
     }
 }

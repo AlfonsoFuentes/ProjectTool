@@ -13,26 +13,28 @@
         </RadzenColumn>
 
         <RadzenColumn Size="12" SizeMD="6" SizeLG="4">
-            <RowTemplateCurrency Label="Capital" Value="@Data.Capital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Assigned Capital" Value="@Data.AssignedCapital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Pending Capital" Value="@Data.PendingCapital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Actual Capital" Value="@Data.ActualCapital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Commitment Capital" Value="@Data.CommitmentCapital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Potential Capital" Value="@Data.PotencialCapital"></RowTemplateCurrency>
+            <RowTemplateTitle Title="Capital Status"></RowTemplateTitle>
+            <RowTemplateCurrency Label="Budget" Value="@Data.Capital"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Assigned" Value="@Data.AssignedCapital"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Pending" Value="@Data.PendingCapital"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Actual" Value="@Data.ActualCapital"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Commitment" Value="@Data.CommitmentCapital"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Potential" Value="@Data.PotencialCapital"></RowTemplateCurrency>
+            
            
 
         </RadzenColumn>
         @if (Data.HasAlterations)
         {
+           
             <RadzenColumn Size="12" SizeMD="6" SizeLG="4">
-                <RowTemplateCurrency Label="Expenses" Value="@Data.Expenses"></RowTemplateCurrency>
-                <RowTemplateCurrency Label="Assigned Expenses" Value="@Data.AssignedExpenses"></RowTemplateCurrency>
-                <RowTemplateCurrency Label="Pending Expenses" Value="@Data.PendingExpenses"></RowTemplateCurrency>
-                <RowTemplateCurrency Label="Actual Expenses" Value="@Data.ActualExpenses"></RowTemplateCurrency>
-                <RowTemplateCurrency Label="Commitment Expenses" Value="@Data.CommitmentExpenses"></RowTemplateCurrency>
-                <RowTemplateCurrency Label="Potential Expenses" Value="@Data.PotencialExpenses"></RowTemplateCurrency>
-
-
+                <RowTemplateTitle Title="Expenses Status"></RowTemplateTitle>
+                <RowTemplateCurrency Label="Budget" Value="@Data.Expenses"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Assigned" Value="@Data.AssignedExpenses"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Pending" Value="@Data.PendingExpenses"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Actual" Value="@Data.ActualExpenses"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Commitment" Value="@Data.CommitmentExpenses"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Potential" Value="@Data.PotencialExpenses"></RowTemplateCurrency>
 
             </RadzenColumn>
         }
@@ -44,7 +46,9 @@
         <RadzenRow>
             <RadzenButton Icon="format_list_bulleted" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
                           Click="@(()=>DataMain.ShowApprovedItemsofMWO(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show Items for MWO: {Data.CECName}",TooltipPosition.Left) )" />
-            
+            <RadzenButton Icon="insights" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                          Click="@(()=>DataMain.ShowSapAlignmentofMWO(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show SAP Alignment for MWO: {Data.CECName}",TooltipPosition.Left) )" />
+
         </RadzenRow>
 
     </RadzenStack>

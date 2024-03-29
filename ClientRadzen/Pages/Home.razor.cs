@@ -10,9 +10,10 @@ public partial class Home
     {
         //if (CurrentUser.UserName == "alfonso_fuentes@colpal.com")
         //{
-        //Este codigo se creo para cambiar de usuario de alfonsofuen@gmail.com (Superadmin) a regular user(alfonso_fuentes)
+        //    //Este codigo se creo para cambiar de usuario de alfonsofuen@gmail.com(Superadmin) a regular user(alfonso_fuentes)
         //    await changeUserManager.ChangeUser();
         //}
+        //await changeUserManager.UpdateDataForMWO();
     }
 
 }

@@ -1,0 +1,14 @@
+﻿@page "/Newlogout"
+@using Client.Infrastructure.Authentication
+<h3>NewLogout</h3>
+
+@code {
+    [Inject]
+    private AuthenticationStateProvider AuthStateProvider { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null!);
+        _NavigationManager.NavigateTo("/NewLogin");
+    }
+}

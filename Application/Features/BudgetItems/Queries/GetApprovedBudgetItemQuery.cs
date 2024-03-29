@@ -28,7 +28,7 @@ namespace Application.Features.BudgetItems.Queries
             {
                 return Result<BudgetItemApprovedResponse>.Fail("Budget Item Not found!");
             }
-
+            var purchaseordersbyitem = await _purchaseOrderRepository.GetPurchaseorderByBudgetItem(request.BudgetItemId);
 
             BudgetItemApprovedResponse budgetItemResponse = new()
             {
@@ -37,33 +37,50 @@ namespace Application.Features.BudgetItems.Queries
                 MWOCECName = $"CEC0000{budgetItem.MWO.MWONumber}",
                 MWOId = budgetItem.MWOId,
                 MWOName = budgetItem.MWO.Name,
-                CostCenter=CostCenterEnum.GetName(budgetItem.MWO.CostCenter),
+                CostCenter = CostCenterEnum.GetName(budgetItem.MWO.CostCenter),
 
                 IsMainItemTaxesNoProductive = budgetItem.IsMainItemTaxesNoProductive,
                 Name = budgetItem.Name,
                 Type = BudgetItemTypeEnum.GetType(budgetItem.Type),
                 Order = budgetItem.Order,
-                //PurchaseOrders = budgetItem.PurchaseOrderItems.Select(x =>
-                //new PurchaseOrderItemForBudgetItemResponse()
-                //{
-                //    POValueUSD = x.POValueUSD,
-                //    IsAlteration = x.PurchaseOrder.IsAlteration,
-                //    IsCapitalizedSalary = x.PurchaseOrder.IsCapitalizedSalary,
-                //    IsTaxNoProductive = x.IsTaxNoProductive,
-                //    IsTaxEditable = x.PurchaseOrder.IsTaxEditable,
-                //    BudgetItemId = x.BudgetItemId,
-                //    Actual = x.Actual,
-                //    PurchaseorderItemId = x.Id,
-                //    PurchaseorderName = x.PurchaseOrder.PurchaseorderName,
-                //    PurchaseorderNumber = x.PurchaseOrder.PONumber,
-                //    PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(x.PurchaseOrder.PurchaseOrderStatus),
-                //    PurchaseRequisition = x.PurchaseOrder.PurchaseRequisition,
 
-
-                //}).ToList(),
 
             };
+            budgetItemResponse.PurchaseOrders = purchaseordersbyitem.Select(x => new PurchaseOrderResponse()
+            {
+                AccountAssigment = x.AccountAssigment,
+                IsAlteration = x.IsAlteration,
+                IsCapitalizedSalary = x.IsCapitalizedSalary,
+                IsTaxEditable = x.IsTaxEditable,
+                MWOId = budgetItem.MWOId,
+                MWOName = budgetItemResponse.MWOName,
+                CECName = budgetItemResponse.MWOCECName,
+                IsTaxNoProductive = budgetItem.IsMainItemTaxesNoProductive,
+                PONumber = x.PONumber,
+                PurchaseOrderId = x.Id,
+                PurchaseorderName = x.PurchaseorderName,
+                PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(x.PurchaseOrderStatus),
+                CreatedBy = x.CreatedBy,
+                CreatedOn = x.CreatedDate.ToShortDateString(),
+                ExpectedOn = x.POExpectedDateDate == null ? string.Empty : x.POExpectedDateDate.Value.ToShortDateString(),
+                PurchaseRequisition = x.PurchaseRequisition,
+                QuoteNo = x.QuoteNo,
+                Supplier = x.Supplier == null ? string.Empty : x.Supplier.NickName,
+                SupplierId = x.SupplierId,
+                TaxCode = x.TaxCode,
+                VendorCode = x.Supplier == null ? string.Empty : x.Supplier.VendorCode,
+                ReceivedOn = x.POClosedDate == null ? string.Empty : x.POClosedDate.Value.ToShortDateString(),
+                PurchaseOrderItems = x.PurchaseOrderItems.Select(y => new PurchaseorderItemsResponse()
+                {
+                    Actual = y.Actual,
+                    BudgetItemId = y.BudgetItemId,
+                    POValueUSD = x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id ? y.POValueUSD : 0,
+                    PurchaseorderItemId = y.PurchaseOrderId,
+                    Potencial = x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id ? y.POValueUSD : 0
+                }
+                ).ToList(),
 
+            }).ToList();
 
 
             return Result<BudgetItemApprovedResponse>.Success(budgetItemResponse);

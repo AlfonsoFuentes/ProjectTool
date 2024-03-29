@@ -42,8 +42,17 @@ namespace Application.Features.Suppliers.Queries
                 NickName=e.NickName,
 
             };
-            var result = rows.Select(expression).ToList();
-            return Result<List<SupplierResponse>>.Success(result);
+            try
+            {
+                var result = rows!.Select(expression).ToList();
+                return Result<List<SupplierResponse>>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                string exm=ex.Message;  
+            }
+            return Result<List<SupplierResponse>>.Fail();
+
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain.Entities.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Commons.Results;
@@ -12,10 +13,12 @@ namespace Application.Features.BudgetItems.Command
     {
         private IAppDbContext _appDbContext;
         private IBudgetItemRepository Repository { get; set; }
-        public DeleteBudgetItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository)
+        private IMWORepository MWORepository { get; set; }
+        public DeleteBudgetItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository, IMWORepository mWORepository)
         {
             _appDbContext = appDbContext;
             Repository = repository;
+            MWORepository = mWORepository;
         }
 
         public async Task<IResult> Handle(DeleteBudgetItemCommand request, CancellationToken cancellationToken)
@@ -44,6 +47,7 @@ namespace Application.Features.BudgetItems.Command
 
             var result = await _appDbContext.SaveChangesAsync(cancellationToken);
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
+            await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} was removed succesfully!");

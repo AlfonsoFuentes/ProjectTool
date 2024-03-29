@@ -9,12 +9,14 @@ namespace Application.Features.BudgetItems.Command
     public class CreateAlterationBudgetItemCommandHandler : IRequestHandler<CreateAlterationBudgetItemCommand, IResult>
     {
         private IBudgetItemRepository Repository { get; set; }
+        private IMWORepository MWORepository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
 
-        public CreateAlterationBudgetItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository)
+        public CreateAlterationBudgetItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository, IMWORepository mWORepository)
         {
             AppDbContext = appDbContext;
             Repository = repository;
+            MWORepository = mWORepository;
         }
 
         public async Task<IResult> Handle(CreateAlterationBudgetItemCommand request, CancellationToken cancellationToken)
@@ -35,7 +37,7 @@ namespace Application.Features.BudgetItems.Command
 
             await Repository.AddBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-
+            await MWORepository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} created succesfully!");

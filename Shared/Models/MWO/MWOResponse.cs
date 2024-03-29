@@ -2,6 +2,7 @@
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.MWOStatus;
 using Shared.Models.MWOTypes;
+using Shared.Models.PurchaseOrders.Responses;
 
 namespace Shared.Models.MWO
 {
@@ -15,29 +16,28 @@ namespace Shared.Models.MWO
         public string sStatus => Status.Name;
         public string CreatedBy { get; set; } = string.Empty;
         public string CreatedOn { get; set; } = string.Empty;
-        public double Capital { get; set; } = 0;
-        public double Expenses { get; set; } = 0;
+        public double Capital { get; set; }
+        public double Expenses { get; set; }
         public double Appropiation => Capital + Expenses;
         public string CECName { get; set; } = string.Empty;
         public string CostCenter { get; set; } = string.Empty;
-       
-        public List<BudgetItemResponse> BudgetItems { get; set; } = new();
-
+              
+     
         public double Budget => Appropiation;
-        public double AssignedCapital { get; set; }
-        public double ActualCapital { get; set; } = 0;//Purchase orders money received
-        public double PotencialCapital { get; set; } = 0;//Purchase orders not approved
-        public double CommitmentCapital => AssignedCapital - ActualCapital - PotencialCapital;
+        public double AssignedCapital => ActualCapital + CommitmentCapital + PotencialCapital;
+        public double ActualCapital { get; set; }
+        public double PotencialCapital { get; set; }
+        public double CommitmentCapital { get; set; }
         public double PendingCapital => Capital - AssignedCapital;
 
 
-        public double AssignedExpenses { get; set; }
-        public double ActualExpenses { get; set; } = 0;//Purchase orders money receivedActualExpenses
-        public double PotencialExpenses { get; set; } = 0;//Purchase orders not approved
-        public double CommitmentExpenses => AssignedExpenses - ActualExpenses - PotencialExpenses;
+        public double AssignedExpenses => ActualExpenses + CommitmentExpenses + PotencialExpenses;
+        public double ActualExpenses { get; set; }
+        public double PotencialExpenses { get; set; }
+        public double CommitmentExpenses { get; set; }
         public double PendingExpenses => Expenses - AssignedExpenses;
 
-        public bool HasAlterations => BudgetItems.Any(x => x.Type.Id == BudgetItemTypeEnum.Alterations.Id);
+        public bool HasAlterations { get; set; }
         public bool IsAssetProductive { get; set; } = true;
         public List<string> ValidationErrors { get; set; } = new();
         public double PercentageAssetNoProductive { get; set; } = 19;

@@ -96,23 +96,23 @@ namespace Server.Controllers.BudgetItems
         }
        
         [HttpPost("UpdateEquipmentItem")]
-        public async Task<IActionResult> UpdateEquipmentItem(UpdateBudgetItemRequest request)
+        public async Task<IActionResult> UpdateEquipmentItem(UpdateBudgetItemRequestDto request)
         {
 
             return Ok(await Mediator.Send(new UpdateEquipmentInstrumentsItemCommand(request)));
         }
         [HttpPost("UpdateEngContItem")]
-        public async Task<IActionResult> UpdateEngContItem(UpdateBudgetItemRequest request)
+        public async Task<IActionResult> UpdateEngContItem(UpdateBudgetItemRequestDto request)
         {
             return Ok(await Mediator.Send(new UpdateEngContingencyCommand(request)));
         }
         [HttpPost("UpdateTaxItem")]
-        public async Task<IActionResult> UpdateTaxtItem(UpdateBudgetItemRequest request)
+        public async Task<IActionResult> UpdateTaxtItem(UpdateBudgetItemRequestDto request)
         {
             return Ok(await Mediator.Send(new UpdateTaxItemCommand(request)));
         }
         [HttpPost("UpdateAlterationItem")]
-        public async Task<IActionResult> UpdateAlterationItem(UpdateBudgetItemRequest request)
+        public async Task<IActionResult> UpdateAlterationItem(UpdateBudgetItemRequestDto request)
         {
             return Ok(await Mediator.Send(new UpdateAlterationBudgetItemCommand(request)));
         }

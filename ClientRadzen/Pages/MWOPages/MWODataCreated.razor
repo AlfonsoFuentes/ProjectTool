@@ -27,13 +27,13 @@
         <RadzenRow>
             <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1" Click="@(()=>DataMain.EditByForm(Data))"
                           MouseEnter="@(args => MainApp.ShowTooltip(args,$"Edit Inline MWO: {Data.Name}",TooltipPosition.Left) )" />
-            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2" Click="@(()=>DataMain.Delete(Data))"
+            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2" Click="@(()=>Delete(Data))"
                           MouseEnter="@(args => MainApp.ShowTooltip(args,$"Delete {Data.Name}",TooltipPosition.Left) )" />
            
         </RadzenRow>
         <RadzenRow>
             <RadzenButton Icon="verified" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
-                          Click="@(()=>DataMain.Approve(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Approve MWO: {Data.Name}",TooltipPosition.Left) )" />
+                          Click="@(()=>Approve(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Approve MWO: {Data.Name}",TooltipPosition.Left) )" />
             <RadzenButton Icon="new_label" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2"
                           Click="@(()=>DataMain.AddItemToMWO(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Add Item to MWO: {Data.Name}",TooltipPosition.Left) )" />
             <RadzenButton Icon="format_list_bulleted" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1 rz-ml-2"

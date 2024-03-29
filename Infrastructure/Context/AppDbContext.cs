@@ -30,7 +30,7 @@ namespace Infrastructure.Context
                     case EntityState.Modified:
                         entry.Entity.LastModifiedOn = DateTime.UtcNow;
                         entry.Entity.LastModifiedBy = CurrentUser.UserId;
-                        //entry.Entity.CreatedBy = CurrentUser.UserId; se agrego esta linea para cambiar de usuario
+                        //entry.Entity.CreatedBy = CurrentUser.UserId;// se agrego esta linea para cambiar de usuario
                         //entry.Entity.CreatedByUserName = CurrentUser.UserName;
                         break;
                 }
@@ -73,5 +73,6 @@ namespace Infrastructure.Context
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
         public DbSet<DownPayment> DownPayments { get; set; }
+        public DbSet<SapAdjust> SapAdjusts { get; set; }
     }
 }

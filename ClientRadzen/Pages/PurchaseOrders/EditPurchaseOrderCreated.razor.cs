@@ -7,7 +7,7 @@ using ClientRadzen.Pages.Suppliers;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.BudgetItems;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
+using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
 using Shared.Models.Suppliers;
 #nullable disable
 namespace ClientRadzen.Pages.PurchaseOrders

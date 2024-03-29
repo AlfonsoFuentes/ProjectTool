@@ -7,5 +7,5 @@ public partial class MWODataListCreated
 {
     [CascadingParameter]
     public MWODataMain DataMain { get; set; }
-    IQueryable<MWOResponse> FilteredItems=>DataMain.FilteredItems.Where(x=>x.Status.Id==MWOStatusEnum.Created.Id);
+    IEnumerable<MWOResponse> FilteredItems => DataMain.Response.MWOsCreated==null?new List<MWOResponse>(): DataMain.Response.MWOsCreated;
 }

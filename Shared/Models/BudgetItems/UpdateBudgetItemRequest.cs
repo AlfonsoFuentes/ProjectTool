@@ -5,6 +5,30 @@ namespace Shared.Models.BudgetItems
 {
     public class UpdateBudgetItemRequest
     {
+        public UpdateBudgetItemRequestDto ConvertToDto()
+        {
+            return new()
+            {
+                Id = Id,
+                BrandId = Brand == null ? Guid.Empty : Brand.Id,
+                Budget = Budget,
+                BudgetItemDtos = BudgetItemDtos,
+                Existing = Existing,
+                Model = Model,
+                MWOId = MWOId,
+                MWOName = MWOName,
+                Name = Name,
+                Nomenclatore = Nomenclatore,
+                Percentage = Percentage,
+                Quantity = Quantity,
+                Reference = Reference,
+                SelectedBudgetItemDtos = SelectedBudgetItemDtos,
+                SelectedIdBudgetItemDtos = SelectedIdBudgetItemDtos,
+                SumPercentage = SumPercentage,
+                Type = Type.Id,
+                UnitaryCost = UnitaryCost,
+            };
+        }
         public Func<Task<bool>> Validator { get; set; } = null!;
         public Guid MWOId { get; set; }
         public Guid Id { get; set; }
@@ -22,11 +46,11 @@ namespace Shared.Models.BudgetItems
         public string? Reference { get; set; } = string.Empty;
         public double Percentage { get; set; }
         public List<BudgetItemDto> SelectedBudgetItemDtos { get; set; } = new List<BudgetItemDto>();
-       
+
         public List<Guid> SelectedIdBudgetItemDtos { get; set; } = new List<Guid>();
         public List<BudgetItemDto> BudgetItemDtos { get; set; } = new List<BudgetItemDto>();
         public double SumBudgetTaxes => Math.Round(SelectedBudgetItemDtos.Sum(x => x.Budget), 2);
-    
+
 
         public bool IsRegularData => Type.Id == BudgetItemTypeEnum.EHS.Id
             || Type.Id == BudgetItemTypeEnum.Structural.Id
@@ -48,7 +72,7 @@ namespace Shared.Models.BudgetItems
         public BrandResponse? Brand { get; set; }
         public async Task ChangeQuantity(string stringquantity)
         {
-           
+
             double quantity = 0;
             if (!double.TryParse(stringquantity, out quantity))
             { }
@@ -62,7 +86,7 @@ namespace Shared.Models.BudgetItems
         }
         public async Task ChangeUnitaryCost(string stringunitaryCost)
         {
-           
+
             double unitarycost = 0;
             if (!double.TryParse(stringunitaryCost, out unitarycost))
             { }
@@ -77,7 +101,7 @@ namespace Shared.Models.BudgetItems
         }
         public async Task ChangeTaxesItemList(object objeto)
         {
-           
+
             SelectedBudgetItemDtos.Clear();
             foreach (var item in SelectedIdBudgetItemDtos)
             {
@@ -89,7 +113,7 @@ namespace Shared.Models.BudgetItems
         public double SumBudgetItems { get; set; }
         public async Task ChangePercentage(string stringpercentage)
         {
-           
+
             double percentage = 0;
             if (!double.TryParse(stringpercentage, out percentage))
             { }
@@ -109,7 +133,7 @@ namespace Shared.Models.BudgetItems
         }
         public async Task ChangeBudget(string stringunitarycost)
         {
-           
+
             double Unitarycost = 0;
             if (!double.TryParse(stringunitarycost, out Unitarycost))
             { }
@@ -130,5 +154,35 @@ namespace Shared.Models.BudgetItems
             if (Validator != null) await Validator();
 
         }
+    }
+    public class UpdateBudgetItemRequestDto
+    {
+
+        public Guid MWOId { get; set; }
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string MWOName { get; set; } = string.Empty;
+        public string Nomenclatore { get; set; } = string.Empty;
+        public int Type { get; set; }
+        public double UnitaryCost { get; set; }
+        public double Budget { get; set; }
+
+        public bool Existing { get; set; }
+        public double Quantity { get; set; }
+
+        public string? Model { get; set; } = string.Empty;
+        public string? Reference { get; set; } = string.Empty;
+        public double Percentage { get; set; }
+        public List<BudgetItemDto> SelectedBudgetItemDtos { get; set; } = new List<BudgetItemDto>();
+
+        public List<Guid> SelectedIdBudgetItemDtos { get; set; } = new List<Guid>();
+        public List<BudgetItemDto> BudgetItemDtos { get; set; } = new List<BudgetItemDto>();
+        public double SumBudgetTaxes => Math.Round(SelectedBudgetItemDtos.Sum(x => x.Budget), 2);
+
+
+
+        public double SumPercentage { get; set; }
+        public Guid? BrandId { get; set; }
+
     }
 }

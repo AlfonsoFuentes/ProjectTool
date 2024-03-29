@@ -16,7 +16,7 @@ namespace Shared.Models.PurchaseOrders.Responses
         public Guid MWOId { get; set; }
         public string CreatedBy { get; set; } = string.Empty;
         public string CreatedOn { get; set; }=string.Empty;
-        public string ExpetedOn { get; set; } = string.Empty;
+        public string ExpectedOn { get; set; } = string.Empty;
         public string ReceivedOn { get; set; } = string.Empty;
         public string Supplier { get; set; } = string.Empty;
         public string QuoteNo { get; set; } = string.Empty;
@@ -29,7 +29,7 @@ namespace Shared.Models.PurchaseOrders.Responses
         public double Assigned => Actual + Commitment;
         public double Actual => PurchaseOrderItems.Sum(x => x.Actual);
         public double Commitment => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? 0 : POValueUSD - Actual;
-        public double Potencial=> PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? POValueUSD : 0;
+        public double Potencial=> PurchaseOrderItems.Sum(x => x.Potencial);
         public PurchaseOrderStatusEnum PurchaseOrderStatus { get; set; } = PurchaseOrderStatusEnum.None;
         public string PurchaseOrderStatusName => PurchaseOrderStatus.Name;
         public bool IsAlteration { get; set; } = false;

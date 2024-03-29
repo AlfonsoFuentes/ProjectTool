@@ -40,5 +40,10 @@ namespace Shared.Models.Suppliers
             ContactEmail = name;
             if (Validator != null) await Validator();
         }
+        public async Task ChangeSupplierCurrency()
+        {
+            if (Validator != null) await Validator();
+        }
+
     }
 }

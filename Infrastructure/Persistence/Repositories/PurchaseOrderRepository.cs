@@ -2,7 +2,9 @@
 using Domain.Entities.Data;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using Shared.Commons.UserManagement;
 using Shared.Models.BudgetItemTypes;
+using Shared.Models.MWOStatus;
 using Shared.Models.PurchaseorderStatus;
 using System.Linq.Expressions;
 
@@ -50,11 +52,22 @@ namespace Infrastructure.Persistence.Repositories
         {
             var budgetItem = await Context.BudgetItems
                 .Include(x => x.MWO)
-                .Include(x => x.PurchaseOrderItems).ThenInclude(x => x.PurchaseOrder)
                 .AsNoTracking()
                 .AsSplitQuery()
                 .SingleOrDefaultAsync(x => x.Id == BudgetItemId);
             return budgetItem!;
+        }
+        public Task<IQueryable<PurchaseOrder>> GetPurchaseorderByBudgetItem(Guid BudgetItemId)
+        {
+            var result =
+                 Context.PurchaseOrders
+                 .Include(x => x.Supplier)
+                .Include(x => x.PurchaseOrderItems)
+                .Where(x => x.PurchaseOrderItems.Any(x => x.BudgetItemId == BudgetItemId && !x.IsTaxAlteration))
+                .AsNoTracking()
+                .AsSplitQuery()
+                .AsQueryable();
+            return Task.FromResult(result);
         }
         public async Task AddPurchaseOrder(PurchaseOrder purchaseOrder)
         {
@@ -92,21 +105,91 @@ namespace Infrastructure.Persistence.Repositories
             Context.PurchaseOrders.Update(purchaseOrder);
             return Task.CompletedTask;
         }
-        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseorders()
+        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseorders(Expression<Func<PurchaseOrder, bool>> filteruser)
         {
             return Task.FromResult(Context
-                .PurchaseOrders
-                .Include(x => x.MWO)
-                .Include(x => x.PurchaseOrderItems)
-                .ThenInclude(x => x.BudgetItem)
-                .Include(x => x.Supplier)
+               .PurchaseOrders
+               .Include(x => x.MWO)
+               .Include(x => x.PurchaseOrderItems)
+               .ThenInclude(x => x.BudgetItem)
+               .Include(x => x.Supplier)
+                .Where(filteruser)
 
-                .AsNoTracking()
-                .AsQueryable()
-                .AsSplitQuery());
+               .AsNoTracking()
+               .AsQueryable()
+               .AsSplitQuery());
+
+
         }
+        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersCreated(CurrentUser CurrentUser)
+        {
+            Expression<Func<PurchaseOrder, bool>> filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id;
+            if (!CurrentUser.IsSuperAdmin)
+            {
+                filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id && x.CreatedBy == CurrentUser.UserId;
+            }
+            return Task.FromResult(Context
+               .PurchaseOrders
+               .OrderBy(x => x.PurchaseRequisition)
+               .Include(x => x.MWO)
+               .Include(x => x.PurchaseOrderItems)
+               .ThenInclude(x => x.BudgetItem)
+               .Include(x => x.Supplier)
+
+               .Where(filter)
+               .AsNoTracking()
+               .AsQueryable()
+               .AsSplitQuery());
 
 
+        }
+        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersToReceive(CurrentUser CurrentUser)
+        {
+            Expression<Func<PurchaseOrder, bool>> filter = x => !(x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id ||
+           x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id);
+            if (!CurrentUser.IsSuperAdmin)
+            {
+                filter = x => !(x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id ||
+           x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id) && x.CreatedBy == CurrentUser.UserId;
+            }
+            return Task.FromResult(Context
+               .PurchaseOrders
+
+               .OrderBy(x => x.POExpectedDateDate!.Value)
+               .Include(x => x.MWO)
+               .Include(x => x.PurchaseOrderItems)
+               .ThenInclude(x => x.BudgetItem)
+               .Include(x => x.Supplier)
+                .Where(filter)
+               .AsNoTracking()
+               .AsQueryable()
+               .AsSplitQuery());
+
+
+        }
+        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersClosed(CurrentUser CurrentUser)
+        {
+            Expression<Func<PurchaseOrder, bool>> filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id;
+            if (!CurrentUser.IsSuperAdmin)
+            {
+                filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id && x.CreatedBy == CurrentUser.UserId;
+            }
+            return Task.FromResult(Context
+               .PurchaseOrders
+
+                .OrderBy(x => x.POClosedDate!.Value)
+               .Include(x => x.MWO)
+               .Include(x => x.PurchaseOrderItems)
+               .ThenInclude(x => x.BudgetItem)
+               .Include(x => x.Supplier)
+                .Where(filter)
+
+               .AsNoTracking()
+               .AsQueryable()
+               .AsSplitQuery());
+
+
+        }
 
         public async Task<PurchaseOrder> GetPurchaseOrderById(Guid PurchaseOrderId)
         {

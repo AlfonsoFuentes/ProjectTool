@@ -11,11 +11,12 @@ namespace Application.Features.BudgetItems.Command
     {
         private IBudgetItemRepository Repository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
-
-        public CreateRegularBudgetItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository)
+        private IMWORepository MWORepository { get; set; }
+        public CreateRegularBudgetItemCommandHandler(IAppDbContext appDbContext, IBudgetItemRepository repository, IMWORepository mWORepository)
         {
             AppDbContext = appDbContext;
             Repository = repository;
+            MWORepository = mWORepository;
         }
 
         public async Task<IResult> Handle(CreateRegularBudgetItemCommand request, CancellationToken cancellationToken)
@@ -43,6 +44,7 @@ namespace Application.Features.BudgetItems.Command
             await Repository.AddBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
+            await MWORepository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} created succesfully!");

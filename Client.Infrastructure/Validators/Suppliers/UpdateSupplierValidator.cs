@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 
-namespace Application.Features.Suppliers.Validators
+namespace Client.Infrastructure.Validators.Suppliers
 {
-    public class UpdateSupplierValidator:AbstractValidator<UpdateSupplierRequest>
+    public class UpdateSupplierValidator : AbstractValidator<UpdateSupplierRequest>
     {
         private ISupplierValidatorService _Service;
         public UpdateSupplierValidator(ISupplierValidatorService service)
@@ -19,7 +19,7 @@ namespace Application.Features.Suppliers.Validators
             RuleFor(customer => customer.VendorCode).Matches("^[0-9]*$").WithMessage("Supplier vendor Code must be number!");
             RuleFor(customer => customer.TaxCodeLP).Matches("^[0-9]*$").WithMessage("Supplier vendor Code must be number!");
             RuleFor(customer => customer.TaxCodeLD).Matches("^[0-9]*$").WithMessage("Supplier vendor Code must be number!");
-     
+
             RuleFor(x => x.Name).MustAsync(ReviewIfNameExist).When(x => !string.IsNullOrEmpty(x.Name)).WithMessage(x => $"Vendor Name:{x.Name} already exist");
             RuleFor(x => x.VendorCode).MustAsync(ReviewIfVendorCodeExist).When(x => !string.IsNullOrEmpty(x.VendorCode)).WithMessage(x => $"Vendor Code:{x.VendorCode} already exist");
             RuleFor(x => x.ContactEmail).MustAsync(ReviewIfEmailExist).When(x => !string.IsNullOrEmpty(x.ContactEmail)).WithMessage(x => $"Vendor Code:{x.ContactEmail} already exist");
@@ -27,19 +27,19 @@ namespace Application.Features.Suppliers.Validators
             RuleFor(x => x.ContactEmail).NotEmpty().WithMessage("Supplier email must be defined!");
             RuleFor(x => x.ContactEmail).NotNull().WithMessage("Supplier email must be defined!");
         }
-        async Task<bool> ReviewIfNameExist(UpdateSupplierRequest supplier,string name, CancellationToken cancellationToken)
+        async Task<bool> ReviewIfNameExist(UpdateSupplierRequest supplier, string name, CancellationToken cancellationToken)
         {
             var result = await _Service.ReviewIfNameExist(supplier.Id, name);
             return !result;
         }
-        async Task<bool> ReviewIfVendorCodeExist(UpdateSupplierRequest supplier,string vendorcode, CancellationToken cancellationToken)
+        async Task<bool> ReviewIfVendorCodeExist(UpdateSupplierRequest supplier, string vendorcode, CancellationToken cancellationToken)
         {
             var result = await _Service.ReviewIfVendorCodeExist(supplier.Id, vendorcode);
             return !result;
         }
-        async Task<bool> ReviewIfEmailExist(UpdateSupplierRequest supplier,string? email, CancellationToken cancellationToken)
+        async Task<bool> ReviewIfEmailExist(UpdateSupplierRequest supplier, string? email, CancellationToken cancellationToken)
         {
-        
+
             var result = await _Service.ReviewIfEmailExist(supplier.Id, email);
             return !result;
         }

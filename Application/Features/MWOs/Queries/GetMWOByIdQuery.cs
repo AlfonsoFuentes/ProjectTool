@@ -1,9 +1,11 @@
 ﻿using Application.Interfaces;
+using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.MWO;
+using Shared.Models.MWOStatus;
 using Shared.Models.MWOTypes;
 
 namespace Application.Features.MWOs.Queries
@@ -34,19 +36,15 @@ namespace Application.Features.MWOs.Queries
                 PercentageContingency = mwo.PercentageContingency,
                 PercentageEngineering = mwo.PercentageEngineering,
                 MWOType = MWOTypeEnum.GetType(mwo.Type),
-                BudgetItems = mwo.BudgetItems.Select(x =>
-                new BudgetItemResponse()
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Nomenclatore = $"{BudgetItemTypeEnum.GetLetter(x.Type)}{x.Order}",
-                    Type = BudgetItemTypeEnum.GetType(x.Type),
-                    Budget = x.Budget,
-                    Percentage = x.Percentage,
-                    IsNotAbleToEditDelete = x.IsNotAbleToEditDelete,
-
-                }
-                 ).ToList(),
+                Capital = mwo.Capital,
+                Expenses = mwo.Expenses,
+                PotencialCapital = mwo.PotentialCommitmentCapital,
+                PotencialExpenses = mwo.PotentialCommitmentExpenses,
+                ActualCapital = mwo.ActualCapital,
+                ActualExpenses = mwo.ActualExpenses,
+                CommitmentCapital = mwo.CommitmentCapital,
+                CommitmentExpenses = mwo.CommitmentExpenses,
+                Status=MWOStatusEnum.GetType(mwo.Status),
 
             };
 

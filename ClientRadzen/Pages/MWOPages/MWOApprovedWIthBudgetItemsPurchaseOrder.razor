@@ -36,12 +36,12 @@
                     </HeaderTemplate>
                     <ChildContent>
                         <RadzenCard class="rz-mt-1">
-                            <RowTemplateCurrency Label="Capital" Value="@Response.Capital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Assigned Capital" Value="@Response.AssignedCapital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Pending Capital" Value="@Response.PendingCapital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Actual Capital" Value="@Response.ActualCapital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Commitment Capital" Value="@Response.CommitmentCapital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Potential Capital" Value="@Response.PotencialCapital"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Budget, USD" Value="@Response.Capital"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Assigned, USD" Value="@Response.AssignedCapital"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Pending, USD" Value="@Response.PendingCapital"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Actual, USD" Value="@Response.ActualCapital"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Commitment, USD" Value="@Response.CommitmentCapital"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Potential, USD" Value="@Response.PotencialCapital"></RowTemplateCurrency>
                         </RadzenCard>
                     </ChildContent>
                 </RadzenPanel>
@@ -57,12 +57,12 @@
                         </HeaderTemplate>
                         <ChildContent>
                             <RadzenCard class="rz-mt-1">
-                                <RowTemplateCurrency Label="Expenses" Value="@Response.Expenses"></RowTemplateCurrency>
-                                <RowTemplateCurrency Label="Assigned Expenses" Value="@Response.AssignedExpenses"></RowTemplateCurrency>
-                                <RowTemplateCurrency Label="Pending Expenses" Value="@Response.PendingExpenses"></RowTemplateCurrency>
-                                <RowTemplateCurrency Label="Actual Expenses" Value="@Response.ActualExpenses"></RowTemplateCurrency>
-                                <RowTemplateCurrency Label="Commitment Expenses" Value="@Response.CommitmentExpenses"></RowTemplateCurrency>
-                                <RowTemplateCurrency Label="Potential Expenses" Value="@Response.PotencialExpenses"></RowTemplateCurrency>
+                                <RowTemplateCurrency Label="Budget, USD" Value="@Response.Expenses"></RowTemplateCurrency>
+                                <RowTemplateCurrency Label="Assigned, USD" Value="@Response.AssignedExpenses"></RowTemplateCurrency>
+                                <RowTemplateCurrency Label="Pending, USD" Value="@Response.PendingExpenses"></RowTemplateCurrency>
+                                <RowTemplateCurrency Label="Actual, USD" Value="@Response.ActualExpenses"></RowTemplateCurrency>
+                                <RowTemplateCurrency Label="Commitment, USD" Value="@Response.CommitmentExpenses"></RowTemplateCurrency>
+                                <RowTemplateCurrency Label="Potential, USD" Value="@Response.PotencialExpenses"></RowTemplateCurrency>
                             </RadzenCard>
                         </ChildContent>
                     </RadzenPanel>
@@ -81,7 +81,7 @@
         </RadzenRow>
         <RadzenRow>
             <RadzenColumn Size="12" SizeLG="12">
-                <RadzenDataList AllowVirtualization=true Style="height:700px;overflow:auto;"
+                <RadzenDataList AllowVirtualization=true Style="height:100%;overflow:auto;" PageSize=15
                                 WrapItems="false" AllowPaging="true" Density="Density.Compact"
                                 Data="@FilteredItems" TItem="BudgetItemApprovedResponse" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
 
@@ -106,14 +106,14 @@
                                             <RowTemplateCurrency Label="Assigned, USD" Value="@product.Assigned"></RowTemplateCurrency>
                                             <RowTemplateCurrency Label="Pending, USD" Value="@product.Pending"></RowTemplateCurrency>
 
-                                            
+
                                         </RadzenColumn>
                                         <RadzenColumn Size="12" SizeLG="3" Class="rz-p-2">
                                             <RowTemplateCurrency Label="Actual, USD" Value="@product.Actual"></RowTemplateCurrency>
                                             <RowTemplateCurrency Label="Commitment, USD" Value="@product.Commitment"></RowTemplateCurrency>
                                             <RowTemplateCurrency Label="Potential, USD" Value="@product.Potencial"></RowTemplateCurrency>
-                                          
-                                           
+
+
 
                                         </RadzenColumn>
                                         <RadzenColumn Size="12" SizeLG="2" Class="rz-p-2">
@@ -209,6 +209,11 @@
                                                         @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.GetPotentialByItem(seletedRow.BudgetItemId))}")
 
                                                     </Template>
+                                                </RadzenDataGridColumn>
+                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
+                                                                      Property="@nameof(PurchaseOrderResponse.ExpectedOn)"
+                                                                      Title="Expected On" Width="100px" TextAlign="TextAlign.Left">
+                                                   
                                                 </RadzenDataGridColumn>
                                                 @if (!product.IsMainItemTaxesNoProductive)
                                                 {

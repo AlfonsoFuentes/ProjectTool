@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Suppliers.Validators
+﻿namespace Client.Infrastructure.Validators.Suppliers
 {
     public class CreateSupplierValidator : AbstractValidator<CreateSupplierRequest>
     {

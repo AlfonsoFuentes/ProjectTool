@@ -1,4 +1,6 @@
-﻿namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
+﻿using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
+
+namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
 {
     public class ApprovedRegularPurchaseOrderRequestDto: EditPurchaseOrderRegularCreatedRequestDto
     {

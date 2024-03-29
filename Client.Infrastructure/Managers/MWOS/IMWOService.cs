@@ -8,7 +8,10 @@
         Task<IResult> CreateMWO(CreateMWORequest request);
         Task<IResult> ApproveMWO(ApproveMWORequest request);
  
-        Task<IResult<List<MWOResponse>>> GetAllMWO();
+        Task<IResult<MWOResponseList>> GetAllMWO();
+        //Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOCreated();
+        //Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOApproved();
+        //Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOClosed();
         Task<IResult<UpdateMWORequest>> GetMWOToUpdateById(Guid id);
        
         Task<IResult> Delete(MWOResponse request);
@@ -58,10 +61,10 @@
 
       
 
-        public async Task<IResult<List<MWOResponse>>> GetAllMWO()
+        public async Task<IResult<MWOResponseList>> GetAllMWO()
         {
             var httpresult = await Http.GetAsync($"mwo/getall");
-            return await httpresult.ToResult<List<MWOResponse>>();
+            return await httpresult.ToResult<MWOResponseList>();
         }
 
        
@@ -108,5 +111,23 @@
             var httpresult = await Http.GetAsync($"mwo/GetMWOApproved/{id}");
             return await httpresult.ToResult<MWOApprovedResponse>();
         }
+
+        //public async Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOCreated()
+        //{
+        //    var httpresult = await Http.GetAsync($"mwo/getallCreated");
+        //    return await httpresult.ToResult<IEnumerable<MWOResponse>>();
+        //}
+
+        //public async Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOApproved()
+        //{
+        //    var httpresult = await Http.GetAsync($"mwo/getallApproved");
+        //    return await httpresult.ToResult<IEnumerable<MWOResponse>>();
+        //}
+
+        //public async Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOClosed()
+        //{
+        //    var httpresult = await Http.GetAsync($"mwo/getallClosed");
+        //    return await httpresult.ToResult<IEnumerable<MWOResponse>>();
+        //}
     }
 }

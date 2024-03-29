@@ -1,6 +1,6 @@
 ﻿using Client.Infrastructure.Managers.PurchaseOrders;
 using Shared.Models.Currencies;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
+using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
 
 namespace Client.Infrastructure.Validators.PurchaseOrder
 {

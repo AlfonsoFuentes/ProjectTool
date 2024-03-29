@@ -53,8 +53,23 @@ namespace Server.Controllers.MWOS
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await Mediator.Send(new GetAllMWOQuery()));
+            return Ok(await Mediator.Send(new GetAllMWOResponseQuery()));
         }
+        //[HttpGet("getallCreated")]
+        //public async Task<IActionResult> GetAllCreated()
+        //{
+        //    return Ok(await Mediator.Send(new GetAllMWOCreatedResponseQuery()));
+        //}
+        //[HttpGet("getallApproved")]
+        //public async Task<IActionResult> GetAllApproved()
+        //{
+        //    return Ok(await Mediator.Send(new GetAllMWOApprovedResponseQuery()));
+        //}
+        //[HttpGet("getallClosed")]
+        //public async Task<IActionResult> GetAllClosed()
+        //{
+        //    return Ok(await Mediator.Send(new GetAllMWOClosedResponseQuery()));
+        //}
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete(MWOResponse request)
         {

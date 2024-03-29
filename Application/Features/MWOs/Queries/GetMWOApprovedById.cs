@@ -51,6 +51,7 @@ namespace Application.Features.MWOs.Queries
             };
 
             var purchaseorders = await Repository.GetPurchaseOrdersByMWOId(request.MWOId);
+            var pororderlist = purchaseorders.ToList();
             Expression<Func<PurchaseOrder, PurchaseOrderResponse>> expressionpurchaseorder = e => new PurchaseOrderResponse
             {
                 MWOId = e.MWOId,
@@ -59,7 +60,7 @@ namespace Application.Features.MWOs.Queries
                 AccountAssigment = e.AccountAssigment,
                 CreatedBy = e.CreatedBy,
                 CreatedOn = e.CreatedDate.ToShortDateString(),
-                ExpetedOn = e.POExpectedDateDate == null ? string.Empty : e.POExpectedDateDate!.Value.ToShortDateString(),
+                ExpectedOn = e.POExpectedDateDate == null ? string.Empty : e.POExpectedDateDate!.Value.ToShortDateString(),
                 IsAlteration = e.IsAlteration,
                 IsCapitalizedSalary = e.IsCapitalizedSalary,
                 IsTaxEditable = e.IsTaxEditable,
@@ -71,7 +72,7 @@ namespace Application.Features.MWOs.Queries
                 Supplier = e.Supplier == null ? string.Empty : e.Supplier.NickName,
                 TaxCode = e.TaxCode,
                 VendorCode = e.Supplier == null ? string.Empty : e.Supplier.VendorCode,
-
+                SupplierId = e.SupplierId == null ? Guid.Empty : e.SupplierId.Value,
                 PurchaseOrderItems = e.PurchaseOrderItems.Select(x => new PurchaseorderItemsResponse
                 {
                     BudgetItemId = x.BudgetItemId,

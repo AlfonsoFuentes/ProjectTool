@@ -1,21 +1,21 @@
 ﻿namespace Shared.Models.Roles
 {
-    public class RolesDto
+    public class RolesEnum
     {
         public string Name { get; set; } = string.Empty;
 
-        public static RolesDto Create(string name)
+        public static RolesEnum Create(string name)
         {
-            return new RolesDto { Name = name };
+            return new RolesEnum { Name = name };
         }
+        public static RolesEnum None = RolesEnum.Create("None");
 
+        public static RolesEnum RegularUser = RolesEnum.Create("Regular");
+        public static RolesEnum ViewerUser = RolesEnum.Create("Viewer");
 
-        public static RolesDto RegularUser = RolesDto.Create("RegularUser");
-        public static RolesDto ViewerUser = RolesDto.Create("ViewerUser");
-
-        public static List<RolesDto> Roles = new List<RolesDto>()
+        public static List<RolesEnum> Roles = new List<RolesEnum>()
         {
-            RegularUser, ViewerUser
+            None, RegularUser, ViewerUser
         };
     }
 }

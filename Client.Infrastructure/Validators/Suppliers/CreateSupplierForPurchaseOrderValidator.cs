@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Suppliers.Validators
+﻿namespace Client.Infrastructure.Validators.Suppliers
 {
     public class CreateSupplierForPurchaseOrderValidator : AbstractValidator<CreateSupplierForPurchaseOrderRequest>
     {
@@ -20,7 +20,7 @@
             RuleFor(customer => customer.TaxCodeLD).Matches("^[0-9]*$").WithMessage("Supplier vendor Code must be number!");
             RuleFor(x => x.Name).MustAsync(ReviewIfNameExist).When(x => !string.IsNullOrEmpty(x.Name)).WithMessage(x => $"Vendor Name:{x.Name} already exist");
             RuleFor(x => x.VendorCode).MustAsync(ReviewIfVendorCodeExist).When(x => !string.IsNullOrEmpty(x.VendorCode)).WithMessage(x => $"Vendor Code:{x.VendorCode} already exist");
-          
+
         }
         async Task<bool> ReviewIfNameExist(string name, CancellationToken cancellationToken)
         {
@@ -32,6 +32,6 @@
             var result = await _Service.ReviewIfVendorCodeExist(vendorcode);
             return !result;
         }
-       
+
     }
 }

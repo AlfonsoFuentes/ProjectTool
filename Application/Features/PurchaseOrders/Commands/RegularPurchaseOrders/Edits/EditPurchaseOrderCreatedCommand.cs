@@ -1,11 +1,7 @@
-﻿using Application.Features.PurchaseOrders.Validators;
-using Application.Features.PurchaseOrders.Validators.RegularPurchaseOrders;
-using Application.Interfaces;
-using Domain.Entities.Data;
+﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Models.PurchaseOrders.Requests;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
+using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edits
 {
@@ -16,10 +12,12 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
     {
         private IPurchaseOrderRepository Repository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
-        public EditPurchaseOrderCreatedCommandHandler(IPurchaseOrderRepository repository, IAppDbContext appDbContext)
+        private IMWORepository MWORepository { get; set; }
+        public EditPurchaseOrderCreatedCommandHandler(IPurchaseOrderRepository repository, IAppDbContext appDbContext, IMWORepository mWORepository)
         {
             Repository = repository;
             AppDbContext = appDbContext;
+            MWORepository = mWORepository;
         }
 
         public async Task<IResult> Handle(EditPurchaseOrderCreatedCommand request, CancellationToken cancellationToken)
@@ -72,6 +70,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
 
             await Repository.UpdatePurchaseOrder(purchaseOrder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
+            await MWORepository.UpdateDataForApprovedMWO(purchaseOrder.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"Purchase order :{request.Data.PurchaseorderName} was edited succesfully");

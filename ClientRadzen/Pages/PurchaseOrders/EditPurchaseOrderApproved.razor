@@ -32,8 +32,10 @@
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="3">
                     <RadzenFormField Text="Purchase order Expected date" Style="width: 100%;">
-                        <RadzenDatePicker @bind-Value=@Model.ExpectedDate Name="expetedon" AllowClear=true DateFormat="d"
-                                          Change=Model.ChangedExpectedDate
+          
+
+                         <RadzenDatePicker @bind-Value=@Model.ExpectedDate AllowClear=true DateFormat="d" ShowCalendarWeek
+                                           Change=Model.ChangedExpectedDate
                                           TValue="DateTime?">
 
                         </RadzenDatePicker>
@@ -174,7 +176,7 @@
                                 else
                                 {
                                     <RadzenButton Icon="attach_money" Click=ClickUpdateCurrentTRM
-                                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Update current TRM {MainApp.USDEURLabel} COP/USD",
+                                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Update current TRM {MainApp.USDCOPLabel} COP/USD",
                                               TooltipPosition.Top))"></RadzenButton>
                                 }
                             </RadzenColumn>
@@ -212,7 +214,7 @@
                                 else
                                 {
                                     <RadzenButton Icon="attach_money" Click=ClickUpdateCurrentTRM
-                                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Update current TRM {MainApp.USDCOPLabel} EUR/USD",
+                                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Update current TRM {MainApp.USDEURLabel} EUR/USD",
                                               TooltipPosition.Top))"></RadzenButton>
                                 }
                             </RadzenColumn>

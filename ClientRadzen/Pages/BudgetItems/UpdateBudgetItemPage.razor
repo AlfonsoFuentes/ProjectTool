@@ -183,7 +183,7 @@
     <RadzenRow>
         <RadzenStack Orientation="Orientation.Horizontal">
             <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Disabled=@NotValidated Click="SaveAsync"
-                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Create",TooltipPosition.Top) )">Create</RadzenButton>
+                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Update",TooltipPosition.Top) )">Save</RadzenButton>
             <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync"
                           MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
         </RadzenStack>

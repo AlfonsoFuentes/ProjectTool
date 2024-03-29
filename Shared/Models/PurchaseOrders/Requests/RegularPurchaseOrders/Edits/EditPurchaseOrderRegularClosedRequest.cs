@@ -5,16 +5,16 @@ using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 using Shared.Models.PurchaseorderStatus;
 using Shared.Models.Suppliers;
 
-namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
+namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits
 {
-    public class EditPurchaseOrderRegularClosedRequest:EditPurchaseOrderRegularApprovedRequest
+    public class EditPurchaseOrderRegularClosedRequest : EditPurchaseOrderRegularApprovedRequest
     {
         public EditPurchaseOrderRegularClosedRequest()
         {
 
         }
-    
-        public double POValueUSDOriginal {  get; set; }
+
+        public double POValueUSDOriginal { get; set; }
         public PurchaseOrderStatusEnum PurchaseOrderStatus { get; set; } = PurchaseOrderStatusEnum.None;
     }
 }

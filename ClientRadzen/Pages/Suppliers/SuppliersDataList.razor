@@ -19,9 +19,9 @@
 
     <RadzenRow>
         <RadzenColumn Size="12" SizeLG="12">
-            <RadzenDataList AllowVirtualization=true Style="height:450px;overflow:auto;"
+            <RadzenDataList AllowVirtualization=true Style="height:100%;overflow:auto;" PageSize=15
                             WrapItems="false" AllowPaging="false" Density="Density.Compact"
-                            Data="@FilteredItems" TItem="SupplierResponse" PageSize="15" 
+                            Data="@FilteredItems" TItem="SupplierResponse" 
                             PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
                 <Template Context="product">
                     <RadzenCard Style="width: 100%; padding: 0;">

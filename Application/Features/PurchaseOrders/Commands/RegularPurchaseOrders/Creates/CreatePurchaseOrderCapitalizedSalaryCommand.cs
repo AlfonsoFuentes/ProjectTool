@@ -1,6 +1,4 @@
-﻿using Application.Features.PurchaseOrders.Validators;
-using Application.Features.PurchaseOrders.Validators.RegularPurchaseOrders;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
@@ -13,11 +11,12 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
     {
         private IPurchaseOrderRepository Repository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
-
-        public CreatePurchaseOrderCapitalizedSalaryCommandHandler(IAppDbContext appDbContext, IPurchaseOrderRepository repository)
+        private IMWORepository MWORepository { get; set; }
+        public CreatePurchaseOrderCapitalizedSalaryCommandHandler(IAppDbContext appDbContext, IPurchaseOrderRepository repository, IMWORepository mWORepository)
         {
             AppDbContext = appDbContext;
             Repository = repository;
+            MWORepository = mWORepository;
         }
 
         public async Task<IResult> Handle(CreatePurchaseOrderCapitalizedSalaryCommand request, CancellationToken cancellationToken)
@@ -45,7 +44,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Closed.Id;
             purchaseorder.QuoteNo = "";
             purchaseorder.TaxCode = "";
-
+            purchaseorder.POClosedDate=DateTime.UtcNow;
             purchaseorder.AccountAssigment = request.Data.MWOCECName;
             purchaseorder.MainBudgetItemId = request.Data.MainBudgetItemId;
             purchaseorder.Currency = request.Data.PurchaseOrderCurrency;
@@ -57,6 +56,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             await Repository.AddPurchaseorderItem(purchaseorderitem);
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
+            await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
             if (result > 0)
                 return Result.Success($"Purchase order created succesfully");
             return Result.Fail($"Purchase order was not created succesfully");

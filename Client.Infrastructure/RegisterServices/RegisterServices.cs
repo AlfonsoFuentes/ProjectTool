@@ -1,4 +1,6 @@
 ﻿
+using Blazored.LocalStorage;
+using Client.Infrastructure.Authentication;
 using Client.Infrastructure.Managers.CurrencyApis;
 using System.Globalization;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
@@ -11,21 +13,17 @@ namespace Client.Infrastructure.RegisterServices
         public static WebAssemblyHostBuilder AddClientServices(this WebAssemblyHostBuilder builder)
         {
 
-           
+            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddAuthorizationCore();
+            builder.Services.AddCascadingAuthenticationState();
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
 
             // register the cookie handler
-            builder.Services.AddScoped<CookieHandler>();
-
-            // set up authorization
-            builder.Services.AddAuthorizationCore();
-
-            // register the custom state provider
-            builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStateProvider>();
+         
             builder.Services.AddScoped<CurrentUser>();
             // register the account management interface
-            builder.Services.AddScoped(
-                sp => (ICookieAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>());
+           
 
             var frontend = builder.Configuration["FrontendUrl"];
             var backend = builder.Configuration["BackendUrl"];
@@ -41,22 +39,7 @@ namespace Client.Infrastructure.RegisterServices
                     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
                 });
 
-            // builder.Services.AddHttpClient("Auth", client =>
-            //client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
-            //      .AddHttpMessageHandler<CookieHandler>(); ;
-
-
-            // // Supply HttpClient instances that include access tokens when making requests to the server project
-            // builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Auth"));
-
-            //builder.Services.AddScoped(sp =>
-            //    new HttpClient { BaseAddress = new Uri(builder.Configuration["FrontendUrl"] ?? "https://localhost:5002") });
-
-            //// configure client for auth interactions
-            //builder.Services.AddHttpClient(
-            //    "Auth",
-            //    opt => opt.BaseAddress = new Uri(builder.Configuration["BackendUrl"] ?? "https://localhost:5001"))
-            //    .AddHttpMessageHandler<CookieHandler>();
+            
             builder.Services.AddHttpClientInterceptor();
             builder.Services.AddOptions();
             builder.Services.AddManagers();
@@ -64,6 +47,7 @@ namespace Client.Infrastructure.RegisterServices
             builder.Services.CurrencyService();
             return builder;
         }
+       
 
         public static IServiceCollection AddManagers(this IServiceCollection services)
         {

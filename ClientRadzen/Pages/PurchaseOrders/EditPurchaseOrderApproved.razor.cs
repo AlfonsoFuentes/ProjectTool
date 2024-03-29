@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.BudgetItems;
 using Shared.Models.PurchaseOrders.Requests;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
+using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
 using Shared.Models.Suppliers;
 
 #nullable disable
@@ -27,7 +27,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
         private ISupplierService SupplierService { get; set; }
 
 
-        EditPurchaseOrderRegularApprovedRequest Model = new();
+        EditPurchaseOrderRegularApprovedRequest Model = null!;
         List<BudgetItemApprovedResponse> OriginalBudgetItems { get; set; } = new();
         List<BudgetItemApprovedResponse> BudgetItems => GetBudgetItems();
         List<BudgetItemApprovedResponse> GetBudgetItems()
@@ -74,8 +74,8 @@ namespace ClientRadzen.Pages.PurchaseOrders
                 OriginalBudgetItems = resultBudgetItems.Data.BudgetItems;
 
             }
-            await ValidateAsync();
-            StateHasChanged();
+          
+            //StateHasChanged();
         }
 
         async Task<bool> ValidateAsync()

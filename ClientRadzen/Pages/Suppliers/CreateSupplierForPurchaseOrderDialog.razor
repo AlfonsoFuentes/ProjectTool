@@ -11,7 +11,7 @@
     <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
         <FluentValidationValidator @ref="_fluentValidationValidator" />
         <RadzenRow>
-            <RadzenColumn Size="12" SizeMD="8">
+            <RadzenColumn Size="12" SizeMD="12">
                 <RadzenFormField Text="Name" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.Name class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.Name"
                                    @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
@@ -23,7 +23,7 @@
             
         </RadzenRow>
         <RadzenRow>
-            <RadzenColumn Size="12" SizeMD="8">
+            <RadzenColumn Size="12" SizeMD="12">
                 <RadzenFormField Text="Nick Name" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.NickName class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.Nickname"
                                    @oninput="@((arg)=>Model.ChangeNickName(arg.Value!.ToString()!))"
@@ -35,7 +35,7 @@
            
         </RadzenRow>
         <RadzenRow>
-            <RadzenColumn Size="12" SizeMD="8">
+            <RadzenColumn Size="12" SizeMD="12">
                 <RadzenFormField Text="Vendor Code" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.VendorCode class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.GivenName"
                                    @oninput="@((arg)=>Model.ChangeVendorCode(arg.Value!.ToString()!))"
@@ -47,12 +47,12 @@
            
          </RadzenRow>
          <RadzenRow>
-             <RadzenColumn Size="12" SizeMD="4">
+             <RadzenColumn Size="12" SizeMD="6">
                  <RadzenFormField Text="Tax Code LD" Style="width: 100%; height:100%">
                      <RadzenText Text=@Model.TaxCodeLD class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;" />
                  </RadzenFormField>
              </RadzenColumn>
-             <RadzenColumn Size="12" SizeMD="4">
+             <RadzenColumn Size="12" SizeMD="6">
                  <RadzenFormField Text="Tax Code LP" Style="width: 100%; height:100%">
                      <RadzenText Text=@Model.TaxCodeLP class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;" />
                  </RadzenFormField>
@@ -60,13 +60,14 @@
            
          </RadzenRow>
          <RadzenRow>
-             <RadzenColumn Size="12" SizeMD="8">
+            <RadzenColumn Size="12" SizeMD="12">
                  <RadzenFormField Text="Supplier Currency" Style="width: 100%;">
                      <RadzenDropDown @bind-Value=@Model.SupplierCurrency Data=@CurrencyEnum.List Style="width: 100%; "
                                      Name="suppliercurrency" TextProperty="Name"
                                      AllowClear=true
                                      FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
                                      AllowFiltering="true"
+                                     Change="Model.ChangeSupplierCurrency"
                                      TValue="CurrencyEnum" />
 
 

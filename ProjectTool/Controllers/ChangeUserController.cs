@@ -22,5 +22,10 @@ namespace Server.Controllers
         {
             return Ok(await Mediator.Send(new ChangeDatabaseUserCommand()));
         }
+        [HttpPost("UpdateDataForMWOs")]
+        public async Task<IActionResult> UpdateDataForMWOs()
+        {
+            return Ok(await Mediator.Send(new UpdataForMWOSCommand()));
+        }
     }
 }

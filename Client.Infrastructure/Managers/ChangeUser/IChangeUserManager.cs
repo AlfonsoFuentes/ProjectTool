@@ -10,6 +10,7 @@ namespace Client.Infrastructure.Managers.ChangeUser
     public interface IChangeUserManager : IManager
     {
         public Task<IResult> ChangeUser();
+        public Task<IResult> UpdateDataForMWO();
 
     }
     public class ChangeUserManager:IChangeUserManager 
@@ -23,6 +24,13 @@ namespace Client.Infrastructure.Managers.ChangeUser
         public async Task<IResult> ChangeUser()
         {
             var httpresult = await Http.PostAsync("ChangeUser/ChangeUser", null);
+
+            return await httpresult.ToResult();
+        }
+
+        public async Task<IResult> UpdateDataForMWO()
+        {
+            var httpresult = await Http.PostAsync("ChangeUser/UpdateDataForMWOs", null);
 
             return await httpresult.ToResult();
         }

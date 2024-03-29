@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Brands.Validators
+﻿namespace Client.Infrastructure.Validators.Brands
 {
     public class UpdateBrandValidator : AbstractValidator<UpdateBrandRequest>
     {

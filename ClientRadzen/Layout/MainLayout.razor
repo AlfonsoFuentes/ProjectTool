@@ -2,9 +2,7 @@
 
 <RadzenLayout Style="width:100%">
     <RadzenHeader>
-      @*   <div class="rz-p-1 rz-text-align-center">
-            <RadzenLink Path="CreateSuperAdmin" Text="CreateSuperAdmin" />
-        </div> *@
+     
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.SpaceBetween>
             <div>
                 <AuthorizeView>
@@ -12,7 +10,7 @@
                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.Start class="m-2 ms-lg-5">
                             <RadzenButton Icon="home" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Medium" Click="@(()=>GoToHome())"
                                           MouseEnter="@(args => ShowTooltip(args,$"Go to Home Page") )" />
-                            @if (CurrentUser.IsSuperAdmin)
+                            @if(context.User.IsInRole("Administrator"))
                             {
                                 <RadzenButton Icon="store" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Medium" Click="@(()=>GoToBrands())"
                                               MouseEnter="@(args => ShowTooltip(args,$"Go to Brands") )" />
@@ -37,12 +35,12 @@
                             <div class="rz-ml-2 rz-mr-3">
                                 @context.User.Identity?.Name
                             </div>
-                            <RadzenLink Path="logout" class="rz-ml-2 rz-mr-3">Logout</RadzenLink>
+                            <RadzenLink Path="Newlogout" class="rz-ml-2 rz-mr-3">Logout</RadzenLink>
                         </RadzenStack>
                     </Authorized>
                     <NotAuthorized>
 
-                        <RadzenLink Path="login" class="rz-ml-2 rz-mr-3">Login</RadzenLink>
+                        <RadzenLink Path="NewLogin" class="rz-ml-2 rz-mr-3">Login</RadzenLink>
 
                     </NotAuthorized>
                 </AuthorizeView>
@@ -88,5 +86,10 @@
     private void GoToPurchaseorders()
     {
         _NavigationManager.NavigateTo("/PurchaseOrdersDataList");
+    }
+    protected override Task OnParametersSetAsync()
+    {
+       
+        return base.OnParametersSetAsync();
     }
 }

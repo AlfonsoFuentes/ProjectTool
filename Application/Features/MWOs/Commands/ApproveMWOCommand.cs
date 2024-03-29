@@ -36,6 +36,7 @@ namespace Application.Features.MWOs.Commands
             mwo.PercentageTaxForAlterations = request.Data.PercentageTaxForAlterations;
             mwo.PercentageContingency = request.Data.PercentageContingency;
             mwo.PercentageEngineering = request.Data.PercentageEngineering;
+            mwo.ApprovedDate=DateTime.Now;
             if (mwo.IsAssetProductive && !request.Data.IsAssetProductive)
             {
                 mwo.IsAssetProductive = false;
@@ -56,6 +57,7 @@ namespace Application.Features.MWOs.Commands
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
             await RepositoryBudgetItem.UpdateTaxesAndEngineeringContingencyItems(mwo.Id, cancellationToken);
+            await Repository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} approved succesfully");

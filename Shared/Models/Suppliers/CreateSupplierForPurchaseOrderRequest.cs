@@ -30,6 +30,10 @@ namespace Shared.Models.Suppliers
             VendorCode = name;
             if (Validator != null) await Validator();
         }
+        public async Task ChangeSupplierCurrency()
+        {
+            if (Validator != null) await Validator();
+        }
        
     }
 }

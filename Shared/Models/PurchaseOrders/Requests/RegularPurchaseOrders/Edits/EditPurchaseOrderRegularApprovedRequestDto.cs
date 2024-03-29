@@ -1,4 +1,6 @@
-﻿namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
+﻿using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
+
+namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits
 {
     public class EditPurchaseOrderRegularApprovedRequestDto : ApprovedRegularPurchaseOrderRequestDto
     {
@@ -6,10 +8,10 @@
         {
 
         }
-       
+
         public void ConvertToDto(EditPurchaseOrderRegularApprovedRequest request)
         {
-           
+
             base.ConvertToDto(request);
         }
     }

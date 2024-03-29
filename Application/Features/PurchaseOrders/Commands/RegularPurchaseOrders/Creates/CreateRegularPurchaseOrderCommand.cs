@@ -1,7 +1,4 @@
-﻿using Application.Features.PurchaseOrders.Validators;
-using Application.Features.PurchaseOrders.Validators.RegularPurchaseOrders;
-using Application.Interfaces;
-using Domain.Entities.Data;
+﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
@@ -15,11 +12,12 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
     {
         private IPurchaseOrderRepository Repository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
-
-        public CreateRegularPurchaseOrderCommandHandler(IAppDbContext appDbContext, IPurchaseOrderRepository repository)
+        private IMWORepository MWORepository { get; set; }
+        public CreateRegularPurchaseOrderCommandHandler(IAppDbContext appDbContext, IPurchaseOrderRepository repository, IMWORepository mWORepository)
         {
             AppDbContext = appDbContext;
             Repository = repository;
+            MWORepository = mWORepository;
         }
 
         public async Task<IResult> Handle(CreateRegularPurchaseOrderCommand request, CancellationToken cancellationToken)
@@ -59,6 +57,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             }
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
+            await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
             if (result > 0)
                 return Result.Success($"Purchase order created succesfully");
             return Result.Fail($"Purchase order was not created succesfully");

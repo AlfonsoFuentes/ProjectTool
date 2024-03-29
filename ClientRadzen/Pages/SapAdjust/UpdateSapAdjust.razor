@@ -1,0 +1,169 @@
+﻿@page "/UpdateAdjustForMWO/{SapAdjustId:guid}"
+
+<PageTitle>Update SAP Adjust</PageTitle>
+
+
+<RadzenStack Orientation="Orientation.Vertical">
+    <RadzenRow>
+        <RadzenText TextStyle="TextStyle.DisplayH5" Text="@($"Update Data for {Model.MWOName} at date: {Model.Date.ToShortDateString()}")"></RadzenText>
+    </RadzenRow>
+
+
+    <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
+        <FluentValidationValidator @ref="_fluentValidationValidator" />
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeLG="6">
+                <RadzenRow>
+                    <RadzenColumn Size="4" SizeMD="4">
+
+
+                        <RadzenFormField Text="Actual SAP" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown=false @bind-Value=@Model.ActualSap class="w-100"
+                                           @oninput="@((arg)=>Model.ChangeActualSap(arg.Value!.ToString()!))"
+                                           Name="actual sap" />
+
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.PecentageActual" style="color:red; font-size:x-small;" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="4" SizeMD="4">
+                        <RadzenFormField Text="Actual Software" Style="width: 100%;">
+                            <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.ActualSoftware)}")</b>
+                            </RadzenText>
+                        </RadzenFormField>
+
+
+                    </RadzenColumn>
+                    <RadzenColumn Size="4" SizeMD="4">
+                        <RadzenFormField Text="Actual Diference" Style="width: 100%;">
+                            <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.DiferenceActual)}")</b>
+                            </RadzenText>
+                        </RadzenFormField>
+
+
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn Size="4" SizeMD="4">
+
+
+                        <RadzenFormField Text="Commitment SAP" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown=false @bind-Value=@Model.CommitmentSap class="w-100"
+                                           @oninput="@((arg)=>Model.ChangeCommitmentSap(arg.Value!.ToString()!))"
+                                           Name="actual sap" />
+
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.PecentageCommitment" style="color:red; font-size:x-small;" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="4" SizeMD="4">
+                        <RadzenFormField Text="Commitment Software" Style="width: 100%;">
+                            <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.CommitmentSoftware)}")</b>
+                            </RadzenText>
+                        </RadzenFormField>
+
+
+                    </RadzenColumn>
+                    <RadzenColumn Size="4" SizeMD="4">
+                        <RadzenFormField Text="Commitment Diference" Style="width: 100%;">
+                            <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.DiferenceCommitment)}")</b>
+                            </RadzenText>
+                        </RadzenFormField>
+
+
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn Size="4" SizeMD="4">
+
+
+                        <RadzenFormField Text="Potential SAP" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PotencialSap class="w-100"
+                                           @oninput="@((arg)=>Model.ChangePotencialSap(arg.Value!.ToString()!))"
+                                           Name="actual sap" />
+
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.PecentagePotencial" style="color:red; font-size:x-small;" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="4" SizeMD="4">
+                        <RadzenFormField Text="Potential Software" Style="width: 100%;">
+                            <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.PotencialSoftware)}")</b>
+                            </RadzenText>
+                        </RadzenFormField>
+
+
+                    </RadzenColumn>
+                    <RadzenColumn Size="4" SizeMD="4">
+                        <RadzenFormField Text="Potential Diference" Style="width: 100%;">
+                            <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.DiferencePotencial)}")</b>
+                            </RadzenText>
+                        </RadzenFormField>
+
+
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow class="rz-m-2">
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Click="SaveAsync" Disabled=@NotValidated Style="width:100%"
+                                      MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Create",TooltipPosition.Top) )">Save</RadzenButton>
+                        <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync" Style="width:100%"
+                                      MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
+                    </RadzenStack>
+
+                </RadzenRow>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeLG="6">
+                <RadzenRow>
+
+                    <RadzenFileInput @bind-Value=@Model.ImageData @bind-FileName=@Model.ImageTitle @bind-FileSize=@fileSize TValue="string" class="w-100"
+                                     Change=@(args =>Model.ChangeImage(args)) Error=@(args => OnError(args, "FileInput")) Accept="image/*"
+                                     ChooseText="Select SAP Image"
+                                     InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})" />
+                    <ValidationMessage For="() => Model.ImageData" style="color:red; font-size:x-small;" />
+                </RadzenRow>
+                <RadzenRow>
+                    @if (!string.IsNullOrEmpty(Model.ImageData))
+                    {
+                        <RadzenImage Path="@($"{Model.ImageData}")" AlternateText="binary image" Style="width:100%" />
+                    }
+
+
+                </RadzenRow>
+
+            </RadzenColumn>
+
+        </RadzenRow>
+
+    </EditForm>
+
+
+
+
+
+
+</RadzenStack>
+
+@code {
+    long? fileSize;
+
+    void OnChange(string value, string name)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            Model.ImageData = value;
+        }
+
+
+    }
+
+    void OnError(UploadErrorEventArgs args, string name)
+    {
+
+    }
+}
