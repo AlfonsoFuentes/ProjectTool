@@ -1,4 +1,7 @@
-﻿namespace Domain.Entities.Data
+﻿using Shared.Models.Currencies;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Domain.Entities.Data
 {
     public class PurchaseOrder : BaseEntity
     {
@@ -57,15 +60,20 @@
         public double USDEUR { get; set; }
         public DateTime CurrencyDate { get; set; }
         public string AccountAssigment { get; set; } = "";
-
-        public double POValueUSD { get; set; }
+        public double POValueCurrency { get; set; }
+   
+        public double ActualCurrency { get; set; }
         public string PurchaseorderName { get; set; } = string.Empty;
        
-        public double Actual { get; set; }
-
         public bool IsAlteration { get; set; } = false;
         public bool IsCapitalizedSalary { get; set; } = false;
        
         public bool IsTaxEditable { get; set; } = false;
+        [NotMapped]
+        public double ActualUSD => Currency == CurrencyEnum.USD.Id ? ActualCurrency :
+            Currency == CurrencyEnum.COP.Id ? ActualCurrency / USDCOP : ActualCurrency / USDEUR;
+        [NotMapped]
+        public double POValueUSD => Currency == CurrencyEnum.USD.Id ? POValueCurrency :
+            Currency == CurrencyEnum.COP.Id ? POValueCurrency / USDCOP : POValueCurrency / USDEUR;
     }
 }

@@ -4,10 +4,11 @@ using Client.Infrastructure.Managers.UserAccount;
 using Microsoft.AspNetCore.Components;
 using Shared.Models.UserAccounts.Logins;
 using Shared.Models.UserAccounts.Registers;
+using System.ComponentModel.DataAnnotations;
 #nullable disable
 namespace ClientRadzen.Pages.Authetication
 {
-    public partial class NewLogin:IDisposable
+    public partial class NewLogin
     {
         [CascadingParameter]
         private App MainApp { get; set; }
@@ -18,7 +19,7 @@ namespace ClientRadzen.Pages.Authetication
         private AuthenticationStateProvider AuthStateProvider { get; set; }
         protected override void OnInitialized()
         {
-            Model.Validator += ValidateAsync;
+        
             Model.EmailConfirmed = true;
         }
 
@@ -88,9 +89,21 @@ namespace ClientRadzen.Pages.Authetication
 
         }
 
-        public void Dispose()
+        
+        public async Task ChangeEmail(string email)
         {
-            Model.Validator -= ValidateAsync;
+            Model.Email = email;
+            await ValidateAsync();
+        }
+        public async Task ChangePassword(string password)
+        {
+            Model.Password = password;
+            await ValidateAsync();
+        }
+        public async Task ChangeNewPassword(string password)
+        {
+            Model.Password = password;
+            await ValidateAsync();
         }
     }
 }

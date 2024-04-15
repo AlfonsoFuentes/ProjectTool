@@ -57,8 +57,8 @@ namespace Application.Features.MWOs.Queries
                 CECName = e.Status == MWOStatusEnum.Approved.Id ? $"CEC0000{e.MWONumber}" : "",
                 CostCenter = CostCenterEnum.GetName(e.CostCenter),
                 
-                Capital = e.Capital,
-                Expenses = e.Expenses,
+                Capital = e.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+                Expenses = e.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
                 IsAssetProductive = e.IsAssetProductive,
                
                 
@@ -80,14 +80,20 @@ namespace Application.Features.MWOs.Queries
                 CreatedOn = e.CreatedDate.ToString(),
                 CECName = e.Status == MWOStatusEnum.Approved.Id ? $"CEC0000{e.MWONumber}" : "",
                 CostCenter = CostCenterEnum.GetName(e.CostCenter),
-                Capital = e.Capital,
-                Expenses = e.Expenses,
-                PotencialCapital = e.PotentialCommitmentCapital,
-                PotencialExpenses = e.PotentialCommitmentExpenses,
-                ActualCapital = e.ActualCapital,
-                ActualExpenses = e.ActualExpenses,
-                CommitmentCapital = e.CommitmentCapital,
-                CommitmentExpenses = e.CommitmentExpenses,
+                Capital = e.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+                Expenses = e.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+
+                PotencialCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false 
+                && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                PotencialExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true
+                && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                
+                ActualCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.ActualUSD),
+                ActualExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.ActualUSD),
+                
+                POValueCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.POValueUSD),
+                POValueExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.POValueUSD),
+                
                 MWOType = MWOTypeEnum.GetType(e.Type),
                 Status = MWOStatusEnum.GetType(e.Status),
                 
@@ -106,12 +112,15 @@ namespace Application.Features.MWOs.Queries
                 CreatedOn = e.CreatedDate.ToString(),
                 CECName = e.Status == MWOStatusEnum.Approved.Id ? $"CEC0000{e.MWONumber}" : "",
                 CostCenter = CostCenterEnum.GetName(e.CostCenter),
-                PotencialCapital = e.PotentialCommitmentCapital,
-                PotencialExpenses = e.PotentialCommitmentExpenses,
-                ActualCapital = e.ActualCapital,
-                ActualExpenses = e.ActualExpenses,
-                CommitmentCapital = e.CommitmentCapital,
-                CommitmentExpenses = e.CommitmentExpenses,
+                Capital = e.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+                Expenses = e.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+
+                PotencialCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                PotencialExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                ActualCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.ActualUSD),
+                ActualExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.ActualUSD),
+                POValueCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.POValueUSD),
+                POValueExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.POValueUSD),
                 MWOType = MWOTypeEnum.GetType(e.Type),
                 Status = MWOStatusEnum.GetType(e.Status),
                 

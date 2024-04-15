@@ -9,39 +9,15 @@ namespace Shared.Models.SapAdjust
 {
     public class CreateSapAdjustRequest
     {
-       
+
         public DateTime Date { get; set; }
         public double ActualSap { get; set; }
-        public Func<Task<bool>> Validator { get; set; } = null!;
-        public async Task ChangeActualSap(string actualsapstring)
-        {
-            double actualsap = 0;
-            if (double.TryParse(actualsapstring, out actualsap))
-            {
-                ActualSap = actualsap;
-            }
-            if (Validator != null) await Validator();
-        }
+       
+        
         public double CommitmentSap { get; set; }
-        public async Task ChangeCommitmentSap(string commitmentsapstring)
-        {
-            double commitmsap = 0;
-            if (double.TryParse(commitmentsapstring, out commitmsap))
-            {
-                CommitmentSap = commitmsap;
-            }
-            if (Validator != null) await Validator();
-        }
+       
         public double PotencialSap { get; set; }
-        public async Task ChangePotencialSap(string potencialsapstring)
-        {
-            double potencialsap = 0;
-            if (double.TryParse(potencialsapstring, out potencialsap))
-            {
-                PotencialSap = potencialsap;
-            }
-            if (Validator != null) await Validator();
-        }
+     
         public double BudgetCapital => MWOApproved == null ? 0 : MWOApproved.Capital;
         public double PendingCapital => MWOApproved == null ? 0 : MWOApproved.PendingCapital;
         public double ActualSoftware => MWOApproved == null ? 0 : MWOApproved.ActualCapital;
@@ -60,36 +36,10 @@ namespace Shared.Models.SapAdjust
         public string Justification { get; set; } = string.Empty;
         public string ImageTitle { get; set; } = string.Empty;
         public string ImageData { get; set; } = string.Empty;
-        public async Task ChangeImage(string image)
-        {
-            ImageData = string.Empty;
-            if (!string.IsNullOrWhiteSpace(image))
-            {
-                ImageData = image;
-            }
-
-            if (Validator != null) { await Validator(); }
-        }
+      
         public MWOApprovedResponse MWOApproved { get; set; } = null!;
         public string MWOName => MWOApproved == null ? string.Empty : MWOApproved.Name;
-        public CreateSapAdjustRequestDto ConvertToDto()
-
-        {
-            return new()
-            {
-                ActualSap = ActualSap,
-                ActualSoftware = ActualSoftware,
-                CommitmentSap = CommitmentSap,
-                CommitmentSoftware = CommitmentSoftware,
-                Date = Date,
-                ImageData = ImageData,
-                ImageTitle = ImageTitle,
-                Justification = Justification,
-                MWOId = MWOApproved.Id,
-                PotencialSap = PotencialSap,
-                PotencialSoftware = PotencialSoftware,
-                BudgetCapital = BudgetCapital,
-            };
-        }
+        public string MWOCECName => MWOApproved == null ? string.Empty : MWOApproved.CECName;
+        public Guid MWOId => MWOApproved == null ? Guid.Empty : MWOApproved.Id;
     }
 }

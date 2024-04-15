@@ -17,8 +17,8 @@ public partial class App
     public double USDCOP => RateList == null ? 0 : Math.Round(RateList.COP, 2);
     public double USDEUR => RateList == null ? 0 : Math.Round(RateList.EUR, 2);
 
-    public string USDCOPLabel => String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", USDCOP);
-    public string USDEURLabel => String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", USDEUR);
+    public string USDCOPLabel => String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", USDCOP);
+    public string USDEURLabel => String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", USDEUR);
    
     protected override async Task OnInitializedAsync()
     {

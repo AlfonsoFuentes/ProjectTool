@@ -22,14 +22,11 @@
         {
             BudgetItemId = newbudgetitemid;
         }
-        public double POValueUSD { get; set; }
-
-        public void SetApplyDiscount(double discount)
-        {
-            POValueUSD = POValueUSD * (100 - discount) / 100;
-        }
+        //public double POValueCurrency {  get; set; }
+        public double UnitaryValueCurrency { get; set; }
+        public double ActualCurrency { get; set; }
         public double Quantity { get; set; }
-        public double Actual {  get; set; }
+  
         public bool IsTaxNoProductive { get; set; } = false;
         public bool IsTaxAlteration { get; set; } = false;
     }

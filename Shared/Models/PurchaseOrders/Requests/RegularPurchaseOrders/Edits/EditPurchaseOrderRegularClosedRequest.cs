@@ -13,8 +13,10 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits
         {
 
         }
-
-        public double POValueUSDOriginal { get; set; }
+        public double POValueCurrencyOriginal { get; set; }
+        public double POValueUSDOriginal => PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ?
+            POValueCurrencyOriginal : PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ?
+            POValueCurrencyOriginal / USDCOP : POValueCurrencyOriginal / USDEUR;
         public PurchaseOrderStatusEnum PurchaseOrderStatus { get; set; } = PurchaseOrderStatusEnum.None;
     }
 }

@@ -6,6 +6,7 @@ using Shared.Commons.UserManagement;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.CostCenter;
+using Shared.Models.Currencies;
 using Shared.Models.MWO;
 using Shared.Models.MWOStatus;
 using Shared.Models.MWOTypes;
@@ -69,17 +70,21 @@ namespace Application.Features.MWOs.Queries
                 PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(e.PurchaseOrderStatus),
                 PurchaseRequisition = e.PurchaseRequisition,
                 QuoteNo = e.QuoteNo,
-                Supplier = e.Supplier == null ? string.Empty : e.Supplier.NickName,
+                SupplierNickName = e.Supplier == null ? string.Empty : e.Supplier.NickName,
+                SupplierName = e.Supplier == null ? string.Empty : e.Supplier.Name,
                 TaxCode = e.TaxCode,
                 VendorCode = e.Supplier == null ? string.Empty : e.Supplier.VendorCode,
                 SupplierId = e.SupplierId == null ? Guid.Empty : e.SupplierId.Value,
                 PurchaseOrderItems = e.PurchaseOrderItems.Select(x => new PurchaseorderItemsResponse
                 {
                     BudgetItemId = x.BudgetItemId,
-                    Actual = x.Actual,
-                    POValueUSD = e.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id ? 0 : x.POValueUSD,
-                    PurchaseorderItemId = x.Id,
-                    Potencial = e.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id ? x.POValueUSD : 0,
+                    ActualCurrency = x.ActualCurrency,
+                    UnitaryValueCurrency=x.UnitaryValueCurrency,
+                    Quantity = x.Quantity,
+                    PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(e.PurchaseOrderStatus),
+                    USDCOP = e.USDCOP,
+                    USDEUR = e.USDEUR,
+                    Currency = CurrencyEnum.GetType(e.Currency)
                 }
                ).ToList(),
             };

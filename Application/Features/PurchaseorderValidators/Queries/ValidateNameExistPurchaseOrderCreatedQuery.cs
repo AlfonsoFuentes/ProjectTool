@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.Features.PurchaseorderValidators.Queries
 {
-    public record ValidateNameExistPurchaseOrderCreatedQuery(Guid PurchaseOrderId, string name) : IRequest<bool>;
+    public record ValidateNameExistPurchaseOrderCreatedQuery(Guid MWOId,Guid PurchaseOrderId, string name) : IRequest<bool>;
 
     internal class ValidateNameExistPurchaseOrderCreatedQueryHandler : IRequestHandler<ValidateNameExistPurchaseOrderCreatedQuery, bool>
     {
@@ -16,7 +16,7 @@ namespace Application.Features.PurchaseorderValidators.Queries
 
         public async Task<bool> Handle(ValidateNameExistPurchaseOrderCreatedQuery request, CancellationToken cancellationToken)
         {
-            return await _repository.ValidateNameExist(request.PurchaseOrderId, request.name);
+            return await _repository.ValidateNameExist(request.MWOId, request.PurchaseOrderId, request.name);
         }
     }
 

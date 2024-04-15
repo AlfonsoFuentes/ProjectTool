@@ -34,12 +34,12 @@ namespace Client.Infrastructure.Validators.PurchaseOrder
             RuleFor(X => X.PurchaseRequisition).Must(x => x.StartsWith("PR")).WithMessage("PR must include PR letter at start");
             RuleFor(X => X.PurchaseRequisition).Length(8).WithMessage("PR must 8 characters");
 
-            RuleFor(x => x.SumPOValueUSD).GreaterThan(x => x.POValueUSDOriginal)
-                .When(x => x.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Closed.Id)
-                .WithMessage(x => $"PO new Value $USD{x.SumPOValueUSD} can not be less than $USD{x.POValueUSDOriginal}");
+            //RuleFor(x => x.SumPOValueUSD).GreaterThan(x => x.POValueUSDOriginal)
+            //    .When(x => x.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Closed.Id)
+            //    .WithMessage(x => $"PO new Value $USD{x.SumPOValueUSD} can not be less than $USD{x.POValueUSDOriginal}");
 
-            RuleFor(x => x.TRMUSDEUR).GreaterThan(0).WithMessage("TRM must be defined");
-            RuleFor(x => x.TRMUSDCOP).GreaterThan(0).WithMessage("TRM must be defined");
+            RuleFor(x => x.USDEUR).GreaterThan(0).WithMessage("TRM must be defined");
+            RuleFor(x => x.USDCOP).GreaterThan(0).WithMessage("TRM must be defined");
             RuleFor(x => x.SumPOValueUSD).GreaterThan(0).WithMessage("PO Value must be defined");
 
             RuleFor(x => x.IsAnyValueNotDefined).NotEqual(true).WithMessage("All Item must have Currency value greater Than zero");

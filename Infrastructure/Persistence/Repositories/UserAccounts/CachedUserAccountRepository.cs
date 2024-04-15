@@ -19,9 +19,9 @@ namespace Infrastructure.Persistence.Repositories.UserAccounts
             _decorated = decorated;
         }
 
-        public Task<IResult<RegisterUserResponse>> RegisterUser(RegisterUserRequestDto Data)=>_decorated.RegisterUser(Data);
+        public Task<IResult<RegisterUserResponse>> RegisterUser(RegisterUserRequest Data)=>_decorated.RegisterUser(Data);
 
-        public Task<IResult<LoginUserResponse>> LoginUser(LoginUserRequestDto Data)=>_decorated.LoginUser(Data);
+        public Task<IResult<LoginUserResponse>> LoginUser(LoginUserRequest Data)=>_decorated.LoginUser(Data);
 
         public Task<IResult<RegisterUserResponse>> RegisterSuperAdminUser(RegisterSuperAdminUserRequest userDTO)=>_decorated.RegisterSuperAdminUser(userDTO);
 

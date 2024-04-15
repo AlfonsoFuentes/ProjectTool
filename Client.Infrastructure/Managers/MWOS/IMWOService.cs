@@ -30,8 +30,8 @@
         {
             try
             {
-                var model=request.ConvertToDto();
-                var httpresult = await Http.PostAsJsonAsync("MWO/createMWO", model);
+               
+                var httpresult = await Http.PostAsJsonAsync("MWO/createMWO", request);
 
                 return await httpresult.ToResult();
             }
@@ -46,8 +46,8 @@
         {
             try
             {
-                var model=request.ConvertToDto();
-                var httpresult = await Http.PostAsJsonAsync("MWO/updateMWO", model);
+             
+                var httpresult = await Http.PostAsJsonAsync("MWO/updateMWO", request);
 
                 return await httpresult.ToResult();
             }
@@ -85,8 +85,8 @@
         {
             try
             {
-                var model=request.ConvertToDto();   
-                var httpresult = await Http.PostAsJsonAsync("MWO/approveMWO", model);
+              
+                var httpresult = await Http.PostAsJsonAsync("MWO/approveMWO", request);
 
                 return await httpresult.ToResult();
             }

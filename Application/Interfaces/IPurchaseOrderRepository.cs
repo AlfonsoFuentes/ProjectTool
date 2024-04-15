@@ -37,5 +37,7 @@ namespace Application.Interfaces
         Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersClosed(CurrentUser CurrentUser);
         Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersToReceive(CurrentUser CurrentUser);
         Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersCreated(CurrentUser CurrentUser);
+        Task<PurchaseOrder> GetPurchaseOrderToDeleteById(Guid PurchaseOrderId);
+        Task RemovePurchaseOrder(PurchaseOrder item);
     }
 }

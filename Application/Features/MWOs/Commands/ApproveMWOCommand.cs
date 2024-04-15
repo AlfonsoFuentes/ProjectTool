@@ -8,7 +8,7 @@ using Shared.Models.MWOStatus;
 
 namespace Application.Features.MWOs.Commands
 {
-    public record ApproveMWOCommand(ApproveMWORequestDto Data) : IRequest<IResult>;
+    public record ApproveMWOCommand(ApproveMWORequest Data) : IRequest<IResult>;
     public class ApproveMWOCommandHandler : IRequestHandler<ApproveMWOCommand, IResult>
     {
         private IMWORepository Repository { get; set; }
@@ -32,7 +32,7 @@ namespace Application.Features.MWOs.Commands
             }
             mwo.Status = MWOStatusEnum.Approved.Id;
             mwo.MWONumber = request.Data.MWONumber;
-            mwo.CostCenter = request.Data.CostCenter;
+            mwo.CostCenter = request.Data.CostCenter.Id;
             mwo.PercentageTaxForAlterations = request.Data.PercentageTaxForAlterations;
             mwo.PercentageContingency = request.Data.PercentageContingency;
             mwo.PercentageEngineering = request.Data.PercentageEngineering;
@@ -57,7 +57,7 @@ namespace Application.Features.MWOs.Commands
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
             await RepositoryBudgetItem.UpdateTaxesAndEngineeringContingencyItems(mwo.Id, cancellationToken);
-            await Repository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
+            //await Repository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} approved succesfully");
@@ -65,7 +65,7 @@ namespace Application.Features.MWOs.Commands
 
             return Result.Fail($"{request.Data.Name} was not approved succesfully");
         }
-        async Task CreateTaxesForNoProductive(MWO mwo, ApproveMWORequestDto Data)
+        async Task CreateTaxesForNoProductive(MWO mwo, ApproveMWORequest Data)
         {
             var taxitem = mwo.AddBudgetItem(BudgetItemTypeEnum.Taxes.Id);
 

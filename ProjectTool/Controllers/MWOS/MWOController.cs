@@ -20,7 +20,7 @@ namespace Server.Controllers.MWOS
         }
 
         [HttpPost("createMWO")]
-        public async Task<IActionResult> CreateMWO(CreateMWORequestDto request)
+        public async Task<IActionResult> CreateMWO(CreateMWORequest request)
         {
 
             return Ok(await Mediator.Send(new CreateMWOCommand(request)));
@@ -28,13 +28,13 @@ namespace Server.Controllers.MWOS
 
        
         [HttpPost("updateMWO")]
-        public async Task<IActionResult> UpdateMWO(UpdateMWORequestDto request)
+        public async Task<IActionResult> UpdateMWO(UpdateMWORequest request)
         {
 
             return Ok(await Mediator.Send(new UpdateMWOCommand(request)));
         }
         [HttpPost("approveMWO")]
-        public async Task<IActionResult> ApproveMWO(ApproveMWORequestDto request)
+        public async Task<IActionResult> ApproveMWO(ApproveMWORequest request)
         {
 
             return Ok(await Mediator.Send(new ApproveMWOCommand(request)));

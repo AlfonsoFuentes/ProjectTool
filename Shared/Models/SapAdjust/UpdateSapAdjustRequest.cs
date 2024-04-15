@@ -7,36 +7,12 @@ namespace Shared.Models.SapAdjust
         public Guid SapAdjustId { get; set; }
         public DateTime Date { get; set; }
         public double ActualSap { get; set; }
-        public Func<Task<bool>> Validator { get; set; } = null!;
-        public async Task ChangeActualSap(string actualsapstring)
-        {
-            double actualsap = 0;
-            if (double.TryParse(actualsapstring, out actualsap))
-            {
-                ActualSap = actualsap;
-            }
-            if (Validator != null) await Validator();
-        }
+       
+      
         public double CommitmentSap { get; set; }
-        public async Task ChangeCommitmentSap(string commitmentsapstring)
-        {
-            double commitmsap = 0;
-            if (double.TryParse(commitmentsapstring, out commitmsap))
-            {
-                CommitmentSap = commitmsap;
-            }
-            if (Validator != null) await Validator();
-        }
+       
         public double PotencialSap { get; set; }
-        public async Task ChangePotencialSap(string potencialsapstring)
-        {
-            double potencialsap = 0;
-            if (double.TryParse(potencialsapstring, out potencialsap))
-            {
-                PotencialSap = potencialsap;
-            }
-            if (Validator != null) await Validator();
-        }
+       
         public double BudgetCapital { get; set; }
         public double PendingCapital { get; set; }
         public double ActualSoftware { get; set; }
@@ -55,38 +31,12 @@ namespace Shared.Models.SapAdjust
         public string Justification { get; set; } = string.Empty;
         public string ImageTitle { get; set; } = string.Empty;
         public string ImageData { get; set; } = string.Empty;
-        public async Task ChangeImage(string image)
-        {
-            ImageData = string.Empty;
-            if (!string.IsNullOrWhiteSpace(image))
-            {
-                ImageData = image;
-            }
-            
-            if(Validator!=null) { await Validator(); }
-        }
+       
       
         public string MWOName { get; set; }=string.Empty;
+        public string CECMWOName { get; set; } = string.Empty;
         public Guid MWOId { get; set; }
 
-        public UpdateSapAdjustRequestDto ConvertToDto()
-
-        {
-            return new()
-            {
-                SapAdjustId = SapAdjustId,
-                ActualSap = ActualSap,
-                ActualSoftware = ActualSoftware,
-                CommitmentSap = CommitmentSap,
-                CommitmentSoftware = CommitmentSoftware,
-                Date = Date,
-                ImageData = ImageData,
-                ImageTitle = ImageTitle,
-                Justification = Justification,
-
-                PotencialSap = PotencialSap,
-                PotencialSoftware = PotencialSoftware,
-            };
-        }
+        
     }
 }

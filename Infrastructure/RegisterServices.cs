@@ -5,6 +5,7 @@ using Infrastructure.GenerateTokens;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Repositories.Suppliers;
 using Infrastructure.Persistence.Repositories.UserAccounts;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -66,6 +67,9 @@ namespace Infrastructure
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             services.AddScoped<IGenerateToken, GenerateToken>();
             services.AddScoped<ISapAdjustRepository, SapAdjustRepository>();
+            services.AddScoped<IExcelService, ExcelService>();
+
+            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             return services;
         }
       

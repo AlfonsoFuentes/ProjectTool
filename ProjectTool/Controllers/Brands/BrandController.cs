@@ -19,17 +19,17 @@ namespace Server.Controllers.Brands
             Mediator = mediator;
         }
         [HttpPost("CreateBrand")]
-        public async Task<IActionResult> CreateBrand(CreateBrandRequestDto request)
+        public async Task<IActionResult> CreateBrand(CreateBrandRequest request)
         {
             return Ok(await Mediator.Send(new CreateBrandCommand(request)));
         }
         [HttpPost("CreateBrandForBudgetItem")]
-        public async Task<IActionResult> CreateBrandForBudgetItem(CreateBrandRequestDto request)
+        public async Task<IActionResult> CreateBrandForBudgetItem(CreateBrandRequest request)
         {
             return Ok(await Mediator.Send(new CreateBrandForBudgetItemCommand(request)));
         }
         [HttpPost("UpdateBrand")]
-        public async Task<IActionResult> UpdateBrand(UpdateBrandRequestDto request)
+        public async Task<IActionResult> UpdateBrand(UpdateBrandRequest request)
         {
             return Ok(await Mediator.Send(new UpdateBrandCommand(request)));
         }

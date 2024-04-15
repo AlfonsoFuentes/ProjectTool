@@ -23,7 +23,7 @@
                 <RadzenColumn Size="12" SizeMD="@MaxColumn">
                     <RadzenFormField Text="Purchase order Name" Style="width: 100%;">
                         <RadzenTextBox @bind-Value=@Model.PurchaseorderName class="w-100"
-                                       @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
+                                       @oninput="@((arg)=>ChangeName(arg.Value!.ToString()!))"
                                        Name="name" />
 
                     </RadzenFormField>
@@ -37,7 +37,7 @@
                         <RadzenDropDown @bind-Value=@Model.Supplier Data=@Suppliers
                                         Name="supplier" TextProperty="Name"
                                         Placeholder="Select Supplier"
-                                        Change="@(()=>Model.SetSupplier(Model.Supplier!))"
+                                        Change="@(()=>SetSupplier(Model.Supplier!))"
                                         AllowClear=true
                                         FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
                                         AllowFiltering="true"
@@ -71,7 +71,7 @@
                 <RadzenColumn Size="12" SizeMD="3">
                     <RadzenFormField Text="Purchase Requisition" Style="width: 100%;">
                         <RadzenTextBox @bind-Value=@Model.PurchaseRequisition class="w-100"
-                                       @oninput="@((arg)=>Model.ChangePR(arg.Value!.ToString()!))"
+                                       @oninput="@((arg)=>ChangePR(arg.Value!.ToString()!))"
                                        Name="pr" />
 
                     </RadzenFormField>
@@ -80,7 +80,7 @@
                 <RadzenColumn Size="12" SizeMD="3">
                     <RadzenFormField Text="Quote No" Style="width: 100%;">
                         <RadzenTextBox @bind-Value=@Model.QuoteNo class="w-100"
-                                       @oninput="@((arg)=>Model.ChangeQuote(arg.Value!.ToString()!))"
+                                       @oninput="@((arg)=>ChangeQuote(arg.Value!.ToString()!))"
                                        Name="quoteno" />
 
                     </RadzenFormField>
@@ -91,7 +91,7 @@
                     <RadzenColumn Size="12" SizeMD="3">
                         <RadzenFormField Text="Account" Style="width: 100%;">
 
-                            <RadzenText Text=@Model.AccountAssignment class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;" />
+                            <RadzenText Text=@Model.AccountAssigment class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;" />
                         </RadzenFormField>
                     </RadzenColumn>
                     <RadzenColumn Size="12" SizeMD="3">
@@ -106,7 +106,7 @@
                     <RadzenColumn Size="12" SizeMD="6">
                         <RadzenFormField Text="Account" Style="width: 100%;">
 
-                            <RadzenText Text=@Model.AccountAssignment class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;" />
+                            <RadzenText Text=@Model.AccountAssigment class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;" />
                         </RadzenFormField>
                     </RadzenColumn>
                 }
@@ -120,6 +120,7 @@
                                         AllowClear=true
                                         FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
                                         AllowFiltering="true" Disabled=Model.IsAlteration
+                                        Change="@(()=>ChangeQuoteCurrency(Model.QuoteCurrency))"
                                         Name="type" TextProperty="Name"
                                         TValue="CurrencyEnum" />
                     </RadzenFormField>
@@ -129,22 +130,22 @@
                     @if (Model.QuoteCurrency.Id == CurrencyEnum.COP.Id)
                     {
                         <RadzenFormField Text=@($"PO TRM COP to USD {Model.CurrencyDateOnly}") Style="width: 100%;">
-                            <RadzenNumeric ShowUpDown=false @bind-Value=@Model.TRMUSDCOP class="w-100"
-                                           @oninput="@((arg)=>Model.ChangeTRMUSDCOP(arg.Value!.ToString()!))"
+                            <RadzenNumeric ShowUpDown=false @bind-Value=@Model.USDCOP class="w-100"
+                                           @oninput="@((arg)=>ChangeTRMUSDCOP(arg.Value!.ToString()!))"
                                            Name="usdcop" />
 
                         </RadzenFormField>
-                        <ValidationMessage For="() => Model.TRMUSDCOP" style="color:red; font-size:x-small;" />
+                        <ValidationMessage For="() => Model.USDCOP" style="color:red; font-size:x-small;" />
                     }
                     else if (Model.QuoteCurrency.Id == CurrencyEnum.EUR.Id)
                     {
                         <RadzenFormField Text=@($"PO TRM EUR to USD {Model.CurrencyDateOnly}") Style="width: 100%;">
-                            <RadzenNumeric ShowUpDown=false @bind-Value=@Model.TRMUSDEUR class="w-100"
-                                           @oninput="@((arg)=>Model.ChangeTRMUSDEUR(arg.Value!.ToString()!))"
+                            <RadzenNumeric ShowUpDown=false @bind-Value=@Model.USDEUR class="w-100"
+                                           @oninput="@((arg)=>ChangeTRMUSDEUR(arg.Value!.ToString()!))"
                                            Name="usdeur" />
 
                         </RadzenFormField>
-                        <ValidationMessage For="() => Model.TRMUSDEUR" style="color:red; font-size:x-small;" />
+                        <ValidationMessage For="() => Model.USDEUR" style="color:red; font-size:x-small;" />
                     }
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="3">
@@ -180,7 +181,7 @@
                             <RadzenRow>
                                 <RadzenFormField Text="PO Value, $USD" Style="width: 100%;">
                                     <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
-                                        <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.SumPOValueUSD)}")</b>
+                                        <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.SumPOValueUSD)}")</b>
                                     </RadzenText>
                                    
                                 </RadzenFormField>
@@ -194,7 +195,7 @@
                             {
                                 <RadzenFormField Text=@($"PO Value, ${Model.PurchaseOrderCurrency.Name}") Style="width: 100%; height:100%">
                                     <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
-                                        <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.SumPOValueCurrency)}")</b>
+                                        <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.SumPOValueCurrency)}")</b>
                                     </RadzenText>
                                 </RadzenFormField>
 
@@ -260,7 +261,7 @@
                                     @if (order.BudgetItemId != Guid.Empty)
                                     {
                                         <RadzenTextBox @bind-Value="@order.Name" Style="width:100%"
-                                                       @oninput="@((arg)=>Model.ChangeName(order,arg.Value!.ToString()!))"></RadzenTextBox>
+                                                       @oninput="@((arg)=>ChangeName(order,arg.Value!.ToString()!))"></RadzenTextBox>
 
                                     }
                                 </EditTemplate>
@@ -279,7 +280,7 @@
                                     @if (order.BudgetItemId != Guid.Empty)
                                     {
                                         <RadzenNumeric ShowUpDown=false @bind-Value=@order.Quantity
-                                                       @oninput="@((arg)=>Model.ChangeQuantity(order,arg.Value!.ToString()!))">
+                                                       @oninput="@((arg)=>ChangeQuantity(order,arg.Value!.ToString()!))">
                                         </RadzenNumeric>
                                         <ValidationMessage For="() => order.Quantity" style="color:red; font-size:x-small;" />
                                     }
@@ -290,12 +291,12 @@
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
                                                   Property="@nameof(PurchaseOrderItemRequest.CurrencyUnitaryValue)"
-                                                  Title="@($"Item Value, {Model.QuoteCurrency.Name}")"
-                                                  Width="60px">
+                                                  Title="@($"Value, {Model.QuoteCurrency.Name}")"
+                                                  Width="40px">
                                 <Template Context="detail">
                                     @if (detail.BudgetItemId != Guid.Empty)
                                     {
-                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.CurrencyUnitaryValue)
+                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.CurrencyUnitaryValue)
 
                                     }
 
@@ -305,7 +306,7 @@
                                     {
                                         <RadzenNumeric ShowUpDown=false @bind-Value=@order.CurrencyUnitaryValue Name="CurrencyValue"
                                                        @onkeydown=@((arg)=>OnKeyDownCurrency(arg,order))
-                                                       @oninput="@((arg)=>Model.ChangeCurrencyValue(order,arg.Value!.ToString()!))"></RadzenNumeric>
+                                                       @oninput="@((arg)=>ChangeCurrencyValue(order,arg.Value!.ToString()!))"></RadzenNumeric>
 
                                     }
 
@@ -313,28 +314,28 @@
 
                                 </EditTemplate>
                                 <FooterTemplate>
-                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C}", Model.SumPOValueCurrency)}")</b>
+                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumPOValueCurrency)}")</b>
                                 </FooterTemplate>
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.POItemValueUSD)"
-                                                  Title="Total Item, USD" Width="30px">
+                                                  Property="@nameof(PurchaseOrderItemRequest.POValueUSD)"
+                                                  Title="Total, USD" Width="30px">
                                 <Template Context="detail">
                                     @if (detail.BudgetItemId != Guid.Empty)
                                     {
-                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.POItemValueUSD)
+                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.POValueUSD)
                                     }
 
                                 </Template>
                                 <EditTemplate Context="order">
                                     @if (order.BudgetItemId != Guid.Empty)
                                     {
-                                        @String.Format(new CultureInfo("en-US"), "{0:C}", order.POItemValueUSD)
+                                        @String.Format(new CultureInfo("en-US"), "{0:C0}", order.POValueUSD)
                                     }
 
                                 </EditTemplate>
                                 <FooterTemplate>
-                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C}", Model.SumPOValueUSD)}")</b>
+                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumPOValueUSD)}")</b>
                                 </FooterTemplate>
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
@@ -343,55 +344,55 @@
                                 <Template Context="detail">
                                     @if (detail.BudgetItemId != Guid.Empty)
                                     {
-                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.Budget)
+                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Budget)
                                     }
 
                                 </Template>
                                 <EditTemplate Context="order">
                                     @if (order.BudgetItemId != Guid.Empty)
                                     {
-                                        @String.Format(new CultureInfo("en-US"), "{0:C}", order.Budget)
+                                        @String.Format(new CultureInfo("en-US"), "{0:C0}", order.Budget)
                                     }
                                 </EditTemplate>
                                 <FooterTemplate>
-                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C}", Model.SumBudget)}")</b>
+                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumBudget)}")</b>
                                 </FooterTemplate>
                             </RadzenDataGridColumn>
 
                             <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.BudgetAssigned)"
+                                                  Property="@nameof(PurchaseOrderItemRequest.AssignedUSD)"
                                                   Title="Assigned" Width="30px">
                                 <Template Context="detail">
-                                    @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.BudgetAssigned)
+                                    @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.AssignedUSD)
                                 </Template>
                                 <EditTemplate Context="order">
-                                    @String.Format(new CultureInfo("en-US"), "{0:C}", order.BudgetAssigned)
+                                    @String.Format(new CultureInfo("en-US"), "{0:C0}", order.AssignedUSD)
                                 </EditTemplate>
                                 <FooterTemplate>
-                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C}", Model.SumBudgetAssigned)}")</b>
+                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumBudgetAssigned)}")</b>
                                 </FooterTemplate>
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.BudgetPotencial)"
+                                                  Property="@nameof(PurchaseOrderItemRequest.PotencialUSD)"
                                                   Title="Potential" Width="30px">
                                 <Template Context="detail">
-                                    @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.BudgetPotencial)
+                                    @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.PotencialUSD)
                                 </Template>
                                 <EditTemplate Context="order">
-                                    @String.Format(new CultureInfo("en-US"), "{0:C}", order.BudgetPotencial)
+                                    @String.Format(new CultureInfo("en-US"), "{0:C0}", order.PotencialUSD)
                                 </EditTemplate>
                                 <FooterTemplate>
-                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C}", Model.SumBudgetPotencial)}")</b>
+                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumBudgetPotencial)}")</b>
                                 </FooterTemplate>
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
                                                   Property="@nameof(PurchaseOrderItemRequest.POItemPendingUSD)"
                                                   Title="Pending" Width="30px">
                                 <Template Context="detail">
-                                    @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.POItemPendingUSD)
+                                    @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.POItemPendingUSD)
                                 </Template>
                                 <EditTemplate Context="order">
-                                    @String.Format(new CultureInfo("en-US"), "{0:C}", order.POItemPendingUSD)
+                                    @String.Format(new CultureInfo("en-US"), "{0:C0}", order.POItemPendingUSD)
                                 </EditTemplate>
 
                             </RadzenDataGridColumn>
@@ -440,90 +441,5 @@
 
 
 @code {
-    bool debug = true;
-    RadzenDataGrid<PurchaseOrderItemRequest> ordersGrid = null!;
-    Density Density = Density.Compact;
-
-    int MaxColumn = 12;
-    int MediumColumn = 6;
-
-    async Task EditRow(DataGridRowMouseEventArgs<PurchaseOrderItemRequest> order)
-    {
-
-
-        await ordersGrid.EditRow(order.Data);
-
-    }
-    async Task ClickCell(DataGridCellMouseEventArgs<PurchaseOrderItemRequest> order)
-    {
-        var column = order.Column;
-        var row = order.Data.BudgetItemId == Guid.Empty;
-        if (order.Column.Property == "BudgetItemName" && order.Data.BudgetItemId == Guid.Empty)
-        {
-            await ordersGrid.EditRow(order.Data);
-        }
-
-
-    }
-    async Task EditRowButton(PurchaseOrderItemRequest order)
-    {
-
-        await ordersGrid.EditRow(order);
-    }
-    async Task DeleteRow(PurchaseOrderItemRequest order)
-    {
-
-
-        if (Model.PurchaseOrderItems.Contains(order) && order.BudgetItemId != Model.MainBudgetItemId)
-        {
-
-            Model.PurchaseOrderItems.Remove(order);
-            var datatoadd = OriginalBudgetItems.Single(x => x.BudgetItemId == order.BudgetItemId);
-            BudgetItems.Add(datatoadd);
-            if (BudgetItems.Count > 0)
-            {
-                Model.AddBlankItem();
-            }
-            await ordersGrid.Reload();
-        }
-        else
-        {
-            ordersGrid.CancelEditRow(order);
-            await ordersGrid.Reload();
-        }
-    }
-    async Task SaveRow(PurchaseOrderItemRequest order)
-    {
-        await ordersGrid.UpdateRow(order);
-    }
-
-    void CancelEdit(PurchaseOrderItemRequest order)
-    {
-
-
-        ordersGrid.CancelEditRow(order);
-
-
-    }
-
-    async Task AddNewItem(PurchaseOrderItemRequest order)
-    {
-        Model.AddBudgetItem(ItemToAdd!);
-
-      
-        if (BudgetItems.Count > 0)
-        {
-            Model.AddBlankItem();
-        }
-        await ordersGrid.UpdateRow(order);
-        await ordersGrid.Reload();
-        ItemToAdd = null!;
-    }
-    async Task OnKeyDownCurrency(KeyboardEventArgs arg, PurchaseOrderItemRequest order)
-    {
-        if (arg.Key == "Enter")
-        {
-            await ordersGrid.UpdateRow(order);
-        }
-    }
+   
 }

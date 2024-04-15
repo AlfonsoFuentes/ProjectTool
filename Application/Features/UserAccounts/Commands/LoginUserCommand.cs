@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.UserAccounts.Commands
 {
-    public record LoginUserCommand(LoginUserRequestDto Data) : IRequest<IResult<LoginUserResponse>>;
+    public record LoginUserCommand(LoginUserRequest Data) : IRequest<IResult<LoginUserResponse>>;
 
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, IResult<LoginUserResponse>>
     {

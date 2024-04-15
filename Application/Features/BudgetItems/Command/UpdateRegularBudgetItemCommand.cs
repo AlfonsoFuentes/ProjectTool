@@ -38,7 +38,7 @@ namespace Application.Features.BudgetItems.Command
 
 
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
-            await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
+            //await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} updated succesfully!");

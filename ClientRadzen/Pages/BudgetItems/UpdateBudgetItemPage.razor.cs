@@ -7,6 +7,7 @@ using Radzen;
 using Shared.Models.Brands;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
+using System.ComponentModel.DataAnnotations;
 #nullable disable
 namespace ClientRadzen.Pages.BudgetItems
 {
@@ -32,7 +33,7 @@ namespace ClientRadzen.Pages.BudgetItems
             if (resultModel.Succeeded)
             {
                 Model = resultModel.Data;
-                Model.Validator += ValidateAsync;
+               
             }
             var resultDataForCreateBudget = await Service.GetDataForCreateBudgetItem(Model.MWOId);
             if (resultDataForCreateBudget.Succeeded)
@@ -96,10 +97,7 @@ namespace ClientRadzen.Pages.BudgetItems
         }
         bool NotValidated = true;
 
-        public void Dispose()
-        {
-            Model.Validator -= ValidateAsync;
-        }
+        
         async Task CreateBrand()
         {
             var result = await DialogService.OpenAsync<CreateBrandDialog>($"Create New Brand",
@@ -117,6 +115,90 @@ namespace ClientRadzen.Pages.BudgetItems
 
 
             }
+        }
+        public async Task ChangeQuantity(string stringquantity)
+        {
+
+            double quantity = 0;
+            if (!double.TryParse(stringquantity, out quantity))
+            { }
+
+            if (Model.IsRegularData || Model.IsEquipmentData || Model.IsAlteration)
+            {
+                Model.Quantity = quantity;
+                Model.Budget = Model.Quantity * Model.UnitaryCost;
+            }
+            await ValidateAsync();
+        }
+        public async Task ChangeUnitaryCost(string stringunitaryCost)
+        {
+
+            double unitarycost = 0;
+            if (!double.TryParse(stringunitaryCost, out unitarycost))
+            { }
+
+
+            if (Model.IsRegularData || Model.IsEquipmentData || Model.IsAlteration)
+            {
+                Model.UnitaryCost = unitarycost;
+                Model.Budget = Model.Quantity * Model.UnitaryCost;
+            }
+            await ValidateAsync();
+        }
+        public async Task ChangeTaxesItemList(object objeto)
+        {
+
+            Model.SelectedBudgetItemDtos.Clear();
+            foreach (var item in Model.SelectedIdBudgetItemDtos)
+            {
+                Model.SelectedBudgetItemDtos.Add(Model.BudgetItemDtos.Single(x => x.BudgetItemId == item));
+            }
+            Model.Budget = Math.Round(Model.SumBudgetTaxes * Model.Percentage / 100.0, 2);
+            await ValidateAsync();
+        }
+
+        public async Task ChangePercentage(string stringpercentage)
+        {
+
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+            { }
+            if (Model.IsEngContData)
+            {
+                Model.SumPercentage -= Model.Percentage;
+                Model.Percentage = percentage;
+                Model.SumPercentage += Model.Percentage;
+                Model.Budget = Math.Round(Model.SumBudgetItems * Model.Percentage / (100 - Model.SumPercentage), 2);
+            }
+            if (Model.IsTaxesData)
+            {
+                Model.Percentage = percentage;
+                Model.Budget = Math.Round(Model.SumBudgetTaxes * Model.Percentage / 100, 2);
+            }
+            await ValidateAsync();
+        }
+        public async Task ChangeBudget(string stringunitarycost)
+        {
+
+            double Unitarycost = 0;
+            if (!double.TryParse(stringunitarycost, out Unitarycost))
+            { }
+            if (Model.IsEngineeringData)
+            {
+                Model.Percentage = 0;
+                Model.UnitaryCost = Unitarycost;
+                Model.Quantity = 1;
+                Model.Budget = Model.UnitaryCost * Model.Quantity;
+            }
+            await ValidateAsync();
+
+
+        }
+        public async Task ChangeName(string name)
+        {
+            Model.Name = name;
+            await ValidateAsync();
+
         }
     }
 }

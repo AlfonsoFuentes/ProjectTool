@@ -25,7 +25,8 @@ namespace ClientRadzen.Pages.BudgetItems
         x.PurchaseOrders.Any(x => x.PurchaseorderName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
         x.PurchaseOrders.Any(x => x.PONumber.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
         x.PurchaseOrders.Any(x => x.PurchaseRequisition.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
-        x.PurchaseOrders.Any(x => x.Supplier.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase))
+        x.PurchaseOrders.Any(x => x.SupplierName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
+        x.PurchaseOrders.Any(x => x.SupplierNickName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase))
         ;
         IQueryable<BudgetItemApprovedResponse> FilteredItems => Response.BudgetItems?.Where(fiterexpresion).AsQueryable();
         [Parameter]
@@ -44,17 +45,17 @@ namespace ClientRadzen.Pages.BudgetItems
 
         void CreatePurchaseOrder(BudgetItemApprovedResponse approvedResponse)
         {
-            if (approvedResponse.CreateNormalPurchaseOrder)
-            {
-                _NavigationManager.NavigateTo($"/CreatePurchaseOrder/{approvedResponse.BudgetItemId}");
-            }
-            else if (approvedResponse.CreateTaxPurchaseOrder)
+            if (approvedResponse.CreateTaxPurchaseOrder)
             {
                 _NavigationManager.NavigateTo($"/CreateTaxPurchaseOrder/{approvedResponse.BudgetItemId}");
             }
             else if (approvedResponse.CreateCapitalizedSalaries)
             {
                 _NavigationManager.NavigateTo($"/CreateCapitalizedSalary/{approvedResponse.BudgetItemId}");
+            }
+            else if (approvedResponse.CreateNormalPurchaseOrder)
+            {
+                _NavigationManager.NavigateTo($"/CreatePurchaseOrder/{approvedResponse.BudgetItemId}");
             }
 
         }

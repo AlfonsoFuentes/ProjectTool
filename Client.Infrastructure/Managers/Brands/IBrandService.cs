@@ -26,9 +26,8 @@ namespace Client.Infrastructure.Managers.Brands
         {
             try
             {
-                CreateBrandRequestDto model = new CreateBrandRequestDto();
-                model.ConvertToDto(request);
-                var httpresult = await Http.PostAsJsonAsync("Brand/CreateBrand", model);
+               
+                var httpresult = await Http.PostAsJsonAsync("Brand/CreateBrand", request);
 
                 return await httpresult.ToResult();
             }
@@ -43,9 +42,8 @@ namespace Client.Infrastructure.Managers.Brands
         {
             try
             {
-                UpdateBrandRequestDto model = new();
-                model.ConvertToDto(request);
-                var httpresult = await Http.PostAsJsonAsync("Brand/UpdateBrand", model);
+              
+                var httpresult = await Http.PostAsJsonAsync("Brand/UpdateBrand", request);
 
                 return await httpresult.ToResult();
             }
@@ -82,9 +80,7 @@ namespace Client.Infrastructure.Managers.Brands
         {
             try
             {
-                CreateBrandRequestDto model = new CreateBrandRequestDto();
-                model.ConvertToDto(request);
-                var httpresult = await Http.PostAsJsonAsync("Brand/CreateBrandForBudgetItem", model);
+                var httpresult = await Http.PostAsJsonAsync("Brand/CreateBrandForBudgetItem", request);
 
                 return await httpresult.ToResult<BrandResponse>();
             }

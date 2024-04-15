@@ -50,28 +50,27 @@ namespace Application.Features.PurchaseOrders.Queries
                 },
                 PurchaseOrderName = purchaseOrder.PurchaseorderName,
                 PurchaseOrderId = purchaseOrder.Id,
-
+                PurchaseorderNumber = purchaseOrder.PONumber,
                 PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
-
-                TRMUSDCOP = purchaseOrder.USDCOP,
-                TRMUSDEUR = purchaseOrder.USDEUR,
+                IsCapitalizedSalary = purchaseOrder.PONumber == string.Empty,
+                USDCOP = purchaseOrder.USDCOP,
+                USDEUR = purchaseOrder.USDEUR,
                 CurrencyDate = purchaseOrder.CurrencyDate,
                 PurchaseOrderItem = purchaseOrder.PurchaseOrderItems.Select(x => new PurchaseOrderItemRequest()
                 {
                     Budget = x.BudgetItem.Budget,
                     BudgetItemId = x.BudgetItemId,
                     PurchaseOrderItemId = x.Id,
-                    POItemActualUSD = x.Actual,
-                    BudgetAssigned=x.Actual,
+                    ActualCurrency = x.ActualCurrency,
+                    AssignedCurrency = x.ActualCurrency,
+                    Currency = CurrencyEnum.GetType(purchaseOrder.Currency),
                     Name = x.Name,
                     Quantity = x.Quantity,
                     BudgetItemName = x.BudgetItem.Name,
                     TRMUSDCOP = purchaseOrder.USDCOP,
                     TRMUSDEUR = purchaseOrder.USDEUR,
 
-                    CurrencyUnitaryValue = (purchaseOrder.Currency == CurrencyEnum.USD.Id ? x.POValueUSD :
-                    purchaseOrder.Currency == CurrencyEnum.COP.Id ? x.POValueUSD * purchaseOrder.USDCOP :
-                    x.POValueUSD * purchaseOrder.USDEUR) / x.Quantity,
+                    CurrencyUnitaryValue = x.UnitaryValueCurrency
 
                 }).FirstOrDefault()!,
 

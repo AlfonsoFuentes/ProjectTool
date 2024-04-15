@@ -6,7 +6,7 @@ using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Creates
 {
-    public record ApproveRegularPurchaseOrderCommand(ApprovedRegularPurchaseOrderRequestDto Data) : IRequest<IResult>;
+    public record ApproveRegularPurchaseOrderCommand(ApprovedRegularPurchaseOrderRequest Data) : IRequest<IResult>;
 
 
     internal class ApproveRegularPurchaseOrderCommandHandler : IRequestHandler<ApproveRegularPurchaseOrderCommand, IResult>
@@ -40,11 +40,12 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
                 var TaxBudgetitem = await Repository.GetTaxBudgetItemNoProductive(purchaseorder.MWOId);
                 if (TaxBudgetitem != null)
                 {
-                    var sumPOValueUSD = purchaseorder.POValueUSD;
+                    var sumPOValueCurrency = purchaseorder.POValueCurrency;
 
                     var purchaseordertaxestem = purchaseorder.AddPurchaseOrderItemForNoProductiveTax(TaxBudgetitem.Id,
                             $"{request.Data.PONumber} Tax {TaxBudgetitem.Percentage}%");
-                    purchaseordertaxestem.POValueUSD = TaxBudgetitem.Percentage / 100.0 * sumPOValueUSD;
+                    purchaseordertaxestem.UnitaryValueCurrency = TaxBudgetitem.Percentage / 100.0 * sumPOValueCurrency;
+                    purchaseordertaxestem.Quantity = 1;
                     await Repository.AddPurchaseorderItem(purchaseordertaxestem);
 
                 }
@@ -54,7 +55,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
 
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
+           
             if (result > 0)
             {
                 return Result.Success($"Purchase order: {purchaseorder.PONumber} was approved succesfully"); ;

@@ -13,7 +13,7 @@
                 <RadzenFormField Text="Email" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.Email class="w-100" aria-label="Default TextBox"
                                    AutoComplete=true AutoCompleteType="AutoCompleteType.Email"
-                                   @oninput=@((arg)=>Model.ChangeEmail(arg.Value!.ToString()!))
+                                   @oninput=@((arg)=>ChangeEmail(arg.Value!.ToString()!))
                                    Placeholder="name@example.com" Name="email" />
 
                 </RadzenFormField>
@@ -26,7 +26,7 @@
 
 
                     <RadzenDropDown @bind-Value=@Model.Role Data=@RolesEnum.Roles Style="width: 100%; "
-                                    Name="role" TextProperty="Name" Change="@(()=>Model.ChangeRole())"
+                                    Name="role" TextProperty="Name" Change="@(()=>ChangeRole())"
                                     TValue="RolesEnum" />
 
                 </RadzenFormField>

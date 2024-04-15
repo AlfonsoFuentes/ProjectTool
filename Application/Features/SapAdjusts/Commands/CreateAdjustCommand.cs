@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Application.Features.SapAdjusts.Commands
 {
-    public record CreateSapAdjustCommand(CreateSapAdjustRequestDto Data) : IRequest<IResult>;
+    public record CreateSapAdjustCommand(CreateSapAdjustRequest Data) : IRequest<IResult>;
     internal class CreateSapAdjustCommandHandler : IRequestHandler<CreateSapAdjustCommand, IResult>
     {
         private ISapAdjustRepository Repository { get; set; }

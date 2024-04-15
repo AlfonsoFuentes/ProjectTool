@@ -29,33 +29,33 @@ namespace Client.Infrastructure.Managers.BudgetItems
         }
         public async Task<IResult> CreateBudgetItem(CreateBudgetItemRequest request)
         {
-            var model = request.ConvertTodDto();
+          
             if (request.IsRegularData)
             {
                
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateRegularItem", model);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateRegularItem", request);
                 return await httpresult.ToResult();
             }
             else if (request.IsEquipmentData)
             {
               
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEquipmentItem", model);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEquipmentItem", request);
                 return await httpresult.ToResult();
             }
             else if (request.IsTaxesData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateTaxItem", model);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateTaxItem", request);
                 return await httpresult.ToResult();
             }
             else if (request.IsEngContData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEngContItem", model);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateEngContItem", request);
                 return await httpresult.ToResult();
 
             }
             else if (request.IsAlteration)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateAlterationItem", model);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/CreateAlterationItem", request);
                 return await httpresult.ToResult();
             }
             return await Result.FailAsync();
@@ -63,31 +63,31 @@ namespace Client.Infrastructure.Managers.BudgetItems
 
         public async Task<IResult> UpdateBudgetItem(UpdateBudgetItemRequest request)
         {
-            var model=request.ConvertToDto();
+           
             if (request.IsRegularData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateRegularItem", model);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateRegularItem", request);
                 return await httpresult.ToResult();
             }
             else if (request.IsEquipmentData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateEquipmentItem", model);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateEquipmentItem", request);
                 return await httpresult.ToResult();
             }
             else if (request.IsTaxesData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateTaxItem", model);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateTaxItem", request);
                 return await httpresult.ToResult();
             }
             else if (request.IsEngContData)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateEngContItem", model);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateEngContItem", request);
                 return await httpresult.ToResult();
 
             }
             else if (request.IsAlteration)
             {
-                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateAlterationItem", model);
+                var httpresult = await Http.PostAsJsonAsync("BudgetItem/UpdateAlterationItem", request);
                 return await httpresult.ToResult();
             }
             return await Result.FailAsync();

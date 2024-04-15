@@ -4,6 +4,7 @@ using Client.Infrastructure.Managers.Suppliers;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.Suppliers;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClientRadzen.Pages.Suppliers
 {
@@ -25,7 +26,7 @@ namespace ClientRadzen.Pages.Suppliers
             {
                 Model = result.Data;
             }
-            Model.Validator += ValidateAsync;
+         
             StateHasChanged();
         }
 
@@ -61,10 +62,30 @@ namespace ClientRadzen.Pages.Suppliers
         }
         bool NotValidated = true;
 
-        public void Dispose()
+       
+        public async Task ChangeName(string name)
         {
-            Model.Validator -= ValidateAsync;
+            Model.Name = name;
+            await ValidateAsync();
         }
-
+        public async Task ChangeNickName(string name)
+        {
+            Model.NickName = name;
+            await ValidateAsync();
+        }
+        public async Task ChangeVendorCode(string name)
+        {
+            Model.VendorCode = name;
+            await ValidateAsync();
+        }
+        public async Task ChangeEmail(string name)
+        {
+            Model.ContactEmail = name;
+            await ValidateAsync();
+        }
+        public async Task ChangeSupplierCurrency()
+        {
+            await ValidateAsync();
+        }
     }
 }

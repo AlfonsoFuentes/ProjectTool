@@ -5,7 +5,7 @@ using Shared.Models.Brands;
 
 namespace Application.Features.Brands.Command
 {
-    public record UpdateBrandCommand(UpdateBrandRequestDto Data) : IRequest<IResult>;
+    public record UpdateBrandCommand(UpdateBrandRequest Data) : IRequest<IResult>;
     public class UpdateBrandCommandHandler : IRequestHandler<UpdateBrandCommand, IResult>
     {
         private IBrandRepository Repository { get; set; }

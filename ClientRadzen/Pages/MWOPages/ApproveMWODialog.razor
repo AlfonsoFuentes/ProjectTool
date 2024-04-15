@@ -11,7 +11,7 @@
             <RadzenColumn SizeXS="8" SizeSM="4">
                 <RadzenFormField Text="Name" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.Name AutoComplete class="w-100"
-                                    @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
+                                    @oninput="@((arg)=>ChangeName(arg.Value!.ToString()!))"
                                     Name="name" />
 
                  </RadzenFormField>
@@ -23,7 +23,7 @@
              <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenFormField Text="MWO Number" Style="width: 100%;">
                      <RadzenTextBox @bind-Value=@Model.MWONumber AutoComplete Style="width:100%"
-                                    Name="number" @oninput="@((args)=>Model.ChangeMWONumber(args.Value!.ToString()!))" />
+                                    Name="number" @oninput="@((args)=>ChangeMWONumber(args.Value!.ToString()!))" />
 
                  </RadzenFormField>
                  <ValidationMessage For="() => Model.MWONumber" style="color:red; font-size:x-small;" />
@@ -34,7 +34,7 @@
              <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenFormField Text="Type" Style="width: 100%;">
                      <RadzenDropDown @bind-Value=@Model.Type Data=@MWOTypeEnum.List Style="width: 100%; "
-                                     Name="type" TextProperty="Name" Change="@(()=>Model.ChangeType())"
+                                     Name="type" TextProperty="Name" Change="@(()=>ChangeType())"
                                      TValue="MWOTypeEnum" />
                  </RadzenFormField>
                  <ValidationMessage For="() => Model.Type.Id" style="color:red; font-size:x-small;" />
@@ -43,7 +43,7 @@
              <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenFormField Text="Cost center" Style="width: 100%;">
                      <RadzenDropDown @bind-Value=@Model.CostCenter Data=@CostCenterEnum.List Style="width:100%"
-                                     Name="costcenter" TextProperty="Name" Change="Model.ChangeCostCenter"
+                                     Name="costcenter" TextProperty="Name" Change="ChangeCostCenter"
                                      AllowClear=true
                                      FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
                                      AllowFiltering="true"
@@ -57,7 +57,7 @@
              <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenFormField Text="Tax for Alterations" Style="width: 100%;">
                      <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageTaxForAlterations Style="width:100%"
-                                    @oninput="@((arg)=>Model.ChangeTaxForAlterations(arg.Value!.ToString()!))"
+                                    @oninput="@((arg)=>ChangeTaxForAlterations(arg.Value!.ToString()!))"
                                     Name="TaxAlterations" />
 
                  </RadzenFormField>
@@ -68,7 +68,7 @@
              <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenFormField Text="Capitalized Salaries" Style="width: 100%;">
                      <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageEngineering Style="width:100%"
-                                    @oninput="@((arg)=>Model.ChangePercentageEngineering(arg.Value!.ToString()!))"
+                                    @oninput="@((arg)=>ChangePercentageEngineering(arg.Value!.ToString()!))"
                                     Name="salaries" />
 
                  </RadzenFormField>
@@ -79,7 +79,7 @@
              <RadzenColumn SizeXS="8" SizeSM="4">
                  <RadzenFormField Text="Contingency" Style="width: 100%;">
                      <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageContingency Style="width:100%"
-                                    @oninput="@((arg)=>Model.ChangePercentageContingency(arg.Value!.ToString()!))"
+                                    @oninput="@((arg)=>ChangePercentageContingency(arg.Value!.ToString()!))"
                                     Name="contingency" />
 
                  </RadzenFormField>
@@ -99,7 +99,7 @@
                 {
                     <RadzenFormField Text="Taxes No Productive" Style="width: 100%;">
                         <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PercentageAssetNoProductive Style="width:100%"
-                                       @oninput="@((arg)=>Model.ChangePercentageTaxes(arg.Value!.ToString()!))"
+                                       @oninput="@((arg)=>ChangePercentageTaxes(arg.Value!.ToString()!))"
                                        Name="taxesnoproductive" />
 
                     </RadzenFormField>

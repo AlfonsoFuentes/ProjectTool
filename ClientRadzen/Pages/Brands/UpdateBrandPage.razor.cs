@@ -3,6 +3,7 @@ using Client.Infrastructure.Managers.Brands;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.Brands;
+using System.ComponentModel.DataAnnotations;
 #nullable disable
 namespace ClientRadzen.Pages.Brands
 {
@@ -23,7 +24,7 @@ namespace ClientRadzen.Pages.Brands
             {
                 Model = result.Data;
             }
-            Model.Validator += ValidateAsync;
+          
             StateHasChanged();
         }
 
@@ -59,9 +60,11 @@ namespace ClientRadzen.Pages.Brands
         }
         bool NotValidated = true;
 
-        public void Dispose()
+       
+        public async Task ChangeName(string name)
         {
-            Model.Validator -= ValidateAsync;
+            Model.Name = name;
+            await ValidateAsync();
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Shared.Models.MWO
         public double PotencialCapital => PurchaseOrderCapital.Sum(x => x.Potencial);
         public double AssignedCapital => PurchaseOrderCapital.Sum(x => x.Assigned);
         public double ActualCapital => PurchaseOrderCapital.Sum(x => x.Actual);
-        public double CommitmentCapital => AssignedCapital - ActualCapital;
+        public double CommitmentCapital => PurchaseOrderCapital.Sum(x => x.Commitment);
         public double PendingCapital => Capital - AssignedCapital - PotencialCapital;
         public List<BudgetItemApprovedResponse> BudgetItems { get; set; } = new();      
 

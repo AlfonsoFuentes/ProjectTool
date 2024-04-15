@@ -79,9 +79,9 @@ namespace Application.Features.PurchaseOrders.Queries
                     Name = x.Name,
                     BudgetItemName = x.BudgetItem.Name,
                     PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
-                    POValueUSD = x.POValueUSD,
-                    POActualUSD = x.Actual,
-
+                    UnitaryValueCurrency = x.UnitaryValueCurrency,
+                    POActualCurrency = x.ActualCurrency,
+                    Quantity = x.Quantity,
                     TRMUSDCOP = purchaseOrder.USDCOP,
                     TRMUSDEUR = purchaseOrder.USDEUR,
 

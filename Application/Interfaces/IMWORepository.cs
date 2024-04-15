@@ -18,8 +18,8 @@ namespace Application.Interfaces
         Task<IQueryable<PurchaseOrder>> GetPurchaseOrdersByMWOId(Guid MWOId);
         Task<IQueryable<BudgetItem>> GetBudgetItemsByMWOId(Guid MWOId);
 
-        Task UpdateDataForNotApprovedMWO(Guid MWOId, CancellationToken token);
-        Task UpdateDataForApprovedMWO(Guid MWOId, CancellationToken token);
+        //Task UpdateDataForNotApprovedMWO(Guid MWOId, CancellationToken token);
+        //Task UpdateDataForApprovedMWO(Guid MWOId, CancellationToken token);
         Task<IEnumerable<MWO>> GetMWOList(CurrentUser CurrentUser);
     }
 }

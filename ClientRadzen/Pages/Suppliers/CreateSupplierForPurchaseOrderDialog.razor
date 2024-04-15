@@ -14,7 +14,7 @@
             <RadzenColumn Size="12" SizeMD="12">
                 <RadzenFormField Text="Name" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.Name class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.Name"
-                                   @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
+                                   @oninput="@((arg)=>ChangeName(arg.Value!.ToString()!))"
                                    Name="name" />
 
                 </RadzenFormField>
@@ -26,7 +26,7 @@
             <RadzenColumn Size="12" SizeMD="12">
                 <RadzenFormField Text="Nick Name" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.NickName class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.Nickname"
-                                   @oninput="@((arg)=>Model.ChangeNickName(arg.Value!.ToString()!))"
+                                   @oninput="@((arg)=>ChangeNickName(arg.Value!.ToString()!))"
                                    Name="nickname" />
 
                 </RadzenFormField>
@@ -38,7 +38,7 @@
             <RadzenColumn Size="12" SizeMD="12">
                 <RadzenFormField Text="Vendor Code" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.VendorCode class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.GivenName"
-                                   @oninput="@((arg)=>Model.ChangeVendorCode(arg.Value!.ToString()!))"
+                                   @oninput="@((arg)=>ChangeVendorCode(arg.Value!.ToString()!))"
                                    Name="vendorcode" />
 
                 </RadzenFormField>
@@ -67,7 +67,7 @@
                                      AllowClear=true
                                      FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
                                      AllowFiltering="true"
-                                     Change="Model.ChangeSupplierCurrency"
+                                     Change="ChangeSupplierCurrency"
                                      TValue="CurrencyEnum" />
 
 
@@ -99,25 +99,7 @@
  </RadzenStack>
 
 @code {
-    void ChangeName(string name)
-    {
-        Model.Name = name;
-    }
-    void NotifyMessage(NotificationSeverity Severity, string Leyend, List<string> messages)
-    {
-        AlertStyle alertStyle = Severity == NotificationSeverity.Success ? AlertStyle.Success : AlertStyle.Danger;
+  
 
-        NotificationService.Notify(new NotificationMessage
-            {
-                Severity = Severity,
-                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">@Leyend</RadzenText>,
-            DetailContent = ns =>@<SimpleAlertMessage AlertStyle="@alertStyle" Messages=@messages></SimpleAlertMessage>,
-
-
-            Duration = Severity == NotificationSeverity.Success ? 2000 : 4000,
-        });
-
-    }
-    void ShowTooltip(ElementReference elementReference, string text) =>
-     TooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Right });
+    
 }

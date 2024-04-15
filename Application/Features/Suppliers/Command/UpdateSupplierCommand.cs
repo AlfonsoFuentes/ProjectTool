@@ -5,7 +5,7 @@ using Shared.Models.Suppliers;
 
 namespace Application.Features.Suppliers.Command
 {
-    public record UpdateSupplierCommand(UpdateSupplierRequestDto Data) : IRequest<IResult>;
+    public record UpdateSupplierCommand(UpdateSupplierRequest Data) : IRequest<IResult>;
     public class UpdateSupplierCommandHandler:IRequestHandler<UpdateSupplierCommand,IResult>
     {
         private ISupplierRepository Repository { get; set; }
@@ -31,7 +31,7 @@ namespace Application.Features.Suppliers.Command
             row.VendorCode=request.Data.VendorCode;
             row.TaxCodeLD=request.Data.TaxCodeLD;
             row.TaxCodeLP=request.Data.TaxCodeLP;
-            row.SupplierCurrency=request.Data.SupplierCurrency;
+            row.SupplierCurrency=request.Data.SupplierCurrency.Id;
 
             row.NickName = request.Data.NickName;
             await Repository.UpdateSupplier(row);

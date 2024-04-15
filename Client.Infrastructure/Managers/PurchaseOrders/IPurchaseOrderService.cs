@@ -1,4 +1,6 @@
-﻿using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
+﻿using Azure.Core;
+using Shared.Models.PurchaseOrders.Requests;
+using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
 using Shared.Models.PurchaseOrders.Requests.Taxes;
@@ -34,6 +36,8 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
 
         Task<IResult<EditTaxPurchaseOrderRequest>> GetPurchaseOrderTaxToEdit(Guid PurchaseOrderId);
         Task<IResult<EditCapitalizedSalaryPurchaseOrderRequest>> GetPurchaseOrderCapitalizedSalarToEdit(Guid PurchaseOrderId);
+        Task<IResult> DeletePurchaseOrder(Guid PurchaseOrderId);
+        Task<IResult> RecalculatePurchaseOrder();
     }
     public class PurchaseOrderService : IPurchaseOrderService
     {
@@ -51,9 +55,9 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         }
         public async Task<IResult> CreateRegularPurchaseOrder(CreatedRegularPurchaseOrderRequest request)
         {
-            CreatedRegularPurchaseOrderRequestDto model = new ();
-            model.ConvertToDto(request);
-            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/CreateRegularPurchaseOrder", model);
+            
+            
+            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/CreateRegularPurchaseOrder", request);
             return await httpresult.ToResult();
         }
         public async Task<IResult> CreateTaxPurchaseOrder(CreateTaxPurchaseOrderRequest request)
@@ -76,9 +80,8 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
 
         public async Task<IResult> EditPurchaseOrderCreated(EditPurchaseOrderRegularCreatedRequest request)
         {
-            EditPurchaseOrderRegularCreatedRequestDto model = new();
-            model.ConvertToDto(request);
-            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderCreated", model);
+            
+            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderCreated", request);
             return await httpresult.ToResult();
         }
 
@@ -86,24 +89,21 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
 
         public async Task<IResult> ApproveRegularPurchaseOrder(ApprovedRegularPurchaseOrderRequest request)
         {
-            ApprovedRegularPurchaseOrderRequestDto model = new();
-            model.ConvertToDto(request);
+            
 
-            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/ApproveRegularPurchaseOrder", model);
+            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/ApproveRegularPurchaseOrder", request);
             return await httpresult.ToResult();
         }
         public async Task<IResult> ApprovePurchaseOrderForAlteration(ApprovedRegularPurchaseOrderRequest request)
         {
-            ApprovedRegularPurchaseOrderRequestDto model = new();
-            model.ConvertToDto(request);
-            var httpresultAlteration = await Http.PostAsJsonAsync($"PurchaseOrder/ApprovePurchaseOrderForAlteration", model);
+            
+            var httpresultAlteration = await Http.PostAsJsonAsync($"PurchaseOrder/ApprovePurchaseOrderForAlteration", request);
             return await httpresultAlteration.ToResult();
         }
         public async Task<IResult> EditPurchaseOrderApproved(EditPurchaseOrderRegularApprovedRequest request)
         {
-            EditPurchaseOrderRegularApprovedRequestDto model= new();
-            model.ConvertToDto(request);
-            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderApproved", model);
+            
+            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderApproved", request);
             return await httpresult.ToResult();
         }
 
@@ -115,9 +115,9 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
 
         public async Task<IResult> ReceivePurchaseOrder(ReceiveRegularPurchaseOrderRequest request)
         {
-            ReceiveRegularPurchaseOrderRequestDto model = new();
-            model.ConvertToDto(request);
-            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/ReceivePurchaseOrder", model);
+            
+            
+            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/ReceivePurchaseOrder", request);
             return await httpresult.ToResult();
         }
 
@@ -139,23 +139,18 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         }
         public async Task<IResult> EditPurchaseOrderClosed(EditPurchaseOrderRegularClosedRequest request)
         {
-            EditPurchaseOrderRegularClosedRequestDto model = new();
-            model.ConvertToDto(request);
-            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderClosed", model);
+            
+            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderClosed", request);
             return await httpresult.ToResult();
         }
 
-        //public async Task<IResult<ClosedPurchaseOrderRequest>> GetPurchaseOrderClosedById(Guid PurchaseOrderId)
-        //{
-        //    var httpresult = await Http.GetAsync($"PurchaseOrder/GetClosedPurchaseOrder/{PurchaseOrderId}");
-        //    return await httpresult.ToResult<ClosedPurchaseOrderRequest>();
-        //}
+      
 
         public async Task<IResult> CreatePurchaseOrderCapitalizedSalary(CreateCapitalizedSalaryPurchaseOrderRequest request)
         {
-            CreateCapitalizedSalaryPurchaseOrderRequestDto model = new();
-            model.ConverToDto(request);
-            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/CreatePurchaseOrderCapitalizedSalary", model);
+            
+            
+            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/CreatePurchaseOrderCapitalizedSalary", request);
             return await httpresult.ToResult();
         }
 
@@ -179,12 +174,22 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
 
         public async Task<IResult> EditPurchaseOrderCapitalizedSalary(EditCapitalizedSalaryPurchaseOrderRequest request)
         {
-            EditCapitalizedSalaryPurchaseOrderRequestDto model = new();
-            model.ConverToDto(request);
-            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderCapitalizedSalary", model);
+            
+            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderCapitalizedSalary", request);
             return await httpresult.ToResult();
         }
 
-       
+        public async Task<IResult> DeletePurchaseOrder(Guid PurchaseOrderId)
+        {
+            DeletePurchaseorderRequest request = new DeletePurchaseorderRequest() { PurchaseOrderId = PurchaseOrderId };
+            var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/RemovePurchaseOrder", request);
+            return await httpresult.ToResult();
+        }
+
+        public async Task<IResult> RecalculatePurchaseOrder()
+        {
+            var httpresult = await Http.GetAsync($"PurchaseOrder/RecalculatePurchaseOrder");
+            return await httpresult.ToResult();
+        }
     }
 }

@@ -27,8 +27,8 @@ namespace Client.Infrastructure.Validators.PurchaseOrder
 
 
 
-            RuleFor(x => x.TRMUSDEUR).GreaterThan(0).WithMessage("TRM must be defined");
-            RuleFor(x => x.TRMUSDCOP).GreaterThan(0).WithMessage("TRM must be defined");
+            RuleFor(x => x.USDEUR).GreaterThan(0).WithMessage("TRM must be defined");
+            RuleFor(x => x.USDCOP).GreaterThan(0).WithMessage("TRM must be defined");
             RuleFor(x => x.SumPOValueUSD).GreaterThan(0).WithMessage("PO Value must be defined");
 
             RuleFor(x => x.IsAnyValueNotDefined).NotEqual(true).WithMessage("All Item must have Currency value greater Than zero");
@@ -37,10 +37,10 @@ namespace Client.Infrastructure.Validators.PurchaseOrder
             RuleFor(x => x.PurchaseRequisition).MustAsync(ReviewPRExist).When(x => !string.IsNullOrEmpty(x.PurchaseRequisition)).WithMessage(x => $"{x.PurchaseRequisition} already exist");
             PurchaseOrderValidator = purchaseOrderValidator;
         }
-        async Task<bool> ReviewNameExist(string name, CancellationToken cancellationToken)
+        async Task<bool> ReviewNameExist(CreatedRegularPurchaseOrderRequest po,string name, CancellationToken cancellationToken)
         {
        
-            var result= await PurchaseOrderValidator.ValidateNameExistInPurchaseOrder(name);
+            var result= await PurchaseOrderValidator.ValidateNameExistInPurchaseOrder(po.MWOId,name);
             return !result;
         }
         async Task<bool> ReviewPRExist(string pr, CancellationToken cancellationToken)

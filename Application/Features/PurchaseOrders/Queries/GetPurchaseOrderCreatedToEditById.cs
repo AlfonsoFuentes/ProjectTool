@@ -55,8 +55,8 @@ namespace Application.Features.PurchaseOrders.Queries
                 QuoteNo = purchaseOrder.QuoteNo,
                 PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
                 QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
-                TRMUSDCOP = purchaseOrder.USDCOP,
-                TRMUSDEUR = purchaseOrder.USDEUR,
+                USDCOP = purchaseOrder.USDCOP,
+                USDEUR = purchaseOrder.USDEUR,
                 CurrencyDate = purchaseOrder.CurrencyDate,
                 PurchaseOrderItems = purchaseOrder.PurchaseOrderItems.Select(x => new PurchaseOrderItemRequest()
                 {
@@ -68,15 +68,15 @@ namespace Application.Features.PurchaseOrders.Queries
                     BudgetItemName = x.BudgetItem.Name,
                     TRMUSDCOP = purchaseOrder.USDCOP,
                     TRMUSDEUR = purchaseOrder.USDEUR,
-                    QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
-                    CurrencyUnitaryValue = (purchaseOrder.Currency == CurrencyEnum.USD.Id ? x.POValueUSD :
-                    purchaseOrder.Currency == CurrencyEnum.COP.Id ? x.POValueUSD * purchaseOrder.USDCOP :
-                    x.POValueUSD * purchaseOrder.USDEUR) / x.Quantity,
+                    Currency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
+                    CurrencyUnitaryValue = x.UnitaryValueCurrency ,
 
                     Budget = x.BudgetItem.Budget,
-                    BudgetAssigned = x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id ? x.BudgetItem.PurchaseOrderItems.Sum(x => x.POValueUSD) : 0,
-                    BudgetPotencial = x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id ? x.BudgetItem.PurchaseOrderItems.Sum(x => x.POValueUSD) : 0,
-                    POItemActualUSD = x.Actual,
+                    AssignedCurrency = x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id ? 
+                    x.BudgetItem.PurchaseOrderItems.Sum(x => x.UnitaryValueCurrency * x.Quantity) : 0,
+                    PotencialCurrency = x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id ?
+                    x.BudgetItem.PurchaseOrderItems.Sum(x => x.UnitaryValueCurrency * x.Quantity) : 0,
+                    ActualCurrency = x.ActualCurrency,
 
                 }).ToList(),
 

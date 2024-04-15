@@ -47,7 +47,8 @@
             <RadzenButton Icon="format_list_bulleted" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
                           Click="@(()=>DataMain.ShowApprovedItemsofMWO(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show Items for MWO: {Data.CECName}",TooltipPosition.Left) )" />
             <RadzenButton Icon="insights" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
-                          Click="@(()=>DataMain.ShowSapAlignmentofMWO(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show SAP Alignment for MWO: {Data.CECName}",TooltipPosition.Left) )" />
+                          Click="@(()=>DataMain.ShowSapAlignmentofMWO(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show SAP Alignment for MWO: {Data.CECName}",
+                          TooltipPosition.Left) )" />
 
         </RadzenRow>
 

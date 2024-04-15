@@ -1,16 +1,11 @@
 ﻿#nullable disable
 using Blazored.FluentValidation;
 using Client.Infrastructure.Managers.BudgetItems;
-using Client.Infrastructure.Managers.CurrencyApis;
 using Client.Infrastructure.Managers.PurchaseOrders;
-using Client.Infrastructure.Managers.Suppliers;
-using ClientRadzen.Pages.Suppliers;
 using Microsoft.AspNetCore.Components;
 using Radzen;
-using Shared.Models.BudgetItems;
 using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.Models.Suppliers;
+using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 
 namespace ClientRadzen.Pages.PurchaseOrders
 {
@@ -44,10 +39,10 @@ namespace ClientRadzen.Pages.PurchaseOrders
             {
                 Model = new();
                 Model.SetMainBudgetItem(result.Data);
-                Model.Validator += ValidateAsync;
+              
 
-                Model.TRMUSDCOP = MainApp.RateList == null ? 4000 : Math.Round(MainApp.RateList.COP, 2);
-                Model.TRMUSDEUR = MainApp.RateList == null ? 1 : Math.Round(MainApp.RateList.EUR, 2);
+                Model.USDCOP = MainApp.RateList == null ? 4000 : Math.Round(MainApp.RateList.COP, 2);
+                Model.USDEUR = MainApp.RateList == null ? 1 : Math.Round(MainApp.RateList.EUR, 2);
 
             }
 
@@ -87,10 +82,37 @@ namespace ClientRadzen.Pages.PurchaseOrders
             Navigation.NavigateBack();
         }
        
-        public void Dispose()
+        
+        public async Task ChangeCurrencyValue(PurchaseOrderItemRequest item, string arg)
         {
-            Model.Validator -= ValidateAsync;
-        }
 
+            if (string.IsNullOrEmpty(arg))
+            {
+                return;
+            }
+            double currencyvalue = item.Quantity;
+            if (!double.TryParse(arg, out currencyvalue))
+            {
+
+            }
+            item.CurrencyUnitaryValue = currencyvalue;
+            item.ActualCurrency = currencyvalue;
+
+            await ValidateAsync();
+        }
+        public async Task ChangeName(string name)
+        {
+
+            Model.PurchaseOrderName = name;
+            Model.PurchaseOrderItem.Name = name;
+            await ValidateAsync();
+        }
+        public async Task ChangePurchaseorderNumber(string ponumber)
+        {
+
+            Model.PurchaseorderNumber = ponumber;
+            await ValidateAsync();
+
+        }
     }
 }

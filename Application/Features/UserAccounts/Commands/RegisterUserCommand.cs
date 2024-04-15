@@ -3,15 +3,10 @@ using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.UserAccounts.Registers;
 using Shared.Models.UserAccounts.Reponses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.UserAccounts.Commands
 {
-    public record RegisterUserCommand(RegisterUserRequestDto Data) : IRequest<IResult<RegisterUserResponse>>;
+    public record RegisterUserCommand(RegisterUserRequest Data) : IRequest<IResult<RegisterUserResponse>>;
 
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, IResult<RegisterUserResponse>>
     {

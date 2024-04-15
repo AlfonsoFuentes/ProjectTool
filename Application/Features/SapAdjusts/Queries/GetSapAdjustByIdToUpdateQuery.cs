@@ -33,6 +33,7 @@ namespace Application.Features.SapAdjusts.Queries
                 ActualSoftware = query.ActualSoftware,
                 CommitmentSoftware = query.CommitmentSoftware,
                 MWOName = query.MWO.Name,
+                CECMWOName=$"CEC0000{query.MWO.MWONumber}",
                 PotencialSoftware = query.PotencialSoftware,
                 BudgetCapital = query.BudgetCapital,
 

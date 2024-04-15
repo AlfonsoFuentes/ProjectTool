@@ -7,7 +7,7 @@ using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edits
 {
-    public record EditPurchaseOrderClosedCommand(EditPurchaseOrderRegularClosedRequestDto Data) : IRequest<IResult>;
+    public record EditPurchaseOrderClosedCommand(EditPurchaseOrderRegularClosedRequest Data) : IRequest<IResult>;
     internal class EditPurchaseOrderClosedCommandHandler : IRequestHandler<EditPurchaseOrderClosedCommand, IResult>
     {
         private IPurchaseOrderRepository Repository { get; set; }
@@ -22,7 +22,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
 
         public async Task<IResult> Handle(EditPurchaseOrderClosedCommand request, CancellationToken cancellationToken)
         {
-          
+
             var purchaseOrder = await Repository.GetPurchaseOrderById(request.Data.PurchaseOrderId);
 
             if (purchaseOrder == null)
@@ -34,27 +34,40 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseOrder.PurchaseorderName = request.Data.PurchaseorderName;
             purchaseOrder.QuoteNo = request.Data.QuoteNo;
             purchaseOrder.SupplierId = request.Data.SupplierId;
-            purchaseOrder.QuoteCurrency = request.Data.QuoteCurrency;
+            purchaseOrder.QuoteCurrency = request.Data.QuoteCurrency.Id;
             purchaseOrder.USDCOP = request.Data.USDCOP;
             purchaseOrder.USDEUR = request.Data.USDEUR;
             purchaseOrder.MainBudgetItemId = request.Data.MainBudgetItemId;
-            double povalueusd = purchaseOrder.POValueUSD;
-            purchaseOrder.POValueUSD = request.Data.PurchaseOrderItems.Sum(x => x.POValueUSD);
-            purchaseOrder.PurchaseOrderStatus = purchaseOrder.POValueUSD != povalueusd ? PurchaseOrderStatusEnum.Receiving.Id : PurchaseOrderStatusEnum.Closed.Id;
-            foreach (var item in request.Data.PurchaseOrderItems)
+            double poactualCurrency = purchaseOrder.ActualCurrency;
+            var newValueCurrency = request.Data.PurchaseOrderItemNoBlank.Sum(x => x.TotalCurrencyValue);
+
+            if (newValueCurrency > poactualCurrency)
+            {
+                purchaseOrder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Receiving.Id;
+
+            }
+            else
+            {
+                purchaseOrder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Closed.Id;
+                purchaseOrder.ActualCurrency = newValueCurrency;
+
+            }
+
+
+            foreach (var item in request.Data.PurchaseOrderItemNoBlank)
             {
                 var purchaseorderItem = await Repository.GetPurchaseOrderItemById(item.PurchaseOrderItemId);
                 if (purchaseorderItem == null)
                 {
-                    purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId, item.PurchaseorderItemName);
-                    purchaseorderItem.POValueUSD = item.POValueUSD;
+                    purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId, item.Name);
+                    purchaseorderItem.UnitaryValueCurrency = item.CurrencyUnitaryValue;
                     purchaseorderItem.Quantity = item.Quantity;
                     await Repository.AddPurchaseorderItem(purchaseorderItem);
                     if (purchaseOrder.IsAlteration)
                     {
                         var purchaseordertaxestem = purchaseOrder.AddPurchaseOrderItemForAlteration(item.BudgetItemId,
                    $"{request.Data.PONumber} Tax {item.BudgetItemName} {purchaseOrder.MWO.PercentageTaxForAlterations}%");
-                        purchaseordertaxestem.POValueUSD = purchaseOrder.MWO.PercentageTaxForAlterations / 100.0 * item.POValueUSD;
+                        purchaseordertaxestem.UnitaryValueCurrency = purchaseOrder.MWO.PercentageTaxForAlterations / 100.0 * item.TotalCurrencyValue;
                         purchaseordertaxestem.Quantity = 1;
 
                         await Repository.AddPurchaseorderItem(purchaseordertaxestem);
@@ -64,28 +77,31 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                 }
                 else
                 {
-                    purchaseorderItem.Name = item.PurchaseorderItemName;
+                    purchaseorderItem.Name = item.Name;
                     purchaseorderItem.Quantity = item.Quantity;
-                    purchaseorderItem.POValueUSD = item.POValueUSD;
+                    purchaseorderItem.UnitaryValueCurrency = item.CurrencyUnitaryValue;
+                    purchaseorderItem.ActualCurrency = newValueCurrency < purchaseorderItem.ActualCurrency ? newValueCurrency : purchaseorderItem.ActualCurrency;
                     if (item.BudgetItemId != purchaseorderItem.BudgetItemId)
                         purchaseorderItem.ChangeBudgetItem(item.BudgetItemId);
                     await Repository.UpdatePurchaseOrderItem(purchaseorderItem);
                 }
 
             }
-            var sumPOValueUSD = request.Data.PurchaseOrderItems.Count == 0 ? 0 :
-                  request.Data.PurchaseOrderItems.Sum(x => x.POValueUSD);
+            var sumPOValueCurrency = request.Data.PurchaseOrderItems.Count == 0 ? 0 :
+                  request.Data.PurchaseOrderItems.Sum(x => x.TotalCurrencyValue);
 
             if (purchaseOrder.IsAlteration)
             {
-                foreach (var row in request.Data.PurchaseOrderItems)
+                foreach (var row in request.Data.PurchaseOrderItemNoBlank)
                 {
                     var alterationsitem = await Repository.GetPurchaseOrderItemsAlterationsById(purchaseOrder.Id, row.BudgetItemId);
                     if (alterationsitem != null)
                     {
-                        alterationsitem.POValueUSD = row.POValueUSD * purchaseOrder.MWO.PercentageTaxForAlterations / 100;
+                        var currencyvalue = row.TotalCurrencyValue * purchaseOrder.MWO.PercentageTaxForAlterations / 100;
+                        alterationsitem.UnitaryValueCurrency = currencyvalue;
+                        alterationsitem.Quantity = 1;
                         await Repository.UpdatePurchaseOrderItem(alterationsitem);
-                        sumPOValueUSD += alterationsitem.POValueUSD;
+                        sumPOValueCurrency += currencyvalue;
                     }
 
                 }
@@ -98,12 +114,25 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                     AppDbContext.PurchaseOrderItems.Remove(row);
                 }
             }
+            if (request.Data.IsMWONoProductive && !request.Data.IsAlteration)
+            {
+                var TaxBudgetitem = await Repository.GetTaxBudgetItemNoProductive(purchaseOrder.MWOId);
+                if (TaxBudgetitem != null)
+                {
 
+                    var purchaseordertaxestem = await Repository.GetPurchaseOrderMainTaxItemById(TaxBudgetitem.Id, purchaseOrder.MWOId);
 
+                    purchaseordertaxestem.UnitaryValueCurrency = TaxBudgetitem.Percentage / 100.0 * purchaseOrder.POValueCurrency;
+                    await Repository.UpdatePurchaseOrderItem(purchaseordertaxestem);
+
+                }
+
+            }
+            purchaseOrder.POValueCurrency = sumPOValueCurrency;
 
             await Repository.UpdatePurchaseOrder(purchaseOrder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            await MWORepository.UpdateDataForApprovedMWO(purchaseOrder.MWOId, cancellationToken);
+            //await MWORepository.UpdateDataForApprovedMWO(purchaseOrder.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"Purchase order :{request.Data.PurchaseorderName} was edited succesfully");

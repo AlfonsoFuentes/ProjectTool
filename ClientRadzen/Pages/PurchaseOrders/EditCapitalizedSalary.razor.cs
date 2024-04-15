@@ -5,7 +5,9 @@ using Client.Infrastructure.Managers.PurchaseOrders;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
+using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 using Shared.Models.PurchaseOrders.Requests.Taxes;
+using System.ComponentModel.DataAnnotations;
 #nullable disable
 namespace ClientRadzen.Pages.PurchaseOrders;
 public partial class EditCapitalizedSalary
@@ -38,10 +40,6 @@ public partial class EditCapitalizedSalary
 
 
             Model = result.Data;
-
-          
-            Model.Validator += ValidateAsync;
-
 
 
         }
@@ -80,12 +78,39 @@ public partial class EditCapitalizedSalary
         Navigation.NavigateBack();
     }
 
-    public void Dispose()
+   
+    public async Task ChangeCurrencyValue(PurchaseOrderItemRequest item, string arg)
     {
-        Model.Validator -= ValidateAsync;
+
+        if (string.IsNullOrEmpty(arg))
+        {
+            return;
+        }
+        double currencyvalue = item.Quantity;
+        if (!double.TryParse(arg, out currencyvalue))
+        {
+
+        }
+        item.CurrencyUnitaryValue = currencyvalue;
+        item.ActualCurrency = currencyvalue;
+
+        await ValidateAsync();
+    }
+    public async Task ChangeName(string name)
+    {
+
+        Model.PurchaseOrderName = name;
+        Model.PurchaseOrderItem.Name = name;
+        await ValidateAsync();
+    }
+    public async Task ChangePurchaseorderNumber(string ponumber)
+    {
+
+        Model.PurchaseorderNumber = ponumber;
+        await ValidateAsync();
+
     }
 
-   
 
 
 }

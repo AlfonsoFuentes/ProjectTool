@@ -15,8 +15,8 @@ namespace Client.Infrastructure.Validators.PurchaseOrder
             RuleFor(X => X.ExpectedDate).NotNull().WithMessage("Expected PO must be defined");
        
             RuleFor(x => x.PONumber).MustAsync(ReviewPONumberExist).When(x => !string.IsNullOrEmpty(x.PONumber)).WithMessage(x => $"{x.PONumber} already exist");
-            RuleFor(x => x.TRMUSDEUR).GreaterThan(0).WithMessage("TRM must be defined");
-            RuleFor(x => x.TRMUSDCOP).GreaterThan(0).WithMessage("TRM must be defined");
+            RuleFor(x => x.USDEUR).GreaterThan(0).WithMessage("TRM must be defined");
+            RuleFor(x => x.USDCOP).GreaterThan(0).WithMessage("TRM must be defined");
             PurchaseOrderValidator = purchaseOrderValidator;
         }
         async Task<bool> ReviewPONumberExist(ApprovedRegularPurchaseOrderRequest Purchaseorder, string ponumber, CancellationToken cancellationToken)

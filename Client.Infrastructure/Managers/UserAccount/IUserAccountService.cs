@@ -35,16 +35,16 @@ namespace Client.Infrastructure.Managers.UserAccount
 
         public async Task<IResult<RegisterUserResponse>> RegisterUser(RegisterUserRequest request)
         {
-            var model = request.ConvertToDto();
-            var httpresult = await Http.PostAsJsonAsync("UserAccount/RegisterUser", model);
+          
+            var httpresult = await Http.PostAsJsonAsync("UserAccount/RegisterUser", request);
 
             return await httpresult.ToResult<RegisterUserResponse>();
         }
 
         public async Task<IResult<LoginUserResponse>> LoginUser(LoginUserRequest request)
         {
-            var model = request.ConvertToDto();
-            var httpresult = await Http.PostAsJsonAsync("UserAccount/LoginUser", model);
+         
+            var httpresult = await Http.PostAsJsonAsync("UserAccount/LoginUser", request);
 
             return await httpresult.ToResult<LoginUserResponse>();
         }
@@ -96,8 +96,8 @@ namespace Client.Infrastructure.Managers.UserAccount
 
         public async Task<IResult<UserReponse>> ValidatePasswordMatch(LoginUserRequest request)
         {
-            var model = request.ConvertToDto();
-            var httpresult = await Http.PostAsJsonAsync($"UserAccount/ValidatePasswordMatch", model);
+          
+            var httpresult = await Http.PostAsJsonAsync($"UserAccount/ValidatePasswordMatch", request);
             return await httpresult.ToResult<UserReponse>();
         }
     }

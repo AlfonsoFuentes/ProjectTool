@@ -3,6 +3,7 @@ using Client.Infrastructure.Managers.Brands;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.Brands;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 namespace ClientRadzen.Pages.Brands
@@ -15,10 +16,7 @@ namespace ClientRadzen.Pages.Brands
 
         [Inject]
         private IBrandService Service { get; set; } = null!;
-        protected override void OnInitialized()
-        {
-            Model.Validator += ValidateAsync;
-        }
+       
 
         private async Task SaveAsync()
         {
@@ -47,13 +45,14 @@ namespace ClientRadzen.Pages.Brands
         }
         bool NotValidated = true;
 
-        public void Dispose()
-        {
-            Model.Validator -= ValidateAsync;
-        }
        
 
-       
+
+        public async Task ChangeName(string name)
+        {
+            Model.Name = name;
+            await ValidateAsync();
+        }
 
         private void CancelAsync()
         {

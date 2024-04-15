@@ -14,7 +14,7 @@
 
                     <RadzenFormField Text="Name" Style="width: 100%;">
                         <RadzenTextArea Rows="2" @bind-Value=@Model.Name class="w-100"
-                                        @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
+                                        @oninput="@((arg)=>ChangeName(arg.Value!.ToString()!))"
                                         Name="name" />
 
                     </RadzenFormField>
@@ -37,28 +37,7 @@
 </RadzenStack>
 
  @code {
-    void ChangeName(string name)
-    {
-        Model.Name = name;
-
-
-    }
-    void NotifyMessage(NotificationSeverity Severity, string Leyend, List<string> messages)
-    {
-        AlertStyle alertStyle = Severity == NotificationSeverity.Success ? AlertStyle.Success : AlertStyle.Danger;
-
-        NotificationService.Notify(new NotificationMessage
-            {
-                Severity = Severity,
-                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">@Leyend</RadzenText>,
-            DetailContent = ns =>@<SimpleAlertMessage AlertStyle="@alertStyle" Messages=@messages></SimpleAlertMessage>,
-
-
-            Duration = Severity == NotificationSeverity.Success ? 2000 : 4000,
-        });
-
-    }
-    void ShowTooltip(ElementReference elementReference, string text) =>
-      TooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Right });
+    
+   
 }
 

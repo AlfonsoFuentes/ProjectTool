@@ -6,7 +6,7 @@ using Shared.Models.Suppliers;
 
 namespace Application.Features.Suppliers.Command
 {
-    public record CreateSupplierCommand(CreateSupplierRequestDto Data ):IRequest<IResult>;
+    public record CreateSupplierCommand(CreateSupplierRequest Data ):IRequest<IResult>;
 
     public class CreateSupplierCommandHandler:IRequestHandler<CreateSupplierCommand,IResult>
     {
@@ -24,7 +24,7 @@ namespace Application.Features.Suppliers.Command
 
            
             var row = Supplier.Create(request.Data.Name, request.Data.VendorCode,request.Data.TaxCodeLD,
-                request.Data.TaxCodeLP,request.Data.SupplierCurrency);
+                request.Data.TaxCodeLP,request.Data.SupplierCurrency.Id);
             row.NickName=request.Data.NickName;
 
               await Repository.AddSupplier(row);

@@ -7,26 +7,12 @@ namespace Shared.Models.MWO
 {
     public class UpdateMWORequest
     {
-        public Func<Task<bool>> Validator { get; set; } = null!;
+       
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public MWOTypeEnum Type { get; set; } = MWOTypeEnum.Replacement;
         public bool IsAssetProductive { get; set; } = true;
-        public UpdateMWORequestDto ConvertToDto()
-        {
-            return new UpdateMWORequestDto()
-            {
-                Id = Id,
-                Name = Name,
-                IsAssetProductive = IsAssetProductive,
-                PercentageAssetNoProductive = PercentageAssetNoProductive,
-                PercentageContingency = PercentageContingency,
-                PercentageEngineering = PercentageEngineering,
-                PercentageTaxForAlterations = PercentageTaxForAlterations,
-                Type = Type.Id,
-
-            };
-        }
+      
 
         public double PercentageAssetNoProductive { get; set; } = 19;
         public double PercentageEngineering { get; set; } = 6;
@@ -70,75 +56,6 @@ namespace Shared.Models.MWO
             return sumBudget + sumDrawings;
         }
 
-        public async Task ChangeName(string name)
-        {
-
-            Name = name;
-
-            if (Validator != null) await Validator();
-        }
-        public async Task ChangeType(MWOTypeEnum type)
-        {
-            Type = type;
-            if (Validator != null) await Validator();
-        }
-
-        public async Task ChangePercentageTaxes(string stringpercentage)
-        {
-
-            double percentage = 0;
-            if (!double.TryParse(stringpercentage, out percentage))
-            {
-
-            }
-
-            PercentageAssetNoProductive = percentage;
-            if (Validator != null) await Validator();
-        }
-        public async Task ChangePercentageEngineering(string stringpercentage)
-        {
-
-            double percentage = 0;
-            if (!double.TryParse(stringpercentage, out percentage))
-            {
-
-            }
-
-            PercentageEngineering = percentage;
-            if (Validator != null) await Validator();
-
-        }
-        public async Task ChangePercentageContingency(string stringpercentage)
-        {
-
-            double percentage = 0;
-            if (!double.TryParse(stringpercentage, out percentage))
-            {
-
-            }
-
-
-            PercentageContingency = percentage;
-            if (Validator != null) await Validator();
-
-        }
-        public async Task ChangeTaxForAlterations(string stringpercentage)
-        {
-
-            double percentage = 0;
-            if (!double.TryParse(stringpercentage, out percentage))
-            {
-
-            }
-
-            PercentageTaxForAlterations = percentage;
-            if (Validator != null) await Validator();
-
-        }
-        public async Task ChangeType()
-        {
-
-            if (Validator != null) await Validator();
-        }
+        
     }
 }

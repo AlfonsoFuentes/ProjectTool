@@ -60,12 +60,7 @@ namespace Application.Features.BudgetItems.Queries
                 IsMainItemTaxesNoProductive = e.IsMainItemTaxesNoProductive,
                 Quantity = e.Quantity,
 
-                //MWO = new()
-                //{
-                //    Id = mwo.Id,
-                //    Name = mwo.Name,
-                //    IsAssetProductive = mwo.IsAssetProductive,
-                //},
+               
                 Percentage = e.Percentage,
                 Brand = e.Brand == null ? string.Empty : e.Brand.Name,
                 

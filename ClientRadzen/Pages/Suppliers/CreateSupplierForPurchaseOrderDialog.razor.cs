@@ -3,6 +3,7 @@ using Client.Infrastructure.Managers.Suppliers;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.Suppliers;
+using System.ComponentModel.DataAnnotations;
 #nullable disable
 namespace ClientRadzen.Pages.Suppliers
 {
@@ -14,11 +15,7 @@ namespace ClientRadzen.Pages.Suppliers
 
         [Inject]
         private ISupplierService Service { get; set; } = null!;
-        protected override void OnInitialized()
-        {
-            Model.Validator += ValidateAsync;
-        }
-
+       
         private async Task SaveAsync()
         {
 
@@ -46,18 +43,30 @@ namespace ClientRadzen.Pages.Suppliers
         }
         bool NotValidated = true;
 
-        public void Dispose()
-        {
-            Model.Validator -= ValidateAsync;
-        }
-
-      
-
+        
        
         private void CancelAsync()
         {
             DialogService.Close(false);
         }
-
+        public async Task ChangeName(string name)
+        {
+            Model.Name = name;
+            await ValidateAsync();
+        }
+        public async Task ChangeNickName(string name)
+        {
+            Model.NickName = name;
+            await ValidateAsync();
+        }
+        public async Task ChangeVendorCode(string name)
+        {
+            Model.VendorCode = name;
+            await ValidateAsync();
+        }
+        public async Task ChangeSupplierCurrency()
+        {
+            await ValidateAsync();
+        }
     }
 }

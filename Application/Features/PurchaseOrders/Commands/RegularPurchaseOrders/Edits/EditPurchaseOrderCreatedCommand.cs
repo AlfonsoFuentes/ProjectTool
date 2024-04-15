@@ -6,7 +6,7 @@ using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edits
 {
 
-    public record EditPurchaseOrderCreatedCommand(EditPurchaseOrderRegularCreatedRequestDto Data) : IRequest<IResult>;
+    public record EditPurchaseOrderCreatedCommand(EditPurchaseOrderRegularCreatedRequest Data) : IRequest<IResult>;
 
     internal class EditPurchaseOrderCreatedCommandHandler : IRequestHandler<EditPurchaseOrderCreatedCommand, IResult>
     {
@@ -33,11 +33,11 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseOrder.PurchaseorderName = request.Data.PurchaseorderName;
             purchaseOrder.QuoteNo = request.Data.QuoteNo;
             purchaseOrder.SupplierId = request.Data.SupplierId;
-            purchaseOrder.QuoteCurrency = request.Data.QuoteCurrency;
+            purchaseOrder.QuoteCurrency = request.Data.QuoteCurrency.Id;
             purchaseOrder.USDCOP = request.Data.USDCOP;
             purchaseOrder.USDEUR = request.Data.USDEUR;
             purchaseOrder.MainBudgetItemId = request.Data.MainBudgetItemId;
-            purchaseOrder.POValueUSD = request.Data.PurchaseOrderItems.Sum(x => x.POValueUSD);
+            purchaseOrder.POValueCurrency = request.Data.SumPOValueCurrency;
             foreach (var row in purchaseOrder.PurchaseOrderItems)
             {
                 if (!request.Data.PurchaseOrderItems.Any(x => x.BudgetItemId == row.BudgetItemId))
@@ -45,21 +45,21 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                     AppDbContext.PurchaseOrderItems.Remove(row);
                 }
             }
-            foreach (var item in request.Data.PurchaseOrderItems)
+            foreach (var item in request.Data.PurchaseOrderItemNoBlank)
             {
                 var purchaseorderItem = await Repository.GetPurchaseOrderItemById(item.PurchaseOrderItemId);
                 if(purchaseorderItem==null)
                 {
-                    purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId, item.PurchaseorderItemName);
-                    purchaseorderItem.POValueUSD = item.POValueUSD;
+                    purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId, item.Name);
+                    purchaseorderItem.UnitaryValueCurrency = item.CurrencyUnitaryValue;
                     purchaseorderItem.Quantity = item.Quantity;
                     await Repository.AddPurchaseorderItem(purchaseorderItem);
                 }
                 else
                 {
-                    purchaseorderItem.Name = item.PurchaseorderItemName;
+                    purchaseorderItem.Name = item.Name;
                     purchaseorderItem.Quantity = item.Quantity;
-                    purchaseorderItem.POValueUSD = item.POValueUSD;
+                    purchaseorderItem.UnitaryValueCurrency = item.CurrencyUnitaryValue;
                     if (item.BudgetItemId != purchaseorderItem.BudgetItemId)
                         purchaseorderItem.ChangeBudgetItem(item.BudgetItemId);
                     await Repository.UpdatePurchaseOrderItem(purchaseorderItem);
@@ -70,7 +70,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
 
             await Repository.UpdatePurchaseOrder(purchaseOrder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            await MWORepository.UpdateDataForApprovedMWO(purchaseOrder.MWOId, cancellationToken);
+            //await MWORepository.UpdateDataForApprovedMWO(purchaseOrder.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"Purchase order :{request.Data.PurchaseorderName} was edited succesfully");

@@ -190,7 +190,10 @@ namespace Infrastructure.Persistence.Repositories
 
 
         }
-
+        public async Task<PurchaseOrder> GetPurchaseOrderToDeleteById(Guid PurchaseOrderId)
+        {
+            return (await Context.PurchaseOrders.FindAsync(PurchaseOrderId))!;
+        }
         public async Task<PurchaseOrder> GetPurchaseOrderById(Guid PurchaseOrderId)
         {
             return (await Context.PurchaseOrders
@@ -295,6 +298,11 @@ namespace Infrastructure.Persistence.Repositories
         {
             var result = await Context.PurchaseOrderItems.SingleOrDefaultAsync(x => x.BudgetItemId == TaxBudgetItemId && x.IsTaxNoProductive == true);
             return result!;
+        }
+        public Task RemovePurchaseOrder(PurchaseOrder item)
+        {
+            Context.PurchaseOrders.Remove(item);
+            return Task.CompletedTask;
         }
     }
 }

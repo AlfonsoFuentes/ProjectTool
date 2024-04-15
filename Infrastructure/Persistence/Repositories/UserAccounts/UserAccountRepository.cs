@@ -25,12 +25,12 @@ namespace Infrastructure.Persistence.Repositories.UserAccounts
             GenerateToken = generateToken;
         }
 
-        public async Task<IResult<RegisterUserResponse>> RegisterUser(RegisterUserRequestDto userDTO)
+        public async Task<IResult<RegisterUserResponse>> RegisterUser(RegisterUserRequest userDTO)
         {
             if (userDTO is null) return Result<RegisterUserResponse>.Fail("Model is empty");
             var newUser = new AplicationUser()
             {
-                InternalRole = userDTO.Role,
+                InternalRole = userDTO.Role.Name,
                 Email = userDTO.Email,
                 PasswordHash = userDTO.Password,
                 UserName = userDTO.Email
@@ -42,11 +42,11 @@ namespace Infrastructure.Persistence.Repositories.UserAccounts
             if (!createUser.Succeeded) return Result<RegisterUserResponse>.Fail(createUser.Errors.Select(x => x.Description).FirstOrDefault()!);
 
             //Assign Default Role : Admin to first registrar; rest is user
-            var checkUser = await roleManager.FindByNameAsync(userDTO.Role);
+            var checkUser = await roleManager.FindByNameAsync(userDTO.Role.Name);
             if (checkUser is null)
-                await roleManager.CreateAsync(new IdentityRole() { Name = userDTO.Role });
+                await roleManager.CreateAsync(new IdentityRole() { Name = userDTO.Role.Name });
 
-            await userManager.AddToRoleAsync(newUser, userDTO.Role);
+            await userManager.AddToRoleAsync(newUser, userDTO.Role.Name);
             RegisterUserResponse result = new()
             {
                 Email = userDTO.Email,
@@ -56,7 +56,7 @@ namespace Infrastructure.Persistence.Repositories.UserAccounts
             return Result<RegisterUserResponse>.Success(result, "Account Created succesfully");
         }
 
-        public async Task<IResult<LoginUserResponse>> LoginUser(LoginUserRequestDto loginDTO)
+        public async Task<IResult<LoginUserResponse>> LoginUser(LoginUserRequest loginDTO)
         {
             LoginUserResponse result = new()
             {

@@ -24,8 +24,7 @@ namespace Client.Infrastructure.Validators.Suppliers
             RuleFor(x => x.VendorCode).MustAsync(ReviewIfVendorCodeExist).When(x => !string.IsNullOrEmpty(x.VendorCode)).WithMessage(x => $"Vendor Code:{x.VendorCode} already exist");
             RuleFor(x => x.ContactEmail).MustAsync(ReviewIfEmailExist).When(x => !string.IsNullOrEmpty(x.ContactEmail)).WithMessage(x => $"Vendor Code:{x.ContactEmail} already exist");
             RuleFor(x => x.ContactEmail).EmailAddress().When(x => !string.IsNullOrEmpty(x.ContactEmail)).WithMessage(x => $"Must supply valid email");
-            RuleFor(x => x.ContactEmail).NotEmpty().WithMessage("Supplier email must be defined!");
-            RuleFor(x => x.ContactEmail).NotNull().WithMessage("Supplier email must be defined!");
+
         }
         async Task<bool> ReviewIfNameExist(UpdateSupplierRequest supplier, string name, CancellationToken cancellationToken)
         {

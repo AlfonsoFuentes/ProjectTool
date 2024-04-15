@@ -7,7 +7,7 @@ using Shared.Models.MWO;
 
 namespace Application.Features.MWOs.Commands
 {
-    public record CreateMWOCommand(CreateMWORequestDto Data) : IRequest<IResult>;
+    public record CreateMWOCommand(CreateMWORequest Data) : IRequest<IResult>;
 
     public class CreateMWOCommandHandler : IRequestHandler<CreateMWOCommand, IResult>
     {
@@ -25,7 +25,7 @@ namespace Application.Features.MWOs.Commands
         public async Task<IResult> Handle(CreateMWOCommand request, CancellationToken cancellationToken)
         {
           
-            var row = MWO.Create(request.Data.Name, request.Data.Type);
+            var row = MWO.Create(request.Data.Name, request.Data.Type.Id);
             row.IsAssetProductive = request.Data.IsAssetProductive;
             row.PercentageEngineering = request.Data.PercentageEngineering;
             row.PercentageContingency = request.Data.PercentageContingency;
@@ -46,7 +46,7 @@ namespace Application.Features.MWOs.Commands
 
             return Result.Fail($"{request.Data.Name} was not created succesfully");
         }
-        async Task CreateTaxesForNoProductive(MWO mwo, CreateMWORequestDto Data)
+        async Task CreateTaxesForNoProductive(MWO mwo, CreateMWORequest Data)
         {
             var taxitem = mwo.AddBudgetItem(BudgetItemTypeEnum.Taxes.Id);
 
@@ -56,7 +56,7 @@ namespace Application.Features.MWOs.Commands
             taxitem.IsMainItemTaxesNoProductive = true;
             await RepositoryBudgetItem.AddBudgetItem(taxitem);
         }
-        async Task CreateEngineeringItem(MWO mwo, CreateMWORequestDto Data)
+        async Task CreateEngineeringItem(MWO mwo, CreateMWORequest Data)
         {
             var budgetItem = mwo.AddBudgetItem(BudgetItemTypeEnum.Engineering.Id);
 
@@ -66,7 +66,7 @@ namespace Application.Features.MWOs.Commands
             budgetItem.IsNotAbleToEditDelete = true;
             await RepositoryBudgetItem.AddBudgetItem(budgetItem);
         }
-        async Task CreateContingencyItem(MWO mwo, CreateMWORequestDto Data)
+        async Task CreateContingencyItem(MWO mwo, CreateMWORequest Data)
         {
             var budgetItem = mwo.AddBudgetItem(BudgetItemTypeEnum.Contingency.Id);
 

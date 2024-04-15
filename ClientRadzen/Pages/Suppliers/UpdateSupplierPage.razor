@@ -14,7 +14,7 @@
             <RadzenColumn Size="12" SizeMD="4">
                 <RadzenFormField Text="Name" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.Name class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.Name"
-                                   @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
+                                   @oninput="@((arg)=>ChangeName(arg.Value!.ToString()!))"
                                    Name="name" />
 
                 </RadzenFormField>
@@ -33,7 +33,7 @@
             <RadzenColumn Size="12" SizeMD="4">
                 <RadzenFormField Text="Nick Name" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.NickName class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.Nickname"
-                                   @oninput="@((arg)=>Model.ChangeNickName(arg.Value!.ToString()!))"
+                                   @oninput="@((arg)=>ChangeNickName(arg.Value!.ToString()!))"
                                    Name="nickname" />
 
                 </RadzenFormField>
@@ -42,7 +42,7 @@
             <RadzenColumn Size="12" SizeMD="4">
                 <RadzenFormField Text="Email" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.ContactEmail class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.Email"
-                                   @oninput="@((arg)=>Model.ChangeEmail(arg.Value!.ToString()!))"
+                                   @oninput="@((arg)=>ChangeEmail(arg.Value!.ToString()!))"
                                    Name="email" />
 
                 </RadzenFormField>
@@ -53,7 +53,7 @@
             <RadzenColumn Size="12" SizeMD="4">
                 <RadzenFormField Text="Vendor Code" Style="width: 100%;">
                     <RadzenTextBox @bind-Value=@Model.VendorCode class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.GivenName"
-                                   @oninput="@((arg)=>Model.ChangeVendorCode(arg.Value!.ToString()!))"
+                                   @oninput="@((arg)=>ChangeVendorCode(arg.Value!.ToString()!))"
                                    Name="vendorcode" />
 
                 </RadzenFormField>
@@ -85,7 +85,7 @@
                  <RadzenFormField Text="Address" Style="width: 100%;">
                      <RadzenTextBox @bind-Value=@Model.Address class="w-100" AutoComplete AutoCompleteType="AutoCompleteType.AddressLevel1"
                                     @oninput="@((arg)=>Model.Address=arg.Value!.ToString()!)"
-                                    Name="addres" />
+                                    Name="address" />
 
                  </RadzenFormField>
              </RadzenColumn>
@@ -98,7 +98,7 @@
                                      AllowClear=true
                                      FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
                                      AllowFiltering="true"
-                                     Change="Model.ChangeSupplierCurrency"
+                                     Change="ChangeSupplierCurrency"
                                      TValue="CurrencyEnum" />
 
 

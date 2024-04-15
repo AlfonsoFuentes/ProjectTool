@@ -4,13 +4,15 @@ using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 using Shared.Models.PurchaseorderStatus;
 using Shared.Models.Suppliers;
 using Shared.Models.WayToReceivePurchaseOrdersEnums;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
 {
     public class ReceiveRegularPurchaseOrderRequest
     {
-        public Func<Task<bool>> Validator { get; set; } = null!;
+      
+       
         public Guid PurchaseOrderId { get; set; }
         public string PONumber { get; set; } = string.Empty;
         public string PurchaseorderName { get; set; } = string.Empty;
@@ -49,88 +51,9 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
         public WayToReceivePurchaseorderEnum WayToReceivePurchaseOrder { get; set; } = WayToReceivePurchaseorderEnum.None;
 
         public double PercentageToReceive { get; set; }
-        public async Task OnChangeWayToReceivePurchaseOrder(WayToReceivePurchaseorderEnum wayToReceivePurchaseOrder)
-        {
-
-
-
-            if (WayToReceivePurchaseOrder.Id != wayToReceivePurchaseOrder.Id)
-            {
-                WayToReceivePurchaseOrder = wayToReceivePurchaseOrder;
-                ClearValues();
-            }
-            if (WayToReceivePurchaseOrder.Id == WayToReceivePurchaseorderEnum.CompleteOrder.Id)
-            {
-                PercentageToReceive = Math.Round(SumPOPendingCurrency / SumPOValueCurrency * 100, 2);
-                foreach (var row in PurchaseOrderItemsToReceive)
-                {
-                    row.ReceivingCurrency = row.POPendingCurrency;
-
-
-                    row.ReceivePercentagePurchaseOrder = Math.Round(row.ReceivingCurrency / row.POValueCurrency * 100, 2);
-                }
-            }
-            if (Validator != null) await Validator();
-
-        }
-        void ClearValues()
-        {
-            foreach (var row in PurchaseOrderItemsToReceive)
-            {
-                row.ReceivingCurrency = 0;
-
-                row.ReceivePercentagePurchaseOrder = 0;
-            }
-        }
-        public async Task OnChangeReceivePercentagePurchaseOrder(string percentage)
-        {
-
-            double newpercentage = PercentageToReceive;
-            if (!double.TryParse(percentage, out newpercentage)) return;
-
-            if (!(newpercentage < 0 || newpercentage > 100))
-            {
-                PercentageToReceive = newpercentage;
-                if (newpercentage > MaxPercentageToReceive)
-                {
-                    PercentageToReceive = MaxPercentageToReceive;
-                }
-
-                foreach (var row in PurchaseOrderItemsToReceive)
-                {
-                    row.ReceivePercentagePurchaseOrder = PercentageToReceive;
-                }
-            }
-
-
-            if (Validator != null) await Validator();
-        }
-        public async Task OnChangeReceivingItem(ReceivePurchaseorderItemRequest item, string receivingvalue)
-        {
-            double newreceivingitem = item.ReceivingCurrency;
-            if (!double.TryParse(receivingvalue, out newreceivingitem)) return;
-            item.ReceivingCurrency = newreceivingitem;
-           
-            if (Validator != null) await Validator();
-        }
-        public async Task OnChangePercentageReceivingItem(ReceivePurchaseorderItemRequest item, string receivingpercentage)
-        {
-            double newpercentage = item.ReceivePercentagePurchaseOrder;
-            if (!double.TryParse(receivingpercentage, out newpercentage)) return;
-            if (!(newpercentage < 0 || newpercentage > 100))
-            {
-
-                if (newpercentage > item.MaxPercentageToReceive)
-                {
-                    newpercentage = item.MaxPercentageToReceive;
-                }
-                item.ReceivePercentagePurchaseOrder = newpercentage;
-
-            }
-
-
-            if (Validator != null) await Validator();
-        }
+       
+       
+        
         double _usdcop;
         public double TRMUSDCOP
         {
@@ -144,21 +67,7 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
                 }
             }
         }
-        public async Task ChangeTRMUSDCOP(string arg)
-        {
-
-            if (string.IsNullOrEmpty(arg))
-            {
-                return;
-            }
-            double usdcop = _usdcop;
-            if (!double.TryParse(arg, out usdcop))
-            {
-
-            }
-            TRMUSDCOP = usdcop;
-            if (Validator != null) await Validator();
-        }
+  
         double _usdeur;
         public double OldTRMUSDCOP { get; set; }
         public double OldTRMUSDEUR { get; set; }
@@ -178,21 +87,7 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
                 }
             }
         }
-        public async Task ChangeTRMUSDEUR(string arg)
-        {
-
-            if (string.IsNullOrEmpty(arg))
-            {
-                return;
-            }
-            double usdeur = _usdeur;
-            if (!double.TryParse(arg, out usdeur))
-            {
-
-            }
-            TRMUSDEUR = usdeur;
-            if (Validator != null) await Validator();
-        }
+       
         public WayToReceivePurchaseorderEnum WayToReceivePurchaseorderEnum { get; set; } = WayToReceivePurchaseorderEnum.None;
 
         public double SumPOValueUSD => PurchaseOrderItemsToReceive.Count == 0 ? 0 : PurchaseOrderItemsToReceive.Sum(x => x.POValueUSD);
@@ -210,25 +105,5 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
         public double SumPONewPendingUSD => PurchaseOrderItemsToReceive.Count == 0 ? 0 : PurchaseOrderItemsToReceive.Sum(x => x.PONewPendingUSD);
 
 
-        public async Task SetSupplier(SupplierResponse? _Supplier)
-        {
-
-            if (_Supplier == null)
-            {
-                PurchaseOrderCurrency = CurrencyEnum.COP;
-                return;
-            }
-            Supplier = _Supplier;
-
-
-            if (Validator != null) await Validator();
-            foreach (var row in PurchaseOrderItemsToReceive)
-            {
-                row.PurchaseOrderCurrency = _Supplier.SupplierCurrency;
-
-            }
-
-            PurchaseOrderCurrency = _Supplier.SupplierCurrency;
-        }
     }
 }

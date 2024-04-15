@@ -3,6 +3,7 @@ using Blazored.FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Client.Infrastructure.Managers.MWOS;
+using System.ComponentModel.DataAnnotations;
 namespace ClientRadzen.Pages.MWOPages
 {
     public partial class CreateMWOPage
@@ -11,10 +12,7 @@ namespace ClientRadzen.Pages.MWOPages
         private App MainApp { get; set; }
         CreateMWORequest Model { get; set; } = new();
 
-        protected override void OnInitialized()
-        {
-            Model.Validator += ValidateAsync;
-        }
+        
         [Inject]
         private IMWOService Service { get; set; } = null!;
 
@@ -57,10 +55,71 @@ namespace ClientRadzen.Pages.MWOPages
         }
         bool NotValidated = true;
 
-        public void Dispose()
+       
+        public async Task ChangeName(string name)
         {
-            Model.Validator -= ValidateAsync;
+
+            Model.Name = name;
+            await ValidateAsync();
+
         }
 
+        public async Task ChangePercentageTaxes(string stringpercentage)
+        {
+
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+            {
+
+            }
+
+            Model.PercentageAssetNoProductive = percentage;
+            await ValidateAsync();
+        }
+        public async Task ChangePercentageEngineering(string stringpercentage)
+        {
+
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+            {
+
+            }
+
+            Model.PercentageEngineering = percentage;
+            await ValidateAsync();
+
+        }
+        public async Task ChangePercentageContingency(string stringpercentage)
+        {
+
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+            {
+
+            }
+
+
+            Model.PercentageContingency = percentage;
+            await ValidateAsync();
+
+        }
+        public async Task ChangeTaxForAlterations(string stringpercentage)
+        {
+
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+            {
+
+            }
+
+            Model.PercentageTaxForAlterations = percentage;
+            await ValidateAsync();
+
+        }
+        public async Task ChangeType()
+        {
+
+            await ValidateAsync();
+        }
     }
 }

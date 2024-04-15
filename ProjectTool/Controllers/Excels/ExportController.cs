@@ -16,7 +16,7 @@ using System.Globalization;
 
 namespace Server.Controllers.Excels
 {
-    public partial class ExportController : Controller
+    public partial class ExportController : ControllerBase
     {
         public IQueryable ApplyQuery<T>(IQueryable<T> items, IQueryCollection query = null) where T : class
         {

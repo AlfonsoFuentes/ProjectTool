@@ -6,7 +6,7 @@ using Shared.Models.SapAdjust;
 
 namespace Application.Features.SapAdjusts.Commands
 {
-    public record UpdateSapAdjustCommand(UpdateSapAdjustRequestDto Data) : IRequest<IResult>;
+    public record UpdateSapAdjustCommand(UpdateSapAdjustRequest Data) : IRequest<IResult>;
     internal class UpdateSapAdjustCommandHandler : IRequestHandler<UpdateSapAdjustCommand, IResult>
     {
         private ISapAdjustRepository Repository { get; set; }

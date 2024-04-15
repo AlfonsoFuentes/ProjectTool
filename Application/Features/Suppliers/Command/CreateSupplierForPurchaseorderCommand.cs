@@ -7,7 +7,7 @@ using Shared.Models.Suppliers;
 
 namespace Application.Features.Suppliers.Command
 {
-    public record CreateSupplierForPurchaseorderCommand(CreateSupplierRequestDto Data) : IRequest<IResult<SupplierResponse>>;
+    public record CreateSupplierForPurchaseorderCommand(CreateSupplierRequest Data) : IRequest<IResult<SupplierResponse>>;
     public class CreateSupplierForPurchaseorderCommandHandler : IRequestHandler<CreateSupplierForPurchaseorderCommand, IResult<SupplierResponse>>
     {
         private ISupplierRepository Repository { get; set; }
@@ -23,7 +23,7 @@ namespace Application.Features.Suppliers.Command
         {
 
             var row = Supplier.Create(request.Data.Name, request.Data.VendorCode, request.Data.TaxCodeLD,
-                request.Data.TaxCodeLP, request.Data.SupplierCurrency);
+                request.Data.TaxCodeLP, request.Data.SupplierCurrency.Id);
 
             row.NickName = request.Data.NickName;
             await Repository.AddSupplier(row);

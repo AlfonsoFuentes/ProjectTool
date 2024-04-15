@@ -6,7 +6,7 @@ using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Creates
 {
-    public record ReceivePurchaseOrderCommand(ReceiveRegularPurchaseOrderRequestDto Data) : IRequest<IResult>;
+    public record ReceivePurchaseOrderCommand(ReceiveRegularPurchaseOrderRequest Data) : IRequest<IResult>;
     internal class ReceivePurchaseOrderCommandHandler : IRequestHandler<ReceivePurchaseOrderCommand, IResult>
     {
         private IPurchaseOrderRepository Repository { get; set; }
@@ -28,15 +28,15 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
                 return Result.Fail($"Not found data approving purchase order: {request.Data.PONumber}");
 
             }
-            purchaseorder.PurchaseOrderStatus = request.Data.SumPOPendingUSD == 0 ? PurchaseOrderStatusEnum.Closed.Id : PurchaseOrderStatusEnum.Receiving.Id;
-            purchaseorder.Actual = request.Data.SumPOActualUSD;
+            purchaseorder.PurchaseOrderStatus = request.Data.SumPONewPendingCurrency == 0 ? PurchaseOrderStatusEnum.Closed.Id : PurchaseOrderStatusEnum.Receiving.Id;
+            var sumPOactualCurrency = request.Data.SumPONewActualCurrency;
             purchaseorder.POClosedDate = purchaseorder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id ? DateTime.UtcNow : null;
             foreach (var row in request.Data.PurchaseOrderItemsToReceive)
             {
                 var item = await Repository.GetPurchaseOrderItemById(row.PurchaseOrderItemId);
                 if (item != null)
                 {
-                    item.Actual = row.POActualUSD;
+                    item.ActualCurrency= row.PONewActualCurrency;
                     await Repository.UpdatePurchaseOrderItem(item);
                 }
 
@@ -46,8 +46,9 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
                 var PurchaseorderItemTax = await Repository.GetPurchaseOrderItemForTaxesItemById(purchaseorder.Id);
                 if (PurchaseorderItemTax != null)
                 {
-                    var sumActualPOUSD = request.Data.SumPOActualUSD;
-                    PurchaseorderItemTax.Actual = sumActualPOUSD * PurchaseorderItemTax.BudgetItem.Percentage / 100;
+                    var sumTaxPOCurrency = request.Data.SumPONewActualCurrency;
+                    sumPOactualCurrency += sumTaxPOCurrency;
+                    PurchaseorderItemTax.ActualCurrency = sumTaxPOCurrency * PurchaseorderItemTax.BudgetItem.Percentage / 100;
                     await Repository.UpdatePurchaseOrderItem(PurchaseorderItemTax);
 
                 }
@@ -59,7 +60,9 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
                     var purchaseorderItemTaxForAlteration = await Repository.GetPurchaseOrderItemForTaxesForAlterationById(purchaseorder.Id, row.BudgetItemId);
                     if (purchaseorderItemTaxForAlteration != null)
                     {
-                        purchaseorderItemTaxForAlteration.Actual = row.POActualUSD * request.Data.PercentageAlteration / 100.0;
+                        var TaxAlterationCurrency= row.PONewActualCurrency * request.Data.PercentageAlteration / 100.0;
+                        sumPOactualCurrency += TaxAlterationCurrency;
+                        purchaseorderItemTaxForAlteration.ActualCurrency = TaxAlterationCurrency;
                         await Repository.UpdatePurchaseOrderItem(purchaseorderItemTaxForAlteration);
                     }
 
@@ -67,10 +70,10 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
 
             }
 
-
+            purchaseorder.ActualCurrency = sumPOactualCurrency;
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
+            //await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"Purchase order: {purchaseorder.PONumber} was received succesfully"); ;

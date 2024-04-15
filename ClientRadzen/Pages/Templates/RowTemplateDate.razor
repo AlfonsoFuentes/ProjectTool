@@ -1,0 +1,14 @@
+﻿<RadzenRow JustifyContent="JustifyContent.SpaceBetween">
+    <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5"><b>@Label</b></RadzenText>
+    <RadzenText TextStyle="TextStyle.Caption">@SValue</RadzenText>
+</RadzenRow>
+
+@code {
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+    [Parameter]
+    public DateTime Value { get; set; } = DateTime.Now;
+
+    CultureInfo ci = new CultureInfo("en-US");
+    string SValue => Value.ToString("D", ci);
+}

@@ -41,6 +41,7 @@ namespace Infrastructure.Persistence.Repositories
         {
 
             var context = await Context.MWOs
+                .Include(x=>x.BudgetItems)
                 .Include(x => x.SapAdjusts)
                 .AsNoTracking()
                 .AsSplitQuery()

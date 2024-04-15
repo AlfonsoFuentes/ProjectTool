@@ -14,10 +14,7 @@ namespace ClientRadzen.Pages.Brands
 
         [Inject]
         private IBrandService Service { get; set; } = null!;
-        protected override void OnInitialized()
-        {
-            Model.Validator += ValidateAsync;
-        }
+       
 
         private async Task SaveAsync()
         {
@@ -51,10 +48,12 @@ namespace ClientRadzen.Pages.Brands
         }
         bool NotValidated = true;
 
-        public void Dispose()
+        public async Task ChangeName(string name)
         {
-            Model.Validator -= ValidateAsync;
+            Model.Name = name;
+            await ValidateAsync();
         }
+
     }
 
 }

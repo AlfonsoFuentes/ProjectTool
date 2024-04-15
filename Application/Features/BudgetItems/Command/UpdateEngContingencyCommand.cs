@@ -6,7 +6,7 @@ using Shared.Models.BudgetItemTypes;
 
 namespace Application.Features.BudgetItems.Command
 {
-    public record UpdateEngContingencyCommand(UpdateBudgetItemRequestDto Data) : IRequest<IResult>;
+    public record UpdateEngContingencyCommand(UpdateBudgetItemRequest Data) : IRequest<IResult>;
     public class UpdateEngContingencyCommandHandler : IRequestHandler<UpdateEngContingencyCommand, IResult>
     {
         private IBudgetItemRepository Repository { get; set; }
@@ -51,7 +51,7 @@ namespace Application.Features.BudgetItems.Command
            
             await AppDbContext.SaveChangesAsync(cancellationToken);
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
-            await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
+            //await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} updated succesfully!");

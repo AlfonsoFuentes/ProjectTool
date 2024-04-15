@@ -6,7 +6,7 @@ using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Creates
 {
-    public record ApprovePurchaseOrderForAlterationCommand(ApprovedRegularPurchaseOrderRequestDto Data) : IRequest<IResult>;
+    public record ApprovePurchaseOrderForAlterationCommand(ApprovedRegularPurchaseOrderRequest Data) : IRequest<IResult>;
     internal class ApprovePurchaseOrderForAlterationCommandHandler : IRequestHandler<ApprovePurchaseOrderForAlterationCommand, IResult>
     {
         private IPurchaseOrderRepository Repository { get; set; }
@@ -33,22 +33,23 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.PONumber = request.Data.PONumber;
             purchaseorder.POExpectedDateDate = request.Data.ExpectedDate!.Value;
 
-            var sumPOValueUSD = request.Data.PurchaseOrderItems.Count == 0 ? 0 :
-                   request.Data.PurchaseOrderItems.Sum(x => x.POValueUSD);
-            foreach (var row in request.Data.PurchaseOrderItems)
+            var sumPOValueCurrency = request.Data.PurchaseOrderItems.Count == 0 ? 0 :
+                   request.Data.PurchaseOrderItems.Sum(x => x.TotalCurrencyValue);
+            foreach (var row in request.Data.PurchaseOrderItemNoBlank)
             {
                 var purchaseordertaxestem = purchaseorder.AddPurchaseOrderItemForAlteration(row.BudgetItemId,
                     $"{request.Data.PONumber} Tax {row.BudgetItemName} {purchaseorder.MWO.PercentageTaxForAlterations}%");
-                purchaseordertaxestem.POValueUSD = purchaseorder.MWO.PercentageTaxForAlterations / 100.0 * row.POValueUSD;
+                var povalucurrency = purchaseorder.MWO.PercentageTaxForAlterations / 100.0 * row.TotalCurrencyValue;
+                purchaseordertaxestem.UnitaryValueCurrency = povalucurrency;
                 purchaseordertaxestem.Quantity = 1;
-                sumPOValueUSD += purchaseordertaxestem.POValueUSD;
+                sumPOValueCurrency += povalucurrency;
                 await Repository.AddPurchaseorderItem(purchaseordertaxestem);
             }
 
-            purchaseorder.POValueUSD = sumPOValueUSD;
+            purchaseorder.POValueCurrency = sumPOValueCurrency;
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
+            //await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"Purchase order: {purchaseorder.PONumber} was approved succesfully"); ;

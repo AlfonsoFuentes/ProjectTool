@@ -49,7 +49,7 @@ namespace Application.Features.ChangeUser
                     _appDbContext.PurchaseOrders.Update(purchaseitem);
                     foreach(PurchaseOrderItem purchaseOrderItem in purchaseitem.PurchaseOrderItems)
                     {
-                        purchaseOrderItem.POValueUSD=purchaseOrderItem.POValueUSD;
+                        purchaseOrderItem.UnitaryValueCurrency=purchaseOrderItem.UnitaryValueCurrency;
                         _appDbContext.PurchaseOrderItems.Update(purchaseOrderItem);
                     }
                 }

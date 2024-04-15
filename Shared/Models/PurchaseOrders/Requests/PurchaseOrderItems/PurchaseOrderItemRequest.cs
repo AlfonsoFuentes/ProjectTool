@@ -12,23 +12,34 @@ namespace Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems
             Name = _BudgetItem.Name;
             BudgetItemId = _BudgetItem.BudgetItemId;
             Budget = _BudgetItem.Budget;
-            BudgetAssigned = _BudgetItem.Assigned;
-            BudgetPotencial = _BudgetItem.Potencial;
+            AssignedCurrency = _BudgetItem.Assigned;
+            PotencialCurrency = _BudgetItem.Potencial;
             TRMUSDCOP = usdcop;
             TRMUSDEUR = usdeur;
         }
-        public double Budget {  get; set; }
-        public double BudgetAssigned {  get; set; }
-        public double BudgetPotencial {  get; set; }
+       
+        public double Budget { get; set; }
+        public double AssignedCurrency {  get; set; }
+        public double PotencialCurrency {  get; set; }
+        public double ActualCurrency {  get; set; }
+        public double AssignedUSD => Currency.Id == CurrencyEnum.USD.Id ? AssignedCurrency :
+            Currency.Id == CurrencyEnum.COP.Id ? AssignedCurrency / TRMUSDCOP :
+            AssignedCurrency / TRMUSDEUR;
+        public double PotencialUSD => Currency.Id == CurrencyEnum.USD.Id ? PotencialCurrency :
+            Currency.Id == CurrencyEnum.COP.Id ? PotencialCurrency / TRMUSDCOP :
+            PotencialCurrency / TRMUSDEUR;
+        public double ActualUSD => Currency.Id == CurrencyEnum.USD.Id ? ActualCurrency :
+            Currency.Id == CurrencyEnum.COP.Id ? ActualCurrency / TRMUSDCOP :
+            ActualCurrency / TRMUSDEUR;
         public Guid PurchaseOrderItemId { get; set; }
         public string Name { get; set; } = string.Empty;
-      
+
         public Guid BudgetItemId { get; set; } = Guid.Empty;
         public string BudgetItemName { get; set; } = string.Empty;
         public double Quantity { get; set; } = 1;
-        public double POItemActualUSD { get; set; }
        
-        public double POItemPendingUSD => POItemValueUSD - POItemActualUSD;
+
+        public double POItemPendingUSD => POValueUSD - ActualUSD- PotencialUSD;
         public void ChangeQuantity(string arg)
         {
 
@@ -76,22 +87,22 @@ namespace Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems
             CurrencyUnitaryValue = currencyvalue;
         }
         CurrencyEnum _QuoteCurrency = CurrencyEnum.COP;
-        public CurrencyEnum QuoteCurrency
+        public CurrencyEnum Currency
         {
             get { return _QuoteCurrency; }
             set { _QuoteCurrency = value; }
         }
 
-        public double POItemCurrencyValue => Quantity * CurrencyUnitaryValue;
+        public double TotalCurrencyValue => Quantity * CurrencyUnitaryValue;
         public double CurrencyUnitaryValue { get; set; }
 
 
-        public double POItemValueUSD => Quantity * UnitaryCostInUSD;
-        public double UnitaryCostInUSD => QuoteCurrency.Id == CurrencyEnum.USD.Id ?
-            CurrencyUnitaryValue : QuoteCurrency.Id == CurrencyEnum.COP.Id ?
+        public double POValueUSD => Quantity * UnitaryCostInUSD;
+        public double UnitaryCostInUSD => Currency.Id == CurrencyEnum.USD.Id ?
+            CurrencyUnitaryValue : Currency.Id == CurrencyEnum.COP.Id ?
            TRMUSDCOP == 0 ? 0 : CurrencyUnitaryValue / TRMUSDCOP : TRMUSDEUR == 0 ? 0 : CurrencyUnitaryValue / TRMUSDEUR;
-        public double TRMUSDCOP { get;  set; } = 1;
-        public double TRMUSDEUR { get;  set; } = 1;
+        public double TRMUSDCOP { get; set; } = 1;
+        public double TRMUSDEUR { get; set; } = 1;
         public void SetUSDCOP(double usdcop)
         {
             TRMUSDCOP = usdcop;

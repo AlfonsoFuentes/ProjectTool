@@ -10,7 +10,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
     public partial class PurchaseOrderDataMain
     {
         [Inject]
-        private IPurchaseOrderService Service { get; set; } = null!;
+        public IPurchaseOrderService Service { get; set; } = null!;
 
         public IEnumerable<PurchaseOrderResponse> PurchaseordersCreated => Response.PurchaseordersCreated;
         public IEnumerable<PurchaseOrderResponse> PurchaseordersToReceive => Response.PurchaseordersApproved;
@@ -20,7 +20,12 @@ namespace ClientRadzen.Pages.PurchaseOrders
 
         protected override async Task OnInitializedAsync()
         {
+            await UpdateAll();
+           
 
+        }
+        public async Task UpdateAll()
+        {
             var result = await Service.GetAllPurchaseOrders();
             if (result.Succeeded)
             {

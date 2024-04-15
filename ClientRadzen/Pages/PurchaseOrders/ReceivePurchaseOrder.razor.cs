@@ -6,8 +6,12 @@ using ClientRadzen.Pages.Suppliers;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.BudgetItems;
+using Shared.Models.Currencies;
+using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
 using Shared.Models.Suppliers;
+using Shared.Models.WayToReceivePurchaseOrdersEnums;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClientRadzen.Pages.PurchaseOrders
 {
@@ -56,7 +60,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             if (result.Succeeded)
             {
                 Model = result.Data;
-                Model.Validator += ValidateAsync;
+               
                
             }
 
@@ -114,7 +118,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
                 new DialogOptions() { Width = "400px", Height = "450px", Resizable = true, Draggable = true });
             if (result != null)
             {
-                await Model.SetSupplier(result as SupplierResponse);
+                await SetSupplier(result as SupplierResponse);
                 var resultData = await SupplierService.GetAllSupplier();
                 if (resultData.Succeeded)
                 {
@@ -146,7 +150,138 @@ namespace ClientRadzen.Pages.PurchaseOrders
             Model.TRMUSDEUR = Model.OldTRMUSDEUR;
             UpdateCurrentTRM = false;
         }
+        public async Task OnChangeWayToReceivePurchaseOrder(WayToReceivePurchaseorderEnum wayToReceivePurchaseOrder)
+        {
 
+
+
+            if (Model.WayToReceivePurchaseOrder.Id != wayToReceivePurchaseOrder.Id)
+            {
+                Model.WayToReceivePurchaseOrder = wayToReceivePurchaseOrder;
+                ClearValues();
+            }
+            if (Model.WayToReceivePurchaseOrder.Id == WayToReceivePurchaseorderEnum.CompleteOrder.Id)
+            {
+                Model.PercentageToReceive = Math.Round(Model.SumPOPendingCurrency / Model.SumPOValueCurrency * 100, 2);
+                foreach (var row in Model.PurchaseOrderItemsToReceive)
+                {
+                    row.ReceivingCurrency = row.POPendingCurrency;
+
+
+                    row.ReceivePercentagePurchaseOrder = Math.Round(row.ReceivingCurrency / row.POValueCurrency * 100, 2);
+                }
+            }
+            await ValidateAsync();
+
+        }
+        void ClearValues()
+        {
+            foreach (var row in Model.PurchaseOrderItemsToReceive)
+            {
+                row.ReceivingCurrency = 0;
+
+                row.ReceivePercentagePurchaseOrder = 0;
+            }
+        }
+        public async Task SetSupplier(SupplierResponse? _Supplier)
+        {
+
+            if (_Supplier == null)
+            {
+                Model.PurchaseOrderCurrency = CurrencyEnum.COP;
+                return;
+            }
+            Model.Supplier = _Supplier;
+
+
+            await ValidateAsync();
+            foreach (var row in Model.PurchaseOrderItemsToReceive)
+            {
+                row.PurchaseOrderCurrency = _Supplier.SupplierCurrency;
+
+            }
+
+            Model.PurchaseOrderCurrency = _Supplier.SupplierCurrency;
+        }
+        public async Task ChangeTRMUSDEUR(string arg)
+        {
+
+            if (string.IsNullOrEmpty(arg))
+            {
+                return;
+            }
+            double usdeur = Model.OldTRMUSDEUR;
+            if (!double.TryParse(arg, out usdeur))
+            {
+
+            }
+            Model.TRMUSDEUR = usdeur;
+            await ValidateAsync();
+        }
+        public async Task OnChangeReceivePercentagePurchaseOrder(string percentage)
+        {
+
+            double newpercentage = Model.PercentageToReceive;
+            if (!double.TryParse(percentage, out newpercentage)) { };
+
+            if (!(newpercentage < 0 || newpercentage > 100))
+            {
+                Model.PercentageToReceive = newpercentage;
+                if (newpercentage > Model.MaxPercentageToReceive)
+                {
+                    Model.PercentageToReceive = Model.MaxPercentageToReceive;
+                }
+
+                foreach (var row in Model.PurchaseOrderItemsToReceive)
+                {
+                    row.ReceivePercentagePurchaseOrder = Model.PercentageToReceive;
+                }
+            }
+
+
+            await ValidateAsync();
+        }
+        public async Task OnChangeReceivingItem(ReceivePurchaseorderItemRequest item, string receivingvalue)
+        {
+            double newreceivingitem = item.ReceivingCurrency;
+            if (!double.TryParse(receivingvalue, out newreceivingitem)) { };
+            item.ReceivingCurrency = newreceivingitem;
+
+            await ValidateAsync();
+        }
+        public async Task OnChangePercentageReceivingItem(ReceivePurchaseorderItemRequest item, string receivingpercentage)
+        {
+            double newpercentage = item.ReceivePercentagePurchaseOrder;
+            if (!double.TryParse(receivingpercentage, out newpercentage)) { };
+            if (!(newpercentage < 0 || newpercentage > 100))
+            {
+
+                if (newpercentage > item.MaxPercentageToReceive)
+                {
+                    newpercentage = item.MaxPercentageToReceive;
+                }
+                item.ReceivePercentagePurchaseOrder = newpercentage;
+
+            }
+
+
+            await ValidateAsync();
+        }
+        public async Task ChangeTRMUSDCOP(string arg)
+        {
+
+            if (string.IsNullOrEmpty(arg))
+            {
+                return;
+            }
+            double usdcop = Model.OldTRMUSDCOP;
+            if (!double.TryParse(arg, out usdcop))
+            {
+
+            }
+            Model.TRMUSDCOP = usdcop;
+            await ValidateAsync();
+        }
 
     }
 }

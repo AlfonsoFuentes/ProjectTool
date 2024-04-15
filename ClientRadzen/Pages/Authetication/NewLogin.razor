@@ -29,7 +29,7 @@
                     {
                         <RadzenFormField Text="Password" Style="width: 100%;">
                             <RadzenPassword @bind-Value=@Model.Password AutoComplete=true aria-label="enter password"
-                                            @oninput="@((arg)=>Model.ChangePassword(arg.Value!.ToString()!))"
+                                            @oninput="@((arg)=>ChangePassword(arg.Value!.ToString()!))"
                                             class="w-100" Name="password" AutoCompleteType="AutoCompleteType.CurrentPassword" />
 
                         </RadzenFormField>
@@ -39,7 +39,7 @@
                     {
                         <RadzenFormField Text="New Password" Style="width: 100%;">
                             <RadzenPassword @bind-Value=@Model.NewPassword AutoComplete=true aria-label="enter password"
-                                            @oninput="@((arg)=>Model.ChangeNewPassword(arg.Value!.ToString()!))"
+                                            @oninput="@((arg)=>ChangeNewPassword(arg.Value!.ToString()!))"
                                             class="w-100" Name="newpassword" AutoCompleteType="AutoCompleteType.CurrentPassword" />
 
                         </RadzenFormField>

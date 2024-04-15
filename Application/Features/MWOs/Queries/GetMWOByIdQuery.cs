@@ -7,6 +7,7 @@ using Shared.Models.BudgetItemTypes;
 using Shared.Models.MWO;
 using Shared.Models.MWOStatus;
 using Shared.Models.MWOTypes;
+using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.MWOs.Queries
 {
@@ -24,9 +25,9 @@ namespace Application.Features.MWOs.Queries
 
         public async Task<IResult<MWOResponse>> Handle(GetMWOByIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await Repository.GetMWOById(request.Id);
-            if (result == null) return Result<MWOResponse>.Fail("Not Found");
             var mwo = await Repository.GetMWOWithItemsById(request.Id);
+            if (mwo == null) return Result<MWOResponse>.Fail("Not Found");
+
             MWOResponse retorno = new()
             {
                 Id = mwo.Id,
@@ -36,15 +37,15 @@ namespace Application.Features.MWOs.Queries
                 PercentageContingency = mwo.PercentageContingency,
                 PercentageEngineering = mwo.PercentageEngineering,
                 MWOType = MWOTypeEnum.GetType(mwo.Type),
-                Capital = mwo.Capital,
-                Expenses = mwo.Expenses,
-                PotencialCapital = mwo.PotentialCommitmentCapital,
-                PotencialExpenses = mwo.PotentialCommitmentExpenses,
-                ActualCapital = mwo.ActualCapital,
-                ActualExpenses = mwo.ActualExpenses,
-                CommitmentCapital = mwo.CommitmentCapital,
-                CommitmentExpenses = mwo.CommitmentExpenses,
-                Status=MWOStatusEnum.GetType(mwo.Status),
+                Capital = mwo.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+                Expenses = mwo.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+                PotencialCapital = mwo.PurchaseOrders.Where(x => x.IsAlteration == false && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                PotencialExpenses = mwo.PurchaseOrders.Where(x => x.IsAlteration == true && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
+                ActualCapital = mwo.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.ActualUSD),
+                ActualExpenses = mwo.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.ActualUSD),
+                POValueCapital = mwo.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.POValueUSD),
+                POValueExpenses = mwo.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.POValueUSD),
+                Status = MWOStatusEnum.GetType(mwo.Status),
 
             };
 

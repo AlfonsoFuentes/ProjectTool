@@ -1,7 +1,9 @@
 ﻿using Application.Interfaces;
+using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Commons.UserManagement;
+using Shared.Models.BudgetItemTypes;
 using Shared.Models.SapAdjust;
 using System;
 using System.Collections.Generic;
@@ -25,11 +27,9 @@ namespace Application.Features.SapAdjusts.Queries
 
         public async Task<IResult<SapAdjustResponseList>> Handle(GetSapAdjustByMWOIdQuery request, CancellationToken cancellationToken)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
+          
             var query = await Repository.GetSapAdjustsByMWOId(request.MWOId);
-            stopwatch.Stop();
-            var elapas1=stopwatch.ElapsedMilliseconds;
-            stopwatch.Restart();
+          
             SapAdjustResponseList response = new()
             {
                 MWOName = query.Name,
@@ -48,12 +48,12 @@ namespace Application.Features.SapAdjusts.Queries
                     PotencialSap = x.PotencialSap,
                     PotencialSoftware = x.PotencialSoftware,
                     SapAdjustId = x.Id,
-                    BudgetCapital=query.Capital,
-                    
-                }).ToList(),
+                    BudgetCapital = query.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+
+                }),
             };
-            stopwatch.Stop();
-            var elapse2=stopwatch.ElapsedMilliseconds;
+          
+ 
           
             
 

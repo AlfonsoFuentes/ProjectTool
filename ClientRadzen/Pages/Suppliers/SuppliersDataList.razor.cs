@@ -1,12 +1,7 @@
 ﻿using Client.Infrastructure.Managers.Suppliers;
 using Microsoft.AspNetCore.Components;
-using Radzen.Blazor;
 using Radzen;
 using Shared.Models.Suppliers;
-using Client.Infrastructure.Managers.Brands;
-using Microsoft.AspNetCore.Components.Web;
-using Shared.Models.Brands;
-using Azure;
 #nullable disable
 namespace ClientRadzen.Pages.Suppliers
 {
@@ -20,16 +15,16 @@ namespace ClientRadzen.Pages.Suppliers
         List<SupplierResponse> OriginalData { get; set; } = new();
 
         string nameFilter = string.Empty;
-        IQueryable<SupplierResponse> FilteredItems => OriginalData?.Where(x => 
-        x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)||
-        x.NickName.Contains(nameFilter,StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
+        IQueryable<SupplierResponse> FilteredItems => OriginalData?.Where(x =>
+        x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
+        x.NickName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();
         protected override async Task OnInitializedAsync()
         {
 
-           
+
             await UpdateAll();
         }
-        
+
         async Task UpdateAll()
         {
             var result = await Service.GetAllSupplier();
@@ -42,7 +37,7 @@ namespace ClientRadzen.Pages.Suppliers
 
 
 
-      
+
         void EditByForm(SupplierResponse Response)
         {
             _NavigationManager.NavigateTo($"/UpdateSupplier/{Response.Id}");
@@ -57,7 +52,7 @@ namespace ClientRadzen.Pages.Suppliers
                 var result = await Service.Delete(response);
                 if (result.Succeeded)
                 {
-                   MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+                    MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
                     await UpdateAll();
                 }
@@ -69,11 +64,27 @@ namespace ClientRadzen.Pages.Suppliers
             }
 
         }
-      
+
         private void AddNew()
         {
             _NavigationManager.NavigateTo($"/CreateSupplier");
         }
+        async Task ExporToExcel()
+        {
+            var result = await Service.ExporToExcel();
+            if (result.Succeeded)
+            {
+                var downloadresult = await blazorDownloadFileService.DownloadFile(result.Data.ExportFileName,
+                   result.Data.Data, contentType: result.Data.ContentType);
+                if (downloadresult.Succeeded)
+                {
+                    MainApp.NotifyMessage(NotificationSeverity.Success, "Export Excel", new() { "Export excel succesfully"});
+                   
 
+                }
+            }
+
+
+        }
     }
 }

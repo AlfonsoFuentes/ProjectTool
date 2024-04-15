@@ -26,13 +26,13 @@ namespace Server.Controllers.UserAccounts
         }
 
         [HttpPost("RegisterUser")]
-        public async Task<IActionResult> RegisterUser(RegisterUserRequestDto request)
+        public async Task<IActionResult> RegisterUser(RegisterUserRequest request)
         {
 
             return Ok(await Mediator.Send(new RegisterUserCommand(request)));
         }
         [HttpPost("LoginUser")]
-        public async Task<IActionResult> LoginUser(LoginUserRequestDto request)
+        public async Task<IActionResult> LoginUser(LoginUserRequest request)
         {
             var result = await Mediator.Send(new LoginUserCommand(request));
            
@@ -63,7 +63,7 @@ namespace Server.Controllers.UserAccounts
             return Ok(await Mediator.Send(new ValidatePasswordConfirmedQuery(email)));
         }
         [HttpPost("ValidatePasswordMatch")]
-        public async Task<IActionResult> ValidatePasswordMatch(LoginUserRequestDto user)
+        public async Task<IActionResult> ValidatePasswordMatch(LoginUserRequest user)
         {
 
             return Ok(await Mediator.Send(new ValidatePasswordMatchQuery(user)));

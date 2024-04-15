@@ -5,16 +5,21 @@ using Client.Infrastructure.Managers.PurchaseOrders;
 using Client.Infrastructure.Managers.Suppliers;
 using ClientRadzen.Pages.Suppliers;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Radzen;
+using Radzen.Blazor;
 using Shared.Models.BudgetItems;
+using Shared.Models.Currencies;
+using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
 using Shared.Models.PurchaseOrders.Responses;
 using Shared.Models.Suppliers;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 namespace ClientRadzen.Pages.PurchaseOrders
 {
-    public partial class CreateRegularPurchaseOrder : IDisposable
+    public partial class CreateRegularPurchaseOrder
     {
         [CascadingParameter]
         public App MainApp { get; set; }
@@ -51,8 +56,8 @@ namespace ClientRadzen.Pages.PurchaseOrders
 
         BudgetItemApprovedResponse ItemToAdd;
 
-       
-       protected override async Task OnInitializedAsync()
+
+        protected override async Task OnInitializedAsync()
         {
             var resultSupplier = await SupplierService.GetAllSupplier();
             if (resultSupplier.Succeeded)
@@ -60,26 +65,26 @@ namespace ClientRadzen.Pages.PurchaseOrders
                 Suppliers = resultSupplier.Data;
 
             }
-
+            Model = new();
+            Model.USDCOP = MainApp.RateList == null ? 4000 : Math.Round(MainApp.RateList.COP, 2);
+            Model.USDEUR = MainApp.RateList == null ? 1 : Math.Round(MainApp.RateList.EUR, 2);
             var result = await BudgetItemService.GetApprovedBudgetItemsById(BudgetItemId);
             if (result.Succeeded)
             {
-                Model = new();
-                Model.SetMainBudgetItem(result.Data);
-                Model.Validator += ValidateAsync;
+               
+                SetMainBudgetItem(result.Data);
+
 
 
             }
 
+           
 
-            Model.TRMUSDCOP = MainApp.RateList == null ? 4000 : Math.Round(MainApp.RateList.COP, 2);
-            Model.TRMUSDEUR = MainApp.RateList == null ? 1 : Math.Round(MainApp.RateList.EUR, 2);
-          
 
             var resultBudgetItems = await Service.GetBudgetItemsToCreatePurchaseOrder(Model.MainBudgetItemId);
             if (resultBudgetItems.Succeeded)
             {
-               
+
                 OriginalBudgetItems = resultBudgetItems.Data.BudgetItems;
             }
             StateHasChanged();
@@ -104,7 +109,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             else
             {
                 MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
-               
+
 
             }
 
@@ -121,7 +126,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
                 new DialogOptions() { Width = "400px", Height = "450px", Resizable = true, Draggable = true });
             if (result != null)
             {
-              await  Model.SetSupplier((result as SupplierResponse));
+                await SetSupplier((result as SupplierResponse));
                 var resultData = await SupplierService.GetAllSupplier();
                 if (resultData.Succeeded)
                 {
@@ -133,9 +138,271 @@ namespace ClientRadzen.Pages.PurchaseOrders
             }
         }
 
-        public void Dispose()
+
+        public async Task ChangeTRMUSDEUR(string arg)
         {
-            Model.Validator -= ValidateAsync;
+
+            if (string.IsNullOrEmpty(arg))
+            {
+                return;
+            }
+            double usdeur = Model.USDEUR;
+            if (!double.TryParse(arg, out usdeur))
+            {
+
+            }
+            Model.USDEUR = usdeur;
+            foreach (var item in Model.PurchaseOrderItemNoBlank)
+            {
+                item.SetUSDEUR(usdeur);
+            }
+            await ValidateAsync();
+        }
+        public async Task ChangeTRMUSDCOP(string arg)
+        {
+
+            if (string.IsNullOrEmpty(arg))
+            {
+                return;
+            }
+            double usdcop = Model.USDCOP;
+            if (!double.TryParse(arg, out usdcop))
+            {
+
+            }
+            Model.USDCOP = usdcop;
+            foreach (var item in Model.PurchaseOrderItemNoBlank)
+            {
+                item.SetUSDCOP(usdcop);
+            }
+            await ValidateAsync();
+        }
+        public void SetMainBudgetItem(BudgetItemApprovedResponse budgetItem)
+        {
+            Model.MWOId = budgetItem.MWOId;
+            Model.MWOName = budgetItem.MWOName;
+            Model.CostCenter = budgetItem.CostCenter;
+            Model.MWOCECName = budgetItem.MWOCECName;
+
+            Model.MainBudgetItem = budgetItem;
+            Model.QuoteCurrency = CurrencyEnum.COP;
+            AddBudgetItem(budgetItem);
+            AddBlankItem();
+        }
+        public async Task ChangeName(string name)
+        {
+
+            Model.PurchaseorderName = name;
+            if (Model.PurchaseOrderItemNoBlank.Count == 1)
+            {
+                Model.PurchaseOrderItems[0].Name = Model.PurchaseorderName;
+            }
+            await ValidateAsync();
+        }
+        public async Task ChangeName(PurchaseOrderItemRequest model, string name)
+        {
+
+            model.Name = name;
+
+            if (Model.PurchaseOrderItemNoBlank.Count == 1)
+            {
+                Model.PurchaseorderName = name;
+            }
+            await ValidateAsync();
+        }
+        public void ChangeQuoteCurrency(CurrencyEnum currencyEnum)
+        {
+
+            foreach (var item in Model.PurchaseOrderItems)
+            {
+                item.ChangeCurrency(currencyEnum);
+            }
+
+        }
+
+        public async Task SetSupplier(SupplierResponse? _Supplier)
+        {
+
+            if (_Supplier == null)
+            {
+                Model.PurchaseOrderCurrency = CurrencyEnum.COP;
+                return;
+            }
+            Model.Supplier = _Supplier;
+            Model.PurchaseOrderCurrency = _Supplier.SupplierCurrency;
+
+            await ValidateAsync();
+
+        }
+
+        public void AddMWOBudgetItem(BudgetItemApprovedResponse budgetItem)
+        {
+            AddBudgetItem(budgetItem);
+            AddBlankItem();
+        }
+
+        public void AddBudgetItem(BudgetItemApprovedResponse response)
+        {
+            if (Model.PurchaseOrderItems.Count == 0)
+                Model.PurchaseOrderItems.Add(new PurchaseOrderItemRequest());
+
+            Model.PurchaseOrderItems[Model.PurchaseOrderItems.Count - 1].SetBudgetItem(response, Model.USDCOP, Model.USDEUR);
+
+
+        }
+        public void AddBlankItem()
+        {
+            if (!Model.PurchaseOrderItems.Any(x => x.BudgetItemId == Guid.Empty))
+            {
+                Model.PurchaseOrderItems.Add(new PurchaseOrderItemRequest());
+            }
+
+
+        }
+        public async Task ChangeCurrency(PurchaseOrderItemRequest item, CurrencyEnum newCurrency)
+        {
+
+            double originalValueInUsd = item.UnitaryCostInUSD;
+            if (newCurrency.Id == CurrencyEnum.COP.Id)
+            {
+                item.CurrencyUnitaryValue = originalValueInUsd * Model.USDCOP;
+            }
+            else if (newCurrency.Id == CurrencyEnum.EUR.Id)
+            {
+                item.CurrencyUnitaryValue = originalValueInUsd * Model.USDEUR;
+            }
+            else if (newCurrency.Id == CurrencyEnum.USD.Id)
+            {
+                item.CurrencyUnitaryValue = originalValueInUsd;
+            }
+            Model.QuoteCurrency = newCurrency;
+            await ValidateAsync();
+        }
+        public async Task ChangeQuantity(PurchaseOrderItemRequest item, string arg)
+        {
+
+            if (string.IsNullOrEmpty(arg))
+            {
+                return;
+            }
+            double quantity = item.Quantity;
+            if (!double.TryParse(arg, out quantity))
+            {
+
+            }
+            item.Quantity = quantity;
+            await ValidateAsync();
+        }
+        public async Task ChangeCurrencyValue(PurchaseOrderItemRequest item, string arg)
+        {
+
+            if (string.IsNullOrEmpty(arg))
+            {
+                return;
+            }
+            double currencyvalue = item.Quantity;
+            if (!double.TryParse(arg, out currencyvalue))
+            {
+
+            }
+            item.CurrencyUnitaryValue = currencyvalue;
+            await ValidateAsync();
+        }
+        public async Task ChangePR(string purchaserequisition)
+        {
+            Model.PurchaseRequisition = purchaserequisition;
+            await ValidateAsync();
+        }
+        public async Task ChangeQuote(string quoteno)
+        {
+            Model.QuoteNo = quoteno;
+            await ValidateAsync();
+        }
+        bool debug = true;
+        RadzenDataGrid<PurchaseOrderItemRequest> ordersGrid = null!;
+        Density Density = Density.Compact;
+
+        int MaxColumn = 12;
+        int MediumColumn = 6;
+
+        async Task EditRow(DataGridRowMouseEventArgs<PurchaseOrderItemRequest> order)
+        {
+
+
+            await ordersGrid.EditRow(order.Data);
+
+        }
+        async Task ClickCell(DataGridCellMouseEventArgs<PurchaseOrderItemRequest> order)
+        {
+            var column = order.Column;
+            var row = order.Data.BudgetItemId == Guid.Empty;
+            if (order.Column.Property == "BudgetItemName" && order.Data.BudgetItemId == Guid.Empty)
+            {
+                await ordersGrid.EditRow(order.Data);
+            }
+
+
+        }
+        async Task EditRowButton(PurchaseOrderItemRequest order)
+        {
+
+            await ordersGrid.EditRow(order);
+        }
+        async Task DeleteRow(PurchaseOrderItemRequest order)
+        {
+
+
+            if (Model.PurchaseOrderItems.Contains(order) && order.BudgetItemId != Model.MainBudgetItemId)
+            {
+
+                Model.PurchaseOrderItems.Remove(order);
+                var datatoadd = OriginalBudgetItems.Single(x => x.BudgetItemId == order.BudgetItemId);
+                BudgetItems.Add(datatoadd);
+                if (BudgetItems.Count > 0)
+                {
+                    AddBlankItem();
+                }
+                await ordersGrid.Reload();
+            }
+            else
+            {
+                ordersGrid.CancelEditRow(order);
+                await ordersGrid.Reload();
+            }
+        }
+        async Task SaveRow(PurchaseOrderItemRequest order)
+        {
+            await ordersGrid.UpdateRow(order);
+        }
+
+        void CancelEdit(PurchaseOrderItemRequest order)
+        {
+
+
+            ordersGrid.CancelEditRow(order);
+
+
+        }
+
+        async Task AddNewItem(PurchaseOrderItemRequest order)
+        {
+            AddBudgetItem(ItemToAdd!);
+
+
+            if (BudgetItems.Count > 0)
+            {
+                AddBlankItem();
+            }
+            await ordersGrid.UpdateRow(order);
+            await ordersGrid.Reload();
+            ItemToAdd = null!;
+        }
+        async Task OnKeyDownCurrency(KeyboardEventArgs arg, PurchaseOrderItemRequest order)
+        {
+            if (arg.Key == "Enter")
+            {
+                await ordersGrid.UpdateRow(order);
+            }
         }
     }
 }

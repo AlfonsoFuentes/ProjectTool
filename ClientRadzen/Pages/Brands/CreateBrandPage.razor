@@ -14,7 +14,7 @@
 
                     <RadzenFormField Text="Name" Style="width: 100%;">
                         <RadzenTextArea Rows="2" @bind-Value=@Model.Name class="w-100"  
-                                        @oninput="@((arg)=>Model.ChangeName(arg.Value!.ToString()!))"
+                                        @oninput="@((arg)=>ChangeName(arg.Value!.ToString()!))"
                                         Name="name" />
 
                      </RadzenFormField>

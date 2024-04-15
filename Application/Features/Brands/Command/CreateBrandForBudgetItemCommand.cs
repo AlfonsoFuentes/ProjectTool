@@ -6,7 +6,7 @@ using Shared.Models.Brands;
 
 namespace Application.Features.Brands.Command
 {
-    public record CreateBrandForBudgetItemCommand(CreateBrandRequestDto Data) : IRequest<IResult<BrandResponse>>;
+    public record CreateBrandForBudgetItemCommand(CreateBrandRequest Data) : IRequest<IResult<BrandResponse>>;
     public class CreateBrandForBudgetItemCommandHandler : IRequestHandler<CreateBrandForBudgetItemCommand, IResult<BrandResponse>>
     {
         private IBrandRepository Repository { get; set; }

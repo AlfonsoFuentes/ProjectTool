@@ -1,9 +1,11 @@
 ﻿using Application.Features.PurchaseOrders.Commands;
+using Application.Features.PurchaseOrders.Commands.RecalculateData;
 using Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Creates;
 using Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edits;
 using Application.Features.PurchaseOrders.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Models.PurchaseOrders.Requests;
 using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
@@ -22,18 +24,22 @@ namespace Server.Controllers.PurchaseOrders
             Mediator = mediator;
         }
         [HttpPost("ReceivePurchaseOrder")]
-        public async Task<IActionResult> ReceivePurchaseOrder(ReceiveRegularPurchaseOrderRequestDto request)
+        public async Task<IActionResult> ReceivePurchaseOrder(ReceiveRegularPurchaseOrderRequest request)
         {
             return Ok(await Mediator.Send(new ReceivePurchaseOrderCommand(request)));
         }
-
+        [HttpGet("RecalculatePurchaseOrder")]
+        public async Task<IActionResult> ReceivePurchaseOrder()
+        {
+            return Ok(await Mediator.Send(new RecalculatePurchaseOrderCommand()));
+        }
         [HttpPost("CreateRegularPurchaseOrder")]
-        public async Task<IActionResult> CreatePurchaseOrder(CreatedRegularPurchaseOrderRequestDto request)
+        public async Task<IActionResult> CreatePurchaseOrder(CreatedRegularPurchaseOrderRequest request)
         {
             return Ok(await Mediator.Send(new CreateRegularPurchaseOrderCommand(request)));
         }
         [HttpPost("CreatePurchaseOrderCapitalizedSalary")]
-        public async Task<IActionResult> CreatePurchaseOrderCapitalizedSalary(CreateCapitalizedSalaryPurchaseOrderRequestDto request)
+        public async Task<IActionResult> CreatePurchaseOrderCapitalizedSalary(CreateCapitalizedSalaryPurchaseOrderRequest request)
         {
             return Ok(await Mediator.Send(new CreatePurchaseOrderCapitalizedSalaryCommand(request)));
         }
@@ -43,34 +49,34 @@ namespace Server.Controllers.PurchaseOrders
             return Ok(await Mediator.Send(new CreateTaxPurchaseOrderCommand(request)));
         }
         [HttpPost("ApproveRegularPurchaseOrder")]
-        public async Task<IActionResult> ApprovePurchaseOrder(ApprovedRegularPurchaseOrderRequestDto request)
+        public async Task<IActionResult> ApprovePurchaseOrder(ApprovedRegularPurchaseOrderRequest request)
         {
             return Ok(await Mediator.Send(new ApproveRegularPurchaseOrderCommand(request)));
 
         }
         [HttpPost("ApprovePurchaseOrderForAlteration")]
-        public async Task<IActionResult> ApprovePurchaseOrderForAlteration(ApprovedRegularPurchaseOrderRequestDto request)
+        public async Task<IActionResult> ApprovePurchaseOrderForAlteration(ApprovedRegularPurchaseOrderRequest request)
         {
             return Ok(await Mediator.Send(new ApprovePurchaseOrderForAlterationCommand(request)));
 
         }
         [HttpPost("EditPurchaseOrderCreated")]
-        public async Task<IActionResult> EditPurchaseOrderCreated(EditPurchaseOrderRegularCreatedRequestDto request)
+        public async Task<IActionResult> EditPurchaseOrderCreated(EditPurchaseOrderRegularCreatedRequest request)
         {
             return Ok(await Mediator.Send(new EditPurchaseOrderCreatedCommand(request)));
         }
-        //[HttpPost("UpdatePurchaseOrderMinimal")]
-        //public async Task<IActionResult> UpdatePurchaseOrderMinimal(UpdatePurchaseOrderMinimalRequest request)
-        //{
-        //    return Ok(await Mediator.Send(new UpdatePurchaseOrderMinimalCommand(request)));
-        //}
+        [HttpPost("RemovePurchaseOrder")]
+        public async Task<IActionResult> UpdatePurchaseOrderMinimal(DeletePurchaseorderRequest request)
+        {
+            return Ok(await Mediator.Send(new DeletePurchaseOrderCommand(request.PurchaseOrderId)));
+        }
         [HttpPost("EditPurchaseOrderApproved")]
-        public async Task<IActionResult> EditPurchaseOrderApproved(EditPurchaseOrderRegularApprovedRequestDto request)
+        public async Task<IActionResult> EditPurchaseOrderApproved(EditPurchaseOrderRegularApprovedRequest request)
         {
             return Ok(await Mediator.Send(new EditPurchaseOrderApprovedCommand(request)));
         }
         [HttpPost("EditPurchaseOrderClosed")]
-        public async Task<IActionResult> EditPurchaseOrderClosed(EditPurchaseOrderRegularClosedRequestDto request)
+        public async Task<IActionResult> EditPurchaseOrderClosed(EditPurchaseOrderRegularClosedRequest request)
         {
 
             return Ok(await Mediator.Send(new EditPurchaseOrderClosedCommand(request)));
@@ -81,7 +87,7 @@ namespace Server.Controllers.PurchaseOrders
             return Ok(await Mediator.Send(new EditTaxPurchaseOrderCommand(request)));
         }
         [HttpPost("EditPurchaseOrderCapitalizedSalary")]
-        public async Task<IActionResult> EditPurchaseOrderCapitalizedSalary(EditCapitalizedSalaryPurchaseOrderRequestDto request)
+        public async Task<IActionResult> EditPurchaseOrderCapitalizedSalary(EditCapitalizedSalaryPurchaseOrderRequest request)
         {
             return Ok(await Mediator.Send(new EditPurchaseOrderCapitalizedSalaryCommand(request)));
         }

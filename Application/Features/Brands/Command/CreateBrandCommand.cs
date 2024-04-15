@@ -6,7 +6,7 @@ using Shared.Models.Brands;
 
 namespace Application.Features.Brands.Command
 {
-    public record CreateBrandCommand(CreateBrandRequestDto Data ):IRequest<IResult>;
+    public record CreateBrandCommand(CreateBrandRequest Data ):IRequest<IResult>;
 
     public class CreateBrandCommandHandler:IRequestHandler<CreateBrandCommand,IResult>
     {

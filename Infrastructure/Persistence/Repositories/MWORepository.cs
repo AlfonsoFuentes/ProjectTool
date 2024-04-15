@@ -69,6 +69,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             return (await Context.MWOs
                 .Include(x => x.BudgetItems)
+                .Include(x=>x.PurchaseOrders)
                 .AsNoTracking()
                 .AsQueryable()
                 .AsSplitQuery()
@@ -105,6 +106,9 @@ namespace Infrastructure.Persistence.Repositories
                 filter = x => x.CreatedBy == CurrentUser.UserId;
             }
             var mwos = Context.MWOs
+                .Include(x=>x.BudgetItems)
+                .Include(x=>x.PurchaseOrders)
+                .ThenInclude(x=>x.PurchaseOrderItems)
                 .Where(filter)
                .AsNoTracking()
               .AsSplitQuery()
@@ -114,27 +118,27 @@ namespace Infrastructure.Persistence.Repositories
             return Task.FromResult(mwos);
         }
        
-        public async Task UpdateDataForNotApprovedMWO(Guid MWOId,CancellationToken token)
-        {
-            var mwos =await Context.MWOs
-                .Include(x => x.BudgetItems)
-                .SingleOrDefaultAsync(x=>x.Id==MWOId);
-            if (mwos == null) return;
+        //public async Task UpdateDataForNotApprovedMWO(Guid MWOId,CancellationToken token)
+        //{
+        //    var mwos =await Context.MWOs
+        //        .Include(x => x.BudgetItems)
+        //        .SingleOrDefaultAsync(x=>x.Id==MWOId);
+        //    if (mwos == null) return;
 
-            mwos.SetDataNotApproved();
-            await Context.SaveChangesAsync(token);
-        }
+        //    //mwos.SetDataNotApproved();
+        //    await Context.SaveChangesAsync(token);
+        //}
 
-        public async Task UpdateDataForApprovedMWO(Guid MWOId, CancellationToken token)
-        {
-            var mwos = await Context.MWOs
-               .Include(x => x.PurchaseOrders)
-               .ThenInclude(x=>x.PurchaseOrderItems)
-               .SingleOrDefaultAsync(x => x.Id == MWOId);
-            if (mwos == null) return;
+        //public async Task UpdateDataForApprovedMWO(Guid MWOId, CancellationToken token)
+        //{
+        //    var mwos = await Context.MWOs
+        //       .Include(x => x.PurchaseOrders)
+        //       .ThenInclude(x=>x.PurchaseOrderItems)
+        //       .SingleOrDefaultAsync(x => x.Id == MWOId);
+        //    if (mwos == null) return;
 
-            mwos.SetDataApproved();
-            await Context.SaveChangesAsync(token);
-        }
+        //    mwos.SetDataApproved();
+        //    await Context.SaveChangesAsync(token);
+        //}
     }
 }

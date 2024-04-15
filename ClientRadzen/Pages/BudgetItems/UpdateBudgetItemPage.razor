@@ -27,7 +27,7 @@
                 <RadzenColumn SizeXS="8" SizeSM="4">
                     <RadzenFormField Text="Name" Style="width: 100%;">
                         <RadzenTextArea @bind-Value=@Model.Name class="w-100" Rows="2"
-                                        @oninput=@(args =>Model.ChangeName(args.Value!.ToString()!)) Name="name" />
+                                        @oninput=@(args =>ChangeName(args.Value!.ToString()!)) Name="name" />
                     </RadzenFormField>
                     <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
                 </RadzenColumn>
@@ -78,7 +78,7 @@
                         <RadzenFormField Text="Quantity" Style="width: 100%;">
                             <RadzenNumeric @bind-Value=@Model.Quantity class="w-100" TValue=double ShowUpDown=false
                                            InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
-                                           Name="Quantity" @oninput=@(args =>Model.ChangeQuantity(args.Value!.ToString()!)) />
+                                           Name="Quantity" @oninput=@(args =>ChangeQuantity(args.Value!.ToString()!)) />
 
                         </RadzenFormField>
                     </RadzenColumn>
@@ -98,7 +98,7 @@
                         <RadzenFormField Text="Unitary Cost, USD" Style="width: 100%;">
                             <RadzenNumeric ShowUpDown="false" @bind-Value=@Model.UnitaryCost class="w-100" TValue=double
                                            InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
-                                           Name="UnitaryCost" @oninput=@(args =>Model.ChangeUnitaryCost(args.Value!.ToString()!)) />
+                                           Name="UnitaryCost" @oninput=@(args =>ChangeUnitaryCost(args.Value!.ToString()!)) />
 
                         </RadzenFormField>
                     </RadzenColumn>
@@ -130,7 +130,7 @@
                         <RadzenFormField Text="Budget, USD" Style="width: 100%;">
                             <RadzenNumeric ShowUpDown="false" Value=@Model.UnitaryCost class="w-100" TValue=double
                                            InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
-                                           Name="Percentage" @oninput=@(args =>Model.ChangeBudget(args.Value!.ToString()!)) />
+                                           Name="Percentage" @oninput=@(args =>ChangeBudget(args.Value!.ToString()!)) />
 
                         </RadzenFormField>
                     </RadzenColumn>
@@ -140,7 +140,7 @@
             <RadzenRow>
                 <RadzenColumn SizeXS="8" SizeSM="4">
                     <RadzenFormField Text="Budget, USD" Style="width: 100%;">
-                        <RadzenText class="rz-p-2"> @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.Budget)}")</RadzenText>
+                        <RadzenText class="rz-p-2"> @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.Budget)}")</RadzenText>
 
 
                     </RadzenFormField>
@@ -153,7 +153,7 @@
                             <RadzenNumeric ShowUpDown="false" Value=@Model.Percentage class="w-100" TValue=double
                                            Max=100 Min=0
                                            InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
-                                           Name="Percentage" @oninput=@(args =>Model.ChangePercentage(args.Value!.ToString()!)) />
+                                           Name="Percentage" @oninput=@(args =>ChangePercentage(args.Value!.ToString()!)) />
 
                         </RadzenFormField>
 
@@ -172,7 +172,7 @@
                         <RadzenListBox AllowFiltering=true @bind-Value=@Model.BudgetItemDtos Data="@Model.BudgetItemDtos"
                                        TextProperty="Name" TValue="List<BudgetItemDto>"
                                        Multiple=true AllowClear=true Placeholder="Select items" Style="width: 100%;  height: 200px"
-                                       Change="Model.ChangeTaxesItemList"
+                                       Change="ChangeTaxesItemList"
                                        InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select items" }})" />
                     </RadzenColumn>
                 </RadzenRow>

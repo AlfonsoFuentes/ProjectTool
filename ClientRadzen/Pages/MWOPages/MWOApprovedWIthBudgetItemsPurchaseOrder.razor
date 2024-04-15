@@ -72,6 +72,8 @@
         </RadzenRow>
         <RadzenRow class="rz-ml-4">
             <RadzenColumn Size="12" SizeLG="7">
+                <RadzenButton Icon="insights" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                              Click="@(()=>ShowSapAlignmentofMWO(Response))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show SAP Alignment for MWO: {Response.CECName}",TooltipPosition.Right) )" />
 
 
             </RadzenColumn>
@@ -176,13 +178,13 @@
                                                                       Property="@nameof(PurchaseOrderResponse.PONumber)"
                                                                       Title="PO Number" Width="100px" TextAlign="TextAlign.Left" />
                                                 <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                                      Property="@nameof(PurchaseOrderResponse.Supplier)"
+                                                                      Property="@nameof(PurchaseOrderResponse.SupplierNickName)"
                                                                       Title="Supplier" Width="100px" TextAlign="TextAlign.Left" />
                                                 <RadzenDataGridColumn TItem="PurchaseOrderResponse"
                                                                       Property="@nameof(PurchaseOrderResponse.POValueUSD)"
-                                                                      Title="PO Value, USD" Width="100px" TextAlign="TextAlign.Left">
+                                                                      Title="Value, USD" Width="100px" TextAlign="TextAlign.Left">
                                                     <Template Context="detail">
-                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.GetPOValueByItem(seletedRow.BudgetItemId))}")
+                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.GetPOValueByItem(seletedRow.BudgetItemId))}")
 
                                                     </Template>
                                                 </RadzenDataGridColumn>
@@ -190,7 +192,7 @@
                                                                       Property="@nameof(PurchaseOrderResponse.Actual)"
                                                                       Title="Actual, USD" Width="100px" TextAlign="TextAlign.Left">
                                                     <Template Context="detail">
-                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.GetActualByItem(seletedRow.BudgetItemId))}")
+                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.GetActualByItem(seletedRow.BudgetItemId))}")
 
                                                     </Template>
                                                 </RadzenDataGridColumn>
@@ -198,7 +200,7 @@
                                                                       Property="@nameof(PurchaseOrderResponse.Commitment)"
                                                                       Title="Pending, USD" Width="100px" TextAlign="TextAlign.Left">
                                                     <Template Context="detail">
-                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.GetCommitmentByItem(seletedRow.BudgetItemId))}")
+                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.GetCommitmentByItem(seletedRow.BudgetItemId))}")
 
                                                     </Template>
                                                 </RadzenDataGridColumn>
@@ -206,7 +208,7 @@
                                                                       Property="@nameof(PurchaseOrderResponse.Potencial)"
                                                                       Title="Potencial, USD" Width="100px" TextAlign="TextAlign.Left">
                                                     <Template Context="detail">
-                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.GetPotentialByItem(seletedRow.BudgetItemId))}")
+                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.GetPotentialByItem(seletedRow.BudgetItemId))}")
 
                                                     </Template>
                                                 </RadzenDataGridColumn>
@@ -252,6 +254,9 @@
                                                             {
 
                                                             }
+                                                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
+                                                                          MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete purchase order {order.PONumber}",TooltipPosition.Left) )"
+                                                                          class="rz-mr-1" Click="@(()=>RemovePurchaseorder(order))" />
                                                         </Template>
                                                     </RadzenDataGridColumn>
                                                 }

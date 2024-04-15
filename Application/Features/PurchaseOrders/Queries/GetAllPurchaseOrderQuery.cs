@@ -3,6 +3,7 @@ using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
 using Shared.Commons.UserManagement;
+using Shared.Models.Currencies;
 using Shared.Models.PurchaseOrders.Responses;
 using Shared.Models.PurchaseorderStatus;
 using System.Diagnostics;
@@ -30,15 +31,15 @@ namespace Application.Features.PurchaseOrders.Queries
             sw.Stop();
             var elapsed1 = sw.ElapsedMilliseconds;
             sw = Stopwatch.StartNew();
-           
+
             response.PurchaseordersApproved = await GetPurchaseOrderApproved();
             sw.Stop();
             var elapsed2 = sw.ElapsedMilliseconds;
             sw = Stopwatch.StartNew();
-            
+
             response.PurchaseordersClosed = await GetPurchaseOrderClosed();
-            sw.Stop();  
-            var elapsed3=sw.ElapsedMilliseconds;
+            sw.Stop();
+            var elapsed3 = sw.ElapsedMilliseconds;
 
             return Result<PurchaseOrdersListResponse>.Success(response);
         }
@@ -75,20 +76,31 @@ namespace Application.Features.PurchaseOrders.Queries
             MWOName = e.MWO == null ? string.Empty : e.MWO.Name,
             CreatedBy = e.CreatedByUserName,
             CreatedOn = e.CreatedDate.ToShortDateString(),
-
+            IsAlteration = e.IsAlteration,
+            IsCapitalizedSalary = e.IsCapitalizedSalary,
+            IsTaxEditable = e.IsTaxEditable,
+            IsTaxNoProductive=!e.IsTaxEditable,
             ReceivedOn = e.POClosedDate.HasValue ? e.POClosedDate.Value.ToShortDateString() : string.Empty,
             PurchaseorderName = e.PurchaseorderName,
             QuoteNo = e.QuoteNo,
-            Supplier = e.Supplier == null ? string.Empty : e.Supplier.NickName,
+            SupplierNickName = e.Supplier == null ? string.Empty : e.Supplier.NickName,
+            SupplierName = e.Supplier == null ? string.Empty : e.Supplier.Name,
             SupplierId = e.SupplierId,
             PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(e.PurchaseOrderStatus),
+
             PurchaseOrderItems = e.PurchaseOrderItems.Count == 0 ? new() :
                 e.PurchaseOrderItems.Select(x => new PurchaseorderItemsResponse()
                 {
                     PurchaseorderItemId = x.Id,
                     BudgetItemId = x.Id,
-                    POValueUSD = x.POValueUSD,
-                    Actual = Math.Round(x.Actual, 2)
+                    UnitaryValueCurrency = x.UnitaryValueCurrency,
+                    Quantity = x.Quantity,
+
+                    ActualCurrency = x.ActualCurrency,
+                    Currency = CurrencyEnum.GetType(e.Currency),
+                    USDCOP = e.USDCOP,
+                    USDEUR = e.USDEUR,
+
 
                 }).ToList(),
 

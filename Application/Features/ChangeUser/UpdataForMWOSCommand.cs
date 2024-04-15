@@ -24,19 +24,19 @@ namespace Application.Features.ChangeUser
                 .AsNoTracking()
                 .AsSplitQuery()
                 .Where(x => x.Status == MWOStatusEnum.Created.Id).ToListAsync();
-            foreach (var mwo in mwoNotapproved)
-            {
-                await MWORepository.UpdateDataForNotApprovedMWO(mwo.Id,cancellationToken);
-            }
+            //foreach (var mwo in mwoNotapproved)
+            //{
+            //    await MWORepository.UpdateDataForNotApprovedMWO(mwo.Id,cancellationToken);
+            //}
             var mwoapproved = await AppDbContext.MWOs
                 .AsNoTracking()
                 .AsSplitQuery()
                 .Where(x => x.Status == MWOStatusEnum.Approved.Id).ToListAsync();
-            foreach (var mwo in mwoapproved)
-            {
-                await MWORepository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
-                await MWORepository.UpdateDataForApprovedMWO(mwo.Id, cancellationToken);
-            }
+            //foreach (var mwo in mwoapproved)
+            //{
+            //    await MWORepository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
+            //    await MWORepository.UpdateDataForApprovedMWO(mwo.Id, cancellationToken);
+            //}
 
             return Result.Success();
 

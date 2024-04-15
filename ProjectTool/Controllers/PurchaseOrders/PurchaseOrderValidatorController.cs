@@ -15,30 +15,35 @@ namespace Server.Controllers.PurchaseOrders
         {
             Mediator = mediator;
         }
-        [HttpGet("ValidateNameExist/{name}")]
-        public async Task<IActionResult> ValidateNameExistInPurchaseOrder(string name)
+        [HttpGet("ValidateNameExist/{MWOId}/{name}")]
+        public async Task<IActionResult> ValidateNameExistInPurchaseOrder(Guid MWOId,string name)
         {
-            return Ok(await Mediator.Send(new ValidateNameExistPurchaseOrderQuery(name)));
+            return Ok(await Mediator.Send(new ValidateNameExistPurchaseOrderQuery(MWOId,name)));
         }
         [HttpGet("ValidatePurchaseRequisitionExist/{purchaserequisition}")]
         public async Task<IActionResult> ValidatePurchaseRequisitionExistInPurchaseOrder(string purchaserequisition)
         {
             return Ok(await Mediator.Send(new ValidatePurchaseRequisitionExistPurchaseOrder(purchaserequisition)));
         }
-        [HttpGet("ValidateNameExist/{PurchaseOrderId}/{name}")]
-        public async Task<IActionResult> ValidateNameExistInPurchaseOrder(string name, Guid PurchaseOrderId)
+        [HttpGet("ValidateNameExist/{MWOId}/{PurchaseOrderId}/{name}")]
+        public async Task<IActionResult> ValidateNameExistInPurchaseOrder(Guid MWOId, Guid PurchaseOrderId, string name)
         {
-            return Ok(await Mediator.Send(new ValidateNameExistPurchaseOrderCreatedQuery(PurchaseOrderId, name)));
+            return Ok(await Mediator.Send(new ValidateNameExistPurchaseOrderCreatedQuery(MWOId,PurchaseOrderId, name)));
         }
-        [HttpGet("ValidatePurchaseRequisitionExist/{purchaserequisition}/{PurchaseOrderId}")]
+        [HttpGet("ValidatePurchaseRequisitionExist/{PurchaseOrderId}/{purchaserequisition}")]
         public async Task<IActionResult> ValidatePurchaseRequisitionExistInPurchaseOrder(string purchaserequisition, Guid PurchaseOrderId)
         {
             return Ok(await Mediator.Send(new ValidatePurchaseRequisitionExistPurchaseOrderCreated(PurchaseOrderId, purchaserequisition)));
         }
-        [HttpGet("ValidatePONumberExist/{ponumber}/{PurchaseOrderId}")]
+        [HttpGet("ValidatePONumberExist/{PurchaseOrderId}/{ponumber}")]
         public async Task<IActionResult> ValidatePONumberExistInPurchaseOrder(string ponumber, Guid PurchaseOrderId)
         {
             return Ok(await Mediator.Send(new ValidatePONumberExist(PurchaseOrderId, ponumber)));
+        }
+        [HttpGet("ValidatePONumberExist/{ponumber}")]
+        public async Task<IActionResult> ValidatePONumberExistInPurchaseOrder(string ponumber)
+        {
+            return Ok(await Mediator.Send(new ValidateNewPONumberExist(ponumber)));
         }
     }
 }

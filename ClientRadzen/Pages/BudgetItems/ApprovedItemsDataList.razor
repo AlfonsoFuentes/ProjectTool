@@ -27,7 +27,7 @@
                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Appropiation</RadzenText>
                             <RadzenText TextStyle="TextStyle.Caption">
                                 <b>
-                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.Appropiation)}")
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.Appropiation)}")
                                 </b>
                             </RadzenText>
 
@@ -36,7 +36,7 @@
                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Expenses</RadzenText>
                             <RadzenText TextStyle="TextStyle.Caption">
                                 <b>
-                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.Expenses)}")
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.Expenses)}")
                                 </b>
                             </RadzenText>
 
@@ -45,7 +45,7 @@
                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Capital</RadzenText>
                             <RadzenText TextStyle="TextStyle.Caption">
                                 <b>
-                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.Capital)}")
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.Capital)}")
                                 </b>
                             </RadzenText>
 
@@ -69,7 +69,7 @@
                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Assigned</RadzenText>
                             <RadzenText TextStyle="TextStyle.Caption">
                                 <b>
-                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.AssignedCapital)}")
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.AssignedCapital)}")
                                 </b>
                             </RadzenText>
 
@@ -78,7 +78,7 @@
                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Actual</RadzenText>
                             <RadzenText TextStyle="TextStyle.Caption">
                                 <b>
-                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.ActualCapital)}")
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.ActualCapital)}")
                                 </b>
                             </RadzenText>
 
@@ -87,7 +87,7 @@
                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Potencial</RadzenText>
                             <RadzenText TextStyle="TextStyle.Caption">
                                 <b>
-                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.PotencialCapital)}")
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.PotencialCapital)}")
                                 </b>
                             </RadzenText>
 
@@ -96,7 +96,7 @@
                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Pending</RadzenText>
                             <RadzenText TextStyle="TextStyle.Caption">
                                 <b>
-                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.PendingCapital)}")
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.PendingCapital)}")
                                 </b>
                             </RadzenText>
 
@@ -120,7 +120,7 @@
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Assigned</RadzenText>
                                 <RadzenText TextStyle="TextStyle.Caption">
                                     <b>
-                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.AssignedExpenses)}")
+                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.AssignedExpenses)}")
                                     </b>
                                 </RadzenText>
 
@@ -129,7 +129,7 @@
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Actual</RadzenText>
                                 <RadzenText TextStyle="TextStyle.Caption">
                                     <b>
-                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.ActualExpenses)}")
+                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.ActualExpenses)}")
                                     </b>
                                 </RadzenText>
 
@@ -138,7 +138,7 @@
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Potencial</RadzenText>
                                 <RadzenText TextStyle="TextStyle.Caption">
                                     <b>
-                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.PotencialExpenses)}")
+                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.PotencialExpenses)}")
                                     </b>
                                 </RadzenText>
 
@@ -147,7 +147,7 @@
                                 <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5" Class="rz-mb-0">Pending</RadzenText>
                                 <RadzenText TextStyle="TextStyle.Caption">
                                     <b>
-                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Response.PendingExpenses)}")
+                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Response.PendingExpenses)}")
                                     </b>
                                 </RadzenText>
 
@@ -208,19 +208,19 @@
                                     <RadzenColumn Size="12" SizeMD="6" SizeLG="3" class="rz-p-1">
                                         <RadzenRow JustifyContent="JustifyContent.SpaceBetween" Style="width:100%" Class="rz-p-1">
                                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5">Budget, USD</RadzenText>
-                                            <RadzenText TextStyle="TextStyle.Caption"><b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", product.Budget)}")</b></RadzenText>
+                                            <RadzenText TextStyle="TextStyle.Caption"><b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", product.Budget)}")</b></RadzenText>
 
                                         </RadzenRow>
                                         <RadzenRow JustifyContent="JustifyContent.SpaceBetween" Style="width:100%" Class="rz-p-1">
 
                                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5">Assigned, USD</RadzenText>
-                                            <RadzenText TextStyle="TextStyle.Caption"><b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", product.Assigned)}")</b></RadzenText>
+                                            <RadzenText TextStyle="TextStyle.Caption"><b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", product.Assigned)}")</b></RadzenText>
 
                                         </RadzenRow>
                                         <RadzenRow JustifyContent="JustifyContent.SpaceBetween" Style="width:100%" Class="rz-p-1">
 
                                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5">Pending, USD</RadzenText>
-                                            <RadzenText TextStyle="TextStyle.Caption"><b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", product.Pending)}")</b></RadzenText>
+                                            <RadzenText TextStyle="TextStyle.Caption"><b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", product.Pending)}")</b></RadzenText>
 
                                         </RadzenRow>
 
@@ -231,7 +231,7 @@
                                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5">Actual , USD</RadzenText>
                                             <RadzenText TextStyle="TextStyle.Caption">
                                                 <b>
-                                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", product.Actual)}")
+                                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", product.Actual)}")
                                                 </b>
                                             </RadzenText>
 
@@ -240,14 +240,14 @@
 
                                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5">Commitment, USD</RadzenText>
                                             <RadzenText TextStyle="TextStyle.Caption">
-                                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", product.Commitment)}")</b>
+                                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", product.Commitment)}")</b>
                                             </RadzenText>
 
                                         </RadzenRow>
                                         <RadzenRow JustifyContent="JustifyContent.SpaceBetween" Style="width:100%" Class="rz-p-1">
 
                                             <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5">Potential, USD</RadzenText>
-                                            <RadzenText TextStyle="TextStyle.Caption"><b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", product.Potencial)}")</b></RadzenText>
+                                            <RadzenText TextStyle="TextStyle.Caption"><b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", product.Potencial)}")</b></RadzenText>
 
                                         </RadzenRow>
 
@@ -312,13 +312,13 @@
                                                           Property="@nameof(PurchaseOrderResponse.PONumber)"
                                                           Title="PO Number" Width="100px" TextAlign="TextAlign.Left" />
                                     <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                          Property="@nameof(PurchaseOrderResponse.Supplier)"
+                                                          Property="@nameof(PurchaseOrderResponse.SupplierNickName)"
                                                           Title="Supplier" Width="100px" TextAlign="TextAlign.Left" />
                                     <RadzenDataGridColumn TItem="PurchaseOrderResponse"
                                                           Property="@nameof(PurchaseOrderResponse.POValueUSD)"
                                                           Title="PO Value, USD" Width="100px" TextAlign="TextAlign.Left">
                                         <Template Context="detail">
-                                            @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.POValueUSD)}")
+                                            @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.POValueUSD)}")
 
                                         </Template>
                                     </RadzenDataGridColumn>
@@ -326,7 +326,7 @@
                                                           Property="@nameof(PurchaseOrderResponse.Actual)"
                                                           Title="Actual, USD" Width="100px" TextAlign="TextAlign.Left">
                                         <Template Context="detail">
-                                            @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.Actual)}")
+                                            @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Actual)}")
 
                                         </Template>
                                     </RadzenDataGridColumn>
@@ -334,7 +334,7 @@
                                                           Property="@nameof(PurchaseOrderResponse.Commitment)"
                                                           Title="Pending, USD" Width="100px" TextAlign="TextAlign.Left">
                                         <Template Context="detail">
-                                            @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.Commitment)}")
+                                            @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Commitment)}")
 
                                         </Template>
                                     </RadzenDataGridColumn>
@@ -342,7 +342,7 @@
                                                           Property="@nameof(PurchaseOrderResponse.Potencial)"
                                                           Title="Potencial, USD" Width="100px" TextAlign="TextAlign.Left">
                                         <Template Context="detail">
-                                            @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.Potencial)}")
+                                            @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Potencial)}")
 
                                         </Template>
                                     </RadzenDataGridColumn>

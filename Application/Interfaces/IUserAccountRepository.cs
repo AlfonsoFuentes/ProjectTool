@@ -9,8 +9,8 @@ namespace Application.Interfaces
     public interface IUserAccountRepository
     {
        
-        Task<IResult<RegisterUserResponse>> RegisterUser(RegisterUserRequestDto Data);
-        Task<IResult<LoginUserResponse>> LoginUser(LoginUserRequestDto Data);
+        Task<IResult<RegisterUserResponse>> RegisterUser(RegisterUserRequest Data);
+        Task<IResult<LoginUserResponse>> LoginUser(LoginUserRequest Data);
         Task<IResult<RegisterUserResponse>> RegisterSuperAdminUser(RegisterSuperAdminUserRequest userDTO);
         Task<IResult<UserReponseList>?> GetUserList();
 

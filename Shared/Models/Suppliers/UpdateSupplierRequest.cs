@@ -4,7 +4,7 @@ namespace Shared.Models.Suppliers
 {
     public class UpdateSupplierRequest
     {
-        public Func<Task<bool>> Validator { get; set; } = null!;
+       
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string VendorCode { get; set; } = string.Empty;
@@ -20,30 +20,7 @@ namespace Shared.Models.Suppliers
 
         public CurrencyEnum SupplierCurrency { get; set; } = CurrencyEnum.None;
        
-        public async Task ChangeName(string name)
-        {
-            Name = name;
-            if (Validator != null) await Validator();
-        }
-        public async Task ChangeNickName(string name)
-        {
-            NickName = name;
-            if (Validator != null) await Validator();
-        }
-        public async Task ChangeVendorCode(string name)
-        {
-            VendorCode = name;
-            if (Validator != null) await Validator();
-        }
-        public async Task ChangeEmail(string name)
-        {
-            ContactEmail = name;
-            if (Validator != null) await Validator();
-        }
-        public async Task ChangeSupplierCurrency()
-        {
-            if (Validator != null) await Validator();
-        }
+       
 
     }
 }

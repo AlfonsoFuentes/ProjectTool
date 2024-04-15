@@ -60,8 +60,8 @@ namespace Shared.Models.BudgetItems
         public double Assigned => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetAssignedByItem(BudgetItemId));
         public double Potencial => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetPotentialByItem(BudgetItemId));
         public double Actual => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetActualByItem(BudgetItemId));
-        public double Commitment => Assigned - Actual;
-        public double Pending => Budget - Assigned - Potencial;
+        public double Commitment => Assigned - Actual - Potencial;
+        public double Pending => Budget - Assigned ;
         public double Percentage { get; set; }
 
 

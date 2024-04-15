@@ -26,4 +26,9 @@
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="IdentityModels\" />
+    <Folder Include="Managers\Accounts\" />
+  </ItemGroup>
+
 </Project>

@@ -20,8 +20,8 @@ namespace Client.Infrastructure.Validators.PurchaseOrder
             RuleFor(X => X.PurchaseorderNumber).Length(10)
                 .When(x => x.IsCapitalizedSalary == false&& !string.IsNullOrEmpty(x.PurchaseorderNumber)).WithMessage("PO number must 10 characters");
 
-            RuleFor(x => x.TRMUSDEUR).GreaterThan(0).WithMessage("TRM must be defined");
-            RuleFor(x => x.TRMUSDCOP).GreaterThan(0).WithMessage("TRM must be defined");
+            RuleFor(x => x.USDEUR).GreaterThan(0).WithMessage("TRM must be defined");
+            RuleFor(x => x.USDCOP).GreaterThan(0).WithMessage("TRM must be defined");
             RuleFor(x => x.SumPOValueUSD).GreaterThan(0).WithMessage("PO Value must be defined");
             RuleFor(x => x.PurchaseOrderName).MustAsync(ReviewNameExist).When(x =>
             !string.IsNullOrEmpty(x.PurchaseOrderName)).WithMessage(x => $"{x.PurchaseOrderName} already exist"); ;
@@ -32,11 +32,11 @@ namespace Client.Infrastructure.Validators.PurchaseOrder
         }
         async Task<bool> ReviewIfPOExist(EditCapitalizedSalaryPurchaseOrderRequest po,string por, CancellationToken cancellationToken)
         {
-            return !await PurchaseOrderValidator.ValidateNameExistInPurchaseOrder(po.PurchaseOrderId, por);
+            return !await PurchaseOrderValidator.ValidatePONumberExistInPurchaseOrder(po.PurchaseOrderId, por);
         }
         async Task<bool> ReviewNameExist(EditCapitalizedSalaryPurchaseOrderRequest po,string name, CancellationToken cancellationToken)
         {
-            return !await PurchaseOrderValidator.ValidatePONumberExistInPurchaseOrder(po.PurchaseOrderId, name);
+            return !await PurchaseOrderValidator.ValidateNameExistInPurchaseOrder(po.MWOId,po.PurchaseOrderId, name);
         }
     }
 }

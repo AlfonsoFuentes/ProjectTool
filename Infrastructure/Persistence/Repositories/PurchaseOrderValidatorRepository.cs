@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain.Entities.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
@@ -12,22 +13,22 @@ namespace Infrastructure.Persistence.Repositories
             this.Context = context;
         }
 
-        public async Task<bool> ValidateNameExist(string name)
+        public async Task<bool> ValidateNameExist(Guid MWOId, string name)
         {
             if (string.IsNullOrEmpty(name)) return false;
-            return await Context.PurchaseOrders.AnyAsync(x=>x.PurchaseorderName == name);
+            return await Context.PurchaseOrders.Where(x => x.MWOId == MWOId).AnyAsync(x => x.PurchaseorderName == name);
         }
-       
+
         public async Task<bool> ValidatePurchaseRequisition(string purchaserequisition)
         {
             if (string.IsNullOrEmpty(purchaserequisition)) return false;
-            var result= await Context.PurchaseOrders.AnyAsync(x => x.PurchaseRequisition == purchaserequisition);
+            var result = await Context.PurchaseOrders.AnyAsync(x => x.PurchaseRequisition == purchaserequisition);
             return result;
         }
-        public async Task<bool> ValidateNameExist(Guid PurchaseOrderId, string name)
+        public async Task<bool> ValidateNameExist(Guid MWOId, Guid PurchaseOrderId, string name)
         {
             if (string.IsNullOrEmpty(name)) return false;
-            return await Context.PurchaseOrders.Where(x => x.Id != PurchaseOrderId).AnyAsync(x => x.PurchaseorderName == name);
+            return await Context.PurchaseOrders.Where(x => x.MWOId == MWOId && x.Id != PurchaseOrderId).AnyAsync(x => x.PurchaseorderName == name);
         }
         public async Task<bool> ValidatePurchaseRequisition(Guid PurchaseOrderId, string purchaserequisition)
         {
@@ -38,6 +39,12 @@ namespace Infrastructure.Persistence.Repositories
         {
             if (string.IsNullOrEmpty(ponumber)) return false;
             return await Context.PurchaseOrders.Where(x => x.Id != PurchaseOrderId).AnyAsync(x => x.PONumber == ponumber);
+        }
+
+        public async Task<bool> ValidatePONumber(string ponumber)
+        {
+            if (string.IsNullOrEmpty(ponumber)) return false;
+            return await Context.PurchaseOrders.AnyAsync(x => x.PONumber == ponumber);
         }
     }
 }

@@ -7,7 +7,7 @@ using Shared.Models.UserAccounts.Reponses;
 
 namespace Application.Features.UserAccounts.Queries
 {
-    public record ValidatePasswordMatchQuery(LoginUserRequestDto Data) : IRequest<IResult<UserReponse>>;
+    public record ValidatePasswordMatchQuery(LoginUserRequest Data) : IRequest<IResult<UserReponse>>;
     public class ValidatePasswordMatchQueryHandler : IRequestHandler<ValidatePasswordMatchQuery, IResult<UserReponse>>
     {
         IUserAccountRepository Repository { get; set; }

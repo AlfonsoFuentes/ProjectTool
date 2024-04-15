@@ -3,71 +3,81 @@
 @if (Response != null)
 {
     <RadzenStack Orientation="Orientation.Vertical">
+        
+       
         <RadzenRow>
-            <RadzenColumn Size="12" SizeLG="8">
-                <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-ml-4 rz-mt-2" Click="@(()=>CreateAdjust())"
-                              MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Add new Date to {Response.MWOName}", TooltipPosition.Top) )" />
-
-            </RadzenColumn>
-
-
-        </RadzenRow>
-        <RadzenRow>
-            <RadzenColumn Size="12" SizeLG="7">
-                <RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" AllowFilterDateInput=true
-                                AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
-                                Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                FilterPopupRenderMode="PopupRenderMode.OnDemand"
-                                Data="@Response.Adjustments" TItem="SapAdjustResponse" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
-                    <Columns>
-                        <RadzenDataGridColumn TItem="SapAdjustResponse"
-                                              Property="@nameof(SapAdjustResponse.Date)" FormatString="{0:d}" Title="Name" Width="50px" TextAlign="TextAlign.Left" />
-                        <RadzenDataGridColumn TItem="SapAdjustResponse" Title="Assigned Sap" Width="50px" TextAlign="TextAlign.Left">
-                            <Template Context="detail">
-                                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.AssignedSap)}")
-
-                            </Template>
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="SapAdjustResponse" Title="Actual Sap" Width="50px" TextAlign="TextAlign.Left">
-                            <Template Context="detail">
-                                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.ActualSap)}")
-
-                            </Template>
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="SapAdjustResponse" Title="Commitment Sap" Width="50px" TextAlign="TextAlign.Left">
-                            <Template Context="detail">
-                                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.CommitmentSap)}")
-
-                            </Template>
-                        </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="SapAdjustResponse" Title="Potential Sap" Width="50px" TextAlign="TextAlign.Left">
-                            <Template Context="detail">
-                                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.PotencialSap)}")
-
-                            </Template>
-                        </RadzenDataGridColumn>
-
-                        <RadzenDataGridColumn TItem="SapAdjustResponse" Title="Actions" Width="50px" TextAlign="TextAlign.Left">
-                            <Template Context="detail">
-                                @if (detail.Date.Date != Response.MWOApprovedDate.Date)
-                                {
-                                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2"
-                                                  Click="@(()=>Edit(detail))" MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit Data for {detail.Date.ToShortDateString()}", TooltipPosition.Left) )" />
-
-                                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2"
-                                                  Click="@(()=>Remove(detail))" MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete Data for {detail.Date.ToShortDateString()}", TooltipPosition.Left) )" />
-
-                                }
-
-
-                            </Template>
-                        </RadzenDataGridColumn>
-
-
-                    </Columns>
-                </RadzenDataGrid>
-            </RadzenColumn>
             <RadzenColumn Size="12" SizeLG="5">
+                <RadzenRow>
+                    <RowTemplateTitle Title="@($"Data for {Response.MWOCECName}-{Response.MWOName} ")"></RowTemplateTitle>
+                </RadzenRow>
+                
+
+                <RadzenRow>
+                    <RadzenColumn Size="12" SizeLG="8">
+                        <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mb-2" Click="@(()=>CreateAdjust())"
+                                      MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Add new Date to {Response.MWOName}", TooltipPosition.Top) )" />
+
+                    </RadzenColumn>
+
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" AllowFilterDateInput=true
+                                    AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                                    Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" GridLines=DataGridGridLines.Both
+                                    FilterPopupRenderMode="PopupRenderMode.OnDemand" ShowCellDataAsTooltip=true ShowColumnTitleAsTooltip=true
+                                    Data="@Response.Adjustments" TItem="SapAdjustResponse" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="SapAdjustResponse"
+                                                  Property="@nameof(SapAdjustResponse.Date)" FormatString="{0:d}" Title="Date" Width="50px" TextAlign="TextAlign.Center" />
+                            <RadzenDataGridColumn TItem="SapAdjustResponse" Title="Assigned" Width="50px" TextAlign="TextAlign.Center">
+                                <Template Context="detail">
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.AssignedSap)}")
+
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="SapAdjustResponse" Title="Actual" Width="50px" TextAlign="TextAlign.Center">
+                                <Template Context="detail">
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.ActualSap)}")
+
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="SapAdjustResponse" Title="Commitment" Width="50px" TextAlign="TextAlign.Center">
+                                <Template Context="detail">
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.CommitmentSap)}")
+
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="SapAdjustResponse" Title="Potential" Width="50px" TextAlign="TextAlign.Center">
+                                <Template Context="detail">
+                                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.PotencialSap)}")
+
+                                </Template>
+                            </RadzenDataGridColumn>
+
+                            <RadzenDataGridColumn TItem="SapAdjustResponse" Title="Actions" Width="50px" TextAlign="TextAlign.Center">
+                                <Template Context="detail">
+                                    @if (detail.Date.Date != Response.MWOApprovedDate.Date)
+                                    {
+                                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" class="rz-ml-2"
+                                                      Click="@(()=>Edit(detail))" MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit Data for {detail.Date.ToShortDateString()}", TooltipPosition.Left) )" />
+
+                                        <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" class="rz-ml-2"
+                                                      Click="@(()=>Remove(detail))" MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete Data for {detail.Date.ToShortDateString()}", TooltipPosition.Left) )" />
+
+                                    }
+
+
+                                </Template>
+                            </RadzenDataGridColumn>
+
+
+                        </Columns>
+                    </RadzenDataGrid>
+                </RadzenRow>
+               
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeLG="7">
                 <RadzenCard>
                     <RadzenChart Style="height: 450px;">
                         @foreach (var row in Response.Series)

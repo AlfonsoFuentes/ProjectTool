@@ -15,6 +15,7 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits
         {
 
         }
+       
         public Guid PurchaseOrderId { get; set; }
 
     }

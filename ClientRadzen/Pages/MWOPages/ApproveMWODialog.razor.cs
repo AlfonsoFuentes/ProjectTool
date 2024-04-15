@@ -2,6 +2,7 @@
 using Blazored.FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Radzen;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClientRadzen.Pages.MWOPages
 {
@@ -20,7 +21,7 @@ namespace ClientRadzen.Pages.MWOPages
             if (result.Succeeded)
             {
                 Model = result.Data;
-                Model.Validator += ValidateAsync;
+               
             }
 
         }
@@ -64,9 +65,72 @@ namespace ClientRadzen.Pages.MWOPages
         }
         bool NotValidated = true;
 
-        public void Dispose()
+       
+        public async Task ChangeMWONumber(string _mwonumber)
         {
-            Model.Validator -= ValidateAsync;
+
+            Model.MWONumber = _mwonumber;
+            await ValidateAsync();
+        }
+
+        public async Task ChangePercentageTaxes(string stringpercentage)
+        {
+
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+                return;
+
+            Model.PercentageAssetNoProductive = percentage;
+            await ValidateAsync();
+        }
+        public async Task ChangePercentageEngineering(string stringpercentage)
+        {
+
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+                return;
+
+            Model.PercentageEngineering = percentage;
+            await ValidateAsync();
+        }
+        public async Task ChangeTaxForAlterations(string stringpercentage)
+        {
+
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+                return;
+
+            Model.PercentageTaxForAlterations = percentage;
+            await ValidateAsync();
+
+        }
+        public async Task ChangePercentageContingency(string stringpercentage)
+        {
+
+            double percentage = 0;
+            if (!double.TryParse(stringpercentage, out percentage))
+                return;
+
+
+            Model.PercentageContingency = percentage;
+            await ValidateAsync();
+
+        }
+        public async Task ChangeName(string name)
+        {
+
+            Model.Name = name;
+            await ValidateAsync();
+
+        }
+        public async Task ChangeCostCenter()
+        {
+            await ValidateAsync();
+        }
+        public async Task ChangeType()
+        {
+
+            await ValidateAsync();
         }
     }
 }

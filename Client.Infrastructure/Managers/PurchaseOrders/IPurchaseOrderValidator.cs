@@ -11,11 +11,12 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
 
     public interface IPurchaseOrderValidator : IManager
     {
-        Task<bool> ValidateNameExistInPurchaseOrder(string name);
+        Task<bool> ValidateNameExistInPurchaseOrder(Guid MWOId,string name);
         Task<bool> ValidatePurchaseRequisitionExistInPurchaseOrder(string Purchaserequisition);
-        Task<bool> ValidateNameExistInPurchaseOrder(Guid PurchaseOrderId, string name);
+        Task<bool> ValidateNameExistInPurchaseOrder(Guid MWOId, Guid PurchaseOrderId, string name);
         Task<bool> ValidatePurchaseRequisitionExistInPurchaseOrder(Guid PurchaseOrderId, string purchaserequisition);
         Task<bool> ValidatePONumberExistInPurchaseOrder(Guid PurchaseOrderId, string ponumber);
+        Task<bool> ValidatePONumberExistInPurchaseOrder( string ponumber);
     }
     public class PurchaseOrderValidator : IPurchaseOrderValidator
     {
@@ -24,10 +25,10 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         {
             Http = httpClientFactory.CreateClient("Auth");
         }
-        public async Task<bool> ValidateNameExistInPurchaseOrder(string name)
+        public async Task<bool> ValidateNameExistInPurchaseOrder(Guid MWOId,string name)
         {
           
-            var httpresult = await Http.GetAsync($"PurchaseOrderValidator/ValidateNameExist/{name}");
+            var httpresult = await Http.GetAsync($"PurchaseOrderValidator/ValidateNameExist/{MWOId}/{name}");
             return await httpresult.ToObject<bool>();
         }
 
@@ -38,23 +39,29 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
             return await httpresult.ToObject<bool>();
         }
 
-        public async Task<bool> ValidateNameExistInPurchaseOrder(Guid PurchaseOrderId, string name)
+        public async Task<bool> ValidateNameExistInPurchaseOrder(Guid MWOId, Guid PurchaseOrderId, string name)
         {
           
-            var httpresult = await Http.GetAsync($"PurchaseOrderValidator/ValidateNameExist/{name}/{PurchaseOrderId}");
+            var httpresult = await Http.GetAsync($"PurchaseOrderValidator/ValidateNameExist/{MWOId}/{PurchaseOrderId}/{name}");
             return await httpresult.ToObject<bool>();
         }
 
         public async Task<bool> ValidatePurchaseRequisitionExistInPurchaseOrder(Guid PurchaseOrderId, string purchaserequisition)
         {
          
-            var httpresult = await Http.GetAsync($"PurchaseOrderValidator/ValidatePurchaseRequisitionExist/{purchaserequisition}/{PurchaseOrderId}");
+            var httpresult = await Http.GetAsync($"PurchaseOrderValidator/ValidatePurchaseRequisitionExist/{PurchaseOrderId}/{purchaserequisition}");
             return await httpresult.ToObject<bool>();
         }
         public async Task<bool> ValidatePONumberExistInPurchaseOrder(Guid PurchaseOrderId, string ponumber)
         {
          
-            var httpresult = await Http.GetAsync($"PurchaseOrderValidator/ValidatePONumberExist/{ponumber}/{PurchaseOrderId}");
+            var httpresult = await Http.GetAsync($"PurchaseOrderValidator/ValidatePONumberExist/{PurchaseOrderId}/{ponumber}");
+            return await httpresult.ToObject<bool>();
+        }
+
+        public async Task<bool> ValidatePONumberExistInPurchaseOrder(string ponumber)
+        {
+            var httpresult = await Http.GetAsync($"PurchaseOrderValidator/ValidatePONumberExist/{ponumber}");
             return await httpresult.ToObject<bool>();
         }
     }

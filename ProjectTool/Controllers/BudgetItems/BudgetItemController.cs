@@ -17,29 +17,29 @@ namespace Server.Controllers.BudgetItems
             Mediator = mediator;
         }
         [HttpPost("CreateRegularItem")]
-        public async Task<IActionResult> CreateRegularBudgetItem(CreateBudgetItemRequestDto request)
+        public async Task<IActionResult> CreateRegularBudgetItem(CreateBudgetItemRequest request)
         {
 
             return Ok(await Mediator.Send(new CreateRegularBudgetItemCommand(request)));
         }
         [HttpPost("CreateEquipmentItem")]
-        public async Task<IActionResult> CreateEquipmentItem(CreateBudgetItemRequestDto request)
+        public async Task<IActionResult> CreateEquipmentItem(CreateBudgetItemRequest request)
         {
 
             return Ok(await Mediator.Send(new CreateEquipmentInstrumentsItemCommand(request)));
         }
         [HttpPost("CreateEngContItem")]
-        public async Task<IActionResult> CreateEngContItem(CreateBudgetItemRequestDto request)
+        public async Task<IActionResult> CreateEngContItem(CreateBudgetItemRequest request)
         {
             return Ok(await Mediator.Send(new CreateEngContingencyCommand(request)));
         }
         [HttpPost("CreateTaxItem")]
-        public async Task<IActionResult> CreateTaxtItem(CreateBudgetItemRequestDto request)
+        public async Task<IActionResult> CreateTaxtItem(CreateBudgetItemRequest request)
         {
             return Ok(await Mediator.Send(new CreateTaxItemCommand(request)));
         }
         [HttpPost("CreateAlterationItem")]
-        public async Task<IActionResult> CreateAlterationItem(CreateBudgetItemRequestDto request)
+        public async Task<IActionResult> CreateAlterationItem(CreateBudgetItemRequest request)
         {
             return Ok(await Mediator.Send(new CreateAlterationBudgetItemCommand(request)));
         }
@@ -96,23 +96,23 @@ namespace Server.Controllers.BudgetItems
         }
        
         [HttpPost("UpdateEquipmentItem")]
-        public async Task<IActionResult> UpdateEquipmentItem(UpdateBudgetItemRequestDto request)
+        public async Task<IActionResult> UpdateEquipmentItem(UpdateBudgetItemRequest request)
         {
 
             return Ok(await Mediator.Send(new UpdateEquipmentInstrumentsItemCommand(request)));
         }
         [HttpPost("UpdateEngContItem")]
-        public async Task<IActionResult> UpdateEngContItem(UpdateBudgetItemRequestDto request)
+        public async Task<IActionResult> UpdateEngContItem(UpdateBudgetItemRequest request)
         {
             return Ok(await Mediator.Send(new UpdateEngContingencyCommand(request)));
         }
         [HttpPost("UpdateTaxItem")]
-        public async Task<IActionResult> UpdateTaxtItem(UpdateBudgetItemRequestDto request)
+        public async Task<IActionResult> UpdateTaxtItem(UpdateBudgetItemRequest request)
         {
             return Ok(await Mediator.Send(new UpdateTaxItemCommand(request)));
         }
         [HttpPost("UpdateAlterationItem")]
-        public async Task<IActionResult> UpdateAlterationItem(UpdateBudgetItemRequestDto request)
+        public async Task<IActionResult> UpdateAlterationItem(UpdateBudgetItemRequest request)
         {
             return Ok(await Mediator.Send(new UpdateAlterationBudgetItemCommand(request)));
         }

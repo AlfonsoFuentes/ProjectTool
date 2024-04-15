@@ -5,7 +5,7 @@
 
 <RadzenStack Orientation="Orientation.Vertical">
     <RadzenRow>
-        <RadzenText TextStyle="TextStyle.DisplayH5" Text="@($"Create New Data for {Model.MWOName} at date: {Model.Date.ToShortDateString()}")"></RadzenText>
+        <RadzenText TextStyle="TextStyle.DisplayH5" Text="@($"Create New Data for {Model.MWOCECName}-{Model.MWOName} at date: {Model.Date.ToShortDateString()}")"></RadzenText>
     </RadzenRow>
 
     <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
@@ -18,7 +18,7 @@
 
                         <RadzenFormField Text="Actual SAP" Style="width: 100%;">
                             <RadzenNumeric ShowUpDown=false @bind-Value=@Model.ActualSap class="w-100"
-                                           @oninput="@((arg)=>Model.ChangeActualSap(arg.Value!.ToString()!))"
+                                           @oninput="@((arg)=>ChangeActualSap(arg.Value!.ToString()!))"
                                            Name="actual sap" />
 
                         </RadzenFormField>
@@ -27,7 +27,7 @@
                     <RadzenColumn Size="4" SizeMD="4">
                         <RadzenFormField Text="Actual Software" Style="width: 100%;">
                             <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
-                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.ActualSoftware)}")</b>
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.ActualSoftware)}")</b>
                             </RadzenText>
                         </RadzenFormField>
 
@@ -36,7 +36,7 @@
                     <RadzenColumn Size="4" SizeMD="4">
                         <RadzenFormField Text="Actual Diference" Style="width: 100%;">
                             <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
-                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.DiferenceActual)}")</b>
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.DiferenceActual)}")</b>
                             </RadzenText>
                         </RadzenFormField>
 
@@ -49,7 +49,7 @@
 
                         <RadzenFormField Text="Commitment SAP" Style="width: 100%;">
                             <RadzenNumeric ShowUpDown=false @bind-Value=@Model.CommitmentSap class="w-100"
-                                           @oninput="@((arg)=>Model.ChangeCommitmentSap(arg.Value!.ToString()!))"
+                                           @oninput="@((arg)=>ChangeCommitmentSap(arg.Value!.ToString()!))"
                                            Name="actual sap" />
 
                         </RadzenFormField>
@@ -58,7 +58,7 @@
                     <RadzenColumn Size="4" SizeMD="4">
                         <RadzenFormField Text="Commitment Software" Style="width: 100%;">
                             <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
-                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.CommitmentSoftware)}")</b>
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.CommitmentSoftware)}")</b>
                             </RadzenText>
                         </RadzenFormField>
 
@@ -67,7 +67,7 @@
                     <RadzenColumn Size="4" SizeMD="4">
                         <RadzenFormField Text="Commitment Diference" Style="width: 100%;">
                             <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
-                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.DiferenceCommitment)}")</b>
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.DiferenceCommitment)}")</b>
                             </RadzenText>
                         </RadzenFormField>
 
@@ -80,7 +80,7 @@
 
                         <RadzenFormField Text="Potential SAP" Style="width: 100%;">
                             <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PotencialSap class="w-100"
-                                           @oninput="@((arg)=>Model.ChangePotencialSap(arg.Value!.ToString()!))"
+                                           @oninput="@((arg)=>ChangePotencialSap(arg.Value!.ToString()!))"
                                            Name="actual sap" />
 
                         </RadzenFormField>
@@ -89,7 +89,7 @@
                     <RadzenColumn Size="4" SizeMD="4">
                         <RadzenFormField Text="Potential Software" Style="width: 100%;">
                             <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
-                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.PotencialSoftware)}")</b>
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.PotencialSoftware)}")</b>
                             </RadzenText>
                         </RadzenFormField>
 
@@ -98,7 +98,7 @@
                     <RadzenColumn Size="4" SizeMD="4">
                         <RadzenFormField Text="Potential Diference" Style="width: 100%;">
                             <RadzenText class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;">
-                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Model.DiferencePotencial)}")</b>
+                                <b>@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.DiferencePotencial)}")</b>
                             </RadzenText>
                         </RadzenFormField>
 
@@ -121,7 +121,7 @@
                 <RadzenRow>
 
                     <RadzenFileInput @bind-Value=@Model.ImageData @bind-FileName=@Model.ImageTitle @bind-FileSize=@fileSize TValue="string" class="w-100"
-                                     Change=@(args =>Model.ChangeImage(args)) Error=@(args => OnError(args, "FileInput")) Accept="image/*"
+                                     Change=@(args =>ChangeImage(args)) Error=@(args => OnError(args, "FileInput")) Accept="image/*"
                                      ChooseText="Select SAP Image"
                                      InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})" />
                     <ValidationMessage For="() => Model.ImageData" style="color:red; font-size:x-small;" />

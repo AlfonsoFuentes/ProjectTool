@@ -17,13 +17,13 @@ namespace Server.Controllers.SapAdjusts
             Mediator = mediator;
         }
         [HttpPost("CreateSapAdjust")]
-        public async Task<IActionResult> CreateSapAdjust(CreateSapAdjustRequestDto request)
+        public async Task<IActionResult> CreateSapAdjust(CreateSapAdjustRequest request)
         {
             return Ok(await Mediator.Send(new CreateSapAdjustCommand(request)));
         }
         
         [HttpPost("UpdateSapAdjust")]
-        public async Task<IActionResult> UpdateSapAdjust(UpdateSapAdjustRequestDto request)
+        public async Task<IActionResult> UpdateSapAdjust(UpdateSapAdjustRequest request)
         {
             return Ok(await Mediator.Send(new UpdateSapAdjustCommand(request)));
         }

@@ -53,9 +53,9 @@ namespace Application.Features.PurchaseOrders.Queries
                 },
                 PurchaseorderName = purchaseOrder.PurchaseorderName,
                 PurchaseorderId = purchaseOrder.Id,
-               
+
                 PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
-               
+                PONumber = purchaseOrder.PONumber,
                 USDCOP = purchaseOrder.USDCOP,
                 USDEUR = purchaseOrder.USDEUR,
                 CurrencyDate = purchaseOrder.CurrencyDate,
@@ -67,14 +67,16 @@ namespace Application.Features.PurchaseOrders.Queries
                     Name = x.Name,
                     Quantity = x.Quantity,
                     BudgetItemName = x.BudgetItem.Name,
-                    QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
-                    CurrencyUnitaryValue = (purchaseOrder.Currency == CurrencyEnum.USD.Id ? x.POValueUSD :
-                    purchaseOrder.Currency == CurrencyEnum.COP.Id ? x.POValueUSD * purchaseOrder.USDCOP :
-                    x.POValueUSD * purchaseOrder.USDEUR) / x.Quantity,
+                    Currency = CurrencyEnum.GetType(purchaseOrder.Currency),
+                    CurrencyUnitaryValue = x.UnitaryValueCurrency,
+                    ActualCurrency=x.ActualCurrency,
+                    AssignedCurrency=x.ActualCurrency,
+                    TRMUSDCOP = purchaseOrder.USDCOP,
+                    TRMUSDEUR = purchaseOrder.USDEUR,
 
                 }).FirstOrDefault()!,
 
-               
+
 
 
 

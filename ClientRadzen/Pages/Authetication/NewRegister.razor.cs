@@ -3,10 +3,11 @@ using Blazored.FluentValidation;
 using Client.Infrastructure.Managers.UserAccount;
 using Microsoft.AspNetCore.Components;
 using Shared.Models.UserAccounts.Registers;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClientRadzen.Pages.Authetication
 {
-    public partial class NewRegister:IDisposable
+    public partial class NewRegister
     {
         [CascadingParameter]
         public App MainApp { get; set; }
@@ -15,10 +16,7 @@ namespace ClientRadzen.Pages.Authetication
         [Inject]
         private IUserAccountService Service { get; set; }
 
-        protected override void OnInitialized()
-        {
-            Model.Validator += ValidateAsync;
-        }
+       
         async Task RegisterUserAsync()
         {
             var result = await Service.RegisterUser(Model);
@@ -36,9 +34,15 @@ namespace ClientRadzen.Pages.Authetication
             return NotValidated;
         }
 
-        public void Dispose()
+       
+        public async Task ChangeRole()
         {
-            Model.Validator -= ValidateAsync;
+            await ValidateAsync();
+        }
+        public async Task ChangeEmail(string email)
+        {
+            Model.Email = email;
+            await ValidateAsync();
         }
     }
 }

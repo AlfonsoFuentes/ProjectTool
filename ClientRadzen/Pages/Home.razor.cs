@@ -1,11 +1,16 @@
 using Client.Infrastructure.Managers.ChangeUser;
+using Client.Infrastructure.Managers.PurchaseOrders;
 using Microsoft.AspNetCore.Components;
-
+#nullable disable
 namespace ClientRadzen.Pages;
 public partial class Home
 {
-    [Inject]
-    private IChangeUserManager changeUserManager { get; set; }
+    [CascadingParameter]
+    public App MainApp { get; set; }
+    //[Inject]
+    //private IChangeUserManager changeUserManager { get; set; }
+    //[Inject]
+    //private IPurchaseOrderService purchaseOrderService { get; set; }
     protected override async Task OnInitializedAsync()
     {
         //if (CurrentUser.UserName == "alfonso_fuentes@colpal.com")
@@ -14,6 +19,11 @@ public partial class Home
         //    await changeUserManager.ChangeUser();
         //}
         //await changeUserManager.UpdateDataForMWO();
+        //var result = await purchaseOrderService.RecalculatePurchaseOrder();
+        //if (result.Succeeded)
+        //{
+
+        //}
     }
 
 }

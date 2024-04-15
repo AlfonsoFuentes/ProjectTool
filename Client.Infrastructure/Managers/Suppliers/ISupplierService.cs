@@ -1,4 +1,6 @@
-﻿using Client.Infrastructure.Managers;
+﻿using Azure.Core;
+using Client.Infrastructure.Managers;
+using Shared.Models.FileResults;
 using Shared.Models.Suppliers;
 
 namespace Client.Infrastructure.Managers.Suppliers
@@ -13,6 +15,8 @@ namespace Client.Infrastructure.Managers.Suppliers
 
         Task<IResult<List<SupplierResponse>>> GetAllSupplier();
         Task<IResult<UpdateSupplierRequest>> GetSupplierById(Guid id);
+
+        Task<IResult<FileResult>> ExporToExcel();
 
         Task<IResult> Delete(SupplierResponse request);
         Task<IResult<SupplierResponse>> CreateSupplierForPurchaseOrder(CreateSupplierForPurchaseOrderRequest request);
@@ -30,9 +34,8 @@ namespace Client.Infrastructure.Managers.Suppliers
         {
             try
             {
-                var model = new CreateSupplierRequestDto();
-                model.ConvertToDto(request);
-                var httpresult = await Http.PostAsJsonAsync("Supplier/CreateSupplier", model);
+             
+                var httpresult = await Http.PostAsJsonAsync("Supplier/CreateSupplier", request);
 
                 return await httpresult.ToResult();
             }
@@ -47,9 +50,8 @@ namespace Client.Infrastructure.Managers.Suppliers
         {
             try
             {
-                var model = new CreateSupplierRequestDto();
-                model.ConvertToDto(request);
-                var httpresult = await Http.PostAsJsonAsync("Supplier/CreateSupplierForPurchaseorder", model);
+               
+                var httpresult = await Http.PostAsJsonAsync("Supplier/CreateSupplierForPurchaseorder", request);
 
                 return await httpresult.ToResult<SupplierResponse>();
             }
@@ -64,10 +66,9 @@ namespace Client.Infrastructure.Managers.Suppliers
         {
             try
             {
-                UpdateSupplierRequestDto model = new();
-                model.ConvertToDto(request);
-                
-                var httpresult = await Http.PostAsJsonAsync("Supplier/UpdateSupplier", model);
+            
+
+                var httpresult = await Http.PostAsJsonAsync("Supplier/UpdateSupplier", request);
 
                 return await httpresult.ToResult();
             }
@@ -114,6 +115,20 @@ namespace Client.Infrastructure.Managers.Suppliers
             var httpresult = await Http.GetAsync($"Supplier/CreateEmailExist?email={email}");
 
             return await httpresult.ToObject<bool>();
+        }
+        public async Task<IResult<FileResult>> ExporToExcel()
+        {
+            try
+            {
+                var httpresult = await Http.GetAsync($"ExportToFile/SupplierExcel");
+                return await httpresult.ToResult<FileResult>();
+            }
+            catch (Exception ex)
+            {
+                string exm = ex.Message;
+            }
+
+            return await Result<FileResult>.FailAsync();
         }
     }
 }

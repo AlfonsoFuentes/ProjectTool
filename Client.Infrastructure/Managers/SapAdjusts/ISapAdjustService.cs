@@ -28,8 +28,8 @@ namespace Client.Infrastructure.Managers.SapAdjusts
         {
             try
             {
-                CreateSapAdjustRequestDto model = request.ConvertToDto();
-                var httpresult = await Http.PostAsJsonAsync("SapAdjust/CreateSapAdjust", model);
+             
+                var httpresult = await Http.PostAsJsonAsync("SapAdjust/CreateSapAdjust", request);
 
                 return await httpresult.ToResult();
             }
@@ -44,8 +44,8 @@ namespace Client.Infrastructure.Managers.SapAdjusts
         {
             try
             {
-                UpdateSapAdjustRequestDto model = request.ConvertToDto();
-                var httpresult = await Http.PostAsJsonAsync("SapAdjust/UpdateSapAdjust", model);
+              
+                var httpresult = await Http.PostAsJsonAsync("SapAdjust/UpdateSapAdjust", request);
 
                 return await httpresult.ToResult();
             }

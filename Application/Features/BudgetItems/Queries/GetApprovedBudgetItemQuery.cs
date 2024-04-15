@@ -4,6 +4,7 @@ using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.CostCenter;
+using Shared.Models.Currencies;
 using Shared.Models.MWOTypes;
 using Shared.Models.PurchaseOrders.Responses;
 using Shared.Models.PurchaseorderStatus;
@@ -65,18 +66,24 @@ namespace Application.Features.BudgetItems.Queries
                 ExpectedOn = x.POExpectedDateDate == null ? string.Empty : x.POExpectedDateDate.Value.ToShortDateString(),
                 PurchaseRequisition = x.PurchaseRequisition,
                 QuoteNo = x.QuoteNo,
-                Supplier = x.Supplier == null ? string.Empty : x.Supplier.NickName,
+                SupplierNickName = x.Supplier == null ? string.Empty : x.Supplier.NickName,
+                SupplierName = x.Supplier == null ? string.Empty : x.Supplier.Name,
                 SupplierId = x.SupplierId,
                 TaxCode = x.TaxCode,
                 VendorCode = x.Supplier == null ? string.Empty : x.Supplier.VendorCode,
                 ReceivedOn = x.POClosedDate == null ? string.Empty : x.POClosedDate.Value.ToShortDateString(),
                 PurchaseOrderItems = x.PurchaseOrderItems.Select(y => new PurchaseorderItemsResponse()
                 {
-                    Actual = y.Actual,
+                    PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(x.PurchaseOrderStatus),
+                    UnitaryValueCurrency=y.UnitaryValueCurrency,
+                    Quantity = y.Quantity,
+                    
+                    Currency = CurrencyEnum.GetType(x.Currency),
+                    USDCOP = x.USDCOP,
+                    USDEUR = x.USDEUR,
                     BudgetItemId = y.BudgetItemId,
-                    POValueUSD = x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id ? y.POValueUSD : 0,
                     PurchaseorderItemId = y.PurchaseOrderId,
-                    Potencial = x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id ? y.POValueUSD : 0
+                   
                 }
                 ).ToList(),
 

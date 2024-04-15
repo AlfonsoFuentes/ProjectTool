@@ -47,7 +47,7 @@ namespace Application.Features.BudgetItems.Command
 
             var result = await _appDbContext.SaveChangesAsync(cancellationToken);
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
-            await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
+            //await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} was removed succesfully!");

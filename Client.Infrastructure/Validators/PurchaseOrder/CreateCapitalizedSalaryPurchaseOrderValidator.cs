@@ -19,8 +19,8 @@ namespace Client.Infrastructure.Validators.PurchaseOrder
             RuleFor(X => X.PurchaseorderNumber).Length(10)
                 .When(x => x.IsCapitalizedSalary == false && !string.IsNullOrEmpty(x.PurchaseorderNumber)).WithMessage("PO number must 10 characters");
 
-            RuleFor(x => x.TRMUSDEUR).GreaterThan(0).WithMessage("TRM must be defined");
-            RuleFor(x => x.TRMUSDCOP).GreaterThan(0).WithMessage("TRM must be defined");
+            RuleFor(x => x.USDEUR).GreaterThan(0).WithMessage("TRM must be defined");
+            RuleFor(x => x.USDCOP).GreaterThan(0).WithMessage("TRM must be defined");
             RuleFor(x => x.SumPOValueUSD).GreaterThan(0).WithMessage("PO Value must be defined");
             PurchaseOrderValidator = purchaseOrderValidator;
             RuleFor(x => x.PurchaseOrderName).MustAsync(ReviewNameExist).When(x => !string.IsNullOrEmpty(x.PurchaseOrderName))
@@ -38,7 +38,7 @@ namespace Client.Infrastructure.Validators.PurchaseOrder
         async Task<bool> ReviewNameExist(CreateCapitalizedSalaryPurchaseOrderRequest Purchaseorder, string name, CancellationToken cancellationToken)
         {
 
-            var result = await PurchaseOrderValidator.ValidateNameExistInPurchaseOrder(name);
+            var result = await PurchaseOrderValidator.ValidateNameExistInPurchaseOrder(Purchaseorder.MWOId,name);
             return !result;
         }
     }
