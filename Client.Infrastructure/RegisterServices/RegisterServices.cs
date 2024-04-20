@@ -1,6 +1,5 @@
 ﻿
 using Blazored.LocalStorage;
-using Client.Infrastructure.Authentication;
 using Client.Infrastructure.Managers.CurrencyApis;
 using Client.Infrastructure.Managers.UserManagement;
 using System.Globalization;
@@ -16,15 +15,9 @@ namespace Client.Infrastructure.RegisterServices
 
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddAuthorizationCore();
-            builder.Services.AddCascadingAuthenticationState();
-            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-
-
-            // register the cookie handler
-
-            builder.Services.AddScoped<CurrentUser>();
-            // register the account management interface
-
+            builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddScoped<RefreshTokenService>();
 
             var frontend = builder.Configuration["FrontendUrl"];
             var backend = builder.Configuration["BackendUrl"];

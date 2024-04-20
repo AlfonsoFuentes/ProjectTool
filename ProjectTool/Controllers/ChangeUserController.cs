@@ -1,6 +1,4 @@
-﻿using Application.Features.Brands.Command;
-using Application.Features.ChangeUser;
-using Azure.Core;
+﻿using Application.Features.ChangeUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +24,11 @@ namespace Server.Controllers
         public async Task<IActionResult> UpdateDataForMWOs()
         {
             return Ok(await Mediator.Send(new UpdataForMWOSCommand()));
+        }
+        [HttpPost("UpdateTenant")]
+        public async Task<IActionResult> UpdateTenat()
+        {
+            return Ok(await Mediator.Send(new UpdateTenantCommand()));
         }
     }
 }

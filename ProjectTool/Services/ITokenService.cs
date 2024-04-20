@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.Account;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -41,7 +42,8 @@ namespace Server.Services
         {
             var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.Email)
+            new Claim(ClaimTypes.Name, user.Email!),
+            new Claim(Constants.ClaimTenantId,user.Id),
         };
 
             var roles = await _userManager.GetRolesAsync(user);

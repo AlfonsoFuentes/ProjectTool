@@ -41,10 +41,6 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("InternalRole")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -67,6 +63,13 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -97,19 +100,12 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
@@ -135,10 +131,6 @@ namespace Infrastructure.Migrations
                     b.Property<double>("Budget")
                         .HasColumnType("float");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -154,9 +146,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("IsNotAbleToEditDelete")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
@@ -183,6 +172,10 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
@@ -194,6 +187,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("BrandId");
 
                     b.HasIndex("MWOId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("BudgetItems");
                 });
@@ -215,10 +210,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("CBSRequesText")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
@@ -248,9 +239,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Incotherm")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -275,9 +263,15 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("RequestDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PurchaseOrderId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("DownPayments");
                 });
@@ -294,10 +288,6 @@ namespace Infrastructure.Migrations
                     b.Property<int>("CostCenter")
                         .HasColumnType("int");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -307,9 +297,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("IsAssetProductive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
@@ -337,10 +324,16 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("MWOs");
                 });
@@ -357,10 +350,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<double>("ActualCurrency")
                         .HasColumnType("float");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
@@ -383,9 +372,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("IsTaxEditable")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
@@ -441,6 +427,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<double>("USDCOP")
                         .HasColumnType("float");
 
@@ -452,6 +442,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("MWOId");
 
                     b.HasIndex("SupplierId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("PurchaseOrders");
                 });
@@ -468,10 +460,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("BudgetItemId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -484,9 +472,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("IsTaxNoProductive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
@@ -501,6 +486,10 @@ namespace Infrastructure.Migrations
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
 
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<double>("UnitaryValueCurrency")
                         .HasColumnType("float");
 
@@ -509,6 +498,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("BudgetItemId");
 
                     b.HasIndex("PurchaseOrderId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("PurchaseOrderItems");
                 });
@@ -534,10 +525,6 @@ namespace Infrastructure.Migrations
                     b.Property<double>("CommitmentSoftware")
                         .HasColumnType("float");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -560,9 +547,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -575,9 +559,15 @@ namespace Infrastructure.Migrations
                     b.Property<double>("PotencialSoftware")
                         .HasColumnType("float");
 
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MWOId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("SapAdjusts");
                 });
@@ -597,19 +587,12 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ContactName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
@@ -654,10 +637,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("BudgetItemId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -665,20 +644,23 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("SelectedId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BudgetItemId");
 
                     b.HasIndex("SelectedId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("TaxesItems");
                 });

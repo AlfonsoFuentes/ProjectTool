@@ -1,11 +1,10 @@
+using BlazorDownloadFile;
+using Client.Infrastructure.RegisterServices;
 using ClientRadzen;
+using ClientRadzen.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
-using Client.Infrastructure.RegisterServices;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using ClientRadzen.Services;
-using BlazorDownloadFile;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

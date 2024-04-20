@@ -17,8 +17,8 @@ public partial class Home
         //{
         //    //Este codigo se creo para cambiar de usuario de alfonsofuen@gmail.com(Superadmin) a regular user(alfonso_fuentes)
         //    await changeUserManager.ChangeUser();
-        //}
-        //await changeUserManager.UpdateDataForMWO();
+        ////}
+        //await changeUserManager.UpdateTenant();
         //var result = await purchaseOrderService.RecalculatePurchaseOrder();
         //if (result.Succeeded)
         //{

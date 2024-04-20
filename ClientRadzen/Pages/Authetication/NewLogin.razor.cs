@@ -1,10 +1,9 @@
 ﻿using Blazored.FluentValidation;
-using Client.Infrastructure.Authentication;
-using Client.Infrastructure.Managers.UserAccount;
+using Client.Infrastructure.Managers.UserManagement;
 using Microsoft.AspNetCore.Components;
 using Shared.Models.UserAccounts.Logins;
 using Shared.Models.UserAccounts.Registers;
-using System.ComponentModel.DataAnnotations;
+using Shared.Models.UserManagements;
 #nullable disable
 namespace ClientRadzen.Pages.Authetication
 {
@@ -12,11 +11,10 @@ namespace ClientRadzen.Pages.Authetication
     {
         [CascadingParameter]
         private App MainApp { get; set; }
+       
         [Inject]
-        private IUserAccountService Service { get; set; }
+        public IAuthenticationService AuthenticationService { get; set; }
 
-        [Inject]
-        private AuthenticationStateProvider AuthStateProvider { get; set; }
         protected override void OnInitialized()
         {
         
@@ -33,11 +31,15 @@ namespace ClientRadzen.Pages.Authetication
         LoginUserRequest Model = new();
         async Task LoginAsync()
         {
-            var result = await Service.LoginUser(Model);
-            if (result.Succeeded)
+            var model = new UserForAuthenticationDto()
             {
-                var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
-                await customAuthStateProvider.UpdateAuthenticationState(result.Data.Token);
+                 Email=Model.Email,
+                 Password=Model.Password,
+            };
+            var result = await AuthenticationService.Login(model);
+            if (result.IsAuthSuccessful)
+            {
+               
                 _NavigationManager.NavigateTo("/");
             }
 
@@ -49,41 +51,35 @@ namespace ClientRadzen.Pages.Authetication
                 Email = Model.Email,
                 Password = Model.NewPassword,
             };
-            var result = await Service.ChangePasswordUser(modelchangepassword);
-            if (result.Succeeded)
+            var result = await AuthenticationService.ChangePasswordUser(modelchangepassword);
+            if (result)
             {
 
                 _NavigationManager.NavigateTo("/NewLogin", forceLoad: true);
             }
 
         }
-        async Task RegisterSuperAdminAsync()
-        {
-            RegisterSuperAdminUserRequest model = new();
-            var result = await Service.RegisterSuperAdminUser(model);
-            if (result.Succeeded)
-            {
-
-            }
-
-        }
+        bool ShowButtons = false;
         async Task ValidateConfirmEmailPassword(string email)
         {
-            var result = await Service.ValidateIfEmailExist(email);
-            if (result.Succeeded)
+            var result = await AuthenticationService.ValidateIfEmailExist(email);
+            if (result)
             {
                 Model.EmailConfirmed = true;
 
-                var resulpassword = await Service.ValidateIfPasswordConfirmed(email);
-                Model.PasswordConfirmed = resulpassword.Succeeded;
-                
+                var resulpassword = await AuthenticationService.ValidateIfPasswordConfirmed(email);
+                Model.PasswordConfirmed = resulpassword;
+                ShowButtons = true;
 
             }
             else
             {
+              
                 Model.EmailConfirmed = false;
                 Model.PasswordConfirmed = false;
+                ShowButtons = true;
             }
+          
             StateHasChanged();
 
 

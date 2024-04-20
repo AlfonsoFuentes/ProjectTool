@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.Data
 {
-    public class PurchaseOrder : BaseEntity
+    public class PurchaseOrder : BaseEntity, ITenantEntity
     {
         public Guid MWOId { get; set; }
         public MWO MWO { get; set; } = null!;
-
+        public string TenantId { get; set; } = string.Empty;
         public Guid MainBudgetItemId { get; set; }
         public Guid? SupplierId { get; set; }
         public Supplier? Supplier { get; set; } = null!;

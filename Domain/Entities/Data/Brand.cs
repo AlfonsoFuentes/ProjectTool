@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities.Data
 {
-    public class Brand : BaseEntity
+    public class Brand : BaseEntity, ITenantCommonEntity
     {
 
         public string Name { get; set; } = string.Empty;

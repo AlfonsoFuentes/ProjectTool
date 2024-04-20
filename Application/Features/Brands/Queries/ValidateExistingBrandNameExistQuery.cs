@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces;
 using MediatR;
-using Shared.Models.Brands;
 
 namespace Application.Features.Brands.Queries
 {

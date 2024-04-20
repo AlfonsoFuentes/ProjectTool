@@ -1,8 +1,8 @@
 ﻿namespace Domain.Entities.Data
 {
-    public class DownPayment : BaseEntity
+    public class DownPayment : BaseEntity, ITenantEntity
     {
-
+        public string TenantId { get; set; } = string.Empty;
         public static DownPayment Create(Guid purchaseorderid)
         {
             DownPayment item = new DownPayment();

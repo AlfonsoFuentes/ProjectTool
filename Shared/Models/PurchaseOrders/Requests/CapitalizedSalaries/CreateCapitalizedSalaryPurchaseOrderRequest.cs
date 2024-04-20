@@ -20,8 +20,8 @@ namespace Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries
         public double USDEUR { get; set; }
         public DateTime CurrencyDate { get; set; }
         public string CurrencyDateOnly => CurrencyDate.ToShortDateString();
-        public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.COP;
-        public CurrencyEnum QuoteCurrency { get; set; } = CurrencyEnum.COP;
+        public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.USD;
+        public CurrencyEnum QuoteCurrency { get; set; } = CurrencyEnum.USD;
         public PurchaseOrderItemRequest PurchaseOrderItem { get; set; } = new();
        
         public Guid MWOId { get; set; }
@@ -49,7 +49,7 @@ namespace Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries
         {
             PurchaseOrderItem.SetBudgetItem(response, USDCOP, USDEUR);
             PurchaseOrderItem.QuoteCurrency = CurrencyEnum.USD;
-
+            PurchaseOrderItem.PurchaseOrderCurrency = CurrencyEnum.USD;
 
 
         }

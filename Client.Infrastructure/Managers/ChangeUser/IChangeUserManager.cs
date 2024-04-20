@@ -11,6 +11,7 @@ namespace Client.Infrastructure.Managers.ChangeUser
     {
         public Task<IResult> ChangeUser();
         public Task<IResult> UpdateDataForMWO();
+        public Task<IResult> UpdateTenant();
 
     }
     public class ChangeUserManager:IChangeUserManager 
@@ -31,6 +32,13 @@ namespace Client.Infrastructure.Managers.ChangeUser
         public async Task<IResult> UpdateDataForMWO()
         {
             var httpresult = await Http.PostAsync("ChangeUser/UpdateDataForMWOs", null);
+
+            return await httpresult.ToResult();
+        }
+
+        public async Task<IResult> UpdateTenant()
+        {
+            var httpresult = await Http.PostAsync("ChangeUser/UpdateTenant", null);
 
             return await httpresult.ToResult();
         }

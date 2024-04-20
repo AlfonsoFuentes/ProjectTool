@@ -1,8 +1,6 @@
 ﻿@page "/NewLogin"
-@using Client.Infrastructure.Authentication
-@using Client.Infrastructure.Managers.UserAccount
-@using Shared.Models.UserAccounts.Logins
-@using Shared.Models.UserAccounts.Registers
+
+
 @attribute [AllowAnonymous]
 <RadzenStack Orientation="Orientation.Vertical">
 
@@ -12,10 +10,9 @@
         <RadzenRow>
             <RadzenColumn SizeXS="8" SizeSM="4">
                 <RadzenFormField Text="Email" Style="width: 100%;">
-                    <RadzenTextBox @bind-Value=@Model.Email class="w-100" 
-                              
+                    <RadzenTextBox @bind-Value=@Model.Email class="w-100"
                                    @oninput=@((arg)=>ValidateConfirmEmailPassword(arg.Value!.ToString()!))
-                                   Placeholder="name@example.com"  />
+                                   Placeholder="name@example.com" />
 
                 </RadzenFormField>
                 <ValidationMessage For="() => Model.Email" style="color:red; font-size:x-small;" />
@@ -23,27 +20,24 @@
         </RadzenRow>
         <RadzenRow>
             <RadzenColumn SizeXS="8" SizeSM="4">
-                @if (Model.EmailConfirmed)
+                @if (Model.PasswordConfirmed)
                 {
-                    @if (Model.PasswordConfirmed)
-                    {
-                        <RadzenFormField Text="Password" Style="width: 100%;">
-                            <RadzenPassword @bind-Value=@Model.Password AutoComplete=true aria-label="enter password"
-                                            @oninput="@((arg)=>ChangePassword(arg.Value!.ToString()!))"
-                                            class="w-100" Name="password" AutoCompleteType="AutoCompleteType.CurrentPassword" />
+                    <RadzenFormField Text="Password" Style="width: 100%;">
+                        <RadzenPassword @bind-Value=@Model.Password AutoComplete=true aria-label="enter password"
+                                        @oninput="@((arg)=>ChangePassword(arg.Value!.ToString()!))"
+                                        class="w-100" Name="password" AutoCompleteType="AutoCompleteType.CurrentPassword" />
 
-                        </RadzenFormField>
-                        <ValidationMessage For="() => Model.Password" style="color:red; font-size:x-small;" />
-                    }
-                    else
-                    {
-                        <RadzenFormField Text="New Password" Style="width: 100%;">
-                            <RadzenPassword @bind-Value=@Model.NewPassword AutoComplete=true aria-label="enter password"
-                                            @oninput="@((arg)=>ChangeNewPassword(arg.Value!.ToString()!))"
-                                            class="w-100" Name="newpassword" AutoCompleteType="AutoCompleteType.CurrentPassword" />
+                    </RadzenFormField>
+                    <ValidationMessage For="() => Model.Password" style="color:red; font-size:x-small;" />
+                }
+                else 
+                {
+                    <RadzenFormField Text="New Password" Style="width: 100%;">
+                        <RadzenPassword @bind-Value=@Model.NewPassword AutoComplete=true aria-label="enter password"
+                                        @oninput="@((arg)=>ChangeNewPassword(arg.Value!.ToString()!))"
+                                        class="w-100" Name="newpassword" AutoCompleteType="AutoCompleteType.CurrentPassword" />
 
-                        </RadzenFormField>
-                    }
+                    </RadzenFormField>
                 }
 
 
@@ -57,25 +51,30 @@
     </EditForm>
     <RadzenRow>
         <RadzenStack Orientation="Orientation.Horizontal">
-            @if (Model.EmailConfirmed)
-            {
-
-                @if (Model.PasswordConfirmed)
+            @if (ShowButtons)
+            { 
+                if (Model.EmailConfirmed)
                 {
 
-                    <RadzenButton ButtonType="ButtonType.Submit" Click="LoginAsync" Disabled=@NotValidated>Log in</RadzenButton>
+                    @if (Model.PasswordConfirmed)
+                    {
+
+                        <RadzenButton ButtonType="ButtonType.Submit" Click="LoginAsync" Disabled=@NotValidated>Log in</RadzenButton>
+                    }
+                    else
+                    {
+
+
+                        <RadzenButton ButtonType="ButtonType.Submit" Click="ChangePasswordAsync">Change Password</RadzenButton>
+                    }
+
+
                 }
-                else
-                {
-
-
-                    <RadzenButton ButtonType="ButtonType.Submit" Click="ChangePasswordAsync">Change Password</RadzenButton>
-                }
-
 
             }
 
-            @* <RadzenButton ButtonType="ButtonType.Submit" Click="RegisterSuperAdminAsync">Register Super Admin</RadzenButton> *@
+
+
         </RadzenStack>
 
     </RadzenRow>

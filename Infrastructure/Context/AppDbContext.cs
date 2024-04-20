@@ -1,53 +1,28 @@
 ﻿using Application.Interfaces;
 using Domain.Entities.Account;
 using Domain.Entities.Data;
+using Domain.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Shared.Commons.Results;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Infrastructure.Context
 {
     public class AppDbContext : IdentityDbContext<AplicationUser>,IAppDbContext
     {
-        private CurrentUser CurrentUser { get; set; }
-        //private IUserContext UserContext { get; set; }
-        public AppDbContext(DbContextOptions<AppDbContext> options, CurrentUser currentUser/*, IUserContext userContext*/) : base(options)
+        private string CurrentTenant { get; set; }
+      
+        public AppDbContext(DbContextOptions<AppDbContext> options, ITenantService TenantService) : base(options)
         {
-            CurrentUser = currentUser;
-            //UserContext = userContext;
-        }
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            foreach (var entry in ChangeTracker.Entries<IBaseEntity>().ToList())
-            {
-                switch (entry.State)
-                {
-                    case EntityState.Added:
-                        entry.Entity.CreatedDate = DateTime.UtcNow;
-                        entry.Entity.CreatedBy = CurrentUser.UserId.ToString();
-                        entry.Entity.CreatedByUserName = CurrentUser.UserName;
-                        break;
+            CurrentTenant=TenantService.GetTenantId();  
 
-                    case EntityState.Modified:
-                        entry.Entity.LastModifiedOn = DateTime.UtcNow;
-                        entry.Entity.LastModifiedBy = CurrentUser.UserId.ToString();
-                        //entry.Entity.CreatedBy = CurrentUser.UserId;// se agrego esta linea para cambiar de usuario
-                        //entry.Entity.CreatedByUserName = CurrentUser.UserName;
-                        break;
-                }
-            }
-            try
-            {
-                return await base.SaveChangesAsync(cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message;
-            }
-            return 0;
+           
         }
+       
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -64,9 +39,68 @@ namespace Infrastructure.Context
             {
                 property.SetColumnType("nvarchar(128)");
             }
+            foreach (var entity in builder.Model.GetEntityTypes())
+            {
+                var type = entity.ClrType;
+                if (typeof(ITenantEntity).IsAssignableFrom(type))
+                {
+                    //Build filter
+                    var method = typeof(AppDbContext)
+                        .GetMethod(nameof(BuildTenantGlobalFilter),
+                    BindingFlags.NonPublic | BindingFlags.Static)?
+                    .MakeGenericMethod(type);
+                    var filter = method?.Invoke(null, new object[] { this })!;
+                    entity.SetQueryFilter((LambdaExpression)filter);
+                    entity.AddIndex(entity.FindProperty(nameof(ITenantEntity.TenantId))!);
+                }
+                else if (type.HideTenantValidation())
+                {
+                    continue;
+                }
+                else
+                {
+                    throw new Exception($"Entity {entity} is not marked as Tenant");
+                }
 
+            }
             base.OnModelCreating(builder);
 
+        }
+        private static LambdaExpression BuildTenantGlobalFilter<TEntity>(
+           AppDbContext context) where TEntity : class, ITenantEntity
+
+        {
+            Expression<Func<TEntity, bool>> filter = x => x.TenantId == context.CurrentTenant;
+            return filter;
+        }
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var AddedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added && e.Entity is ITenantEntity);
+            foreach (var item in AddedEntities)
+            {
+                if (string.IsNullOrEmpty(CurrentTenant))
+                {
+                    throw new Exception("TenantId not found");
+                }
+
+                var entity = item.Entity as ITenantEntity;
+                entity!.TenantId = CurrentTenant;
+
+            }
+            var ModifyEntities = ChangeTracker.Entries<IBaseEntity>().Where(e => e.State == EntityState.Modified && e.Entity is ITenantEntity);
+            foreach (var entry in ModifyEntities)
+            {
+                entry.Entity.LastModifiedOn = DateTime.UtcNow;
+            }
+            try
+            {
+                return await base.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+            return 0;
         }
         public DbSet<MWO> MWOs { get; set; }
         public DbSet<Brand> Brands { get; set; }

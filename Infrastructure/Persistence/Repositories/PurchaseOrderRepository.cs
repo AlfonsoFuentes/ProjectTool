@@ -10,13 +10,11 @@ namespace Infrastructure.Persistence.Repositories
     internal class PurchaseOrderRepository : IPurchaseOrderRepository
     {
         public IAppDbContext Context { get; }
-        //private IUserContext userContext { get; set; }
-        private CurrentUser CurrentUser {  get; set; }
-        public PurchaseOrderRepository(IAppDbContext context, /*IUserContext userContext,*/ CurrentUser currentUser)
+       
+        public PurchaseOrderRepository(IAppDbContext context)
         {
             this.Context = context;
-            //this.userContext = userContext;
-            CurrentUser = currentUser;
+        
         }
 
         public async Task<MWO> GetMWOWithBudgetItemsAndPurchaseOrderById(Guid MWOId)
@@ -124,10 +122,7 @@ namespace Infrastructure.Persistence.Repositories
         public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersCreated()
         {
             Expression<Func<PurchaseOrder, bool>> filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id;
-            if (!CurrentUser.IsSuperAdmin)
-            {
-                filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id && x.CreatedBy == CurrentUser.UserId.ToString();
-            }
+            
             return Task.FromResult(Context
                .PurchaseOrders
                .OrderBy(x => x.PurchaseRequisition)
@@ -147,11 +142,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             Expression<Func<PurchaseOrder, bool>> filter = x => !(x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id ||
            x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id);
-            if (!CurrentUser.IsSuperAdmin)
-            {
-                filter = x => !(x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id ||
-           x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id) && x.CreatedBy == CurrentUser.UserId.ToString();
-            }
+            
             return Task.FromResult(Context
                .PurchaseOrders
 
@@ -170,10 +161,7 @@ namespace Infrastructure.Persistence.Repositories
         public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersClosed()
         {
             Expression<Func<PurchaseOrder, bool>> filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id;
-            if (!CurrentUser.IsSuperAdmin)
-            {
-                filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id && x.CreatedBy == CurrentUser.UserId.ToString();
-            }
+            
             return Task.FromResult(Context
                .PurchaseOrders
 

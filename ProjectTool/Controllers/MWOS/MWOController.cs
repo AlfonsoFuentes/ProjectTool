@@ -1,9 +1,7 @@
-﻿using Application.Features.MWOs;
-using Application.Features.MWOs.Commands;
+﻿using Application.Features.MWOs.Commands;
 using Application.Features.MWOs.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Server.Filters;
 using Shared.Models.MWO;
 
 namespace Server.Controllers.MWOS

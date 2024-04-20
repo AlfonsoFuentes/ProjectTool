@@ -2,13 +2,13 @@
 
 namespace Domain.Entities.Data
 {
-    public class PurchaseOrderItem : BaseEntity
+    public class PurchaseOrderItem : BaseEntity, ITenantEntity
     {
         public Guid BudgetItemId { get; private set; }
         public BudgetItem BudgetItem { get; set; } = null!;
         public Guid PurchaseOrderId { get; private set; }
         public PurchaseOrder PurchaseOrder { get; set; } = null!;
-
+        public string TenantId { get; set; } = string.Empty;
         public static PurchaseOrderItem Create(Guid purchasorderid, Guid mwobudgetitemid)
         {
             PurchaseOrderItem item = new PurchaseOrderItem();

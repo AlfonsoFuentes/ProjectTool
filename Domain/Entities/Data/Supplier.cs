@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities.Data
 {
-    public class Supplier : BaseEntity
+    public class Supplier : BaseEntity, ITenantCommonEntity
     {
         public string Name { get; set; } = string.Empty;
         public string VendorCode { get; set; } = string.Empty;

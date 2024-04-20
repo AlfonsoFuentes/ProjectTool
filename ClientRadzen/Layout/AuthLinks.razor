@@ -1,0 +1,16 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.SpaceBetween Gap="1">
+            <div class="rz-ml-2 rz-mr-3">
+                @context.User.Identity?.Name
+            </div>
+            <RadzenLink Path="Logout" class="rz-ml-2 rz-mr-3">Logout</RadzenLink>
+        </RadzenStack>
+      
+        
+    </Authorized>
+    <NotAuthorized>
+        <RadzenLink Path="NewLogin" class="rz-ml-2 rz-mr-3">Login</RadzenLink>
+   
+    </NotAuthorized>
+</AuthorizeView>

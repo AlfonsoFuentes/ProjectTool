@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.Data
 {
-    public class SapAdjust : BaseEntity
+    public class SapAdjust : BaseEntity, ITenantEntity
     {
         public DateTime Date {  get; set; }
         public double ActualSap {  get; set; }
@@ -22,7 +22,7 @@ namespace Domain.Entities.Data
         public string ImageDataFile { get; set; } = string.Empty;
         public MWO MWO { get; set; } = null!;
         public Guid MWOId { get; set; }
-
+        public string TenantId { get; set; } = string.Empty;
         public static SapAdjust Create(Guid mwoid)
         {
             SapAdjust item = new SapAdjust();

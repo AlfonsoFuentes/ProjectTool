@@ -12,13 +12,11 @@ namespace Infrastructure.Persistence.Repositories
     internal class MWORepository : IMWORepository
     {
         public IAppDbContext Context { get; set; }
-        //private IUserContext userContext { get; set; }
-        private CurrentUser currentUser { get; set; }
-        public MWORepository(IAppDbContext appDbContext, /*IUserContext userContext,*/ CurrentUser currentUser)
+     
+        public MWORepository(IAppDbContext appDbContext)
         {
             Context = appDbContext;
-            //this.userContext = userContext;
-            this.currentUser = currentUser;
+           
         }
 
         public async Task AddMWO(MWO mWO)
@@ -94,17 +92,12 @@ namespace Infrastructure.Persistence.Repositories
         public Task<IEnumerable<MWO>> GetMWOList()
         {
             Stopwatch sw = Stopwatch.StartNew();
-            Expression<Func<MWO, bool>> filter = x => x.CreatedBy != null;
-            if (!currentUser.IsSuperAdmin)
-            {
-                filter = x => x.CreatedBy == currentUser.UserId.ToString();
-            }
+           
             var mwos = Context.MWOs
                 .Include(x => x.BudgetItems)
                 .Include(x => x.PurchaseOrders)
                 .ThenInclude(x => x.PurchaseOrderItems)
-                .Where(filter)
-               .AsNoTracking()
+                .AsNoTracking()
               .AsSplitQuery()
               .AsEnumerable();
             sw.Stop();

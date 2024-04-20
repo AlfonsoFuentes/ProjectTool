@@ -1,7 +1,7 @@
 ﻿namespace Shared.Models.UserAccounts.Reponses
 {
-    public class UserReponseList
+    public class UserResponseList
     {
-        public List<UserReponse> Users { get; set; } = new();
+        public List<UserResponse> Users { get; set; } = new();
     }
 }

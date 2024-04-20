@@ -4,14 +4,7 @@ using MediatR;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
-using Shared.Models.CostCenter;
-using Shared.Models.Currencies;
-using Shared.Models.MWO;
-using Shared.Models.MWOTypes;
 using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
-using Shared.Models.Suppliers;
-using System.Linq.Expressions;
 
 namespace Application.Features.PurchaseOrders.Queries
 {

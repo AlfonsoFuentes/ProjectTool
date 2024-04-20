@@ -68,21 +68,7 @@ namespace Server.Controllers.BudgetItems
         {
             return Ok(await Mediator.Send(new DeleteBudgetItemCommand(response)));
         }
-        [HttpGet("SumPercEngContItems/{MWOId}")]
-        public async Task<IActionResult> GetSumPercEngCont(Guid MWOId)
-        {
-            return Ok(await Mediator.Send(new GetSumPercentageEngContQuery(MWOId)));
-        }
-        [HttpGet("SumBudgetItems/{MWOId}")]
-        public async Task<IActionResult> GetSumBudget(Guid MWOId)
-        {
-            return Ok(await Mediator.Send(new GetSumBudgetItemsQuery(MWOId)));
-        }
-        [HttpGet("SumTaxesBudget/{BudgetItemId}")]
-        public async Task<IActionResult> GetSumTaxesBudget(Guid BudgetItemId)
-        {
-            return Ok(await Mediator.Send(new GetSumBugetTaxesItemsQuery(BudgetItemId)));
-        }
+        
         [HttpGet("GetDataForCreateBudget/{MWOId}")]
         public async Task<IActionResult> GetDataForCreateBudget(Guid MWOId)
         {

@@ -4,8 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.Data
 {
-    public class MWO : BaseEntity
+    public class MWO : BaseEntity, ITenantEntity
     {
+        public string TenantId { get; set; } = string.Empty;
         public int CostCenter { get; set; }
         public string MWONumber { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;

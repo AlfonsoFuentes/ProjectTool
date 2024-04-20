@@ -1,5 +1,4 @@
-﻿using Application.Features.MWOs.Queries;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using MediatR;
 
 namespace Application.Features.Brands.Queries

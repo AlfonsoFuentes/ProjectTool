@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Generics\" />
     <Folder Include="IdentityModels\" />
     <Folder Include="Managers\Accounts\" />
   </ItemGroup>

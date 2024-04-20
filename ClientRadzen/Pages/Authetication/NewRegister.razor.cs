@@ -1,9 +1,9 @@
 ﻿#nullable disable
 using Blazored.FluentValidation;
-using Client.Infrastructure.Managers.UserAccount;
+using Client.Infrastructure.Managers.UserManagement;
 using Microsoft.AspNetCore.Components;
 using Shared.Models.UserAccounts.Registers;
-using System.ComponentModel.DataAnnotations;
+using Shared.Models.UserManagements;
 
 namespace ClientRadzen.Pages.Authetication
 {
@@ -13,16 +13,24 @@ namespace ClientRadzen.Pages.Authetication
         public App MainApp { get; set; }
 
         RegisterUserRequest Model = new();
-        [Inject]
-        private IUserAccountService Service { get; set; }
+        
 
-       
+        [Inject]
+        public IAuthenticationService AuthenticationService { get; set; }
         async Task RegisterUserAsync()
         {
-            var result = await Service.RegisterUser(Model);
-            if(result.Succeeded)
+           
+            UserForRegistrationDto _userForRegistration = new UserForRegistrationDto()
             {
-                _NavigationManager.NavigateTo("/");
+                Email = Model.Email,
+                Password = Model.Password,
+                ConfirmPassword = Model.Password
+                
+            };
+            var result2 = await AuthenticationService.RegisterUser(_userForRegistration);
+            if (result2.IsSuccessfulRegistration)
+            {
+                _NavigationManager.NavigateTo("/NewUserList");
             }
         }
         FluentValidationValidator _fluentValidationValidator = null!;

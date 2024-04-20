@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.ChangeUser
 {
+
     public record ChangeDatabaseUserCommand : IRequest<IResult>; 
 
     public class ChangeDatabaseUserCommandHandler:IRequestHandler<ChangeDatabaseUserCommand,IResult>

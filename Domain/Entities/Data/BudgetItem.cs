@@ -1,7 +1,8 @@
 ﻿namespace Domain.Entities.Data
 {
-    public class BudgetItem : BaseEntity
+    public class BudgetItem : BaseEntity, ITenantEntity
     {
+        public string TenantId { get; set; } = string.Empty;
         public MWO MWO { get; set; } = null!;
         public Guid MWOId { get; set; }
         public string Name { get; set; } = string.Empty;

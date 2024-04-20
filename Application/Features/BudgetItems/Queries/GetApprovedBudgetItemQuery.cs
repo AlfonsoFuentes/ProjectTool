@@ -5,7 +5,6 @@ using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.CostCenter;
 using Shared.Models.Currencies;
-using Shared.Models.MWOTypes;
 using Shared.Models.PurchaseOrders.Responses;
 using Shared.Models.PurchaseorderStatus;
 
@@ -61,7 +60,7 @@ namespace Application.Features.BudgetItems.Queries
                 PurchaseOrderId = x.Id,
                 PurchaseorderName = x.PurchaseorderName,
                 PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(x.PurchaseOrderStatus),
-                CreatedBy = x.CreatedBy,
+                CreatedBy = x.TenantId,
                 CreatedOn = x.CreatedDate.ToShortDateString(),
                 ExpectedOn = x.POExpectedDateDate == null ? string.Empty : x.POExpectedDateDate.Value.ToShortDateString(),
                 PurchaseRequisition = x.PurchaseRequisition,

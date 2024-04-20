@@ -7,7 +7,7 @@ builder.Services.AddRazorPages();
 builder.AddServerServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
 var frontend = builder.Configuration["FrontendUrl"];
 var backend = builder.Configuration["BackendUrl"];
 var app = builder.Build();
@@ -15,8 +15,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    
     app.UseWebAssemblyDebugging();
     app.UseCors(policy =>
     {
@@ -28,13 +27,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-// activate the CORS policy
-app.UseCors("wasm");
+app.UseAuthentication();
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
-
-app.UseAuthentication();
+// activate the CORS policy
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
 
 app.MapRazorPages();
