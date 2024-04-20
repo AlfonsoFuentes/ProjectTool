@@ -21,8 +21,8 @@ namespace Client.Infrastructure.Managers.UserAccount
         Task<IResult<UserReponse>> ValidateIfPasswordConfirmed(string email);
         Task<IResult<UserReponse>> ResetPassword(string email);
         Task<IResult<UserReponse>> ChangePasswordUser(ChangePasswordUserRequest request);
-
-        Task<bool> SendCurrentUserToServer(LoginUserResponse User);
+        Task<IResult> SendCurrentUserToServer(string UserId);
+        Task<IResult> ClearUserInServer();
     }
     public class UserAccountService : IUserAccountService
     {
@@ -67,12 +67,7 @@ namespace Client.Infrastructure.Managers.UserAccount
             return await httpresult.ToResult<UserReponse>();
         }
 
-        public async Task<IResult<UserReponse>> ValidateIfPasswordConfirmed(string email)
-        {
-            var httpresult = await Http.GetAsync($"UserAccount/ValidatePasswordConfirmed/{email}");
-            return await httpresult.ToResult<UserReponse>();
-        }
-
+       
         public async Task<IResult<UserReponse>> ResetPassword(string email)
         {
             var httpresult = await Http.PostAsJsonAsync($"UserAccount/ResetPassword", email);
@@ -87,12 +82,7 @@ namespace Client.Infrastructure.Managers.UserAccount
             return await httpresult.ToResult<UserReponse>();
         }
 
-        public async Task<bool> SendCurrentUserToServer(LoginUserResponse User)
-        {
-            var httpresult = await Http.PostAsJsonAsync($"UserAccount/ReceiveCurrentUser", User);
-
-            return await httpresult.ToObject<bool>();
-        }
+        
 
         public async Task<IResult<UserReponse>> ValidatePasswordMatch(LoginUserRequest request)
         {
@@ -100,5 +90,22 @@ namespace Client.Infrastructure.Managers.UserAccount
             var httpresult = await Http.PostAsJsonAsync($"UserAccount/ValidatePasswordMatch", request);
             return await httpresult.ToResult<UserReponse>();
         }
+
+        public async Task<IResult> SendCurrentUserToServer(string UserId)
+        {
+           var httpresult2 = await Http.GetAsync($"UserAccount/GetCurrentUser/{UserId}");
+            return await httpresult2.ToResult<bool>();
+        }
+        public async Task<IResult> ClearUserInServer()
+        {
+            var httpresult2 = await Http.GetAsync($"UserAccount/ClearCurrentUser");
+            return await httpresult2.ToResult<bool>();
+        }
+        public async Task<IResult<UserReponse>> ValidateIfPasswordConfirmed(string email)
+        {
+            var httpresult = await Http.GetAsync($"UserAccount/ValidatePasswordConfirmed/{email}");
+            return await httpresult.ToResult<UserReponse>();
+        }
+
     }
 }

@@ -56,7 +56,7 @@ namespace Application.Features.PurchaseOrders.Queries
                 PurchaseRequisition = purchaseOrder.PurchaseRequisition,
                 QuoteNo = purchaseOrder.QuoteNo,
                 PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
-
+                QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
                 TRMUSDCOP = purchaseOrder.USDCOP,
                 TRMUSDEUR = purchaseOrder.USDEUR,
                 CurrencyDate = purchaseOrder.CurrencyDate,
@@ -71,19 +71,23 @@ namespace Application.Features.PurchaseOrders.Queries
 
                 },
                 PurchaseOrderItemsToReceive = purchaseOrder.PurchaseOrderItems
-                .Where(x => x.BudgetItem.Type != BudgetItemTypeEnum.Taxes.Id && x.IsTaxAlteration == false).Select(x => new ReceivePurchaseorderItemRequest()
+                .Where(x => x.BudgetItem.Type != BudgetItemTypeEnum.Taxes.Id && x.IsTaxAlteration == false)
+                .Select(x => new ReceivePurchaseorderItemRequest()
                 {
 
                     BudgetItemId = x.BudgetItemId,
                     PurchaseOrderItemId = x.Id,
                     Name = x.Name,
                     BudgetItemName = x.BudgetItem.Name,
+                    QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
                     PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
-                    UnitaryValueCurrency = x.UnitaryValueCurrency,
+                    UnitaryValueCurrency = GetQuoteCurrencyValue(x.UnitaryValueCurrency, purchaseOrder.QuoteCurrency, purchaseOrder.Currency,
+                    purchaseOrder.USDCOP, purchaseOrder.USDEUR),
                     POActualCurrency = x.ActualCurrency,
                     Quantity = x.Quantity,
                     TRMUSDCOP = purchaseOrder.USDCOP,
                     TRMUSDEUR = purchaseOrder.USDEUR,
+
 
 
                 }).ToList(),
@@ -91,6 +95,23 @@ namespace Application.Features.PurchaseOrders.Queries
 
             };
             return Result<ReceiveRegularPurchaseOrderRequest>.Success(result);
+        }
+        double GetQuoteCurrencyValue(double UnitaryValue, int quotecurrency, int purchaseOrdercurrency, double TRMUSDCOP, double TRMUSDEUR)
+        {
+            var result =
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue :
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue * TRMUSDCOP :
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue * TRMUSDEUR :
+
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue / TRMUSDCOP :
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue :
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue / TRMUSDCOP / TRMUSDEUR :
+
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue / TRMUSDEUR :
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue * TRMUSDCOP / TRMUSDEUR :
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue : 0;
+
+            return result;
         }
     }
 

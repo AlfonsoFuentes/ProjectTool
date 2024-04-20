@@ -2,6 +2,7 @@
 using Domain.Entities.Account;
 using Infrastructure.GenerateTokens;
 using Infrastructure.Persistence.Repositories.Suppliers;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Commons.Results;
@@ -16,13 +17,17 @@ namespace Infrastructure.Persistence.Repositories.UserAccounts
         private UserManager<AplicationUser> userManager;
         private RoleManager<IdentityRole> roleManager;
         private IGenerateToken GenerateToken;
-
-        public UserAccountRepository(RoleManager<IdentityRole> roleManager, UserManager<AplicationUser> userManager, IGenerateToken generateToken)
+        private CurrentUser CurrentUser;
+        public UserAccountRepository(RoleManager<IdentityRole> roleManager,
+            UserManager<AplicationUser> userManager, 
+            IGenerateToken generateToken,
+            CurrentUser currentUser)
         {
 
             this.roleManager = roleManager;
             this.userManager = userManager;
             GenerateToken = generateToken;
+            CurrentUser = currentUser;
         }
 
         public async Task<IResult<RegisterUserResponse>> RegisterUser(RegisterUserRequest userDTO)
@@ -77,6 +82,8 @@ namespace Infrastructure.Persistence.Repositories.UserAccounts
 
             var getUserRole = await userManager.GetRolesAsync(getUser);
 
+            CurrentUser.UserId=getUser.Id;
+            CurrentUser.Role= getUserRole.First();
             result.Id = getUser.Id;
             result.Role = getUserRole.First();
 

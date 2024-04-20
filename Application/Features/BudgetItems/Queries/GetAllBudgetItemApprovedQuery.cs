@@ -2,14 +2,10 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Commons.UserManagement;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.CostCenter;
 using Shared.Models.MWO;
-using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
-using System.Globalization;
 using System.Linq.Expressions;
 
 namespace Application.Features.BudgetItems.Queries
@@ -19,11 +15,11 @@ namespace Application.Features.BudgetItems.Queries
     public class GetAllBudgetItemApprovedQueryHandler : IRequestHandler<GetAllBudgetItemApprovedQuery, IResult<ListApprovedBudgetItemsResponse>>
     {
         private IBudgetItemRepository Repository { get; set; }
-        private CurrentUser CurrentUser { get; set; }
-        public GetAllBudgetItemApprovedQueryHandler(IBudgetItemRepository repository, CurrentUser currentUser)
+     
+        public GetAllBudgetItemApprovedQueryHandler(IBudgetItemRepository repository)
         {
             Repository = repository;
-            CurrentUser = currentUser;
+         
         }
 
         public async Task<IResult<ListApprovedBudgetItemsResponse>> Handle(GetAllBudgetItemApprovedQuery request, CancellationToken cancellationToken)

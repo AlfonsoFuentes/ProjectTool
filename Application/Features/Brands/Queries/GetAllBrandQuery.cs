@@ -2,9 +2,7 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Commons.UserManagement;
 using Shared.Models.Brands;
-using Shared.Models.MWO;
 using System.Linq.Expressions;
 
 namespace Application.Features.Brands.Queries
@@ -14,11 +12,11 @@ namespace Application.Features.Brands.Queries
     public class GetAllBrandQueryHandler:IRequestHandler<GetAllBrandQuery, IResult<List<BrandResponse>>>
     {
         private IBrandRepository Repository { get; set; }
-        private CurrentUser CurrentUser { get; set; }
-        public GetAllBrandQueryHandler(IBrandRepository repository, CurrentUser currentUser)
+      
+        public GetAllBrandQueryHandler(IBrandRepository repository)
         {
             Repository = repository;
-            CurrentUser = currentUser;
+        
         }
 
         public async Task<IResult<List<BrandResponse>>> Handle(GetAllBrandQuery request, CancellationToken cancellationToken)

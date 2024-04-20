@@ -118,7 +118,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             {
 
             }
-            item.CurrencyUnitaryValue = currencyvalue;
+            item.QuoteCurrencyValue = currencyvalue;
             item.ActualCurrency = currencyvalue;
 
             await ValidateAsync();

@@ -2,7 +2,6 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Commons.UserManagement;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
 using System.Globalization;
@@ -14,11 +13,11 @@ namespace Application.Features.BudgetItems.Queries
     public class GetAllBudgetItemForTaxesListQueryHandler : IRequestHandler<GetDataForCreateBudgetItemQuery, IResult<DataforCreateBudgetItemResponse>>
     {
         private IBudgetItemRepository Repository { get; set; }
-        private CurrentUser CurrentUser { get; set; }
-        public GetAllBudgetItemForTaxesListQueryHandler(IBudgetItemRepository repository, CurrentUser currentUser)
+      
+        public GetAllBudgetItemForTaxesListQueryHandler(IBudgetItemRepository repository)
         {
             Repository = repository;
-            CurrentUser = currentUser;
+        
         }
 
         public async Task<IResult<DataforCreateBudgetItemResponse>> Handle(GetDataForCreateBudgetItemQuery request, CancellationToken cancellationToken)

@@ -1,8 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Client.Infrastructure.Managers.UserAccount;
-using Shared.Commons.UserManagement;
 using Shared.Models.UserAccounts.Reponses;
-using System.Security.Claims;
 
 namespace Client.Infrastructure.Authentication
 {
@@ -10,12 +8,12 @@ namespace Client.Infrastructure.Authentication
     {
         private ClaimsPrincipal anonymous = new(new ClaimsIdentity());
         private ILocalStorageService localStorageService;
-        private CurrentUser currentUser;
+  
         private IUserAccountService userAccountService;
-        public CustomAuthenticationStateProvider(ILocalStorageService localStorageService, CurrentUser currentUser, IUserAccountService userAccountService)
+        public CustomAuthenticationStateProvider(ILocalStorageService localStorageService, IUserAccountService userAccountService)
         {
             this.localStorageService = localStorageService;
-            this.currentUser = currentUser;
+       
             this.userAccountService = userAccountService;
         }
 
@@ -31,23 +29,15 @@ namespace Client.Infrastructure.Authentication
                     return await Task.FromResult(new AuthenticationState(anonymous));
 
                 var claims = Generics.Generics.GetClaimsFromToken(stringToken);
-                currentUser.UserId = claims.Id;
-                currentUser.Role = claims.Role;
-                currentUser.UserName = claims.Email;
-                LoginUserResponse userresponse = new()
-
-                {
-                    Email = claims.Email,
-                    Id = claims.Id,
-                    Role = claims.Role,
-                };
-
-                await userAccountService.SendCurrentUserToServer(userresponse);
+                var UserId = claims.Id;
+                               
+                await userAccountService.SendCurrentUserToServer(UserId);
                 var claimsPrincipal = Generics.Generics.SetClaimPrincipal(claims);
                 return await Task.FromResult(new AuthenticationState(claimsPrincipal));
             }
-            catch
+            catch(Exception ex) 
             {
+                string exm=ex.Message;
                 return await Task.FromResult(new AuthenticationState(anonymous));
             }
         }
@@ -59,22 +49,14 @@ namespace Client.Infrastructure.Authentication
             {
                 var userSession = Generics.Generics.GetClaimsFromToken(token);
                 claimsPrincipal = Generics.Generics.SetClaimPrincipal(userSession);
-                currentUser.UserId = userSession.Id;
-                currentUser.Role = userSession.Role;
-                currentUser.UserName = userSession.Email;
-                LoginUserResponse userresponse = new()
-
-                {
-                    Email = userSession.Email,
-                    Id = userSession.Id,
-                    Role = userSession.Role,
-                };
-                await userAccountService.SendCurrentUserToServer(userresponse);
+                var UserId = userSession.Id;
+               
+                await userAccountService.SendCurrentUserToServer(UserId);
                 await localStorageService.SetItemAsStringAsync("token", token);
             }
             else
             {
-                await userAccountService.SendCurrentUserToServer(new());
+                await userAccountService.ClearUserInServer();
                 claimsPrincipal = anonymous;
                 await localStorageService.RemoveItemAsync("token");
             }

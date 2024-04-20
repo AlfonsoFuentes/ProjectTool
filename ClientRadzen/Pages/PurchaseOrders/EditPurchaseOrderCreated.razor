@@ -127,7 +127,7 @@
                     <ValidationMessage For="() => Model.QuoteCurrency" style="color:red; font-size:x-small;" />
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="3">
-                    @if (Model.QuoteCurrency.Id == CurrencyEnum.COP.Id)
+                    @if (Model.PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id)
                     {
                         <RadzenRow>
                             <RadzenColumn Size="12" SizeMD="5">
@@ -165,7 +165,7 @@
                         </RadzenRow>
 
                     }
-                    else if (Model.QuoteCurrency.Id == CurrencyEnum.EUR.Id)
+                    else if (Model.PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id)
                     {
                         <RadzenRow>
                             <RadzenColumn Size="12" SizeMD="5">
@@ -265,8 +265,11 @@
             @if (debug)
             {
 
-            }
-            <RadzenRow class="rz-mt-2">
+            }<CascadingValue Value="@Model">
+                <DataGridForPurchaseOrderItems BudgetItems="@BudgetItems" OriginalBudgetItems="@OriginalBudgetItems"
+                                               ValidateAsync="@ValidateAsync"></DataGridForPurchaseOrderItems>
+            </CascadingValue>
+         @*    <RadzenRow class="rz-mt-2">
                 <RadzenColumn Size="12" SizeMD="MaxColumn">
                     <RadzenDataGrid @ref="ordersGrid" AllowAlternatingRows="false" AllowFiltering="false" AllowPaging="true" PageSize="5"
                                     AllowSorting="false" EditMode="DataGridEditMode.Single" Density="@Density" AllowRowSelectOnRowClick=true
@@ -277,7 +280,7 @@
                         <Columns>
                             <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
                                                   Property="@nameof(PurchaseOrderItemRequest.BudgetItemName)"
-                                                  Title="Item Id" Width="100px">
+                                                  Title="Item Id" Width="70px">
                                 <Template Context="detail">
                                     @if (detail.BudgetItemId == Guid.Empty)
                                     {
@@ -342,13 +345,13 @@
                                 </EditTemplate>
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.CurrencyUnitaryValue)"
+                                                  Property="@nameof(PurchaseOrderItemRequest.QuoteCurrencyValue)"
                                                   Title="@($"Value, {Model.QuoteCurrency.Name}")"
                                                   Width="40px">
                                 <Template Context="detail">
                                     @if (detail.BudgetItemId != Guid.Empty)
                                     {
-                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.CurrencyUnitaryValue)
+                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.QuoteCurrencyValue)
 
                                     }
 
@@ -356,7 +359,7 @@
                                 <EditTemplate Context="order">
                                     @if (order.BudgetItemId != Guid.Empty)
                                     {
-                                        <RadzenNumeric ShowUpDown=false @bind-Value=@order.CurrencyUnitaryValue Name="CurrencyValue"
+                                        <RadzenNumeric ShowUpDown=false @bind-Value=@order.QuoteCurrencyValue Name="CurrencyValue"
                                                        @onkeydown=@((arg)=>OnKeyDownCurrency(arg,order))
                                                        @oninput="@((arg)=>ChangeCurrencyValue(order,arg.Value!.ToString()!))"></RadzenNumeric>
 
@@ -367,6 +370,27 @@
                                 </EditTemplate>
                                 <FooterTemplate>
                                     <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumPOValueCurrency)}")</b>
+                                </FooterTemplate>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
+                                                  Title="@($"Value, {Model.PurchaseOrderCurrency.Name}")" Width="30px"
+                                                  Visible="@(!IsSameCurrency)">
+                                <Template Context="detail">
+                                    @if (detail.BudgetItemId != Guid.Empty)
+                                    {
+                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.UnitaryValuePurchaseOrderCurrency)
+                                    }
+
+                                </Template>
+                                <EditTemplate Context="order">
+                                    @if (order.BudgetItemId != Guid.Empty)
+                                    {
+                                        @String.Format(new CultureInfo("en-US"), "{0:C0}", order.UnitaryValuePurchaseOrderCurrency)
+                                    }
+
+                                </EditTemplate>
+                                <FooterTemplate>
+                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumPOValueSupplierCurrency)}")</b>
                                 </FooterTemplate>
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
@@ -483,7 +507,7 @@
                         </Columns>
                     </RadzenDataGrid>
                 </RadzenColumn>
-            </RadzenRow>
+            </RadzenRow> *@
 
         </EditForm>
 
@@ -493,5 +517,5 @@
 
 
 @code {
-   
+    bool IsSameCurrency => Model.QuoteCurrency.Id == Model.PurchaseOrderCurrency.Id;
 }

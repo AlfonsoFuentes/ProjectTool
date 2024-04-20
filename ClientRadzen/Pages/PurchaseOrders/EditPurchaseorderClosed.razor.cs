@@ -146,14 +146,14 @@ public partial class EditPurchaseorderClosed
         Model.USDEUR = Model.OldTRMUSDEUR;
         UpdateCurrentTRM = false;
     }
-    public void ChangeQuoteCurrency(CurrencyEnum currencyEnum)
+    public async Task ChangeQuoteCurrency(CurrencyEnum currencyEnum)
     {
 
         foreach (var item in Model.PurchaseOrderItems)
         {
             item.ChangeCurrency(currencyEnum);
         }
-
+        await ValidateAsync();
     }
     public async Task ChangePONumber(string ponumber)
     {
@@ -182,7 +182,7 @@ public partial class EditPurchaseorderClosed
         Model.USDEUR = usdeur;
         foreach (var item in Model.PurchaseOrderItemNoBlank)
         {
-            item.SetUSDEUR(usdeur);
+            item.TRMUSDEUR = usdeur;
         }
         await ValidateAsync();
     }
@@ -201,7 +201,7 @@ public partial class EditPurchaseorderClosed
         Model.USDCOP = usdcop;
         foreach (var item in Model.PurchaseOrderItemNoBlank)
         {
-            item.SetUSDCOP(usdcop);
+            item.TRMUSDCOP = usdcop;
         }
         await ValidateAsync();
     }
@@ -253,7 +253,7 @@ public partial class EditPurchaseorderClosed
         {
 
         }
-        item.CurrencyUnitaryValue = currencyvalue;
+        item.QuoteCurrencyValue = currencyvalue;
         await ValidateAsync();
     }
     bool debug = true;

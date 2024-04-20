@@ -108,7 +108,7 @@ public partial class EditTaxPurchaseOrder
         {
 
         }
-        item.CurrencyUnitaryValue = currencyvalue;
+        item.QuoteCurrencyValue = currencyvalue;
         item.ActualCurrency = currencyvalue;
 
         await ValidateAsync();

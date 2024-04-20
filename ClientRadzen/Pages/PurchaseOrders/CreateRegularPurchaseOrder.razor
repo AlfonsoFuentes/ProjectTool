@@ -127,7 +127,7 @@
                     <ValidationMessage For="() => Model.QuoteCurrency" style="color:red; font-size:x-small;" />
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="3">
-                    @if (Model.QuoteCurrency.Id == CurrencyEnum.COP.Id)
+                    @if (Model.PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id)
                     {
                         <RadzenFormField Text=@($"PO TRM COP to USD {Model.CurrencyDateOnly}") Style="width: 100%;">
                             <RadzenNumeric ShowUpDown=false @bind-Value=@Model.USDCOP class="w-100"
@@ -137,7 +137,7 @@
                         </RadzenFormField>
                         <ValidationMessage For="() => Model.USDCOP" style="color:red; font-size:x-small;" />
                     }
-                    else if (Model.QuoteCurrency.Id == CurrencyEnum.EUR.Id)
+                    else if (Model.PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id)
                     {
                         <RadzenFormField Text=@($"PO TRM EUR to USD {Model.CurrencyDateOnly}") Style="width: 100%;">
                             <RadzenNumeric ShowUpDown=false @bind-Value=@Model.USDEUR class="w-100"
@@ -210,228 +210,13 @@
 
             </RadzenRow>
 
-            @if (debug)
-            {
-
-            }
-            <RadzenRow class="rz-mt-2">
-                <RadzenColumn Size="12" SizeMD="MaxColumn">
-                    <RadzenDataGrid @ref="ordersGrid" AllowAlternatingRows="false" AllowFiltering="false" AllowPaging="true" PageSize="5"
-                                    AllowSorting="false" EditMode="DataGridEditMode.Single" Density="@Density" AllowRowSelectOnRowClick=true
-                                    Data="@Model.PurchaseOrderItems" TItem="PurchaseOrderItemRequest" RowDoubleClick=EditRow Responsive=true
-                                    CellClick=ClickCell
-                                    ColumnWidth="200px">
-
-                        <Columns>
-                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.BudgetItemName)"
-                                                  Title="Item Id" Width="100px">
-                                <Template Context="detail">
-                                    @if (detail.BudgetItemId == Guid.Empty)
-                                    {
-                                        @("Add Item")
-                                    }
-                                    else
-                                    {
-                                        @detail.BudgetItemName
-                                    }
-
-                                </Template>
-                                <EditTemplate Context="order">
-                                    @if (order.BudgetItemId == Guid.Empty)
-                                    {
-                                        <RadzenDropDown @bind-Value=@ItemToAdd Data=@BudgetItems Style="width: 100%;"
-                                                        Change="@(()=>AddNewItem(order))"
-                                                        Name="budgetitem" TextProperty="NomenclatoreName"
-                                                        AllowClear=true
-                                                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
-                                                        AllowFiltering="true"
-                                                        TValue="BudgetItemApprovedResponse" />
-                                    }
-                                    else
-                                    {
-                                        <RadzenText Text="@order.BudgetItemName"></RadzenText>
-                                    }
-                                </EditTemplate>
-
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest" Property="@nameof(PurchaseOrderItemRequest.Name)"
-                                                  Title="PO Item Name" Width="80px">
-                                <EditTemplate Context="order">
-                                    @if (order.BudgetItemId != Guid.Empty)
-                                    {
-                                        <RadzenTextBox @bind-Value="@order.Name" Style="width:100%"
-                                                       @oninput="@((arg)=>ChangeName(order,arg.Value!.ToString()!))"></RadzenTextBox>
-
-                                    }
-                                </EditTemplate>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.Quantity)"
-                                                  Title="Quantity" Width="30px">
-                                <Template Context="order">
-                                    @if (order.BudgetItemId != Guid.Empty)
-                                    {
-                                        @order.Quantity
-
-                                    }
-                                </Template>
-                                <EditTemplate Context="order">
-                                    @if (order.BudgetItemId != Guid.Empty)
-                                    {
-                                        <RadzenNumeric ShowUpDown=false @bind-Value=@order.Quantity
-                                                       @oninput="@((arg)=>ChangeQuantity(order,arg.Value!.ToString()!))">
-                                        </RadzenNumeric>
-                                        <ValidationMessage For="() => order.Quantity" style="color:red; font-size:x-small;" />
-                                    }
-
-
-
-                                </EditTemplate>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.CurrencyUnitaryValue)"
-                                                  Title="@($"Value, {Model.QuoteCurrency.Name}")"
-                                                  Width="40px">
-                                <Template Context="detail">
-                                    @if (detail.BudgetItemId != Guid.Empty)
-                                    {
-                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.CurrencyUnitaryValue)
-
-                                    }
-
-                                </Template>
-                                <EditTemplate Context="order">
-                                    @if (order.BudgetItemId != Guid.Empty)
-                                    {
-                                        <RadzenNumeric ShowUpDown=false @bind-Value=@order.CurrencyUnitaryValue Name="CurrencyValue"
-                                                       @onkeydown=@((arg)=>OnKeyDownCurrency(arg,order))
-                                                       @oninput="@((arg)=>ChangeCurrencyValue(order,arg.Value!.ToString()!))"></RadzenNumeric>
-
-                                    }
-
-
-
-                                </EditTemplate>
-                                <FooterTemplate>
-                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumPOValueCurrency)}")</b>
-                                </FooterTemplate>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.POValueUSD)"
-                                                  Title="Total, USD" Width="30px">
-                                <Template Context="detail">
-                                    @if (detail.BudgetItemId != Guid.Empty)
-                                    {
-                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.POValueUSD)
-                                    }
-
-                                </Template>
-                                <EditTemplate Context="order">
-                                    @if (order.BudgetItemId != Guid.Empty)
-                                    {
-                                        @String.Format(new CultureInfo("en-US"), "{0:C0}", order.POValueUSD)
-                                    }
-
-                                </EditTemplate>
-                                <FooterTemplate>
-                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumPOValueUSD)}")</b>
-                                </FooterTemplate>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.Budget)"
-                                                  Title="Budget" Width="30px">
-                                <Template Context="detail">
-                                    @if (detail.BudgetItemId != Guid.Empty)
-                                    {
-                                        @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Budget)
-                                    }
-
-                                </Template>
-                                <EditTemplate Context="order">
-                                    @if (order.BudgetItemId != Guid.Empty)
-                                    {
-                                        @String.Format(new CultureInfo("en-US"), "{0:C0}", order.Budget)
-                                    }
-                                </EditTemplate>
-                                <FooterTemplate>
-                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumBudget)}")</b>
-                                </FooterTemplate>
-                            </RadzenDataGridColumn>
-
-                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.AssignedUSD)"
-                                                  Title="Assigned" Width="30px">
-                                <Template Context="detail">
-                                    @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.AssignedUSD)
-                                </Template>
-                                <EditTemplate Context="order">
-                                    @String.Format(new CultureInfo("en-US"), "{0:C0}", order.AssignedUSD)
-                                </EditTemplate>
-                                <FooterTemplate>
-                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumBudgetAssigned)}")</b>
-                                </FooterTemplate>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.PotencialUSD)"
-                                                  Title="Potential" Width="30px">
-                                <Template Context="detail">
-                                    @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.PotencialUSD)
-                                </Template>
-                                <EditTemplate Context="order">
-                                    @String.Format(new CultureInfo("en-US"), "{0:C0}", order.PotencialUSD)
-                                </EditTemplate>
-                                <FooterTemplate>
-                                    <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.SumBudgetPotencial)}")</b>
-                                </FooterTemplate>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest"
-                                                  Property="@nameof(PurchaseOrderItemRequest.POItemPendingUSD)"
-                                                  Title="Pending" Width="30px">
-                                <Template Context="detail">
-                                    @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.POItemPendingUSD)
-                                </Template>
-                                <EditTemplate Context="order">
-                                    @String.Format(new CultureInfo("en-US"), "{0:C0}", order.POItemPendingUSD)
-                                </EditTemplate>
-
-                            </RadzenDataGridColumn>
-
-
-                            <RadzenDataGridColumn TItem="PurchaseOrderItemRequest" Context="order" Filterable="false" Sortable="false"
-                                                  TextAlign="TextAlign.Right" Width="25px">
-                                <Template Context="order">
-                                    @if (order.BudgetItemId != Guid.Empty)
-                                    {
-                                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
-                                                      MouseEnter="@(args => MainApp.ShowTooltip(args,$"Edit", TooltipPosition.Top) )"
-                                                      Click="@(args => EditRowButton(order))" @onclick:stopPropagation="true">
-                                        </RadzenButton>
-                                        @if (order.BudgetItemId != Model.MainBudgetItemId)
-                                        {
-                                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter"
-                                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Delete", TooltipPosition.Left) )"
-                                                          Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@(args => DeleteRow(order))" @onclick:stopPropagation="true">
-                                            </RadzenButton>
-                                        }
-                                    }
-                                </Template>
-                                <EditTemplate Context="order">
-                                    @if (order.BudgetItemId != Guid.Empty)
-                                    {
-                                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
-                                                      Click="@((args) => SaveRow(order))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Save", TooltipPosition.Top) )">
-                                        </RadzenButton>
-                                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
-                                                      class="my-1 ms-1" Click="@((args) => CancelEdit(order))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel", TooltipPosition.Left) )">
-                                        </RadzenButton>
-                                    }
-                                </EditTemplate>
-                            </RadzenDataGridColumn>
-                        </Columns>
-                    </RadzenDataGrid>
-                </RadzenColumn>
-            </RadzenRow>
+           
+            <CascadingValue Value="@Model" >
+                <DataGridForPurchaseOrderItems BudgetItems="@BudgetItems" OriginalBudgetItems="@OriginalBudgetItems"
+                    ValidateAsync="@ValidateAsync"
+                ></DataGridForPurchaseOrderItems>
+            </CascadingValue>
+         
 
         </EditForm>
 
@@ -441,5 +226,5 @@
 
 
 @code {
-   
+    bool IsSameCurrency => Model.QuoteCurrency.Id == Model.PurchaseOrderCurrency.Id;
 }

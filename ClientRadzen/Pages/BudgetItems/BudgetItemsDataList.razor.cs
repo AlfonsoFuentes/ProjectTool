@@ -35,7 +35,7 @@ namespace ClientRadzen.Pages.BudgetItems
         {
 
 
-            var user = CurrentUser.UserId;
+          
 
             await UpdateAll();
         }

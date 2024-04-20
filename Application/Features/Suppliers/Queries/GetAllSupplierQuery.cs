@@ -2,7 +2,6 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Commons.UserManagement;
 using Shared.Models.Currencies;
 using Shared.Models.Suppliers;
 using System.Linq.Expressions;
@@ -14,11 +13,11 @@ namespace Application.Features.Suppliers.Queries
     public class GetAllSupplierQueryHandler : IRequestHandler<GetAllSupplierQuery, IResult<List<SupplierResponse>>>
     {
         private ISupplierRepository Repository { get; set; }
-        private CurrentUser CurrentUser { get; set; }
-        public GetAllSupplierQueryHandler(ISupplierRepository repository, CurrentUser currentUser)
+   
+        public GetAllSupplierQueryHandler(ISupplierRepository repository)
         {
             Repository = repository;
-            CurrentUser = currentUser;
+           
         }
 
         public async Task<IResult<List<SupplierResponse>>> Handle(GetAllSupplierQuery request, CancellationToken cancellationToken)

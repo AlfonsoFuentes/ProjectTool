@@ -1,20 +1,23 @@
 ﻿
 <RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false">
-   
-    
+
+
     <AuthorizeView>
         <Authorized>
             <RadzenPanelMenuItem Text="MWOs Table" Path="mwotable" />
             <RadzenPanelMenuItem Text="Purchase orders" Path="PurchaseOrdersTable" />
-            @if (CurrentUser.IsSuperAdmin)
-            {
-                <RadzenPanelMenuItem Text="CreateSuperAdmin" Path="CreateSuperAdmin" />
-                <RadzenPanelMenuItem Text="Users" Path="UserList" />
-                <RadzenPanelMenuItem Text="Register" Path="register" />
-                <RadzenPanelMenuItem Text="Brands" Path="BrandDatalist" />
-                <RadzenPanelMenuItem Text="Suppliers" Path="Supplierstable" />
-            }
-           
+
+
+
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="Administrator">
+        <Authorized>
+            <RadzenPanelMenuItem Text="CreateSuperAdmin" Path="CreateSuperAdmin" />
+            <RadzenPanelMenuItem Text="Users" Path="UserList" />
+            <RadzenPanelMenuItem Text="Register" Path="register" />
+            <RadzenPanelMenuItem Text="Brands" Path="BrandDatalist" />
+            <RadzenPanelMenuItem Text="Suppliers" Path="Supplierstable" />
         </Authorized>
     </AuthorizeView>
 </RadzenPanelMenu>

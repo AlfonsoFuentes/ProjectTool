@@ -36,7 +36,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseOrder.QuoteCurrency = request.Data.QuoteCurrency.Id;
             purchaseOrder.USDCOP = request.Data.USDCOP;
             purchaseOrder.USDEUR = request.Data.USDEUR;
-
+            
 
 
             foreach (var item in request.Data.PurchaseOrderItemNoBlank)
@@ -45,14 +45,14 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                 if (purchaseorderItem == null)
                 {
                     purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId, item.Name);
-                    purchaseorderItem.UnitaryValueCurrency = item.CurrencyUnitaryValue;
+                    purchaseorderItem.UnitaryValueCurrency = item.UnitaryValuePurchaseOrderCurrency;
                     purchaseorderItem.Quantity = item.Quantity;
                     await Repository.AddPurchaseorderItem(purchaseorderItem);
                     if (purchaseOrder.IsAlteration)
                     {
                         var purchaseordertaxestem = purchaseOrder.AddPurchaseOrderItemForAlteration(item.BudgetItemId,
                    $"{request.Data.PONumber} Tax {item.BudgetItemName} {purchaseOrder.MWO.PercentageTaxForAlterations}%");
-                        purchaseordertaxestem.UnitaryValueCurrency = purchaseOrder.MWO.PercentageTaxForAlterations / 100.0 * item.TotalCurrencyValue;
+                        purchaseordertaxestem.UnitaryValueCurrency = purchaseOrder.MWO.PercentageTaxForAlterations / 100.0 * item.TotalValuePurchaseOrderCurrency;
                         purchaseordertaxestem.Quantity = 1;
 
                         await Repository.AddPurchaseorderItem(purchaseordertaxestem);
@@ -64,15 +64,15 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                 {
                     purchaseorderItem.Name = item.Name;
                     purchaseorderItem.Quantity = item.Quantity;
-                    purchaseorderItem.UnitaryValueCurrency = item.CurrencyUnitaryValue;
+                    purchaseorderItem.UnitaryValueCurrency = item.UnitaryValuePurchaseOrderCurrency;
                     if (item.BudgetItemId != purchaseorderItem.BudgetItemId)
                         purchaseorderItem.ChangeBudgetItem(item.BudgetItemId);
                     await Repository.UpdatePurchaseOrderItem(purchaseorderItem);
                 }
 
             }
-            var sumPOValueCurrency = request.Data.PurchaseOrderItemNoBlank.Count == 0 ? 0 :
-                  request.Data.PurchaseOrderItemNoBlank.Sum(x => x.TotalCurrencyValue);
+            var sumPOValueCurrency = request.Data.PurchaseOrderItems.Count == 0 ? 0 :
+                  request.Data.PurchaseOrderItems.Sum(x => x.TotalValuePurchaseOrderCurrency);
            
             if (purchaseOrder.IsAlteration)
             {
@@ -81,7 +81,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                     var alterationsitem = await Repository.GetPurchaseOrderItemsAlterationsById(purchaseOrder.Id, row.BudgetItemId);
                     if (alterationsitem != null)
                     {
-                        var unitaryvalue = row.TotalCurrencyValue * purchaseOrder.MWO.PercentageTaxForAlterations / 100;
+                        var unitaryvalue = row.TotalValuePurchaseOrderCurrency * purchaseOrder.MWO.PercentageTaxForAlterations / 100;
                         alterationsitem.UnitaryValueCurrency = unitaryvalue;
                         await Repository.UpdatePurchaseOrderItem(alterationsitem);
                         sumPOValueCurrency += unitaryvalue;
@@ -117,7 +117,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
 
             await Repository.UpdatePurchaseOrder(purchaseOrder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            //await MWORepository.UpdateDataForApprovedMWO(purchaseOrder.MWOId, cancellationToken);
+           
             if (result > 0)
             {
                 return Result.Success($"Purchase order :{request.Data.PurchaseorderName} was edited succesfully");

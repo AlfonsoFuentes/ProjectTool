@@ -69,13 +69,22 @@ namespace Application.Features.PurchaseOrders.Queries
                     BudgetItemName = x.BudgetItem.Name,
                     TRMUSDCOP = purchaseOrder.USDCOP,
                     TRMUSDEUR = purchaseOrder.USDEUR,
-                    Currency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
-                    CurrencyUnitaryValue = x.UnitaryValueCurrency,
+                    QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
+                    PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
+                    QuoteCurrencyValue = GetQuoteCurrencyValue(x.UnitaryValueCurrency, purchaseOrder.QuoteCurrency, purchaseOrder.Currency,
+                    purchaseOrder.USDCOP, purchaseOrder.USDEUR),
                     Budget = x.BudgetItem.Budget,
-                    AssignedCurrency = x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id ? 
-                    x.BudgetItem.PurchaseOrderItems.Sum(x => x.UnitaryValueCurrency * x.Quantity) : 0,
-                    PotencialCurrency = x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id ? 
-                    x.BudgetItem.PurchaseOrderItems.Sum(x => x.UnitaryValueCurrency * x.Quantity) : 0,
+                    AssignedCurrency = x.BudgetItem.PurchaseOrderItems.Where(x =>
+                     x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
+
+                    PotencialCurrency = x.BudgetItem.PurchaseOrderItems.Where(x =>
+                    x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
+
+
+                    OriginalAssignedCurrency = x.BudgetItem.PurchaseOrderItems.Where(x =>
+                    x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
+                    OriginalPotencialCurrency = x.BudgetItem.PurchaseOrderItems.Where(x =>
+                    x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
                     ActualCurrency = x.ActualCurrency,
 
                 }).ToList(),
@@ -92,6 +101,23 @@ namespace Application.Features.PurchaseOrders.Queries
                 },
             };
             return Result<ApprovedRegularPurchaseOrderRequest>.Success(result);
+        }
+        double GetQuoteCurrencyValue(double UnitaryValue, int quotecurrency, int purchaseOrdercurrency, double TRMUSDCOP, double TRMUSDEUR)
+        {
+            var result =
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue :
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue * TRMUSDCOP :
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue * TRMUSDEUR :
+
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue / TRMUSDCOP :
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue :
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue / TRMUSDCOP / TRMUSDEUR :
+
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue / TRMUSDEUR :
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue * TRMUSDCOP / TRMUSDEUR :
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue : 0;
+
+            return result;
         }
     }
 

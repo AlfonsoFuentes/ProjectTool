@@ -123,19 +123,39 @@
                 </RadzenRow>
             }
 
-            @if (Model.IsEngineeringData)
+            @if (Model.IsEngContData)
             {
-                <RadzenRow>
-                    <RadzenColumn SizeXS="8" SizeSM="4">
-                        <RadzenFormField Text="Budget, USD" Style="width: 100%;">
-                            <RadzenNumeric ShowUpDown="false" Value=@Model.UnitaryCost class="w-100" TValue=double
+                if (!Model.IsNotAbleToEditDelete)
+                {
+                    <RadzenRow>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+                            <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" Value=@Model.UnitaryCost class="w-100" TValue=double
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="Budget" @oninput=@(args =>ChangeBudget(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+                }
+                else
+                {
+                    <RadzenRow>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+                             <RadzenFormField Text="Percentage" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown="false" Value=@Model.Percentage class="w-100" TValue=double
+                                           Max=100 Min=0
                                            InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
-                                           Name="Percentage" @oninput=@(args =>ChangeBudget(args.Value!.ToString()!)) />
+                                           Name="Percentage" @oninput=@(args =>ChangePercentage(args.Value!.ToString()!)) />
 
                         </RadzenFormField>
-                    </RadzenColumn>
-                </RadzenRow>
+                        </RadzenColumn>
+                    </RadzenRow>
+                   
+                }
+
             }
+            
 
             <RadzenRow>
                 <RadzenColumn SizeXS="8" SizeSM="4">
@@ -191,5 +211,5 @@
     </RadzenRow>
 </RadzenStack>
 @code {
-    
+
 }

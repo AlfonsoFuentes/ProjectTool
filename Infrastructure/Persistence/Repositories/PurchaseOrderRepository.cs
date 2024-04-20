@@ -1,10 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain.Entities.Data;
-using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using Shared.Commons.UserManagement;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.MWOStatus;
+using Shared.Commons.Results;
 using Shared.Models.PurchaseorderStatus;
 using System.Linq.Expressions;
 
@@ -13,10 +10,13 @@ namespace Infrastructure.Persistence.Repositories
     internal class PurchaseOrderRepository : IPurchaseOrderRepository
     {
         public IAppDbContext Context { get; }
-
-        public PurchaseOrderRepository(IAppDbContext context)
+        //private IUserContext userContext { get; set; }
+        private CurrentUser CurrentUser {  get; set; }
+        public PurchaseOrderRepository(IAppDbContext context, /*IUserContext userContext,*/ CurrentUser currentUser)
         {
             this.Context = context;
+            //this.userContext = userContext;
+            CurrentUser = currentUser;
         }
 
         public async Task<MWO> GetMWOWithBudgetItemsAndPurchaseOrderById(Guid MWOId)
@@ -121,12 +121,12 @@ namespace Infrastructure.Persistence.Repositories
 
 
         }
-        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersCreated(CurrentUser CurrentUser)
+        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersCreated()
         {
             Expression<Func<PurchaseOrder, bool>> filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id;
             if (!CurrentUser.IsSuperAdmin)
             {
-                filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id && x.CreatedBy == CurrentUser.UserId;
+                filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id && x.CreatedBy == CurrentUser.UserId.ToString();
             }
             return Task.FromResult(Context
                .PurchaseOrders
@@ -143,14 +143,14 @@ namespace Infrastructure.Persistence.Repositories
 
 
         }
-        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersToReceive(CurrentUser CurrentUser)
+        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersToReceive()
         {
             Expression<Func<PurchaseOrder, bool>> filter = x => !(x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id ||
            x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id);
             if (!CurrentUser.IsSuperAdmin)
             {
                 filter = x => !(x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id ||
-           x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id) && x.CreatedBy == CurrentUser.UserId;
+           x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id) && x.CreatedBy == CurrentUser.UserId.ToString();
             }
             return Task.FromResult(Context
                .PurchaseOrders
@@ -167,12 +167,12 @@ namespace Infrastructure.Persistence.Repositories
 
 
         }
-        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersClosed(CurrentUser CurrentUser)
+        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersClosed()
         {
             Expression<Func<PurchaseOrder, bool>> filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id;
             if (!CurrentUser.IsSuperAdmin)
             {
-                filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id && x.CreatedBy == CurrentUser.UserId;
+                filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id && x.CreatedBy == CurrentUser.UserId.ToString();
             }
             return Task.FromResult(Context
                .PurchaseOrders

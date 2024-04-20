@@ -46,6 +46,7 @@ namespace Shared.Models.BudgetItems
            || Type.Id == BudgetItemTypeEnum.Contingency.Id
            || !IsEngineeringData;
 
+        public bool IsMWOAssetProductive {  get; set; }
         public bool CanCreatePurchaseOrder => !IsTaxesMainTaxesData;
         public bool IsAlteration => Type.Id == BudgetItemTypeEnum.Alterations.Id;
         public bool IsEngineeringData => Type.Id == BudgetItemTypeEnum.Engineering.Id && Percentage > 0;
@@ -55,8 +56,6 @@ namespace Shared.Models.BudgetItems
         public bool CreateTaxPurchaseOrder => Type.Id == BudgetItemTypeEnum.Taxes.Id && !IsMainItemTaxesNoProductive;
         public bool CreateCapitalizedSalaries => IsEngineeringData;
         public double Budget { get; set; }
-
-       
         public double Assigned => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetAssignedByItem(BudgetItemId));
         public double Potencial => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetPotentialByItem(BudgetItemId));
         public double Actual => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetActualByItem(BudgetItemId));

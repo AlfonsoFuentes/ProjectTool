@@ -1,12 +1,6 @@
-using Domain.Entities.Account;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Net.Http.Headers;
 using Server.Services;
-using System.Security.Claims;
 var builder = WebApplication.CreateBuilder(args);
-
-
-
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -32,12 +26,7 @@ if (app.Environment.IsDevelopment())
         .WithHeaders(HeaderNames.ContentType);
     });
 }
-//app.MapIdentityApi<AplicationUser>();
-//app.MapPost("/Logout", async (ClaimsPrincipal user, SignInManager<AplicationUser> signInManager) =>
-//{
-//    await signInManager.SignOutAsync();
-//    return TypedResults.Ok();
-//});
+
 app.UseHttpsRedirection();
 // activate the CORS policy
 app.UseCors("wasm");

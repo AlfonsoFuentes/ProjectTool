@@ -39,7 +39,7 @@ namespace Application.Features.BudgetItems.Queries
                 MWOId = budgetItem.MWOId,
                 MWOName = budgetItem.MWO.Name,
                 CostCenter = CostCenterEnum.GetName(budgetItem.MWO.CostCenter),
-
+                IsMWOAssetProductive = budgetItem.MWO.IsAssetProductive,
                 IsMainItemTaxesNoProductive = budgetItem.IsMainItemTaxesNoProductive,
                 Name = budgetItem.Name,
                 Type = BudgetItemTypeEnum.GetType(budgetItem.Type),
@@ -75,10 +75,10 @@ namespace Application.Features.BudgetItems.Queries
                 PurchaseOrderItems = x.PurchaseOrderItems.Select(y => new PurchaseorderItemsResponse()
                 {
                     PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(x.PurchaseOrderStatus),
-                    UnitaryValueCurrency=y.UnitaryValueCurrency,
+                    QuoteUnitaryValueCurrency=y.UnitaryValueCurrency,
                     Quantity = y.Quantity,
                     
-                    Currency = CurrencyEnum.GetType(x.Currency),
+                    QuoteCurrency = CurrencyEnum.GetType(x.Currency),
                     USDCOP = x.USDCOP,
                     USDEUR = x.USDEUR,
                     BudgetItemId = y.BudgetItemId,

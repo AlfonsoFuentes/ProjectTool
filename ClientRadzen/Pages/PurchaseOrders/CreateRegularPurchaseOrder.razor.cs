@@ -74,12 +74,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
                
                 SetMainBudgetItem(result.Data);
 
-
-
             }
-
-           
-
 
             var resultBudgetItems = await Service.GetBudgetItemsToCreatePurchaseOrder(Model.MainBudgetItemId);
             if (resultBudgetItems.Succeeded)
@@ -154,7 +149,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             Model.USDEUR = usdeur;
             foreach (var item in Model.PurchaseOrderItemNoBlank)
             {
-                item.SetUSDEUR(usdeur);
+                item.TRMUSDEUR = usdeur;
             }
             await ValidateAsync();
         }
@@ -173,7 +168,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             Model.USDCOP = usdcop;
             foreach (var item in Model.PurchaseOrderItemNoBlank)
             {
-                item.SetUSDCOP(usdcop);
+                item.TRMUSDCOP = usdcop;
             }
             await ValidateAsync();
         }
@@ -183,7 +178,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             Model.MWOName = budgetItem.MWOName;
             Model.CostCenter = budgetItem.CostCenter;
             Model.MWOCECName = budgetItem.MWOCECName;
-
+            Model.IsAssetProductive = budgetItem.IsMWOAssetProductive;
             Model.MainBudgetItem = budgetItem;
             Model.QuoteCurrency = CurrencyEnum.COP;
             AddBudgetItem(budgetItem);
@@ -210,14 +205,14 @@ namespace ClientRadzen.Pages.PurchaseOrders
             }
             await ValidateAsync();
         }
-        public void ChangeQuoteCurrency(CurrencyEnum currencyEnum)
+        public async Task ChangeQuoteCurrency(CurrencyEnum currencyEnum)
         {
 
             foreach (var item in Model.PurchaseOrderItems)
             {
                 item.ChangeCurrency(currencyEnum);
             }
-
+            await ValidateAsync();
         }
 
         public async Task SetSupplier(SupplierResponse? _Supplier)
@@ -248,7 +243,8 @@ namespace ClientRadzen.Pages.PurchaseOrders
 
             Model.PurchaseOrderItems[Model.PurchaseOrderItems.Count - 1].SetBudgetItem(response, Model.USDCOP, Model.USDEUR);
 
-
+            Model.PurchaseOrderItems[Model.PurchaseOrderItems.Count - 1].PurchaseOrderCurrency = 
+                Model.Supplier == null ? CurrencyEnum.COP : Model.Supplier.SupplierCurrency;
         }
         public void AddBlankItem()
         {
@@ -262,18 +258,18 @@ namespace ClientRadzen.Pages.PurchaseOrders
         public async Task ChangeCurrency(PurchaseOrderItemRequest item, CurrencyEnum newCurrency)
         {
 
-            double originalValueInUsd = item.UnitaryCostInUSD;
+            double originalValueInUsd = item.UnitaryValueUSD;
             if (newCurrency.Id == CurrencyEnum.COP.Id)
             {
-                item.CurrencyUnitaryValue = originalValueInUsd * Model.USDCOP;
+                item.QuoteCurrencyValue = originalValueInUsd * Model.USDCOP;
             }
             else if (newCurrency.Id == CurrencyEnum.EUR.Id)
             {
-                item.CurrencyUnitaryValue = originalValueInUsd * Model.USDEUR;
+                item.QuoteCurrencyValue = originalValueInUsd * Model.USDEUR;
             }
             else if (newCurrency.Id == CurrencyEnum.USD.Id)
             {
-                item.CurrencyUnitaryValue = originalValueInUsd;
+                item.QuoteCurrencyValue = originalValueInUsd;
             }
             Model.QuoteCurrency = newCurrency;
             await ValidateAsync();
@@ -305,7 +301,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             {
 
             }
-            item.CurrencyUnitaryValue = currencyvalue;
+            item.QuoteCurrencyValue = currencyvalue;
             await ValidateAsync();
         }
         public async Task ChangePR(string purchaserequisition)

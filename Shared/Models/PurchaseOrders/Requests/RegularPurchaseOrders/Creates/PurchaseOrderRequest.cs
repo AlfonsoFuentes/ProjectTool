@@ -1,16 +1,18 @@
 ﻿using Shared.Models.BudgetItems;
 using Shared.Models.Currencies;
 using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
+using Shared.Models.PurchaseorderStatus;
 using Shared.Models.Suppliers;
 
 namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
 {
     public abstract class PurchaseOrderRequest
     {
-        
+        public abstract PurchaseOrderStatusEnum PurchaseOrderStatus { get; set; } 
+
         public string PurchaseorderName { get; set; } = string.Empty;
         public SupplierResponse? Supplier { get; set; }
-        public Guid SupplierId=> Supplier == null ? Guid.Empty : Supplier.Id;
+        public Guid SupplierId => Supplier == null ? Guid.Empty : Supplier.Id;
         public string SupplierName => Supplier == null ? string.Empty : Supplier.NickName;
         public string VendorCode => Supplier == null ? string.Empty : Supplier.VendorCode;
         public string TaxCode => Supplier == null ? string.Empty : IsAlteration || IsMWONoProductive ? Supplier.TaxCodeLP : Supplier.TaxCodeLD;
@@ -30,15 +32,31 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
         public string MWOCECName { get; set; } = string.Empty;
         public double USDCOP { get; set; }
         public double USDEUR { get; set; }
-        public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.None;
-        public CurrencyEnum QuoteCurrency { get; set; }= CurrencyEnum.None;
+        CurrencyEnum _PurchaseOrderCurrency = CurrencyEnum.None;
+        public CurrencyEnum PurchaseOrderCurrency
+        {
+            get => _PurchaseOrderCurrency;
+            set
+            {
+                _PurchaseOrderCurrency = value;
+                foreach (var row in PurchaseOrderItems)
+                {
+                    row.PurchaseOrderCurrency = value;
+                }
+            }
+        }
+        public CurrencyEnum QuoteCurrency { get; set; } = CurrencyEnum.None;
         public abstract double SumPOValueUSD { get; }
-        public abstract double SumPOValueCurrency { get;  }
-        public abstract double SumBudget { get;  }
-        public abstract double SumBudgetAssigned { get;  }
-        public abstract double SumBudgetPotencial { get;  }
-        
-        public abstract double SumPendingUSD { get;  }
-        public abstract List<PurchaseOrderItemRequest> PurchaseOrderItems { get; set; }
+        public abstract double SumPOValueCurrency { get; }
+        public abstract double SumBudget { get; }
+        public abstract double SumBudgetAssigned { get; }
+        public abstract double SumBudgetPotencial { get; }
+        public abstract double SumPOValueSupplierCurrency { get; }
+        public abstract double SumPendingUSD { get; }
+        public List<PurchaseOrderItemRequest> PurchaseOrderItems { get; set; } = new();
+        public List<PurchaseOrderItemRequest> PurchaseOrderItemNoBlank => PurchaseOrderItems.Where(x => x.BudgetItemId != Guid.Empty).ToList();
+
+       
+
     }
 }

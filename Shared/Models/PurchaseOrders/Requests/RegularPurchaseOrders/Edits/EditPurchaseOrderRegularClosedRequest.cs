@@ -17,6 +17,6 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits
         public double POValueUSDOriginal => PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ?
             POValueCurrencyOriginal : PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ?
             POValueCurrencyOriginal / USDCOP : POValueCurrencyOriginal / USDEUR;
-        public PurchaseOrderStatusEnum PurchaseOrderStatus { get; set; } = PurchaseOrderStatusEnum.None;
+        public override PurchaseOrderStatusEnum PurchaseOrderStatus { get; set; } = PurchaseOrderStatusEnum.Closed;
     }
 }

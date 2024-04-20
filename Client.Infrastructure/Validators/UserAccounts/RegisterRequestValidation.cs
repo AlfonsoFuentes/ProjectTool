@@ -1,9 +1,7 @@
-﻿
-
-using Client.Infrastructure.Managers.UserAccount;
+﻿using Client.Infrastructure.Managers.UserAccount;
 using Shared.Models.UserAccounts.Registers;
 
-namespace Client.Infrastructure.IdentityModels.Validations
+namespace Client.Infrastructure.Validators.UserAccounts
 {
     public class RegisterUserRequestValidator : AbstractValidator<RegisterUserRequest>
     {

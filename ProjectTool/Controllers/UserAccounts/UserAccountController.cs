@@ -1,15 +1,11 @@
-﻿using Application.Features.MWOs.Commands;
-using Application.Features.UserAccounts;
-using Application.Features.UserAccounts.Commands;
+﻿using Application.Features.UserAccounts.Commands;
 using Application.Features.UserAccounts.Queries;
+using Infrastructure.Services;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Commons.UserManagement;
-using Shared.Models.MWO;
+using Shared.Commons.Results;
 using Shared.Models.UserAccounts.Logins;
 using Shared.Models.UserAccounts.Registers;
-using Shared.Models.UserAccounts.Reponses;
 
 namespace Server.Controllers.UserAccounts
 {
@@ -18,11 +14,12 @@ namespace Server.Controllers.UserAccounts
     public class UserAccountController : ControllerBase
     {
         private IMediator Mediator { get; set; }
-        private CurrentUser CurrentUser;
+        CurrentUser currentUser { get; set; }
+
         public UserAccountController(IMediator mediator, CurrentUser currentUser)
         {
             Mediator = mediator;
-            CurrentUser = currentUser;
+            this.currentUser = currentUser;
         }
 
         [HttpPost("RegisterUser")]
@@ -56,12 +53,7 @@ namespace Server.Controllers.UserAccounts
 
             return Ok(await Mediator.Send(new ResetPasswordCommand(email)));
         }
-        [HttpGet("ValidatePasswordConfirmed/{email}")]
-        public async Task<IActionResult> ValidatePasswordConfirmed(string email)
-        {
-
-            return Ok(await Mediator.Send(new ValidatePasswordConfirmedQuery(email)));
-        }
+        
         [HttpPost("ValidatePasswordMatch")]
         public async Task<IActionResult> ValidatePasswordMatch(LoginUserRequest user)
         {
@@ -80,14 +72,26 @@ namespace Server.Controllers.UserAccounts
 
             return Ok(await Mediator.Send(new ChangePasswordUserCommand(request)));
         }
-        [HttpPost("ReceiveCurrentUser")]
-        public async Task<IActionResult> ReceiveCurrentUser(LoginUserResponse user)
-        {
-            CurrentUser.UserId = user.Id;
-            CurrentUser.Role = user.Role;
-            CurrentUser.UserName = user.Email;   
-            return Ok(await Task.FromResult(true));
-        }
 
+        [HttpGet("GetCurrentUser/{UserId}")]
+        public async Task<IActionResult> ReceiveCurrentUser(string UserId)
+        {
+
+            return Ok(await Mediator.Send(new ReceiveUserFromClientCommand(UserId)));
+        }
+        [HttpGet("ValidatePasswordConfirmed/{email}")]
+        public async Task<IActionResult> ValidatePasswordConfirmed(string email)
+        {
+
+            return Ok(await Mediator.Send(new ValidatePasswordConfirmedQuery(email)));
+        }
+        [HttpGet("ClearCurrentUser")]
+        public async Task<IActionResult> ClearCurrentUser()
+        {
+            currentUser.UserId = "";
+            currentUser.UserName = "";
+            currentUser.Role = "";
+            return Ok();
+        }
     }
 }

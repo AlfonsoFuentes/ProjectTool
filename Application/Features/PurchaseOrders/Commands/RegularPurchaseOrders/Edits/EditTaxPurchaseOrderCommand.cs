@@ -37,9 +37,9 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseorder.IsAlteration = false;
             purchaseorder.USDEUR = request.Data.USDEUR;
             purchaseorder.SPL = $"Tax for {request.Data.PurchaseOrderItem.Name}";
-            purchaseorder.POClosedDate = DateTime.UtcNow;
+
             purchaseorder.CurrencyDate = DateTime.UtcNow;
-            purchaseorder.POValueCurrency = request.Data.PurchaseOrderItem.TotalCurrencyValue;
+            purchaseorder.POValueCurrency = request.Data.PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Closed.Id;
             purchaseorder.PONumber = request.Data.PONumber;
             purchaseorder.ActualCurrency = request.Data.SumPOValueCurrency;
@@ -51,13 +51,13 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseorder.Currency = request.Data.PurchaseOrderCurrency.Id;
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var purchaseorderitem = await Repository.GetPurchaseOrderItemById(request.Data.PurchaseOrderItem.PurchaseOrderItemId);
-            purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.TotalCurrencyValue;
+            purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
             purchaseorderitem.Quantity = 1;
-            purchaseorderitem.ActualCurrency = request.Data.PurchaseOrderItem.CurrencyUnitaryValue;
+            purchaseorderitem.ActualCurrency = request.Data.PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
             await Repository.UpdatePurchaseOrderItem(purchaseorderitem);
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            //await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
+          
             if (result > 0)
                 return Result.Success($"Purchase order created succesfully");
             return Result.Fail($"Purchase order was not created succesfully");

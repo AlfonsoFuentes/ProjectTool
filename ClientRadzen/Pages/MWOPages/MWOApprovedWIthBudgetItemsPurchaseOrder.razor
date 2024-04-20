@@ -88,7 +88,7 @@
                                 Data="@FilteredItems" TItem="BudgetItemApprovedResponse" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
 
                     <Template Context="product">
-                        <RadzenPanel AllowCollapse="true" Collapsed=true class="rz-m-1">
+                        <RadzenPanel AllowCollapse="true" Collapsed=true class="rz-m-1" >
                             <HeaderTemplate>
                                 <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-1">
                                     @(product.NomenclatoreName)
@@ -153,14 +153,15 @@
 
 
                                 </RadzenCard>
-                                @if (product == seletedRow)
+                                @if (seletedRow != null && product.BudgetItemId == seletedRow.BudgetItemId)
                                 {
                                     <RadzenCard Style="width: 100%;" class="rz-m-1">
                                         <RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false"
                                                         AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
                                                         Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                                         FilterPopupRenderMode="PopupRenderMode.OnDemand"
-                                                        Data="@product.PurchaseOrders" TItem="PurchaseOrderResponse" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+                                                        Data="@product.PurchaseOrders" TItem="PurchaseOrderResponse" ColumnWidth="300px"
+                                                        LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
                                             <Columns>
                                                 <RadzenDataGridColumn TItem="PurchaseOrderResponse"
                                                                       Property="@nameof(PurchaseOrderResponse.PurchaseorderName)"
@@ -215,7 +216,7 @@
                                                 <RadzenDataGridColumn TItem="PurchaseOrderResponse"
                                                                       Property="@nameof(PurchaseOrderResponse.ExpectedOn)"
                                                                       Title="Expected On" Width="100px" TextAlign="TextAlign.Left">
-                                                   
+
                                                 </RadzenDataGridColumn>
                                                 @if (!product.IsMainItemTaxesNoProductive)
                                                 {

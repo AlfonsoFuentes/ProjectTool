@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Commons.Results;
 using System.Text;
 
 namespace Infrastructure
@@ -35,7 +36,7 @@ namespace Infrastructure
 
             var frontend = configuration["FrontendUrl"];
             var backend = configuration["BackendUrl"];
-
+           
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -68,8 +69,8 @@ namespace Infrastructure
             services.AddScoped<IGenerateToken, GenerateToken>();
             services.AddScoped<ISapAdjustRepository, SapAdjustRepository>();
             services.AddScoped<IExcelService, ExcelService>();
-
-            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            //services.AddScoped<CurrentUser>();
+            //services.AddScoped<IUserContext, UserContext>();
             return services;
         }
       

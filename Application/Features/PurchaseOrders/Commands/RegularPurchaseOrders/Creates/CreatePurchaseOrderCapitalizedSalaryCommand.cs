@@ -33,7 +33,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.PurchaseorderName = request.Data.PurchaseOrderName;
             purchaseorder.PurchaseRequisition = request.Data.PurchaseorderNumber;
             purchaseorder.PONumber = request.Data.PurchaseorderNumber;
-            purchaseorder.QuoteCurrency = -1;
+            purchaseorder.QuoteCurrency = CurrencyEnum.USD.Id;
             purchaseorder.IsAlteration = false;
             purchaseorder.USDEUR = request.Data.USDEUR;
             purchaseorder.USDCOP = request.Data.USDCOP;

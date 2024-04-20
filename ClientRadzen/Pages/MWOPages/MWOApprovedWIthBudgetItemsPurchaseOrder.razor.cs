@@ -63,10 +63,12 @@ public partial class MWOApprovedWIthBudgetItemsPurchaseOrder
     List<BudgetItemApprovedResponse> FilteredPurchaseorder = new();
     IQueryable<BudgetItemApprovedResponse> GetFilteredItems()
     {
-        
+        var result = Response.BudgetItems?.Where(fiterexpresion).AsQueryable();
+
+
         if (!string.IsNullOrEmpty(nameFilter))
         {
-            FilteredPurchaseorder = Response.BudgetItems?.Where(fiterexpresionPurchaseOrder).ToList();
+            FilteredPurchaseorder = result.Where(fiterexpresionPurchaseOrder).ToList();
             if (FilteredPurchaseorder.Count == 1)
             {
                 ShowPurchaseOrders(FilteredPurchaseorder.First());
@@ -82,7 +84,7 @@ public partial class MWOApprovedWIthBudgetItemsPurchaseOrder
 
 
 
-        return Response.BudgetItems?.Where(fiterexpresion).AsQueryable();
+        return result;
     }
     void CreatePurchaseOrder(BudgetItemApprovedResponse approvedResponse)
     {

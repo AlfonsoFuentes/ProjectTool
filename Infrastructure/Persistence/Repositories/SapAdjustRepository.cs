@@ -1,8 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities.Data;
 using Microsoft.EntityFrameworkCore;
-using Shared.Commons.UserManagement;
-using System.Linq.Expressions;
 
 namespace Infrastructure.Persistence.Repositories
 {

@@ -1,9 +1,10 @@
 ﻿using Application.Interfaces;
 using Domain.Entities.Account;
 using Domain.Entities.Data;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Shared.Commons.UserManagement;
+using Shared.Commons.Results;
 using System.Reflection;
 
 namespace Infrastructure.Context
@@ -11,9 +12,11 @@ namespace Infrastructure.Context
     public class AppDbContext : IdentityDbContext<AplicationUser>,IAppDbContext
     {
         private CurrentUser CurrentUser { get; set; }
-        public AppDbContext(DbContextOptions<AppDbContext> options, CurrentUser currentUser) : base(options)
+        //private IUserContext UserContext { get; set; }
+        public AppDbContext(DbContextOptions<AppDbContext> options, CurrentUser currentUser/*, IUserContext userContext*/) : base(options)
         {
             CurrentUser = currentUser;
+            //UserContext = userContext;
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -23,13 +26,13 @@ namespace Infrastructure.Context
                 {
                     case EntityState.Added:
                         entry.Entity.CreatedDate = DateTime.UtcNow;
-                        entry.Entity.CreatedBy = CurrentUser.UserId;
+                        entry.Entity.CreatedBy = CurrentUser.UserId.ToString();
                         entry.Entity.CreatedByUserName = CurrentUser.UserName;
                         break;
 
                     case EntityState.Modified:
                         entry.Entity.LastModifiedOn = DateTime.UtcNow;
-                        entry.Entity.LastModifiedBy = CurrentUser.UserId;
+                        entry.Entity.LastModifiedBy = CurrentUser.UserId.ToString();
                         //entry.Entity.CreatedBy = CurrentUser.UserId;// se agrego esta linea para cambiar de usuario
                         //entry.Entity.CreatedByUserName = CurrentUser.UserName;
                         break;
@@ -74,5 +77,6 @@ namespace Infrastructure.Context
         public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
         public DbSet<DownPayment> DownPayments { get; set; }
         public DbSet<SapAdjust> SapAdjusts { get; set; }
+       
     }
 }

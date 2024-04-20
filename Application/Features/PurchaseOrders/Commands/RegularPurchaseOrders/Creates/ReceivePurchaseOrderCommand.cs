@@ -73,7 +73,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.ActualCurrency = sumPOactualCurrency;
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            //await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
+        
             if (result > 0)
             {
                 return Result.Success($"Purchase order: {purchaseorder.PONumber} was received succesfully"); ;

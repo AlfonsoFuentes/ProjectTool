@@ -40,7 +40,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.SPL = request.Data.SPL;
             purchaseorder.SupplierId = request.Data.SupplierId;
             purchaseorder.CurrencyDate = DateTime.UtcNow;
-            purchaseorder.POValueCurrency = request.Data.SumPOValueCurrency;
+            purchaseorder.POValueCurrency = request.Data.PurchaseOrderItemNoBlank.Sum(x=>x.TotalValuePurchaseOrderCurrency);
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Created.Id;
             purchaseorder.QuoteNo = request.Data.QuoteNo;
             purchaseorder.TaxCode = request.Data.TaxCode;
@@ -53,14 +53,14 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             foreach (var item in request.Data.PurchaseOrderItemNoBlank)
             {
                 var purchaseorderItem = purchaseorder.AddPurchaseOrderItem(item.BudgetItemId, item.Name);
-                purchaseorderItem.UnitaryValueCurrency = item.CurrencyUnitaryValue;
+                purchaseorderItem.UnitaryValueCurrency = item.UnitaryValuePurchaseOrderCurrency;
                 purchaseorderItem.Quantity = item.Quantity;
             
                 await Repository.AddPurchaseorderItem(purchaseorderItem);
             }
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            //await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
+           
             if (result > 0)
                 return Result.Success($"Purchase order created succesfully");
             return Result.Fail($"Purchase order was not created succesfully");

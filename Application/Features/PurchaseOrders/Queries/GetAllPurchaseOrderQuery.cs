@@ -2,7 +2,6 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Commons.UserManagement;
 using Shared.Models.Currencies;
 using Shared.Models.PurchaseOrders.Responses;
 using Shared.Models.PurchaseorderStatus;
@@ -16,11 +15,11 @@ namespace Application.Features.PurchaseOrders.Queries
     public class GetPurchaseordersToApproveQueryHandler : IRequestHandler<GetAllPurchaseOrderQuery, IResult<PurchaseOrdersListResponse>>
     {
         private IPurchaseOrderRepository _purchaseOrderRepository;
-        private CurrentUser CurrentUser { get; set; }
-        public GetPurchaseordersToApproveQueryHandler(IPurchaseOrderRepository purchaseOrderRepository, CurrentUser currentUser)
+     
+        public GetPurchaseordersToApproveQueryHandler(IPurchaseOrderRepository purchaseOrderRepository)
         {
             _purchaseOrderRepository = purchaseOrderRepository;
-            CurrentUser = currentUser;
+  
         }
 
         public async Task<IResult<PurchaseOrdersListResponse>> Handle(GetAllPurchaseOrderQuery request, CancellationToken cancellationToken)
@@ -46,21 +45,38 @@ namespace Application.Features.PurchaseOrders.Queries
 
         async Task<IEnumerable<PurchaseOrderResponse>> GetPurchaseOrderCreated()
         {
-            var purchaseorder = await _purchaseOrderRepository.GetAllPurchaseordersCreated(CurrentUser);
+            var purchaseorder = await _purchaseOrderRepository.GetAllPurchaseordersCreated();
 
             return purchaseorder.Select(expression);
         }
         async Task<IEnumerable<PurchaseOrderResponse>> GetPurchaseOrderApproved()
         {
-            var purchaseorder = await _purchaseOrderRepository.GetAllPurchaseordersToReceive(CurrentUser);
+            var purchaseorder = await _purchaseOrderRepository.GetAllPurchaseordersToReceive();
 
             return purchaseorder.Select(expression);
         }
         async Task<IEnumerable<PurchaseOrderResponse>> GetPurchaseOrderClosed()
         {
-            var purchaseorder = await _purchaseOrderRepository.GetAllPurchaseordersClosed(CurrentUser);
+            var purchaseorder = await _purchaseOrderRepository.GetAllPurchaseordersClosed();
 
             return purchaseorder.Select(expression);
+        }
+       static double GetQuoteCurrencyValue(double UnitaryValue, int quotecurrency, int purchaseOrdercurrency, double TRMUSDCOP, double TRMUSDEUR)
+        {
+            var result =
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue :
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue * TRMUSDCOP :
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue * TRMUSDEUR :
+
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue / TRMUSDCOP :
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue :
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue / TRMUSDCOP / TRMUSDEUR :
+
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue / TRMUSDEUR :
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue * TRMUSDCOP / TRMUSDEUR :
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue : 0;
+
+            return result;
         }
         Expression<Func<PurchaseOrder, PurchaseOrderResponse>> expression = e => new PurchaseOrderResponse
         {
@@ -93,11 +109,13 @@ namespace Application.Features.PurchaseOrders.Queries
                 {
                     PurchaseorderItemId = x.Id,
                     BudgetItemId = x.Id,
-                    UnitaryValueCurrency = x.UnitaryValueCurrency,
+                    QuoteUnitaryValueCurrency = GetQuoteCurrencyValue(x.UnitaryValueCurrency, e.QuoteCurrency, e.Currency,
+                    e.USDCOP, e.USDEUR),
                     Quantity = x.Quantity,
-
+                    PurchaseOrderCurrency= CurrencyEnum.GetType(e.Currency),
+                    QuoteCurrency = CurrencyEnum.GetType(e.QuoteCurrency),
                     ActualCurrency = x.ActualCurrency,
-                    Currency = CurrencyEnum.GetType(e.Currency),
+                   
                     USDCOP = e.USDCOP,
                     USDEUR = e.USDEUR,
 
@@ -105,7 +123,9 @@ namespace Application.Features.PurchaseOrders.Queries
                 }).ToList(),
 
         };
+       
     }
+
 
 
 

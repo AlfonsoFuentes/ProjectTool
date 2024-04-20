@@ -177,7 +177,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             Model.USDEUR = usdeur;
             foreach (var item in Model.PurchaseOrderItemNoBlank)
             {
-                item.SetUSDEUR(usdeur);
+                item.TRMUSDEUR = usdeur;
             }
             await ValidateAsync();
         }
@@ -196,7 +196,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             Model.USDCOP = usdcop;
             foreach (var item in Model.PurchaseOrderItemNoBlank)
             {
-                item.SetUSDCOP(usdcop);
+                item.TRMUSDCOP = usdcop;
             }
             await ValidateAsync();
         }
@@ -248,7 +248,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             {
 
             }
-            item.CurrencyUnitaryValue = currencyvalue;
+            item.QuoteCurrencyValue = currencyvalue;
             await ValidateAsync();
         }
         bool debug = true;
@@ -385,6 +385,15 @@ namespace ClientRadzen.Pages.PurchaseOrders
         public async Task ChangeQuote(string quoteno)
         {
             Model.QuoteNo = quoteno;
+            await ValidateAsync();
+        }
+        public async Task ChangeQuoteCurrency(CurrencyEnum currencyEnum)
+        {
+
+            foreach (var item in Model.PurchaseOrderItems)
+            {
+                item.ChangeCurrency(currencyEnum);
+            }
             await ValidateAsync();
         }
     }

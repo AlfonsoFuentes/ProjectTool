@@ -1,5 +1,4 @@
 ﻿using Domain.Entities.Data;
-using Shared.Commons.UserManagement;
 
 namespace Application.Interfaces
 {

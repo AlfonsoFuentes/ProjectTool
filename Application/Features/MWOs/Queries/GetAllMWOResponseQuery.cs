@@ -2,17 +2,13 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Commons.UserManagement;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.CostCenter;
 using Shared.Models.MWO;
 using Shared.Models.MWOStatus;
 using Shared.Models.MWOTypes;
-using Shared.Models.PurchaseOrders.Responses;
 using Shared.Models.PurchaseorderStatus;
 using System.Diagnostics;
-using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Application.Features.MWOs.Queries
 {
@@ -20,18 +16,19 @@ namespace Application.Features.MWOs.Queries
     public class GetAllMWOResponseQueryHandler : IRequestHandler<GetAllMWOResponseQuery, IResult<MWOResponseList>>
     {
         private IMWORepository Repository { get; set; }
-        private CurrentUser CurrentUser { get; set; }
-        public GetAllMWOResponseQueryHandler(IMWORepository repository, CurrentUser currentUser)
+   
+
+        public GetAllMWOResponseQueryHandler(IMWORepository repository)
         {
             Repository = repository;
-            CurrentUser = currentUser;
+          
         }
 
 
         public async Task<IResult<MWOResponseList>> Handle(GetAllMWOResponseQuery request, CancellationToken cancellationToken)
         {
             Stopwatch sw = Stopwatch.StartNew();
-            var mwoList = await Repository.GetMWOList(CurrentUser);
+            var mwoList = await Repository.GetMWOList();
             sw.Stop();
             var elapse1 = sw.ElapsedMilliseconds;
 

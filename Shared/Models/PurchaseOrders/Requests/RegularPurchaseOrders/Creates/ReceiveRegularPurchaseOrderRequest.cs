@@ -36,7 +36,7 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
         public string MWOCECName { get; set; } = string.Empty;
 
         public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.None;
-
+        public CurrencyEnum QuoteCurrency { get; set; } = CurrencyEnum.COP;
 
         public List<ReceivePurchaseorderItemRequest> PurchaseOrderItemsToReceive { get; set; } = new();
 

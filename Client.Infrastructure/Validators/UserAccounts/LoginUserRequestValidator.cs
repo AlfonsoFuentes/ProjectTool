@@ -1,9 +1,7 @@
-﻿
-
-using Client.Infrastructure.Managers.UserAccount;
+﻿using Client.Infrastructure.Managers.UserAccount;
 using Shared.Models.UserAccounts.Logins;
 
-namespace Client.Infrastructure.IdentityModels.Validations
+namespace Client.Infrastructure.Validators.UserAccounts
 {
     public class LoginUserRequestValidator : AbstractValidator<LoginUserRequest>
     {
@@ -23,7 +21,7 @@ namespace Client.Infrastructure.IdentityModels.Validations
             var result = await _accountManager.ValidateIfEmailExist(email);
             return result.Succeeded;
         }
-        async Task<bool> ReviewPasswordMatch(LoginUserRequest user,string pasword, CancellationToken cancellationToken)
+        async Task<bool> ReviewPasswordMatch(LoginUserRequest user, string pasword, CancellationToken cancellationToken)
         {
             var result = await _accountManager.ValidatePasswordMatch(user);
             return result.Succeeded;

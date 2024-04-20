@@ -37,7 +37,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseOrder.USDCOP = request.Data.USDCOP;
             purchaseOrder.USDEUR = request.Data.USDEUR;
             purchaseOrder.MainBudgetItemId = request.Data.MainBudgetItemId;
-            purchaseOrder.POValueCurrency = request.Data.SumPOValueCurrency;
+            purchaseOrder.POValueCurrency = request.Data.PurchaseOrderItemNoBlank.Sum(x=>x.TotalValuePurchaseOrderCurrency);
             foreach (var row in purchaseOrder.PurchaseOrderItems)
             {
                 if (!request.Data.PurchaseOrderItems.Any(x => x.BudgetItemId == row.BudgetItemId))
@@ -51,7 +51,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                 if(purchaseorderItem==null)
                 {
                     purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId, item.Name);
-                    purchaseorderItem.UnitaryValueCurrency = item.CurrencyUnitaryValue;
+                    purchaseorderItem.UnitaryValueCurrency = item.UnitaryValuePurchaseOrderCurrency;
                     purchaseorderItem.Quantity = item.Quantity;
                     await Repository.AddPurchaseorderItem(purchaseorderItem);
                 }
@@ -59,7 +59,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                 {
                     purchaseorderItem.Name = item.Name;
                     purchaseorderItem.Quantity = item.Quantity;
-                    purchaseorderItem.UnitaryValueCurrency = item.CurrencyUnitaryValue;
+                    purchaseorderItem.UnitaryValueCurrency = item.UnitaryValuePurchaseOrderCurrency;
                     if (item.BudgetItemId != purchaseorderItem.BudgetItemId)
                         purchaseorderItem.ChangeBudgetItem(item.BudgetItemId);
                     await Repository.UpdatePurchaseOrderItem(purchaseorderItem);
@@ -70,7 +70,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
 
             await Repository.UpdatePurchaseOrder(purchaseOrder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            //await MWORepository.UpdateDataForApprovedMWO(purchaseOrder.MWOId, cancellationToken);
+       
             if (result > 0)
             {
                 return Result.Success($"Purchase order :{request.Data.PurchaseorderName} was edited succesfully");

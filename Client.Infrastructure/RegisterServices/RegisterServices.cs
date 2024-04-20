@@ -2,6 +2,7 @@
 using Blazored.LocalStorage;
 using Client.Infrastructure.Authentication;
 using Client.Infrastructure.Managers.CurrencyApis;
+using Client.Infrastructure.Managers.UserManagement;
 using System.Globalization;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
@@ -20,10 +21,10 @@ namespace Client.Infrastructure.RegisterServices
 
 
             // register the cookie handler
-         
+
             builder.Services.AddScoped<CurrentUser>();
             // register the account management interface
-           
+
 
             var frontend = builder.Configuration["FrontendUrl"];
             var backend = builder.Configuration["BackendUrl"];
@@ -39,8 +40,10 @@ namespace Client.Infrastructure.RegisterServices
                     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
                 });
 
-            
+
             builder.Services.AddHttpClientInterceptor();
+           
+            builder.Services.AddScoped<HttpInterceptorService>();
             builder.Services.AddOptions();
             builder.Services.AddManagers();
             builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

@@ -45,7 +45,7 @@ namespace Application.Features.BudgetItems.Queries
                 Reference = row.Reference,
                 MWOName = row.MWO.Name,
                 Nomenclatore = $"{BudgetItemTypeEnum.GetLetter(row.Type)}{row.Order}",
-
+                IsNotAbleToEditDelete=row.IsNotAbleToEditDelete,
 
             };
             if (row.Type == BudgetItemTypeEnum.Taxes.Id)

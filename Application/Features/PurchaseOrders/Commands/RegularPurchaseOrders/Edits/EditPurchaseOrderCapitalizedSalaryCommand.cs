@@ -34,7 +34,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseorder.PurchaseorderName = request.Data.PurchaseOrderName;
             purchaseorder.PurchaseRequisition = request.Data.PurchaseorderNumber;
             purchaseorder.PONumber = request.Data.PurchaseorderNumber;
-            purchaseorder.QuoteCurrency = -1;
+            purchaseorder.QuoteCurrency = CurrencyEnum.USD.Id;
             purchaseorder.IsAlteration = false;
             purchaseorder.USDEUR = request.Data.USDEUR;
             purchaseorder.USDCOP = request.Data.USDCOP;
@@ -55,10 +55,11 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseorderitem.UnitaryValueCurrency = request.Data.SumPOValueCurrency;
             purchaseorderitem.Quantity = 1;
             purchaseorderitem.ActualCurrency = request.Data.SumPOValueCurrency;
+
             await Repository.UpdatePurchaseOrderItem(purchaseorderitem);
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            //await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
+          
             if (result > 0)
                 return Result.Success($"Purchase order created succesfully");
             return Result.Fail($"Purchase order was not created succesfully");

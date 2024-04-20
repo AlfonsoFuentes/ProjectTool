@@ -4,6 +4,7 @@ using Shared.Models.Currencies;
 using Shared.Models.MWO;
 using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries
@@ -20,6 +21,7 @@ namespace Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries
         public DateTime CurrencyDate { get; set; }
         public string CurrencyDateOnly => CurrencyDate.ToShortDateString();
         public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.COP;
+        public CurrencyEnum QuoteCurrency { get; set; } = CurrencyEnum.COP;
         public PurchaseOrderItemRequest PurchaseOrderItem { get; set; } = new();
        
         public Guid MWOId { get; set; }
@@ -27,7 +29,7 @@ namespace Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries
         public string AccountAssignment { get; set; } = string.Empty;
         public string CostCenter { get; set; } = string.Empty;
         public string MWOCECName { get; set; } = string.Empty;
-
+        public bool IsAssetProductive { get; set; }
         public Guid MainBudgetItemId => MainBudgetItem.BudgetItemId;
         public BudgetItemApprovedResponse MainBudgetItem { get; set; } = new();
         public void SetMainBudgetItem(BudgetItemApprovedResponse budgetItem)
@@ -37,6 +39,7 @@ namespace Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries
             CostCenter = budgetItem.CostCenter;
             MWOCECName = budgetItem.MWOCECName;
             AccountAssignment = budgetItem.MWOCECName;
+            IsAssetProductive = budgetItem.IsMWOAssetProductive;
             MainBudgetItem = budgetItem;
             AddBudgetItem(budgetItem);
             PurchaseOrderCurrency = CurrencyEnum.USD;
@@ -45,13 +48,13 @@ namespace Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries
         public void AddBudgetItem(BudgetItemApprovedResponse response)
         {
             PurchaseOrderItem.SetBudgetItem(response, USDCOP, USDEUR);
-            PurchaseOrderItem.Currency = CurrencyEnum.USD;
+            PurchaseOrderItem.QuoteCurrency = CurrencyEnum.USD;
 
 
 
         }
         public double SumPOValueUSD => PurchaseOrderItem.POValueUSD;
-        public double SumPOValueCurrency => PurchaseOrderItem.TotalCurrencyValue;
+        public double SumPOValueCurrency => PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
         public double SumBudget => PurchaseOrderItem.Budget;
         public double SumBudgetAssigned => PurchaseOrderItem.AssignedUSD;
         public double SumBudgetPotencialAssigned => PurchaseOrderItem.PotencialUSD;

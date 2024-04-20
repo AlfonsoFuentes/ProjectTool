@@ -1,7 +1,4 @@
 ﻿using Domain.Entities.Data;
-using Shared.Commons.Results;
-using Shared.Commons.UserManagement;
-using System.Linq.Expressions;
 
 namespace Application.Interfaces
 {
@@ -17,9 +14,9 @@ namespace Application.Interfaces
         Task<MWO> GetMWOWithItemsById(Guid id);
         Task<IQueryable<PurchaseOrder>> GetPurchaseOrdersByMWOId(Guid MWOId);
         Task<IQueryable<BudgetItem>> GetBudgetItemsByMWOId(Guid MWOId);
-
-        //Task UpdateDataForNotApprovedMWO(Guid MWOId, CancellationToken token);
-        //Task UpdateDataForApprovedMWO(Guid MWOId, CancellationToken token);
-        Task<IEnumerable<MWO>> GetMWOList(CurrentUser CurrentUser);
+        Task<IEnumerable<MWO>> GetMWOList();
+        Task<BudgetItem> GetBudgetItemsSalary(Guid MWOId);
+        Task<BudgetItem> GetBudgetItemsContingency(Guid MWOId);
+        Task UpdateBudgetItem(BudgetItem entity);
     }
 }

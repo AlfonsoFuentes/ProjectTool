@@ -22,21 +22,42 @@ namespace Application.Features.PurchaseOrders.Commands.RecalculateData
         {
             _appDbContext = appDbContext;
         }
-
         public async Task<IResult> Handle(RecalculatePurchaseOrderCommand request, CancellationToken cancellationToken)
         {
-            var purchaseOrderItemss = await _appDbContext.PurchaseOrderItems.ToListAsync(cancellationToken);
+            //var purchaseOrderItemss = await _appDbContext.PurchaseOrderItems
+            //    .Include(x=>x.PurchaseOrder)
+            //    .Where(x=>x.ActualCurrency!=0)
+            //    .ToListAsync(cancellationToken);
 
-            foreach (var item in purchaseOrderItemss)
-            {
-                item.UnitaryValueCurrency = item.UnitaryValueCurrency ;
-                _appDbContext.PurchaseOrderItems.Update(item);
+            //foreach (var item in purchaseOrderItemss)
+            //{
+                
+            //    var actualvalue=item.AddActualValue(item.ActualCurrency,
+            //        item.PurchaseOrder.USDCOP,
+            //        item.PurchaseOrder.USDEUR,item.PurchaseOrder.Currency,
+            //        item.LastModifiedOn!.Value);
 
-            }
-            var result = await _appDbContext.SaveChangesAsync(cancellationToken);
+            //   await _appDbContext.ActualValues.AddAsync(actualvalue);
+
+            //}
+            //var result = await _appDbContext.SaveChangesAsync(cancellationToken);
 
             return Result.Success();
         }
+        //public async Task<IResult> Handle(RecalculatePurchaseOrderCommand request, CancellationToken cancellationToken)
+        //{
+        //    var purchaseOrderItemss = await _appDbContext.PurchaseOrderItems.ToListAsync(cancellationToken);
+
+        //    foreach (var item in purchaseOrderItemss)
+        //    {
+        //        item.UnitaryValueCurrency = item.UnitaryValueCurrency ;
+        //        _appDbContext.PurchaseOrderItems.Update(item);
+
+        //    }
+        //    var result = await _appDbContext.SaveChangesAsync(cancellationToken);
+
+        //    return Result.Success();
+        //}
         //public async Task<IResult> Handle(RecalculatePurchaseOrderCommand request, CancellationToken cancellationToken)
         //{
         //    var purchaseOrders = await _appDbContext.PurchaseOrders.Include(x => x.PurchaseOrderItems).ToListAsync(cancellationToken);

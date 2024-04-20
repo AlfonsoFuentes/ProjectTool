@@ -1,10 +1,9 @@
 ﻿using Application.Interfaces;
 using Domain.Entities.Data;
-using Infrastructure.Context;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
-using Shared.Commons.UserManagement;
+using Shared.Commons.Results;
 using Shared.Models.BudgetItemTypes;
-using Shared.Models.MWOStatus;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
@@ -13,10 +12,13 @@ namespace Infrastructure.Persistence.Repositories
     internal class MWORepository : IMWORepository
     {
         public IAppDbContext Context { get; set; }
-
-        public MWORepository(IAppDbContext appDbContext)
+        //private IUserContext userContext { get; set; }
+        private CurrentUser currentUser { get; set; }
+        public MWORepository(IAppDbContext appDbContext, /*IUserContext userContext,*/ CurrentUser currentUser)
         {
             Context = appDbContext;
+            //this.userContext = userContext;
+            this.currentUser = currentUser;
         }
 
         public async Task AddMWO(MWO mWO)
@@ -36,26 +38,18 @@ namespace Infrastructure.Persistence.Repositories
 
             return await Context.MWOs.Where(x => x.Id != Id).AnyAsync(x => x.Name.ToLower() == name.ToLower());
         }
-        public Task<IQueryable<MWO>> GetMWOList()
-        {
-            var mwos = Context.MWOs
-               .Include(x => x.PurchaseOrders)
-               .ThenInclude(x => x.PurchaseOrderItems)
-
-               .Include(x => x.BudgetItems)
-
-               .AsNoTracking()
-               .AsSplitQuery()
-               .AsQueryable();
-            return Task.FromResult(mwos);
-        }
+       
 
         public Task UpdateMWO(MWO entity)
         {
             Context.MWOs.Update(entity);
             return Task.CompletedTask;
         }
-
+        public Task UpdateBudgetItem(BudgetItem entity)
+        {
+            Context.BudgetItems.Update(entity);
+            return Task.CompletedTask;
+        }
         public async Task<MWO> GetMWOById(Guid id)
         {
             return (await Context.MWOs.FindAsync(id))!;
@@ -69,7 +63,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             return (await Context.MWOs
                 .Include(x => x.BudgetItems)
-                .Include(x=>x.PurchaseOrders)
+                .Include(x => x.PurchaseOrders)
                 .AsNoTracking()
                 .AsQueryable()
                 .AsSplitQuery()
@@ -97,48 +91,41 @@ namespace Infrastructure.Persistence.Repositories
                 .Where(x => x.MWOId == MWOId);
             return Task.FromResult(BudgetItems);
         }
-        public Task<IEnumerable<MWO>> GetMWOList(CurrentUser CurrentUser)
+        public Task<IEnumerable<MWO>> GetMWOList()
         {
             Stopwatch sw = Stopwatch.StartNew();
             Expression<Func<MWO, bool>> filter = x => x.CreatedBy != null;
-            if (!CurrentUser.IsSuperAdmin)
+            if (!currentUser.IsSuperAdmin)
             {
-                filter = x => x.CreatedBy == CurrentUser.UserId;
+                filter = x => x.CreatedBy == currentUser.UserId.ToString();
             }
             var mwos = Context.MWOs
-                .Include(x=>x.BudgetItems)
-                .Include(x=>x.PurchaseOrders)
-                .ThenInclude(x=>x.PurchaseOrderItems)
+                .Include(x => x.BudgetItems)
+                .Include(x => x.PurchaseOrders)
+                .ThenInclude(x => x.PurchaseOrderItems)
                 .Where(filter)
                .AsNoTracking()
               .AsSplitQuery()
               .AsEnumerable();
             sw.Stop();
-            var elapse=sw.ElapsedMilliseconds;
+            var elapse = sw.ElapsedMilliseconds;
             return Task.FromResult(mwos);
         }
-       
-        //public async Task UpdateDataForNotApprovedMWO(Guid MWOId,CancellationToken token)
-        //{
-        //    var mwos =await Context.MWOs
-        //        .Include(x => x.BudgetItems)
-        //        .SingleOrDefaultAsync(x=>x.Id==MWOId);
-        //    if (mwos == null) return;
 
-        //    //mwos.SetDataNotApproved();
-        //    await Context.SaveChangesAsync(token);
-        //}
+        public async Task<BudgetItem> GetBudgetItemsSalary(Guid MWOId)
+        {
+            var result = await Context.BudgetItems.FirstOrDefaultAsync(x => x.MWOId == MWOId
+            && x.Percentage > 0
+            && x.Type == BudgetItemTypeEnum.Engineering.Id);
+            return result!;
+        }
 
-        //public async Task UpdateDataForApprovedMWO(Guid MWOId, CancellationToken token)
-        //{
-        //    var mwos = await Context.MWOs
-        //       .Include(x => x.PurchaseOrders)
-        //       .ThenInclude(x=>x.PurchaseOrderItems)
-        //       .SingleOrDefaultAsync(x => x.Id == MWOId);
-        //    if (mwos == null) return;
+        public async Task<BudgetItem> GetBudgetItemsContingency(Guid MWOId)
+        {
+            var result = await Context.BudgetItems.FirstOrDefaultAsync(x => x.MWOId == MWOId
 
-        //    mwos.SetDataApproved();
-        //    await Context.SaveChangesAsync(token);
-        //}
+            && x.Type == BudgetItemTypeEnum.Contingency.Id);
+            return result!;
+        }
     }
 }

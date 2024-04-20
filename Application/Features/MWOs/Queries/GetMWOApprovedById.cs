@@ -2,7 +2,6 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Commons.UserManagement;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.CostCenter;
@@ -75,22 +74,33 @@ namespace Application.Features.MWOs.Queries
                 TaxCode = e.TaxCode,
                 VendorCode = e.Supplier == null ? string.Empty : e.Supplier.VendorCode,
                 SupplierId = e.SupplierId == null ? Guid.Empty : e.SupplierId.Value,
+                
                 PurchaseOrderItems = e.PurchaseOrderItems.Select(x => new PurchaseorderItemsResponse
                 {
                     BudgetItemId = x.BudgetItemId,
                     ActualCurrency = x.ActualCurrency,
-                    UnitaryValueCurrency=x.UnitaryValueCurrency,
+                    QuoteUnitaryValueCurrency = x.UnitaryValueCurrency, /*GetQuoteCurrencyValue(x.UnitaryValueCurrency, e.QuoteCurrency, e.Currency,e.USDCOP, e.USDEUR),*/
                     Quantity = x.Quantity,
+                    PurchaseOrderCurrency = CurrencyEnum.GetType(e.Currency),
+                    QuoteCurrency = CurrencyEnum.GetType(e.QuoteCurrency),
+                   
                     PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(e.PurchaseOrderStatus),
                     USDCOP = e.USDCOP,
                     USDEUR = e.USDEUR,
-                    Currency = CurrencyEnum.GetType(e.Currency)
+               
                 }
                ).ToList(),
             };
 
             mworesponse.PurchaseOrders = purchaseorders.Select(expressionpurchaseorder).ToList();
+            mworesponse.PurchaseOrders.ForEach(z => 
+            z.PurchaseOrderItems.ForEach(x => 
+            x.QuoteUnitaryValueCurrency = 
+            GetQuoteCurrencyValue(x.QuoteUnitaryValueCurrency, x.QuoteCurrency.Id, x.PurchaseOrderCurrency.Id
+            , x.USDCOP, x.USDEUR)
 
+
+            ));
             var budgetitems = await Repository.GetBudgetItemsByMWOId(request.MWOId);
             Expression<Func<BudgetItem, BudgetItemApprovedResponse>> expression = e => new BudgetItemApprovedResponse
             {
@@ -122,6 +132,23 @@ namespace Application.Features.MWOs.Queries
             });
 
             return Result<MWOApprovedResponse>.Success(mworesponse);
+        }
+        double GetQuoteCurrencyValue(double UnitaryValue, int quotecurrency, int purchaseOrdercurrency, double TRMUSDCOP, double TRMUSDEUR)
+        {
+            var result =
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue :
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue * TRMUSDCOP :
+                  purchaseOrdercurrency == CurrencyEnum.USD.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue * TRMUSDEUR :
+
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue / TRMUSDCOP :
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue :
+                  purchaseOrdercurrency == CurrencyEnum.COP.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue / TRMUSDCOP / TRMUSDEUR :
+
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.USD.Id ? UnitaryValue / TRMUSDEUR :
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.COP.Id ? UnitaryValue * TRMUSDCOP / TRMUSDEUR :
+                  purchaseOrdercurrency == CurrencyEnum.EUR.Id && quotecurrency == CurrencyEnum.EUR.Id ? UnitaryValue : 0;
+
+            return result;
         }
     }
 

@@ -1,16 +1,8 @@
 ﻿using Application.Interfaces;
-using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Commons.UserManagement;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.SapAdjust;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.SapAdjusts.Queries
 {
@@ -18,11 +10,11 @@ namespace Application.Features.SapAdjusts.Queries
     internal class GetSapAdjustByMWOIdQueryHandler : IRequestHandler<GetSapAdjustByMWOIdQuery, IResult<SapAdjustResponseList>>
     {
         private ISapAdjustRepository Repository { get; set; }
-        private CurrentUser CurrentUser { get; set; }
-        public GetSapAdjustByMWOIdQueryHandler(ISapAdjustRepository repository, CurrentUser currentUser)
+   
+        public GetSapAdjustByMWOIdQueryHandler(ISapAdjustRepository repository)
         {
             Repository = repository;
-            CurrentUser = currentUser;
+  
         }
 
         public async Task<IResult<SapAdjustResponseList>> Handle(GetSapAdjustByMWOIdQuery request, CancellationToken cancellationToken)

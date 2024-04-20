@@ -45,6 +45,7 @@ namespace Shared.Models.BudgetItems
         public bool IsTaxesData => Type.Id == BudgetItemTypeEnum.Taxes.Id;
         public bool IsEngContData => IsContingencyData || IsEngineeringData;
         public bool IsAlteration => Type.Id == BudgetItemTypeEnum.Alterations.Id;
+        public bool IsNotAbleToEditDelete { get; set; }
         public double SumPercentage { get; set; }
         public double SumBudgetItems { get; set; }
         public BrandResponse? Brand { get; set; }

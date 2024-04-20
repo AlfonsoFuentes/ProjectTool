@@ -52,6 +52,18 @@ namespace Application.Features.MWOs.Commands
               
                 AppDbContext.BudgetItems.Remove(taxMainItem);
             }
+            var SalaryItem = await Repository.GetBudgetItemsSalary(request.Data.Id);
+            if(SalaryItem != null)
+            {
+                SalaryItem.Percentage = request.Data.PercentageEngineering;
+                await Repository.UpdateBudgetItem(SalaryItem);
+            }
+            var Contingency=await Repository.GetBudgetItemsContingency(request.Data.Id);
+            if(Contingency != null)
+            {
+                Contingency.Percentage = request.Data.PercentageContingency;
+                await Repository.UpdateBudgetItem(Contingency);
+            }
 
 
             await Repository.UpdateMWO(mwo!);

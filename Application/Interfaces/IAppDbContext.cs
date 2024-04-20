@@ -18,6 +18,7 @@ namespace Application.Interfaces
         DbSet<TaxesItem> TaxesItems { get; set; }
         DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+      
         DbSet<DownPayment> DownPayments { get; set; }
         DbSet<SapAdjust> SapAdjusts { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

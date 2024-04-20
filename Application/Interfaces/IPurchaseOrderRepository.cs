@@ -1,5 +1,4 @@
 ﻿using Domain.Entities.Data;
-using Shared.Commons.UserManagement;
 using System.Linq.Expressions;
 
 namespace Application.Interfaces
@@ -11,6 +10,7 @@ namespace Application.Interfaces
         Task<BudgetItem> GetBudgetItemWithPurchaseOrdersById(Guid BudgetItemId);
         Task AddPurchaseOrder(PurchaseOrder purchaseOrder);
         Task AddPurchaseorderItem(PurchaseOrderItem purchaseOrderItem);
+       
         Task<IQueryable<Supplier>> GetSuppliers();
         Task<List<TaxesItem>> GetTaxesItemsByBudgetItemId(Guid BudgetItemId);
         Task<PurchaseOrder> GetPurchaseOrderWithItemsAndSupplierById(Guid PurchaseOrderId);
@@ -34,9 +34,9 @@ namespace Application.Interfaces
         Task<BudgetItem> GetBudgetItemWithMWOById(Guid BudgetItemId);
         Task<PurchaseOrderItem> GetPurchaseOrderItemsAlterationsById(Guid PurchaseOrderId,Guid BudgetItemId);
         Task<IQueryable<PurchaseOrder>> GetPurchaseorderByBudgetItem(Guid BudgetItemId);
-        Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersClosed(CurrentUser CurrentUser);
-        Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersToReceive(CurrentUser CurrentUser);
-        Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersCreated(CurrentUser CurrentUser);
+        Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersClosed();
+        Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersToReceive();
+        Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersCreated();
         Task<PurchaseOrder> GetPurchaseOrderToDeleteById(Guid PurchaseOrderId);
         Task RemovePurchaseOrder(PurchaseOrder item);
     }

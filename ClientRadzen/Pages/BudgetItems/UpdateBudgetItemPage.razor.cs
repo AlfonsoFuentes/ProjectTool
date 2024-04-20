@@ -194,6 +194,7 @@ namespace ClientRadzen.Pages.BudgetItems
 
 
         }
+       
         public async Task ChangeName(string name)
         {
             Model.Name = name;

@@ -2,10 +2,8 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Commons.UserManagement;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
-using System.Globalization;
 using System.Linq.Expressions;
 
 namespace Application.Features.BudgetItems.Queries
@@ -15,11 +13,11 @@ namespace Application.Features.BudgetItems.Queries
     public class GetAllBudgetItemQueryHandler : IRequestHandler<GetAllBudgetItemQuery, IResult<ListBudgetItemResponse>>
     {
         private IBudgetItemRepository Repository { get; set; }
-        private CurrentUser CurrentUser { get; set; }
-        public GetAllBudgetItemQueryHandler(IBudgetItemRepository repository, CurrentUser currentUser)
+    
+        public GetAllBudgetItemQueryHandler(IBudgetItemRepository repository)
         {
             Repository = repository;
-            CurrentUser = currentUser;
+         
         }
 
         public async Task<IResult<ListBudgetItemResponse>> Handle(GetAllBudgetItemQuery request, CancellationToken cancellationToken)

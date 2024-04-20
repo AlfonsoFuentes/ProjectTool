@@ -7,7 +7,6 @@ global using Microsoft.AspNetCore.Components.Authorization;
 global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 global using Microsoft.Extensions.DependencyInjection;
 global using Shared.Commons.Results;
-global using Shared.Commons.UserManagement;
 global using Shared.Models.Brands;
 global using Shared.Models.MWO;
 global using Shared.Models.MWOTypes;

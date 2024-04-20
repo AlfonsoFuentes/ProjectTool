@@ -22,7 +22,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
 
         public async Task<IResult> Handle(CreateTaxPurchaseOrderCommand request, CancellationToken cancellationToken)
         {
-            
+           
             var mwo = await Repository.GetMWOWithBudgetItemsAndPurchaseOrderById(request.Data.MWOId);
             if (mwo == null)
             {
@@ -32,7 +32,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             var purchaseorder = mwo.AddPurchaseOrder();
             purchaseorder.PurchaseorderName = request.Data.Name;
             purchaseorder.PurchaseRequisition = $"Tax for {request.Data.PurchaseOrderItem.Name}";
-            purchaseorder.QuoteCurrency = 0;
+            purchaseorder.QuoteCurrency = request.Data.PurchaseOrderCurrency.Id;
             purchaseorder.IsAlteration = false;
             purchaseorder.USDEUR = request.Data.USDEUR;
             purchaseorder.USDCOP = request.Data.USDCOP;
@@ -45,19 +45,19 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.ActualCurrency = request.Data.SumPOValueCurrency;
             purchaseorder.QuoteNo = $"Tax for {request.Data.PurchaseOrderItem.Name}";
             purchaseorder.TaxCode = $"Tax for {request.Data.PurchaseOrderItem.Name}";
-            purchaseorder.POClosedDate = DateTime.UtcNow;
+         
             purchaseorder.AccountAssigment = request.Data.MWOCECName;
             purchaseorder.MainBudgetItemId = request.Data.MainBudgetItem.BudgetItemId;
             purchaseorder.Currency = request.Data.PurchaseOrderCurrency.Id;
             await Repository.AddPurchaseOrder(purchaseorder);
             var purchaseorderitem = purchaseorder.AddPurchaseOrderItem(request.Data.PurchaseOrderItem.BudgetItemId, request.Data.PurchaseOrderItem.Name);
-            purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.CurrencyUnitaryValue;
+            purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.QuoteCurrencyValue;
             purchaseorderitem.Quantity = 1;
-            purchaseorderitem.ActualCurrency = request.Data.PurchaseOrderItem.TotalCurrencyValue;
+            purchaseorderitem.ActualCurrency = request.Data.PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
             await Repository.AddPurchaseorderItem(purchaseorderitem);
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-        
+            //await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
             if (result > 0)
                 return Result.Success($"Purchase order created succesfully");
             return Result.Fail($"Purchase order was not created succesfully");
