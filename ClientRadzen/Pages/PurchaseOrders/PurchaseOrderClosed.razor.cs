@@ -14,21 +14,21 @@ public partial class PurchaseOrderClosed
 
     string nameFilter => MainPO.nameFilter;
 
-    Func<PurchaseOrderResponse, bool> fiterexpresion => x =>
+    Func<NewPurchaseOrderClosedResponse, bool> fiterexpresion => x =>
         x.PurchaseOrderStatus.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
          x.PurchaseorderName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
          x.PurchaseRequisition.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
-         x.PONumber.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
+         x.PurchaseOrderNumber.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
          x.SupplierNickName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
          x.SupplierName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
          x.MWOName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
          x.VendorCode.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
     x.AccountAssigment.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase);
-    IEnumerable<PurchaseOrderResponse> FilteredItems => OriginalData.Where(fiterexpresion).AsQueryable();
-    IEnumerable<PurchaseOrderResponse> OriginalData => MainPO.PurchaseordersClosed == null ? new List<PurchaseOrderResponse>() : MainPO.PurchaseordersClosed;
+    IEnumerable<NewPurchaseOrderClosedResponse> FilteredItems => OriginalData.Where(fiterexpresion).AsQueryable();
+    IEnumerable<NewPurchaseOrderClosedResponse> OriginalData => MainPO.PurchaseordersClosed == null ? new List<NewPurchaseOrderClosedResponse>() : MainPO.PurchaseordersClosed;
 
 
-    void EditPurchaseOrder(PurchaseOrderResponse selectedRow)
+    void EditPurchaseOrder(NewPurchaseOrderClosedResponse selectedRow)
     {
         if (selectedRow.IsTaxEditable)
         {
@@ -47,9 +47,9 @@ public partial class PurchaseOrderClosed
 
 
     }
-    async Task RemovePurchaseorder(PurchaseOrderResponse selectedRow)
+    async Task RemovePurchaseorder(NewPurchaseOrderClosedResponse selectedRow)
     {
-        var resultDialog = await DialogService.Confirm($"Are you sure delete {selectedRow.PONumber}?", "Confirm Delete",
+        var resultDialog = await DialogService.Confirm($"Are you sure delete {selectedRow.PurchaseOrderNumber}?", "Confirm Delete",
            new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
         if (resultDialog.Value)
         {

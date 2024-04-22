@@ -5,7 +5,7 @@ using Shared.Models.MWO;
 
 namespace Application.Features.MWOs.Commands
 {
-    public record DeleteMWOCommand(MWOResponse data) : IRequest<IResult>;
+    public record DeleteMWOCommand(MWOCreatedResponse data) : IRequest<IResult>;
 
     public class DeleteMWOCommandHandler:IRequestHandler<DeleteMWOCommand,IResult>
     {

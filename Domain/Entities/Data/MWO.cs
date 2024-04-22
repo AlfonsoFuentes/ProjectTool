@@ -57,40 +57,52 @@ namespace Domain.Entities.Data
             return SapAdjust.Create(Id);
         }
         public DateTime ApprovedDate { get; set; }
-        
-        //public double Capital { get; private set; }
-        //public double Expenses { get; private set; }
-        //public double ActualCapital { get; private set; }
-        //public double CommitmentCapital { get; private set; }
-        //public double PotentialCommitmentCapital { get; private set; }
-        //public double ActualExpenses { get; private set; }
-        //public double CommitmentExpenses { get; private set; }
-        //public double PotentialCommitmentExpenses { get; private set; }
 
-        //public void SetDataNotApproved()
-        //{
-        //    if (BudgetItems != null && BudgetItems.Count() > 0)
-        //    {
-        //        Expenses = BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget);
-        //        Capital = BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget);
-        //    }
-        //}
-        //public void SetDataApproved()
-        //{
-        //    if (PurchaseOrders != null && PurchaseOrders.Count() > 0)
-        //    {
-        //        ActualCapital = PurchaseOrders.Where(x => !x.IsAlteration).Sum(x => x.ActualUSD);
-        //        ActualExpenses = PurchaseOrders.Where(x => x.IsAlteration).Sum(x => x.ActualUSD);
+        [NotMapped]
+        public double CapitalActualUSD => BudgetItemsCapital == null || BudgetItemsCapital.Count == 0 ? 0 :
+             BudgetItemsCapital.Sum(x => x.ActualUSD);
+        [NotMapped]
+        public double CapitalAssignedUSD => BudgetItemsCapital == null || BudgetItemsCapital.Count == 0 ? 0 :
+            BudgetItemsCapital.Sum(x => x.AssignedUSD);
+        [NotMapped]
+        public double CapitalApprovedUSD => BudgetItemsCapital == null || BudgetItemsCapital.Count == 0 ? 0 :
+            BudgetItemsCapital.Sum(x => x.ApprovedUSD);
+        [NotMapped]
+        public double CapitalPotentialCommitmentUSD => BudgetItemsCapital == null || BudgetItemsCapital.Count == 0 ? 0 :
+            BudgetItemsCapital.Sum(x => x.PotentialCommitmentUSD);
 
-        //        var povalueCapital = PurchaseOrders.Where(x => !x.IsAlteration && x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD);
-        //        var povalueExpenses = PurchaseOrders.Where(x => x.IsAlteration && x.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD);
+        [NotMapped]
+        public double CapitalPendingToReceiveUSD => BudgetItemsCapital == null || BudgetItemsCapital.Count == 0 ? 0 :
+            BudgetItemsCapital.Sum(x => x.PendingToReceiveUSD);
+        [NotMapped]
+        public double ExpensesActualUSD => BudgetItemsExpenses == null || BudgetItemsExpenses.Count == 0 ? 0 :
+             BudgetItemsExpenses.Sum(x => x.ActualUSD);
+        [NotMapped]
+        public double ExpensesAssignedUSD => BudgetItemsExpenses == null || BudgetItemsExpenses.Count == 0 ? 0 :
+            BudgetItemsExpenses.Sum(x => x.AssignedUSD);
+        [NotMapped]
+        public double ExpensesApprovedUSD => BudgetItemsExpenses == null || BudgetItemsExpenses.Count == 0 ? 0 :
+            BudgetItemsExpenses.Sum(x => x.ApprovedUSD);
+        [NotMapped]
+        public double ExpensesPotentialCommitmentUSD => BudgetItemsExpenses == null || BudgetItemsExpenses.Count == 0 ? 0 :
+            BudgetItemsExpenses.Sum(x => x.PotentialCommitmentUSD);
 
-        //        CommitmentCapital = povalueCapital - ActualCapital;
-        //        CommitmentExpenses = povalueExpenses - ActualExpenses;
+        [NotMapped]
+        public double ExpensesPendingToReceiveUSD => BudgetItemsExpenses == null || BudgetItemsExpenses.Count == 0 ? 0 :
+            BudgetItemsExpenses.Sum(x => x.PendingToReceiveUSD);
+        [NotMapped]
+        public List<BudgetItem> BudgetItemsExpenses => BudgetItems == null ? new() : BudgetItems.Where(x => x.IsAlteration).ToList();
+        [NotMapped]
+        public List<BudgetItem> BudgetItemsCapital => BudgetItems == null ? new() : BudgetItems.Where(x => x.IsAlteration == false).ToList();
 
-        //        PotentialCommitmentCapital = PurchaseOrders.Where(x => !x.IsAlteration && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD);
-        //        PotentialCommitmentExpenses = PurchaseOrders.Where(x => x.IsAlteration && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD);
-        //    }
-        //}
+        public double ExpensesUSD => BudgetItemsExpenses.Count == 0 ? 0 : BudgetItemsExpenses.Sum(x => x.Budget);
+        [NotMapped]
+        public double CapitalUSD => BudgetItemsCapital.Count == 0 ? 0 : BudgetItemsCapital.Sum(x => x.Budget);
+        [NotMapped]
+        public double AppropiationUSD => ExpensesUSD + CapitalUSD;
+        [NotMapped]
+        public bool HasExpenses => BudgetItemsExpenses.Count > 0;
+        [NotMapped]
+        public string CECName => string.IsNullOrEmpty(MWONumber) ? "MWO not approved" : $"CEC0000{MWONumber}";
     }
 }

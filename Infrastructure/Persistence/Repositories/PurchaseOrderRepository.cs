@@ -103,22 +103,7 @@ namespace Infrastructure.Persistence.Repositories
             Context.PurchaseOrders.Update(purchaseOrder);
             return Task.CompletedTask;
         }
-        public Task<IQueryable<PurchaseOrder>> GetAllPurchaseorders(Expression<Func<PurchaseOrder, bool>> filteruser)
-        {
-            return Task.FromResult(Context
-               .PurchaseOrders
-               .Include(x => x.MWO)
-               .Include(x => x.PurchaseOrderItems)
-               .ThenInclude(x => x.BudgetItem)
-               .Include(x => x.Supplier)
-                .Where(filteruser)
-
-               .AsNoTracking()
-               .AsQueryable()
-               .AsSplitQuery());
-
-
-        }
+       
         public Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersCreated()
         {
             Expression<Func<PurchaseOrder, bool>> filter = x => x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id;
@@ -128,7 +113,7 @@ namespace Infrastructure.Persistence.Repositories
                .OrderBy(x => x.PurchaseRequisition)
                .Include(x => x.MWO)
                .Include(x => x.PurchaseOrderItems)
-               .ThenInclude(x => x.BudgetItem)
+               
                .Include(x => x.Supplier)
 
                .Where(filter)
@@ -149,7 +134,7 @@ namespace Infrastructure.Persistence.Repositories
                .OrderBy(x => x.POExpectedDateDate!.Value)
                .Include(x => x.MWO)
                .Include(x => x.PurchaseOrderItems)
-               .ThenInclude(x => x.BudgetItem)
+       
                .Include(x => x.Supplier)
                 .Where(filter)
                .AsNoTracking()
@@ -168,7 +153,7 @@ namespace Infrastructure.Persistence.Repositories
                 .OrderBy(x => x.POClosedDate!.Value)
                .Include(x => x.MWO)
                .Include(x => x.PurchaseOrderItems)
-               .ThenInclude(x => x.BudgetItem)
+       
                .Include(x => x.Supplier)
                 .Where(filter)
 

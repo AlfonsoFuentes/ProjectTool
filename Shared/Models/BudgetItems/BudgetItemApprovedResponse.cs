@@ -25,7 +25,7 @@ namespace Shared.Models.BudgetItems
                 Type.Id == BudgetItemTypeEnum.Taxes.Id ? $"{Name} {Percentage}%" :
                 Name;
 
-     
+
         public double Quantity { get; set; }
 
         public List<PurchaseOrderResponse> PurchaseOrders { get; set; } = new();
@@ -46,7 +46,7 @@ namespace Shared.Models.BudgetItems
            || Type.Id == BudgetItemTypeEnum.Contingency.Id
            || !IsEngineeringData;
 
-        public bool IsMWOAssetProductive {  get; set; }
+        public bool IsMWOAssetProductive { get; set; }
         public bool CanCreatePurchaseOrder => !IsTaxesMainTaxesData;
         public bool IsAlteration => Type.Id == BudgetItemTypeEnum.Alterations.Id;
         public bool IsEngineeringData => Type.Id == BudgetItemTypeEnum.Engineering.Id && Percentage > 0;
@@ -60,7 +60,7 @@ namespace Shared.Models.BudgetItems
         public double Potencial => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetPotentialByItem(BudgetItemId));
         public double Actual => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetActualByItem(BudgetItemId));
         public double Commitment => Assigned - Actual - Potencial;
-        public double Pending => Budget - Assigned ;
+        public double Pending => Budget - Assigned;
         public double Percentage { get; set; }
 
 

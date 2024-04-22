@@ -14,12 +14,12 @@
                     <ChildContent>
                         <RadzenCard class="rz-mt-1">
 
-                            <RowTemplateData Label="MWO Type" Value="@(Response.Type)"></RowTemplateData>
+                            <RowTemplateData Label="MWO Type" Value="@(Response.Type.Name)"></RowTemplateData>
                             <RowTemplateData Label="CEC Name" Value="@(Response.CECName)"></RowTemplateData>
                             <RowTemplateData Label="Cost Center" Value="@(Response.CostCenter)"></RowTemplateData>
-                            <RowTemplateCurrency Label="Capital" Value="@Response.Capital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Expenses" Value="@Response.Expenses"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Apropiation" Value="@Response.Appropiation"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Capital" Value="@Response.Capital.BudgetUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Expenses" Value="@Response.Expenses.BudgetUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Apropiation" Value="@Response.AppropiationUSD"></RowTemplateCurrency>
 
 
 
@@ -36,12 +36,12 @@
                     </HeaderTemplate>
                     <ChildContent>
                         <RadzenCard class="rz-mt-1">
-                            <RowTemplateCurrency Label="Budget, USD" Value="@Response.Capital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Assigned, USD" Value="@Response.AssignedCapital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Pending, USD" Value="@Response.PendingCapital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Actual, USD" Value="@Response.ActualCapital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Commitment, USD" Value="@Response.CommitmentCapital"></RowTemplateCurrency>
-                            <RowTemplateCurrency Label="Potential, USD" Value="@Response.PotencialCapital"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Budget, USD"     Value="@Response.Capital.BudgetUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Assigned, USD"   Value="@Response.Capital.AssignedUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Pending, USD"    Value="@Response.Capital.PendingToCommitUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Actual, USD"     Value="@Response.Capital.ActualUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Commitment, USD" Value="@Response.Capital.CommitmentUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Potential, USD"  Value="@Response.Capital.PotentialCommitmentUSD"></RowTemplateCurrency>
                         </RadzenCard>
                     </ChildContent>
                 </RadzenPanel>
@@ -57,12 +57,13 @@
                         </HeaderTemplate>
                         <ChildContent>
                             <RadzenCard class="rz-mt-1">
-                                <RowTemplateCurrency Label="Budget, USD" Value="@Response.Expenses"></RowTemplateCurrency>
-                                <RowTemplateCurrency Label="Assigned, USD" Value="@Response.AssignedExpenses"></RowTemplateCurrency>
-                                <RowTemplateCurrency Label="Pending, USD" Value="@Response.PendingExpenses"></RowTemplateCurrency>
-                                <RowTemplateCurrency Label="Actual, USD" Value="@Response.ActualExpenses"></RowTemplateCurrency>
-                                <RowTemplateCurrency Label="Commitment, USD" Value="@Response.CommitmentExpenses"></RowTemplateCurrency>
-                                <RowTemplateCurrency Label="Potential, USD" Value="@Response.PotencialExpenses"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Budget, USD"     Value="@Response.Expenses.BudgetUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Assigned, USD"   Value="@Response.Expenses.AssignedUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Pending, USD"    Value="@Response.Expenses.PendingToCommitUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Actual, USD"     Value="@Response.Expenses.ActualUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Commitment, USD" Value="@Response.Expenses.CommitmentUSD"></RowTemplateCurrency>
+                            <RowTemplateCurrency Label="Potential, USD"  Value="@Response.Expenses.PotentialCommitmentUSD"></RowTemplateCurrency>
+
                             </RadzenCard>
                         </ChildContent>
                     </RadzenPanel>
@@ -73,7 +74,10 @@
         <RadzenRow class="rz-ml-4">
             <RadzenColumn Size="12" SizeLG="7">
                 <RadzenButton Icon="insights" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
-                              Click="@(()=>ShowSapAlignmentofMWO(Response))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show SAP Alignment for MWO: {Response.CECName}",TooltipPosition.Right) )" />
+                              Click="@(()=>ShowSapAlignmentofMWO())" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show SAP Alignment for MWO: {Response.CECName}",TooltipPosition.Right) )" />
+
+                <RadzenButton Icon="description" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1"
+                              MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Export To Excel",TooltipPosition.Top) )" Click="@(()=>ExporApprovedToExcel())" />
 
 
             </RadzenColumn>
@@ -85,10 +89,10 @@
             <RadzenColumn Size="12" SizeLG="12">
                 <RadzenDataList AllowVirtualization=true Style="height:100%;overflow:auto;" PageSize=15
                                 WrapItems="false" AllowPaging="true" Density="Density.Compact"
-                                Data="@FilteredItems" TItem="BudgetItemApprovedResponse" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                                Data="@FilteredItems" TItem="NewBudgetItemsWithPurchaseorders" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
 
                     <Template Context="product">
-                        <RadzenPanel AllowCollapse="true" Collapsed=true class="rz-m-1" >
+                        <RadzenPanel AllowCollapse="true" Collapsed=true class="rz-m-1">
                             <HeaderTemplate>
                                 <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-1">
                                     @(product.NomenclatoreName)
@@ -104,16 +108,16 @@
 
                                         </RadzenColumn>
                                         <RadzenColumn Size="12" SizeLG="3" Class="rz-p-2">
-                                            <RowTemplateCurrency Label="Budget, USD" Value="@product.Budget"></RowTemplateCurrency>
-                                            <RowTemplateCurrency Label="Assigned, USD" Value="@product.Assigned"></RowTemplateCurrency>
-                                            <RowTemplateCurrency Label="Pending, USD" Value="@product.Pending"></RowTemplateCurrency>
+                                            <RowTemplateCurrency Label="Budget, USD" Value="@product.BudgetUSD"></RowTemplateCurrency>
+                                            <RowTemplateCurrency Label="Assigned, USD" Value="@product.AssignedUSD"></RowTemplateCurrency>
+                                            <RowTemplateCurrency Label="Pending, USD" Value="@product.PendingToCommitUSD"></RowTemplateCurrency>
 
 
                                         </RadzenColumn>
                                         <RadzenColumn Size="12" SizeLG="3" Class="rz-p-2">
-                                            <RowTemplateCurrency Label="Actual, USD" Value="@product.Actual"></RowTemplateCurrency>
-                                            <RowTemplateCurrency Label="Commitment, USD" Value="@product.Commitment"></RowTemplateCurrency>
-                                            <RowTemplateCurrency Label="Potential, USD" Value="@product.Potencial"></RowTemplateCurrency>
+                                            <RowTemplateCurrency Label="Actual, USD" Value="@product.ActualUSD"></RowTemplateCurrency>
+                                            <RowTemplateCurrency Label="Commitment, USD" Value="@product.PendingToReceiveUSD"></RowTemplateCurrency>
+                                            <RowTemplateCurrency Label="Potential, USD" Value="@product.PotentialCommitmentUSD"></RowTemplateCurrency>
 
 
 
@@ -160,67 +164,67 @@
                                                         AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
                                                         Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                                         FilterPopupRenderMode="PopupRenderMode.OnDemand"
-                                                        Data="@product.PurchaseOrders" TItem="PurchaseOrderResponse" ColumnWidth="300px"
+                                                        Data="@product.PurchaseOrderItems" TItem="NewPurchaseOrderItemResponse" ColumnWidth="300px"
                                                         LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
                                             <Columns>
-                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                                      Property="@nameof(PurchaseOrderResponse.PurchaseorderName)"
+                                                <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
+                                                                      Property="@nameof(NewPurchaseOrderItemResponse.Name)"
                                                                       Title="Name" Width="150px" TextAlign="TextAlign.Left" />
-                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
+                                                <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
                                                                       Title="Status" Width="70px" TextAlign="TextAlign.Left">
                                                     <Template Context="detail">
                                                         @detail.PurchaseOrderStatus.Name
                                                     </Template>
                                                 </RadzenDataGridColumn>
-                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                                      Property="@nameof(PurchaseOrderResponse.PurchaseRequisition)"
+                                                <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
+                                                                      Property="@nameof(NewPurchaseOrderItemResponse.PurchaseRequisition)"
                                                                       Title="PR" Width="100px" TextAlign="TextAlign.Left" />
-                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                                      Property="@nameof(PurchaseOrderResponse.PONumber)"
+                                                <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
+                                                                      Property="@nameof(NewPurchaseOrderItemResponse.PurchaseOrderNumber)"
                                                                       Title="PO Number" Width="100px" TextAlign="TextAlign.Left" />
-                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                                      Property="@nameof(PurchaseOrderResponse.SupplierNickName)"
+                                                <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
+                                                                      Property="@nameof(NewPurchaseOrderItemResponse.Supplier)"
                                                                       Title="Supplier" Width="100px" TextAlign="TextAlign.Left" />
-                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                                      Property="@nameof(PurchaseOrderResponse.POValueUSD)"
+                                                <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
+                                                                      Property="@nameof(NewPurchaseOrderItemResponse.AssignedUSD)"
                                                                       Title="Value, USD" Width="100px" TextAlign="TextAlign.Left">
                                                     <Template Context="detail">
-                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.GetPOValueByItem(seletedRow.BudgetItemId))}")
+                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.AssignedUSD)}")
 
                                                     </Template>
                                                 </RadzenDataGridColumn>
-                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                                      Property="@nameof(PurchaseOrderResponse.Actual)"
+                                                <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
+                                                                      Property="@nameof(NewPurchaseOrderItemResponse.ActualUSD)"
                                                                       Title="Actual, USD" Width="100px" TextAlign="TextAlign.Left">
                                                     <Template Context="detail">
-                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.GetActualByItem(seletedRow.BudgetItemId))}")
+                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.ActualUSD)}")
 
                                                     </Template>
                                                 </RadzenDataGridColumn>
-                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                                      Property="@nameof(PurchaseOrderResponse.Commitment)"
+                                                <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
+                                                                      Property="@nameof(NewPurchaseOrderItemResponse.PendingToReceiveUSD)"
                                                                       Title="Pending, USD" Width="100px" TextAlign="TextAlign.Left">
                                                     <Template Context="detail">
-                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.GetCommitmentByItem(seletedRow.BudgetItemId))}")
+                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.PendingToReceiveUSD)}")
 
                                                     </Template>
                                                 </RadzenDataGridColumn>
-                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                                      Property="@nameof(PurchaseOrderResponse.Potencial)"
-                                                                      Title="Potencial, USD" Width="100px" TextAlign="TextAlign.Left">
+                                                <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
+                                                                      Property="@nameof(NewPurchaseOrderItemResponse.PotentialCommitmentUSD)"
+                                                                      Title="Potential, USD" Width="100px" TextAlign="TextAlign.Left">
                                                     <Template Context="detail">
-                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.GetPotentialByItem(seletedRow.BudgetItemId))}")
+                                                        @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.PotentialCommitmentUSD)}")
 
                                                     </Template>
                                                 </RadzenDataGridColumn>
-                                                <RadzenDataGridColumn TItem="PurchaseOrderResponse"
-                                                                      Property="@nameof(PurchaseOrderResponse.ExpectedOn)"
+                                                <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
+                                                                      Property="@nameof(NewPurchaseOrderItemResponse.ExpectedOn)"
                                                                       Title="Expected On" Width="100px" TextAlign="TextAlign.Left">
 
                                                 </RadzenDataGridColumn>
                                                 @if (!product.IsMainItemTaxesNoProductive)
                                                 {
-                                                    <RadzenDataGridColumn TItem="PurchaseOrderResponse"
+                                                    <RadzenDataGridColumn TItem="NewPurchaseOrderItemResponse"
                                                                           Title="Actions" Width="100px" TextAlign="TextAlign.Left">
                                                         <Template Context="order">
 
@@ -248,7 +252,7 @@
                                                                 <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="shopping_bag" Variant="Variant.Flat" Shade="Shade.Lighter"
                                                                               Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
                                                                               Click="@(args => ReceivePurchaseOrder(order))" @onclick:stopPropagation="true"
-                                                                              MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Receive {order.PONumber}", TooltipPosition.Left))">
+                                                                              MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Receive {order.PurchaseOrderNumber}", TooltipPosition.Left))">
                                                                 </RadzenButton>
                                                             }
                                                             else
@@ -256,7 +260,7 @@
 
                                                             }
                                                             <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
-                                                                          MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete purchase order {order.PONumber}",TooltipPosition.Left) )"
+                                                                          MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete purchase order {order.PurchaseOrderNumber}",TooltipPosition.Left) )"
                                                                           class="rz-mr-1" Click="@(()=>RemovePurchaseorder(order))" />
                                                         </Template>
                                                     </RadzenDataGridColumn>

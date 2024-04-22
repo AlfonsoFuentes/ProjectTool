@@ -40,7 +40,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.SPL = request.Data.SPL;
             purchaseorder.SupplierId = request.Data.SupplierId;
             purchaseorder.CurrencyDate = DateTime.UtcNow;
-            purchaseorder.POValueCurrency = request.Data.PurchaseOrderItemNoBlank.Sum(x=>x.TotalValuePurchaseOrderCurrency);
+            //purchaseorder.POValueCurrency = request.Data.PurchaseOrderItemNoBlank.Sum(x=>x.TotalValuePurchaseOrderCurrency);
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Created.Id;
             purchaseorder.QuoteNo = request.Data.QuoteNo;
             purchaseorder.TaxCode = request.Data.TaxCode;

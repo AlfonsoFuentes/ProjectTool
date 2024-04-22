@@ -37,7 +37,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseOrder.USDCOP = request.Data.USDCOP;
             purchaseOrder.USDEUR = request.Data.USDEUR;
             purchaseOrder.MainBudgetItemId = request.Data.MainBudgetItemId;
-            purchaseOrder.POValueCurrency = request.Data.PurchaseOrderItemNoBlank.Sum(x=>x.TotalValuePurchaseOrderCurrency);
+            //purchaseOrder.POValueCurrency = request.Data.PurchaseOrderItemNoBlank.Sum(x=>x.TotalValuePurchaseOrderCurrency);
             foreach (var row in purchaseOrder.PurchaseOrderItems)
             {
                 if (!request.Data.PurchaseOrderItems.Any(x => x.BudgetItemId == row.BudgetItemId))

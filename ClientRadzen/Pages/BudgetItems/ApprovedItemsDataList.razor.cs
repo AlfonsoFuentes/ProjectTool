@@ -1,6 +1,7 @@
 ﻿using Client.Infrastructure.Managers.BudgetItems;
 using ClientRadzen.Pages.PurchaseOrders;
 using Microsoft.AspNetCore.Components;
+using Radzen;
 using Shared.Models.BudgetItems;
 using Shared.Models.BudgetItemTypes;
 using Shared.Models.PurchaseOrders.Responses;
@@ -111,6 +112,23 @@ namespace ClientRadzen.Pages.BudgetItems
         void ReceivePurchaseOrder(PurchaseOrderResponse order)
         {
             _NavigationManager.NavigateTo($"/ReceivePurchaseOrder/{order.PurchaseOrderId}");
+        }
+        async Task ExporNotApprovedToExcel()
+        {
+            var result = await Service.ExporApprovedToExcel(MWOId);
+            if (result.Succeeded)
+            {
+                var downloadresult = await blazorDownloadFileService.DownloadFile(result.Data.ExportFileName,
+                   result.Data.Data, contentType: result.Data.ContentType);
+                if (downloadresult.Succeeded)
+                {
+                    MainApp.NotifyMessage(NotificationSeverity.Success, "Export Excel", new() { "Export excel succesfully" });
+
+
+                }
+            }
+
+
         }
     }
 }

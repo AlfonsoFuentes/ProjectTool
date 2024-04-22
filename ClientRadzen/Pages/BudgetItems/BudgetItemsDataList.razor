@@ -82,7 +82,8 @@
                               MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Add new Item",TooltipPosition.Top) )" />
                 <RadzenButton Icon="verified" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
                               Click="@(()=>Approve())" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Approve MWO: {Response.MWO.Name}",TooltipPosition.Top) )" />
-
+                <RadzenButton Icon="description" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1"
+                              MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Export To Excel",TooltipPosition.Top) )" Click="@(()=>ExporNotApprovedToExcel())" />
             </RadzenStack>
 
         </RadzenColumn>

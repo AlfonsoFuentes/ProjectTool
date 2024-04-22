@@ -2,8 +2,6 @@
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
@@ -12,16 +10,6 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "68579c73-0676-4527-8a21-4b86c811ea9f");
-
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "72a79cc4-d03e-40e1-823b-bdcee7e8e20d");
-
             migrationBuilder.DropColumn(
                 name: "CreatedBy",
                 table: "TaxesItems");
@@ -93,10 +81,6 @@ namespace Infrastructure.Migrations
             migrationBuilder.DropColumn(
                 name: "LastModifiedBy",
                 table: "Brands");
-
-            migrationBuilder.DropColumn(
-                name: "InternalRole",
-                table: "AspNetUsers");
         }
 
         /// <inheritdoc />
@@ -218,22 +202,6 @@ namespace Infrastructure.Migrations
                 table: "Brands",
                 type: "nvarchar(128)",
                 nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "InternalRole",
-                table: "AspNetUsers",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "68579c73-0676-4527-8a21-4b86c811ea9f", null, "Viewer", "VIEWER" },
-                    { "72a79cc4-d03e-40e1-823b-bdcee7e8e20d", null, "Administrator", "ADMINISTRATOR" }
-                });
         }
     }
 }

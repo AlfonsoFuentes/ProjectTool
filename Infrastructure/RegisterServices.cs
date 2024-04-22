@@ -2,7 +2,6 @@
 using Domain.Entities.Account;
 using Infrastructure.Context;
 using Infrastructure.Persistence.Repositories;
-using Infrastructure.Persistence.Repositories.Suppliers;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

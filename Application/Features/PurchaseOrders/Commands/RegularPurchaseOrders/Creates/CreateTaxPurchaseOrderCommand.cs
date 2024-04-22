@@ -38,10 +38,10 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.SPL = $"Tax for {request.Data.PurchaseOrderItem.Name}";
             purchaseorder.IsTaxEditable = true;
             purchaseorder.CurrencyDate = DateTime.UtcNow;
-            purchaseorder.POValueCurrency = request.Data.SumPOValueCurrency;
+            //purchaseorder.POValueCurrency = request.Data.SumPOValueCurrency;
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Closed.Id;
             purchaseorder.PONumber = request.Data.PONumber;
-            purchaseorder.ActualCurrency = request.Data.SumPOValueCurrency;
+            //purchaseorder.ActualCurrency = request.Data.SumPOValueCurrency;
             purchaseorder.QuoteNo = $"Tax for {request.Data.PurchaseOrderItem.Name}";
             purchaseorder.TaxCode = $"Tax for {request.Data.PurchaseOrderItem.Name}";
          

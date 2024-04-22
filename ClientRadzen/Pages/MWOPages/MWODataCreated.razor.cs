@@ -12,10 +12,10 @@ public partial class MWODataCreated
     [CascadingParameter]
     public MWODataMain DataMain { get; set; }
     [Parameter]
-    public MWOResponse Data { get; set; }
+    public MWOCreatedResponse Data { get; set; }
     [CascadingParameter]
     private MWODataMain MainPage { get; set; }
-    public async Task Delete(MWOResponse response)
+    public async Task Delete(MWOCreatedResponse response)
     {
 
         var resultDialog = await DialogService.Confirm($"Are you sure delete {response.Name}?", "Confirm Delete",
@@ -47,7 +47,7 @@ public partial class MWODataCreated
         }
 
     }
-    public async Task Approve(MWOResponse Response)
+    public async Task Approve(MWOCreatedResponse Response)
     {
         var resultDialog = await DialogService.Confirm($"Are you sure Approved {Response.Name}?", "Confirm",
             new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });

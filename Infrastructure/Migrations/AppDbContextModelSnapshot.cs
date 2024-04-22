@@ -348,9 +348,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("ActualCurrency")
-                        .HasColumnType("float");
-
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -394,9 +391,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("PONumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("POValueCurrency")
-                        .HasColumnType("float");
 
                     b.Property<int>("PurchaseOrderStatus")
                         .HasColumnType("int");

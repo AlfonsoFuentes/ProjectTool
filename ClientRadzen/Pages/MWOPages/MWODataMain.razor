@@ -6,6 +6,8 @@
         <RadzenColumn Size="12" SizeLG="8">
             <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-ml-4 rz-mt-2" Click="@(()=>AddNew())"
                           MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Add new MWO", TooltipPosition.Top) )" />
+            <RadzenButton Icon="description" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-ml-1"
+                          MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Export To Excel",TooltipPosition.Top) )" Click="@(()=>ExporToExcel())" />
 
         </RadzenColumn>
 
@@ -18,7 +20,7 @@
     </RadzenRow>
 
     <CascadingValue Value=this>
-        <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Server">
+        <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Server" Change="ChangeIndex">
             <Tabs>
                 <RadzenTabsItem Text="Created">
                     <MWODataListCreated></MWODataListCreated>
@@ -40,5 +42,10 @@
 
 </RadzenStack>
 @code {
+    int TabIndex = 0;
+    void ChangeIndex(int index)
+    {
+        TabIndex = index;
+    }
 
 }

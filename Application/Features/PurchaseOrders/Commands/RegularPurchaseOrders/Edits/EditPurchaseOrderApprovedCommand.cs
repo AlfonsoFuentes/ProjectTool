@@ -97,7 +97,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                     AppDbContext.PurchaseOrderItems.Remove(row);
                 }
             }
-            purchaseOrder.POValueCurrency = sumPOValueCurrency;
+            //purchaseOrder.POValueCurrency = sumPOValueCurrency;
             if (request.Data.IsMWONoProductive && !request.Data.IsAlteration)
             {
                 var TaxBudgetitem = await Repository.GetTaxBudgetItemNoProductive(purchaseOrder.MWOId);
@@ -106,7 +106,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
 
                     var purchaseordertaxestem = await Repository.GetPurchaseOrderMainTaxItemById(TaxBudgetitem.Id, purchaseOrder.MWOId);
 
-                    purchaseordertaxestem.UnitaryValueCurrency = TaxBudgetitem.Percentage / 100.0 * purchaseOrder.POValueCurrency;
+                    //purchaseordertaxestem.UnitaryValueCurrency = TaxBudgetitem.Percentage / 100.0 * purchaseOrder.POValueCurrency;
                     await Repository.UpdatePurchaseOrderItem(purchaseordertaxestem);
 
                 }

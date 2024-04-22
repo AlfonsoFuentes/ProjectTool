@@ -1,4 +1,6 @@
-﻿namespace Client.Infrastructure.Managers.MWOS
+﻿using Shared.Models.FileResults;
+
+namespace Client.Infrastructure.Managers.MWOS
 {
     public interface IMWOService : IManager
     {
@@ -9,13 +11,14 @@
         Task<IResult> ApproveMWO(ApproveMWORequest request);
  
         Task<IResult<MWOResponseList>> GetAllMWO();
-        //Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOCreated();
-        //Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOApproved();
-        //Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOClosed();
+        Task<IResult<FileResult>> ExportMWOsCreated();
         Task<IResult<UpdateMWORequest>> GetMWOToUpdateById(Guid id);
        
-        Task<IResult> Delete(MWOResponse request);
-        Task<IResult<MWOApprovedResponse>> GetMWOApprovedById(Guid id);
+        Task<IResult> Delete(MWOCreatedResponse request);
+        Task<IResult<MWOApprovedWithBudgetItemsResponse>> GetMWOApprovedById(Guid id);
+        Task<IResult<MWOCreatedResponse>> GetMWOCreatedById(Guid id);
+        Task<IResult<FileResult>> ExportMWOsApproved();
+        Task<IResult<FileResult>> ExportMWOsClosed();
     }
     public class MWOService : IMWOService
     {
@@ -75,7 +78,7 @@
             return await httpresult.ToResult<UpdateMWORequest>();
         }
 
-        public async Task<IResult> Delete(MWOResponse request)
+        public async Task<IResult> Delete(MWOCreatedResponse request)
         {
             var httpresult = await Http.PostAsJsonAsync($"mwo/Delete", request);
             return await httpresult.ToResult();
@@ -106,28 +109,31 @@
 
       
        
-        public async Task<IResult<MWOApprovedResponse>> GetMWOApprovedById(Guid id)
+        public async Task<IResult<MWOApprovedWithBudgetItemsResponse>> GetMWOApprovedById(Guid id)
         {
             var httpresult = await Http.GetAsync($"mwo/GetMWOApproved/{id}");
-            return await httpresult.ToResult<MWOApprovedResponse>();
+            return await httpresult.ToResult<MWOApprovedWithBudgetItemsResponse>();
+        }
+        public async Task<IResult<MWOCreatedResponse>> GetMWOCreatedById(Guid id)
+        {
+            var httpresult = await Http.GetAsync($"mwo/GetMWOCreated/{id}");
+            return await httpresult.ToResult<MWOCreatedResponse>();
+        }
+        public async Task<IResult<FileResult>> ExportMWOsCreated()
+        {
+            var httpresult = await Http.GetAsync($"ExportToFile/MWOsCreated");
+            return await httpresult.ToResult<FileResult>();
+        }
+        public async Task<IResult<FileResult>> ExportMWOsApproved()
+        {
+            var httpresult = await Http.GetAsync($"ExportToFile/MWOsApproved");
+            return await httpresult.ToResult<FileResult>();
         }
 
-        //public async Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOCreated()
-        //{
-        //    var httpresult = await Http.GetAsync($"mwo/getallCreated");
-        //    return await httpresult.ToResult<IEnumerable<MWOResponse>>();
-        //}
-
-        //public async Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOApproved()
-        //{
-        //    var httpresult = await Http.GetAsync($"mwo/getallApproved");
-        //    return await httpresult.ToResult<IEnumerable<MWOResponse>>();
-        //}
-
-        //public async Task<IResult<IEnumerable<MWOResponse>>> GetAllMWOClosed()
-        //{
-        //    var httpresult = await Http.GetAsync($"mwo/getallClosed");
-        //    return await httpresult.ToResult<IEnumerable<MWOResponse>>();
-        //}
+        public async Task<IResult<FileResult>> ExportMWOsClosed()
+        {
+            var httpresult = await Http.GetAsync($"ExportToFile/MWOsClosed");
+            return await httpresult.ToResult<FileResult>();
+        }
     }
 }

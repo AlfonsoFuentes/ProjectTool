@@ -20,21 +20,21 @@ namespace ClientRadzen.Pages.PurchaseOrders
       
         string nameFilter => MainPO.nameFilter;
 
-        Func<PurchaseOrderResponse, bool> fiterexpresion => x =>
+        Func<NewPurchaseOrderCreatedResponse, bool> fiterexpresion => x =>
             x.PurchaseOrderStatus.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
              x.PurchaseorderName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
              x.PurchaseRequisition.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
-             x.PONumber.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
+             
             x.SupplierNickName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
          x.SupplierName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
              x.MWOName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
              x.VendorCode.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
         x.AccountAssigment.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase);
-        IEnumerable<PurchaseOrderResponse> FilteredItems => OriginalData.Where(fiterexpresion).AsQueryable();
-        IEnumerable<PurchaseOrderResponse> OriginalData => MainPO.PurchaseordersCreated==null?new List<PurchaseOrderResponse>(): MainPO.PurchaseordersCreated;
+        IEnumerable<NewPurchaseOrderCreatedResponse> FilteredItems => OriginalData.Where(fiterexpresion).AsQueryable();
+        IEnumerable<NewPurchaseOrderCreatedResponse> OriginalData => MainPO.PurchaseordersCreated==null?new List<NewPurchaseOrderCreatedResponse>(): MainPO.PurchaseordersCreated;
 
         
-        void EditPurchaseOrder(PurchaseOrderResponse selectedRow)
+        void EditPurchaseOrder(NewPurchaseOrderCreatedResponse selectedRow)
         {
             if (selectedRow.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id)
             {
@@ -51,16 +51,16 @@ namespace ClientRadzen.Pages.PurchaseOrders
 
 
         }
-        void ApprovePurchaseOrder(PurchaseOrderResponse selectedRow)
+        void ApprovePurchaseOrder(NewPurchaseOrderCreatedResponse selectedRow)
         {
 
             _NavigationManager.NavigateTo($"/ApprovePurchaseOrder/{selectedRow.PurchaseOrderId}");
         }
-        void ReceivePurchaseorder(PurchaseOrderResponse selectedRow)
+        void ReceivePurchaseorder(NewPurchaseOrderCreatedResponse selectedRow)
         {
             _NavigationManager.NavigateTo($"/ReceivePurchaseOrder/{selectedRow.PurchaseOrderId}");
         }
-        async Task RemovePurchaseorder(PurchaseOrderResponse selectedRow)
+        async Task RemovePurchaseorder(NewPurchaseOrderCreatedResponse selectedRow)
         {
             var resultDialog = await DialogService.Confirm($"Are you sure delete {selectedRow.PurchaseRequisition}?", "Confirm Delete",
                new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });

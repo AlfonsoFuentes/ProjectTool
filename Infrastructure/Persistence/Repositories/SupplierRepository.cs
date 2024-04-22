@@ -2,7 +2,7 @@
 using Domain.Entities.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persistence.Repositories.Suppliers
+namespace Infrastructure.Persistence.Repositories
 {
     public class SupplierRepository : ISupplierRepository
     {
@@ -59,7 +59,7 @@ namespace Infrastructure.Persistence.Repositories.Suppliers
 
         public Task<IQueryable<Supplier>?> GetSupplierList()
         {
-            var result =Context.Suppliers.
+            var result = Context.Suppliers.
                AsNoTracking().
                AsSplitQuery().
                AsQueryable();
@@ -68,7 +68,7 @@ namespace Infrastructure.Persistence.Repositories.Suppliers
 
         public async Task<Supplier?> GetSupplierById(Guid id)
         {
-            return (await Context.Suppliers.FindAsync(id));
+            return await Context.Suppliers.FindAsync(id);
         }
     }
 }

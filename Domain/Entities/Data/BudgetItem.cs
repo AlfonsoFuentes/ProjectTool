@@ -1,4 +1,7 @@
-﻿namespace Domain.Entities.Data
+﻿using Shared.Models.BudgetItemTypes;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Domain.Entities.Data
 {
     public class BudgetItem : BaseEntity, ITenantEntity
     {
@@ -14,11 +17,11 @@
         public double Quantity { get; set; }
         public Guid? BrandId { get; set; }
         public Brand? Brand { get; set; } = null!;
-        public bool IsMainItemTaxesNoProductive {  get; set; }
+        public bool IsMainItemTaxesNoProductive { get; set; }
         public string? Model { get; set; } = string.Empty;
         public string? Reference { get; set; } = string.Empty;
         public double Percentage { get; set; }
-        public bool IsNotAbleToEditDelete {  get; set; }
+        public bool IsNotAbleToEditDelete { get; set; }
         public ICollection<PurchaseOrderItem> PurchaseOrderItems { get; set; } = new List<PurchaseOrderItem>();
         public ICollection<TaxesItem> TaxesItems { get; set; } = new List<TaxesItem>();
         public ICollection<TaxesItem> Selecteds { get; set; } = new List<TaxesItem>();
@@ -29,7 +32,7 @@
             result.Id = Guid.NewGuid();
             result.BudgetItemId = Id;
             result.SelectedId = SelectedItemId;
-           
+
             return result;
         }
         public TaxesItem AddTaxItemNoProductive(Guid SelectedItemId)
@@ -41,7 +44,27 @@
 
             return result;
         }
-
+        [NotMapped]
+        public string Nomeclatore =>$"{BudgetItemTypeEnum.GetLetter(Type)}{Order}";
+        [NotMapped]
+        public bool IsAlteration => Type == BudgetItemTypeEnum.Alterations.Id;
         
+        [NotMapped]
+        public double ActualUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.ActualUSD);
+        [NotMapped]
+        public double AssignedUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.AssignedUSD);
+        [NotMapped]
+        public double ApprovedUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.ApprovedUSD);
+        [NotMapped]
+        public double PotentialCommitmentUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.PotentialCommitmentUSD);
+        [NotMapped]
+        public double PendingToCommitUSD => Budget - AssignedUSD;
+        [NotMapped]
+        public double PendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.PendingToReceiveUSD);
     }
 }

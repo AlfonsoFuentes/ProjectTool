@@ -11,6 +11,7 @@ namespace Application.Interfaces
         Task<bool> ReviewIfNameExist(Guid MWOId, string name);
         Task<bool> ReviewIfNameExist(Guid id, Guid MWOId, string name);
         Task<IQueryable<BudgetItem>> GetBudgetItemList(Guid MWOId);
+
         Task<IQueryable<BudgetItem>> GetBudgetItemsWithPurchaseordersList(Guid MWOId);
         Task<BudgetItem> GetBudgetItemById(Guid id);
         Task<string> GetMWOName(Guid MWOId);
@@ -34,5 +35,7 @@ namespace Application.Interfaces
         Task UpdateTaxesAndEngineeringContingencyItems(Guid MWOId, CancellationToken cancellationToken);
         Task<List<PurchaseOrderItem>> GetPurchaseOrderItemsByMWOId(Guid MWOId);
         Task<IQueryable<PurchaseOrder>> GetPurchaseOrdersByMWOId(Guid MWOId);
+        Task<IQueryable<BudgetItem>> GetBudgetItemWithMWOList(Guid MWOId);
+        Task<IQueryable<BudgetItem>> GetBudgetItemWithMWOPurchaseOrderList(Guid MWOId);
     }
 }

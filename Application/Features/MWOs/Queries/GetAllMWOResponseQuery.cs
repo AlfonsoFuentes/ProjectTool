@@ -16,114 +16,136 @@ namespace Application.Features.MWOs.Queries
     public class GetAllMWOResponseQueryHandler : IRequestHandler<GetAllMWOResponseQuery, IResult<MWOResponseList>>
     {
         private IMWORepository Repository { get; set; }
-   
+
 
         public GetAllMWOResponseQueryHandler(IMWORepository repository)
         {
             Repository = repository;
-          
+
         }
 
 
         public async Task<IResult<MWOResponseList>> Handle(GetAllMWOResponseQuery request, CancellationToken cancellationToken)
         {
             Stopwatch sw = Stopwatch.StartNew();
-            var mwoList = await Repository.GetMWOList();
-            sw.Stop();
-            var elapse1 = sw.ElapsedMilliseconds;
 
-            sw= Stopwatch.StartNew();
+           
             MWOResponseList response = new();
-            response.MWOsCreated = await GetCreated(mwoList);
-            response.MWOsApproved = await GetApproved(mwoList);
-            response.MWOsClosed = await GetClosed(mwoList);
+            response.MWOsCreated = await GetCreated();
+            response.MWOsApproved = await GetApproved();
+            response.MWOsClosed = await GetClosed();
             sw.Stop();
             var elapse2 = sw.ElapsedMilliseconds;
             return Result<MWOResponseList>.Success(response);
 
         }
-        Task<IEnumerable<MWOResponse>> GetCreated(IEnumerable<MWO> query)
+        async Task<IEnumerable<MWOCreatedResponse>> GetCreated()
         {
-            query = query.Where(x=>x.Status==MWOStatusEnum.Created.Id);
-            var result=query.Select(e => new MWOResponse
+            var query = await Repository.GetMWOCreatedList();
+            var result = query.Select(mwo => new MWOCreatedResponse
             {
-                Id = e.Id,
-                Name = e.Name,
-                CreatedBy = e.CreatedByUserName,
-                CreatedOn = e.CreatedDate.ToString(),
-                CECName = e.Status == MWOStatusEnum.Approved.Id ? $"CEC0000{e.MWONumber}" : "",
-                CostCenter = CostCenterEnum.GetName(e.CostCenter),
-                
-                Capital = e.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
-                Expenses = e.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
-                IsAssetProductive = e.IsAssetProductive,
-               
-                
-                MWOType = MWOTypeEnum.GetType(e.Type),
-                Status = MWOStatusEnum.GetType(e.Status),
+                Id = mwo.Id,
+                Name = mwo.Name,
+                IsAssetProductive = mwo.IsAssetProductive,
+                PercentageAssetNoProductive = mwo.PercentageAssetNoProductive,
+                PercentageContingency = mwo.PercentageContingency,
+                PercentageEngineering = mwo.PercentageEngineering,
+                MWOType = MWOTypeEnum.GetType(mwo.Type),
+                CapitalUSD = mwo.CapitalUSD,
+                CECName = $"CEC0000{mwo.MWONumber}",
+                CostCenter = CostCenterEnum.GetName(mwo.CostCenter),
+                CreatedBy = mwo.CreatedByUserName,
+                CreatedOn = mwo.CreatedDate.ToString("d"),
+                ExpensesUSD = mwo.ExpensesUSD,
+                MWOStatus = MWOStatusEnum.Created,
+                PercentageTaxForAlterations = mwo.PercentageTaxForAlterations,
+                HasExpenses = mwo.HasExpenses,
 
 
             });
-            return Task.FromResult(result);
+            return result;
         }
-        Task<IEnumerable<MWOResponse>> GetApproved(IEnumerable<MWO> query)
+        async Task<IEnumerable<MWOApprovedResponse>> GetApproved()
         {
-            query = query.Where(x => x.Status == MWOStatusEnum.Approved.Id);
-            var result= query.Select(e => new MWOResponse
+            var mwoList = await Repository.GetMWOApprovedList();
+            var result = mwoList.Select(mwo => new MWOApprovedResponse
             {
-                Id = e.Id,
-                Name = e.Name,
-                CreatedBy = e.CreatedByUserName,
-                CreatedOn = e.CreatedDate.ToString(),
-                CECName = e.Status == MWOStatusEnum.Approved.Id ? $"CEC0000{e.MWONumber}" : "",
-                CostCenter = CostCenterEnum.GetName(e.CostCenter),
-                Capital = e.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
-                Expenses = e.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+                Id = mwo.Id,
+                Name = mwo.Name,
+                CreatedBy = mwo.CreatedByUserName,
+                CreatedOn = mwo.CreatedDate.ToString(),
+                CostCenter = CostCenterEnum.GetName(mwo.CostCenter),
+                IsAssetProductive = mwo.IsAssetProductive,
+                PercentageAssetNoProductive = mwo.PercentageAssetNoProductive,
+                PercentageContingency = mwo.PercentageContingency,
+                PercentageEngineering = mwo.PercentageEngineering,
+                MWOType = MWOTypeEnum.GetType(mwo.Type),
+                CECName = $"CEC0000{mwo.MWONumber}",
+                MWOStatus = MWOStatusEnum.Approved,
+                PercentageTaxForAlterations = mwo.PercentageTaxForAlterations,
+                HasExpenses = mwo.HasExpenses,
+                Capital = new()
+                {
+                    BudgetUSD = mwo.CapitalUSD,
+                    ActualUSD = mwo.CapitalActualUSD,
+                    ApprovedUSD = mwo.CapitalApprovedUSD,
+                    AssignedUSD = mwo.CapitalAssignedUSD,
+                    PotentialCommitmentUSD = mwo.CapitalPotentialCommitmentUSD,
+                },
+                Expenses = new()
+                {
+                    BudgetUSD = mwo.ExpensesUSD,
+                    ActualUSD = mwo.ExpensesActualUSD,
+                    ApprovedUSD = mwo.ExpensesApprovedUSD,
+                    PotentialCommitmentUSD = mwo.ExpensesPotentialCommitmentUSD,
+                    AssignedUSD = mwo.ExpensesAssignedUSD,
 
-                PotencialCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false 
-                && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
-                PotencialExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true
-                && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
-                
-                ActualCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.ActualUSD),
-                ActualExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.ActualUSD),
-                
-                POValueCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.POValueUSD),
-                POValueExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.POValueUSD),
-                
-                MWOType = MWOTypeEnum.GetType(e.Type),
-                Status = MWOStatusEnum.GetType(e.Status),
-                
+                },
+
 
             });
-            return Task.FromResult(result);
+            return result;
         }
-        Task<IEnumerable<MWOResponse>> GetClosed(IEnumerable<MWO> query)
+        async Task<IEnumerable<MWOClosedResponse>> GetClosed()
         {
-            query = query.Where(x => x.Status == MWOStatusEnum.Approved.Id);
-            var result=query.Select(e => new MWOResponse
+            var mwoList = await Repository.GetMWOClosedList();
+            var result = mwoList.Select(mwo => new MWOClosedResponse
             {
-                Id = e.Id,
-                Name = e.Name,
-                CreatedBy = e.CreatedByUserName,
-                CreatedOn = e.CreatedDate.ToString(),
-                CECName = e.Status == MWOStatusEnum.Approved.Id ? $"CEC0000{e.MWONumber}" : "",
-                CostCenter = CostCenterEnum.GetName(e.CostCenter),
-                Capital = e.BudgetItems.Where(x => x.Type != BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
-                Expenses = e.BudgetItems.Where(x => x.Type == BudgetItemTypeEnum.Alterations.Id).Sum(x => x.Budget),
+                Id = mwo.Id,
+                Name = mwo.Name,
+                CreatedBy = mwo.CreatedByUserName,
+                CreatedOn = mwo.CreatedDate.ToString(),
+                CostCenter = CostCenterEnum.GetName(mwo.CostCenter),
+                IsAssetProductive = mwo.IsAssetProductive,
+                PercentageAssetNoProductive = mwo.PercentageAssetNoProductive,
+                PercentageContingency = mwo.PercentageContingency,
+                PercentageEngineering = mwo.PercentageEngineering,
+                MWOType = MWOTypeEnum.GetType(mwo.Type),
+                CECName = $"CEC0000{mwo.MWONumber}",
+                MWOStatus = MWOStatusEnum.Approved,
+                PercentageTaxForAlterations = mwo.PercentageTaxForAlterations,
+                HasExpenses = mwo.HasExpenses,
+                Capital = new()
+                {
+                    BudgetUSD = mwo.CapitalUSD,
+                    ActualUSD = mwo.CapitalActualUSD,
+                    ApprovedUSD = mwo.CapitalApprovedUSD,
+                    AssignedUSD = mwo.CapitalAssignedUSD,
+                    PotentialCommitmentUSD = mwo.CapitalPotentialCommitmentUSD,
+                },
+                Expenses = new()
+                {
+                    BudgetUSD = mwo.ExpensesUSD,
+                    ActualUSD = mwo.ExpensesActualUSD,
+                    ApprovedUSD = mwo.ExpensesApprovedUSD,
+                    PotentialCommitmentUSD = mwo.ExpensesPotentialCommitmentUSD,
+                    AssignedUSD = mwo.ExpensesAssignedUSD,
 
-                PotencialCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
-                PotencialExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true && x.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.POValueUSD),
-                ActualCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.ActualUSD),
-                ActualExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.ActualUSD),
-                POValueCapital = e.PurchaseOrders.Where(x => x.IsAlteration == false).Sum(x => x.POValueUSD),
-                POValueExpenses = e.PurchaseOrders.Where(x => x.IsAlteration == true).Sum(x => x.POValueUSD),
-                MWOType = MWOTypeEnum.GetType(e.Type),
-                Status = MWOStatusEnum.GetType(e.Status),
-                
+                },
+
 
             });
-            return Task.FromResult(result);
+            return result;
         }
     }
 }

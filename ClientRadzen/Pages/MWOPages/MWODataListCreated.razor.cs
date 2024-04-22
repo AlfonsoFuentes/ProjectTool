@@ -7,5 +7,5 @@ public partial class MWODataListCreated
 {
     [CascadingParameter]
     public MWODataMain DataMain { get; set; }
-    IEnumerable<MWOResponse> FilteredItems => DataMain.Response.MWOsCreated==null?new List<MWOResponse>(): DataMain.Response.MWOsCreated;
+    IEnumerable<MWOCreatedResponse> FilteredItems => DataMain.Response.MWOsCreated==null?new List<MWOCreatedResponse>(): DataMain.Response.MWOsCreated;
 }

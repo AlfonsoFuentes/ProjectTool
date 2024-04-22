@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240420235020_RemoveCreatedBy")]
-    partial class RemoveCreatedBy
+    [Migration("20240421125617_RemovePOValueCurremcy")]
+    partial class RemovePOValueCurremcy
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -351,9 +351,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("ActualCurrency")
-                        .HasColumnType("float");
-
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -397,9 +394,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("PONumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("POValueCurrency")
-                        .HasColumnType("float");
 
                     b.Property<int>("PurchaseOrderStatus")
                         .HasColumnType("int");

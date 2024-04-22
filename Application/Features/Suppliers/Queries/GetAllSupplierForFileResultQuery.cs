@@ -8,8 +8,8 @@ using System.Linq.Expressions;
 
 namespace Application.Features.Suppliers.Queries
 {
-    public record GetAllSupplierForFileResultQuery():IRequest<IResult<IQueryable<SupplierExportFileResponse>>>;
-    public class GetAllSupplierForFileResultQueryHandler : IRequestHandler<GetAllSupplierForFileResultQuery, IResult<IQueryable<SupplierExportFileResponse>>>
+    public record GetAllSupplierForFileResultQuery():IRequest<IQueryable<SupplierExportFileResponse>>;
+    public class GetAllSupplierForFileResultQueryHandler : IRequestHandler<GetAllSupplierForFileResultQuery, IQueryable<SupplierExportFileResponse>>
     {
         private ISupplierRepository Repository { get; set; }
   
@@ -19,7 +19,7 @@ namespace Application.Features.Suppliers.Queries
     
         }
 
-        public async Task<IResult<IQueryable<SupplierExportFileResponse>>> Handle(GetAllSupplierForFileResultQuery request, CancellationToken cancellationToken)
+        public async Task<IQueryable<SupplierExportFileResponse>> Handle(GetAllSupplierForFileResultQuery request, CancellationToken cancellationToken)
         {
 
             var rows = await Repository.GetSupplierList();
@@ -40,16 +40,8 @@ namespace Application.Features.Suppliers.Queries
                 NickName = e.NickName,
 
             };
-            try
-            {
-                var result = rows!.Select(expression);
-                return Result<IQueryable<SupplierExportFileResponse>>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                string exm = ex.Message;
-            }
-            return Result<IQueryable<SupplierExportFileResponse>>.Fail();
+            var result = rows!.Select(expression);
+            return result;
 
         }
     }

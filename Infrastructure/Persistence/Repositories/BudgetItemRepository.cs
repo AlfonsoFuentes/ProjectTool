@@ -45,6 +45,31 @@ namespace Infrastructure.Persistence.Repositories
                 .Where(x => x.MWOId == MWOId);
             return Task.FromResult(BudgetItems);
         }
+        public Task<IQueryable<BudgetItem>> GetBudgetItemWithMWOList(Guid MWOId)
+        {
+            var BudgetItems = Context.BudgetItems
+                .Include(x => x.Brand)
+                .Include(x => x.MWO)
+                .AsNoTracking().
+                AsSplitQuery().
+                AsQueryable()
+                .OrderBy(x => x.Type).ThenBy(x => x.Order)
+                .Where(x => x.MWOId == MWOId);
+            return Task.FromResult(BudgetItems);
+        }
+        public Task<IQueryable<BudgetItem>> GetBudgetItemWithMWOPurchaseOrderList(Guid MWOId)
+        {
+            var BudgetItems = Context.BudgetItems
+                .Include(x => x.Brand)
+                .Include(x => x.MWO)
+                .Include(x=>x.PurchaseOrderItems).ThenInclude(x=>x.PurchaseOrder)
+                .AsNoTracking().
+                AsSplitQuery().
+                AsQueryable()
+                .OrderBy(x => x.Type).ThenBy(x => x.Order)
+                .Where(x => x.MWOId == MWOId);
+            return Task.FromResult(BudgetItems);
+        }
         public async Task<List<BudgetItem>> GetBudgetItemForTaxesList(Guid MWOId)
         {
             var allitems = await Context.BudgetItems

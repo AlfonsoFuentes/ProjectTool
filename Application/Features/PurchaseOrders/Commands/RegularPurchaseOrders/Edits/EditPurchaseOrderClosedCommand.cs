@@ -38,9 +38,9 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseOrder.USDCOP = request.Data.USDCOP;
             purchaseOrder.USDEUR = request.Data.USDEUR;
             purchaseOrder.MainBudgetItemId = request.Data.MainBudgetItemId;
-            double povaluecurrency = purchaseOrder.POValueCurrency;
-            purchaseOrder.POValueCurrency = request.Data.PurchaseOrderItemNoBlank.Sum(x => x.TotalValuePurchaseOrderCurrency);
-            purchaseOrder.PurchaseOrderStatus = purchaseOrder.POValueCurrency != povaluecurrency ? PurchaseOrderStatusEnum.Receiving.Id : PurchaseOrderStatusEnum.Closed.Id;
+            //double povaluecurrency = purchaseOrder.POValueCurrency;
+            //purchaseOrder.POValueCurrency = request.Data.PurchaseOrderItemNoBlank.Sum(x => x.TotalValuePurchaseOrderCurrency);
+            //purchaseOrder.PurchaseOrderStatus = purchaseOrder.POValueCurrency != povaluecurrency ? PurchaseOrderStatusEnum.Receiving.Id : PurchaseOrderStatusEnum.Closed.Id;
             foreach (var item in request.Data.PurchaseOrderItemNoBlank)
             {
                 var purchaseorderItem = await Repository.GetPurchaseOrderItemById(item.PurchaseOrderItemId);

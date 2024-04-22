@@ -37,10 +37,10 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseorder.SPL = $"Tax for {request.Data.PurchaseOrderItem.Name}";
 
             purchaseorder.CurrencyDate = DateTime.UtcNow;
-            purchaseorder.POValueCurrency = request.Data.PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
+            //purchaseorder.POValueCurrency = request.Data.PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Closed.Id;
             purchaseorder.PONumber = request.Data.PONumber;
-            purchaseorder.ActualCurrency = request.Data.SumPOValueCurrency;
+            //purchaseorder.ActualCurrency = request.Data.SumPOValueCurrency;
             purchaseorder.QuoteNo = $"Tax for {request.Data.PurchaseOrderItem.Name}";
             purchaseorder.TaxCode = $"Tax for {request.Data.PurchaseOrderItem.Name}";
             purchaseorder.USDCOP = request.Data.USDCOP;

@@ -41,8 +41,8 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseorder.SPL = "";
 
             purchaseorder.CurrencyDate = DateTime.UtcNow;
-            purchaseorder.POValueCurrency = request.Data.SumPOValueCurrency;
-            purchaseorder.ActualCurrency = request.Data.SumPOValueCurrency;
+            //purchaseorder.POValueCurrency = request.Data.SumPOValueCurrency;
+            //purchaseorder.ActualCurrency = request.Data.SumPOValueCurrency;
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Closed.Id;
             purchaseorder.QuoteNo = "";
             purchaseorder.TaxCode = "";

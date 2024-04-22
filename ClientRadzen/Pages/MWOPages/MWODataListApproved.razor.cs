@@ -7,5 +7,5 @@ public partial class MWODataListApproved
 {
     [CascadingParameter]
     public MWODataMain DataMain { get; set; }
-    IEnumerable<MWOResponse> FilteredItems => DataMain.Response.MWOsApproved == null ? new List<MWOResponse>() : DataMain.Response.MWOsApproved;
+    IEnumerable<MWOApprovedResponse> FilteredItems => DataMain.Response.MWOsApproved == null ? new List<MWOApprovedResponse>() : DataMain.Response.MWOsApproved;
 }

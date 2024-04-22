@@ -48,8 +48,6 @@ namespace Domain.Entities.Data
         public int Currency { get; set; }
         public int PurchaseOrderStatus { get; set; }
         public string PurchaseRequisition { get; set; } = "";
-
-
         public DateTime? POApprovedDate { get; set; }
         public DateTime? POExpectedDateDate { get; set; }
         public DateTime? POClosedDate { get; set; }
@@ -60,9 +58,7 @@ namespace Domain.Entities.Data
         public double USDEUR { get; set; }
         public DateTime CurrencyDate { get; set; }
         public string AccountAssigment { get; set; } = "";
-        public double POValueCurrency { get; set; }
-   
-        public double ActualCurrency { get; set; }
+     
         public string PurchaseorderName { get; set; } = string.Empty;
        
         public bool IsAlteration { get; set; } = false;
@@ -70,10 +66,20 @@ namespace Domain.Entities.Data
        
         public bool IsTaxEditable { get; set; } = false;
         [NotMapped]
-        public double ActualUSD => Currency == CurrencyEnum.USD.Id ? ActualCurrency :
-            Currency == CurrencyEnum.COP.Id ? ActualCurrency / USDCOP : ActualCurrency / USDEUR;
+        public double ActualUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.ActualUSD);
         [NotMapped]
-        public double POValueUSD => Currency == CurrencyEnum.USD.Id ? POValueCurrency :
-            Currency == CurrencyEnum.COP.Id ? POValueCurrency / USDCOP : POValueCurrency / USDEUR;
+        public double AssignedUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.AssignedUSD);
+        [NotMapped]
+        public double ApprovedUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.ApprovedUSD);
+        [NotMapped]
+        public double PotentialCommitmentUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.PotentialCommitmentUSD);
+       
+        [NotMapped]
+        public double PendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.PendingToReceiveUSD);
     }
 }

@@ -14,9 +14,12 @@ namespace Application.Interfaces
         Task<MWO> GetMWOWithItemsById(Guid id);
         Task<IQueryable<PurchaseOrder>> GetPurchaseOrdersByMWOId(Guid MWOId);
         Task<IQueryable<BudgetItem>> GetBudgetItemsByMWOId(Guid MWOId);
-        Task<IEnumerable<MWO>> GetMWOList();
+        Task<IEnumerable<MWO>> GetMWOApprovedList();
         Task<BudgetItem> GetBudgetItemsSalary(Guid MWOId);
         Task<BudgetItem> GetBudgetItemsContingency(Guid MWOId);
         Task UpdateBudgetItem(BudgetItem entity);
+        Task<IEnumerable<MWO>> GetMWOCreatedList();
+        Task<IEnumerable<MWO>> GetMWOClosedList();
+        Task<MWO> GetMWOWithBudgetItemsPurchaseOrdersById(Guid id);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Client.Infrastructure.Managers;
 using Shared.Models.Brands;
 using Shared.Models.BudgetItems;
+using Shared.Models.FileResults;
 
 namespace Client.Infrastructure.Managers.BudgetItems
 {
@@ -17,7 +18,8 @@ namespace Client.Infrastructure.Managers.BudgetItems
         Task<IResult<DataforCreateBudgetItemResponse>> GetDataForCreateBudgetItem(Guid MWOId);
         Task<IResult<ListApprovedBudgetItemsResponse>> GetApprovedBudgetItemsByMWO(Guid MWOId);
         Task<IResult<BudgetItemApprovedResponse>> GetApprovedBudgetItemsById(Guid BudgetItemId);
-
+        Task<IResult<FileResult>> ExporNotApprovedToExcel(Guid MWOId);
+        Task<IResult<FileResult>> ExporApprovedToExcel(Guid MWOId);
     }
     public class BudgetItemService : IBudgetItemService
     {
@@ -160,6 +162,18 @@ namespace Client.Infrastructure.Managers.BudgetItems
                 string message = ex.Message;
             }
             return Result<BudgetItemApprovedResponse>.Fail();
+        }
+
+        public async Task<IResult<FileResult>> ExporNotApprovedToExcel(Guid MWOId)
+        {
+            var httpresult = await Http.GetAsync($"ExportToFile/BudgetItemsNotApprovedExcel/{MWOId}");
+            return await httpresult.ToResult<FileResult>();
+        }
+
+        public async Task<IResult<FileResult>> ExporApprovedToExcel(Guid MWOId)
+        {
+            var httpresult = await Http.GetAsync($"ExportToFile/BudgetItemsApprovedExcel/{MWOId}");
+            return await httpresult.ToResult<FileResult>();
         }
     }
 }

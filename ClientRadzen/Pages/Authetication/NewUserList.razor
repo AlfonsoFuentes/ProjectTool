@@ -25,9 +25,29 @@
                 <Template Context="user">
                     <RadzenCard Style="width: 100%; padding: 0;">
                         <RadzenRow>
-                            <CascadingValue Value="this">
-                                <NewUserData Data="@user"></NewUserData>
-                            </CascadingValue>
+                            <RadzenColumn Size="12" SizeLG="3" Class="rz-p-2">
+                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-black">@(user.Email)</RadzenText>
+                            </RadzenColumn>
+
+                            <RadzenColumn Size="12" SizeLG="2" Class="rz-p-2">
+                                <RadzenStack Orientation="Orientation.Vertical">
+                                    <RadzenRow>
+                                        @if (user.IsViewer)
+                                        {
+                                            <RadzenButton Icon="remove_done" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                                                          Click="@(()=>UnConfirmUser(user))"
+                                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Reset Password: {user.Email}", TooltipPosition.Left) )" />
+                                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2" 
+                                            Click="@(()=>Delete(user))"
+                                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Delete {user.Email}", TooltipPosition.Left) )" />
+                                        }
+
+
+
+                                    </RadzenRow>
+
+                                </RadzenStack>
+                            </RadzenColumn>
 
                         </RadzenRow>
                     </RadzenCard>

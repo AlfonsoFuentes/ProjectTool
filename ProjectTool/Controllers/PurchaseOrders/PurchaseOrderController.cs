@@ -134,7 +134,7 @@ namespace Server.Controllers.PurchaseOrders
         [HttpGet("GetAllPurchaseOrder")]
         public async Task<IActionResult> GetAllPurchaseorder()
         {
-            return Ok(await Mediator.Send(new GetAllPurchaseOrderQuery()));
+            return Ok(await Mediator.Send(new GetAllNewPurchaseOrderQuery()));
         }
         
     }

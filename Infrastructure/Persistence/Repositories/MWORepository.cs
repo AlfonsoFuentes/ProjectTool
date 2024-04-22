@@ -4,6 +4,7 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Shared.Commons.Results;
 using Shared.Models.BudgetItemTypes;
+using Shared.Models.MWOStatus;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
@@ -12,11 +13,11 @@ namespace Infrastructure.Persistence.Repositories
     internal class MWORepository : IMWORepository
     {
         public IAppDbContext Context { get; set; }
-     
+
         public MWORepository(IAppDbContext appDbContext)
         {
             Context = appDbContext;
-           
+
         }
 
         public async Task AddMWO(MWO mWO)
@@ -36,7 +37,7 @@ namespace Infrastructure.Persistence.Repositories
 
             return await Context.MWOs.Where(x => x.Id != Id).AnyAsync(x => x.Name.ToLower() == name.ToLower());
         }
-       
+
 
         public Task UpdateMWO(MWO entity)
         {
@@ -52,7 +53,20 @@ namespace Infrastructure.Persistence.Repositories
         {
             return (await Context.MWOs.FindAsync(id))!;
         }
-
+        public async Task<MWO> GetMWOWithBudgetItemsPurchaseOrdersById(Guid id)
+        {
+            var result = await Context.MWOs
+                .Include(x => x.BudgetItems)
+                .ThenInclude(x => x.PurchaseOrderItems)
+                .ThenInclude(x => x.PurchaseOrder)
+                .ThenInclude(x => x.Supplier)
+                 .AsNoTracking()
+                .AsQueryable()
+                .AsSplitQuery()
+                .SingleOrDefaultAsync(x => x.Id == id)
+                ;
+            return result!;
+        }
         public async Task<bool> ReviewIfNumberExist(string cecNumber)
         {
             return await Context.MWOs.AnyAsync(x => x.MWONumber == cecNumber);
@@ -89,14 +103,15 @@ namespace Infrastructure.Persistence.Repositories
                 .Where(x => x.MWOId == MWOId);
             return Task.FromResult(BudgetItems);
         }
-        public Task<IEnumerable<MWO>> GetMWOList()
+        public Task<IEnumerable<MWO>> GetMWOApprovedList()
         {
             Stopwatch sw = Stopwatch.StartNew();
-           
+
             var mwos = Context.MWOs
                 .Include(x => x.BudgetItems)
-                .Include(x => x.PurchaseOrders)
                 .ThenInclude(x => x.PurchaseOrderItems)
+                .ThenInclude(x => x.PurchaseOrder)
+                .Where(x => x.Status == MWOStatusEnum.Approved.Id)
                 .AsNoTracking()
               .AsSplitQuery()
               .AsEnumerable();
@@ -104,7 +119,33 @@ namespace Infrastructure.Persistence.Repositories
             var elapse = sw.ElapsedMilliseconds;
             return Task.FromResult(mwos);
         }
+        public Task<IEnumerable<MWO>> GetMWOClosedList()
+        {
+            Stopwatch sw = Stopwatch.StartNew();
 
+            var mwos = Context.MWOs
+                .Include(x => x.BudgetItems)
+                .ThenInclude(x => x.PurchaseOrderItems)
+                .ThenInclude(x => x.PurchaseOrder)
+                .Where(x => x.Status == MWOStatusEnum.Closed.Id)
+                .AsNoTracking()
+              .AsSplitQuery()
+              .AsEnumerable();
+            sw.Stop();
+            var elapse = sw.ElapsedMilliseconds;
+            return Task.FromResult(mwos);
+        }
+        public Task<IEnumerable<MWO>> GetMWOCreatedList()
+        {
+            var mwos = Context.MWOs
+                 .Include(x => x.BudgetItems)
+                 .Where(x => x.Status == MWOStatusEnum.Created.Id)
+                 .AsNoTracking()
+               .AsSplitQuery()
+               .AsEnumerable();
+
+            return Task.FromResult(mwos);
+        }
         public async Task<BudgetItem> GetBudgetItemsSalary(Guid MWOId)
         {
             var result = await Context.BudgetItems.FirstOrDefaultAsync(x => x.MWOId == MWOId

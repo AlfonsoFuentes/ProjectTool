@@ -7,7 +7,7 @@
         <RadzenColumn Size="12" SizeLG="12">
             <RadzenDataList AllowVirtualization=true Style="height:100%;overflow:auto;" PageSize=15
                             WrapItems="false" AllowPaging="true" Density="Density.Compact"
-                            Data="@FilteredItems" TItem="PurchaseOrderResponse" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                            Data="@FilteredItems" TItem="NewPurchaseOrderCreatedResponse" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
                 <Template Context="product">
                     <RadzenCard Style="width: 100%; padding: 0;">
                         <RadzenRow>
@@ -36,7 +36,7 @@
                                     </RadzenColumn>
 
                                     <RadzenColumn Size="12" SizeMD="6" SizeLG="3" class="rz-p-1">
-                                        <RowTemplateCurrency Label="Potential, USD" Value="@product.POValueUSD"></RowTemplateCurrency>
+                                        <RowTemplateCurrency Label="Potential, USD" Value="@product.AssignedUSD"></RowTemplateCurrency>
 
                                        
 
@@ -58,7 +58,7 @@
                                                   class="rz-mr-1" Click="@(()=>ApprovePurchaseOrder(product))" />
 
                                     <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium"
-                                                  MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete purchase order {product.PONumber}",TooltipPosition.Left) )"
+                                                  MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete Requisition {product.PurchaseRequisition}",TooltipPosition.Left) )"
                                                   class="rz-mr-1" Click="@(()=>RemovePurchaseorder(product))" />
                                 </RadzenStack>
                             </RadzenColumn>

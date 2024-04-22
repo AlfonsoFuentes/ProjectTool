@@ -25,7 +25,7 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         Task<IResult> CreateTaxPurchaseOrder(CreateTaxPurchaseOrderRequest request);
         Task<IResult<BudgetItemsListForPurchaseordersResponse>> GetBudgetItemsToCreatePurchaseOrder(Guid BudgetItemId);
        
-        Task<IResult<PurchaseOrdersListResponse>> GetAllPurchaseOrders();
+        Task<IResult<NewPurchaseOrdersListResponse>> GetAllPurchaseOrders();
        
         Task<IResult<ApprovedRegularPurchaseOrderRequest>> GetPurchaseOrderToApproveById(Guid PurchaseOrderId);
         Task<IResult<ReceiveRegularPurchaseOrderRequest>> GetPurchaseOrderToReceiveById(Guid PurchaseOrderId);
@@ -66,10 +66,10 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
             return await httpresult.ToResult();
         }
 
-        public async Task<IResult<PurchaseOrdersListResponse>> GetAllPurchaseOrders()
+        public async Task<IResult<NewPurchaseOrdersListResponse>> GetAllPurchaseOrders()
         {
             var httpresult = await Http.GetAsync($"PurchaseOrder/GetAllPurchaseOrder");
-            return await httpresult.ToResult<PurchaseOrdersListResponse>();
+            return await httpresult.ToResult<NewPurchaseOrdersListResponse>();
         }
 
         public async Task<IResult<ApprovedRegularPurchaseOrderRequest>> GetPurchaseOrderToApproveById(Guid PurchaseOrderId)

@@ -1,58 +1,47 @@
-﻿using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.MWOStatus;
+﻿using Shared.Models.MWOStatus;
 using Shared.Models.MWOTypes;
-using Shared.Models.PurchaseOrders.Responses;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shared.Models.MWO
 {
-
     public class MWOApprovedResponse
     {
         public Guid Id { get; set; }
-        public string CECMWOName => $"{CECName}-{Name}";
         public string Name { get; set; } = string.Empty;
         public MWOTypeEnum MWOType { get; set; } = MWOTypeEnum.None;
         public string Type => MWOType.Name;
-        public MWOStatusEnum Status { get; set; } = MWOStatusEnum.None;
+        public MWOStatusEnum MWOStatus { get; set; } = MWOStatusEnum.None;
+        public string Status => MWOStatus.Name;
         public string CreatedBy { get; set; } = string.Empty;
         public string CreatedOn { get; set; } = string.Empty;
-       
+      
+        public double AppropiationUSD => Capital.BudgetUSD + Expenses.BudgetUSD;
         public string CECName { get; set; } = string.Empty;
         public string CostCenter { get; set; } = string.Empty;
-
-       
-        public double Appropiation => Expenses + Capital;
-        public double Expenses => BudgetItemsAlterations.Sum(x => x.Budget);
-        public double Capital => BudgetItemsCapital.Sum(x => x.Budget);
-        public double ActualExpenses => PurchaseOrderAlterations.Sum(x => x.Actual);
-        public double AssignedExpenses => PurchaseOrderAlterations.Sum(x=>x.Assigned);
-        public double PotencialExpenses => PurchaseOrderAlterations.Sum(x => x.Potencial);
-        public double CommitmentExpenses => PurchaseOrderAlterations.Sum(x => x.Commitment);
-        public double PendingExpenses => Expenses - AssignedExpenses - PotencialExpenses;
-
-
-        
-        public double PotencialCapital => PurchaseOrderCapital.Sum(x => x.Potencial);
-        public double AssignedCapital => PurchaseOrderCapital.Sum(x => x.Assigned);
-        public double ActualCapital => PurchaseOrderCapital.Sum(x => x.Actual);
-        public double CommitmentCapital => PurchaseOrderCapital.Sum(x => x.Commitment);
-        public double PendingCapital => Capital - AssignedCapital - PotencialCapital;
-        public List<BudgetItemApprovedResponse> BudgetItems { get; set; } = new();      
-
+        public bool HasExpenses { get; set; }
         public bool IsAssetProductive { get; set; } = true;
-     
         public double PercentageAssetNoProductive { get; set; } = 19;
         public double PercentageEngineering { get; set; } = 6;
         public double PercentageContingency { get; set; } = 10;
         public double PercentageTaxForAlterations { get; set; } = 19;
-        public bool HasExpenses => BudgetItemsAlterations.Count > 0;
-        public List<BudgetItemApprovedResponse> BudgetItemsAlterations => BudgetItems.Where(x => x.Type.Id == BudgetItemTypeEnum.Alterations.Id).ToList();
+        public MWOCount Capital { get; set; } = new();
+        public MWOCount Expenses { get; set; } = new();
 
-        public List<BudgetItemApprovedResponse> BudgetItemsCapital => BudgetItems.Where(x => x.Type.Id != BudgetItemTypeEnum.Alterations.Id).ToList();
-        public List<PurchaseOrderResponse> PurchaseOrders { get; set; } = new();
-        public List<PurchaseOrderResponse> PurchaseOrderAlterations => PurchaseOrders.Where(x => x.IsAlteration==true).ToList();
+        public double BudgetCapitalUSD => Capital.BudgetUSD;
+        public double AssignedCapitalUSD => Capital.AssignedUSD;
+        public double ApprovedCapitalUSD => Capital.ApprovedUSD;
+        public double ActualCapitalUSD => Capital.ActualUSD;
+        public double CommitmentCapitalUSD => Capital.CommitmentUSD;
+        public double PotentialCommitmentCapitalUSD => Capital.PotentialCommitmentUSD;
+        public double PendingToCommitCapitalUSD => Capital.PendingToCommitUSD;
 
-        public List<PurchaseOrderResponse> PurchaseOrderCapital => PurchaseOrders.Where(x => x.IsAlteration == false).ToList();
+        public double BudgetExpensesUSD => Expenses.BudgetUSD;
+        public double AssignedExpensesUSD => Expenses.AssignedUSD;
+        public double ApprovedExpensesUSD => Expenses.ApprovedUSD;
+        public double ActualExpensesUSD => Expenses.ActualUSD;
+        public double CommitmentExpensesUSD => Expenses.CommitmentUSD;
+        public double PotentialCommitmentExpensesUSD => Expenses.PotentialCommitmentUSD;
+        public double PendingToCommitExpensesUSD => Expenses.PendingToCommitUSD;
+
     }
 }

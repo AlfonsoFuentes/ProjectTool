@@ -12,11 +12,11 @@ namespace ClientRadzen.Pages.PurchaseOrders
         [Inject]
         public IPurchaseOrderService Service { get; set; } = null!;
 
-        public IEnumerable<PurchaseOrderResponse> PurchaseordersCreated => Response.PurchaseordersCreated;
-        public IEnumerable<PurchaseOrderResponse> PurchaseordersToReceive => Response.PurchaseordersApproved;
-        public IEnumerable<PurchaseOrderResponse> PurchaseordersClosed => Response.PurchaseordersClosed;
+        public IEnumerable<NewPurchaseOrderCreatedResponse> PurchaseordersCreated => Response.PurchaseordersCreated;
+        public IEnumerable<NewPurchaseOrderApprovedResponse> PurchaseordersToReceive => Response.PurchaseordersApproved;
+        public IEnumerable<NewPurchaseOrderClosedResponse> PurchaseordersClosed => Response.PurchaseordersClosed;
 
-        PurchaseOrdersListResponse Response = new();
+        NewPurchaseOrdersListResponse Response = new();
 
         protected override async Task OnInitializedAsync()
         {

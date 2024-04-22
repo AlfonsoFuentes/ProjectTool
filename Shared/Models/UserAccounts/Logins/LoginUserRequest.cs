@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.Models.UserAccounts.Logins
+﻿namespace Shared.Models.UserAccounts.Logins
 {
     public class LoginUserRequest
     {

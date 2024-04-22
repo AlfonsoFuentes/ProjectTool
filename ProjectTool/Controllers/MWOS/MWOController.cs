@@ -38,10 +38,10 @@ namespace Server.Controllers.MWOS
             return Ok(await Mediator.Send(new ApproveMWOCommand(request)));
         }
         
-        [HttpGet("{Id}")]
+        [HttpGet("GetMWOCreated/{Id}")]
         public async Task<IActionResult> GetById(Guid Id)
         {
-            return Ok(await Mediator.Send(new GetMWOByIdQuery(Id)));
+            return Ok(await Mediator.Send(new GetMWOCreatedByIdQuery(Id)));
         }
         [HttpGet("GetMWOToUpdate/{Id}")]
         public async Task<IActionResult> GetMWOToUpdateById(Guid Id)
@@ -53,23 +53,9 @@ namespace Server.Controllers.MWOS
         {
             return Ok(await Mediator.Send(new GetAllMWOResponseQuery()));
         }
-        //[HttpGet("getallCreated")]
-        //public async Task<IActionResult> GetAllCreated()
-        //{
-        //    return Ok(await Mediator.Send(new GetAllMWOCreatedResponseQuery()));
-        //}
-        //[HttpGet("getallApproved")]
-        //public async Task<IActionResult> GetAllApproved()
-        //{
-        //    return Ok(await Mediator.Send(new GetAllMWOApprovedResponseQuery()));
-        //}
-        //[HttpGet("getallClosed")]
-        //public async Task<IActionResult> GetAllClosed()
-        //{
-        //    return Ok(await Mediator.Send(new GetAllMWOClosedResponseQuery()));
-        //}
+       
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete(MWOResponse request)
+        public async Task<IActionResult> Delete(MWOCreatedResponse request)
         {
             return Ok(await Mediator.Send(new DeleteMWOCommand(request)));
         }
@@ -81,7 +67,7 @@ namespace Server.Controllers.MWOS
         [HttpGet("GetMWOApproved/{MWOId}")]
         public async Task<IActionResult> GetMWOApproved(Guid MWOId)
         {
-            return Ok(await Mediator.Send(new GetMWOApprovedById(MWOId)));
+            return Ok(await Mediator.Send(new GetNewMWOApprovedById(MWOId)));
         }
     }
 }

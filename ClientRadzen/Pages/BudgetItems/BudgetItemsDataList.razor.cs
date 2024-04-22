@@ -106,5 +106,23 @@ namespace ClientRadzen.Pages.BudgetItems
             _NavigationManager.NavigateTo($"/UpdateBudgetItem/{Response.Id}");
 
         }
+        async Task ExporNotApprovedToExcel()
+        {
+            var result = await Service.ExporNotApprovedToExcel(MWOId);
+            if (result.Succeeded)
+            {
+                var downloadresult = await blazorDownloadFileService.DownloadFile(result.Data.ExportFileName,
+                   result.Data.Data, contentType: result.Data.ContentType);
+                if (downloadresult.Succeeded)
+                {
+                    MainApp.NotifyMessage(NotificationSeverity.Success, "Export Excel", new() { "Export excel succesfully" });
+
+
+                }
+            }
+
+
+        }
+
     }
 }

@@ -6,5 +6,4 @@
         public IEnumerable<PurchaseOrderResponse> PurchaseordersApproved { get; set; } = null!;
         public IEnumerable<PurchaseOrderResponse> PurchaseordersClosed { get; set; } = null!;
     }
-
 }

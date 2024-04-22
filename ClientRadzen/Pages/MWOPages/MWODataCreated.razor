@@ -10,12 +10,9 @@
             <RowTemplateData Label="MWO Type" Value="@(Data.Type)"></RowTemplateData>
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="6" SizeLG="4" class="rz-mr-1 rz-ml-1">
-            <RowTemplateCurrency Label="Capital" Value="@Data.Capital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Expenses" Value="@Data.Expenses"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Apropiation" Value="@Data.Appropiation"></RowTemplateCurrency>
-
-
-
+            <RowTemplateCurrency Label="Capital" Value="@Data.CapitalUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Expenses" Value="@Data.ExpensesUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Apropiation" Value="@Data.AppropiationUSD"></RowTemplateCurrency>
 
         </RadzenColumn>
 
@@ -26,7 +23,7 @@
     <RadzenStack Orientation="Orientation.Vertical">
         <RadzenRow>
             <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1" Click="@(()=>DataMain.EditByForm(Data))"
-                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Edit Inline MWO: {Data.Name}",TooltipPosition.Left) )" />
+                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Edit MWO: {Data.Name}",TooltipPosition.Left) )" />
             <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2" Click="@(()=>Delete(Data))"
                           MouseEnter="@(args => MainApp.ShowTooltip(args,$"Delete {Data.Name}",TooltipPosition.Left) )" />
            

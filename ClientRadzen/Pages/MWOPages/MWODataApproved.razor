@@ -14,27 +14,25 @@
 
         <RadzenColumn Size="12" SizeMD="6" SizeLG="4">
             <RowTemplateTitle Title="Capital Status"></RowTemplateTitle>
-            <RowTemplateCurrency Label="Budget" Value="@Data.Capital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Assigned" Value="@Data.AssignedCapital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Pending" Value="@Data.PendingCapital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Actual" Value="@Data.ActualCapital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Commitment" Value="@Data.CommitmentCapital"></RowTemplateCurrency>
-            <RowTemplateCurrency Label="Potential" Value="@Data.PotencialCapital"></RowTemplateCurrency>
-            
-           
+            <RowTemplateCurrency Label="Budget, USD" Value="@Data.Capital.BudgetUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Assigned, USD" Value="@Data.Capital.AssignedUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Pending, USD" Value="@Data.Capital.PendingToCommitUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Actual, USD" Value="@Data.Capital.ActualUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Commitment, USD" Value="@Data.Capital.CommitmentUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Potential, USD" Value="@Data.Capital.PotentialCommitmentUSD"></RowTemplateCurrency>
 
         </RadzenColumn>
-        @if (Data.HasAlterations)
+        @if (Data.HasExpenses)
         {
            
             <RadzenColumn Size="12" SizeMD="6" SizeLG="4">
                 <RowTemplateTitle Title="Expenses Status"></RowTemplateTitle>
-                <RowTemplateCurrency Label="Budget" Value="@Data.Expenses"></RowTemplateCurrency>
-                <RowTemplateCurrency Label="Assigned" Value="@Data.AssignedExpenses"></RowTemplateCurrency>
-                <RowTemplateCurrency Label="Pending" Value="@Data.PendingExpenses"></RowTemplateCurrency>
-                <RowTemplateCurrency Label="Actual" Value="@Data.ActualExpenses"></RowTemplateCurrency>
-                <RowTemplateCurrency Label="Commitment" Value="@Data.CommitmentExpenses"></RowTemplateCurrency>
-                <RowTemplateCurrency Label="Potential" Value="@Data.PotencialExpenses"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Budget, USD" Value="@Data.Expenses.BudgetUSD"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Assigned, USD" Value="@Data.Expenses.AssignedUSD"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Pending, USD" Value="@Data.Expenses.PendingToCommitUSD"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Actual, USD" Value="@Data.Expenses.ActualUSD"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Commitment, USD" Value="@Data.Expenses.CommitmentUSD"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Potential, USD" Value="@Data.Expenses.PotentialCommitmentUSD"></RowTemplateCurrency>
 
             </RadzenColumn>
         }
@@ -49,7 +47,7 @@
             <RadzenButton Icon="insights" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
                           Click="@(()=>DataMain.ShowSapAlignmentofMWO(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show SAP Alignment for MWO: {Data.CECName}",
                           TooltipPosition.Left) )" />
-
+            
         </RadzenRow>
 
     </RadzenStack>

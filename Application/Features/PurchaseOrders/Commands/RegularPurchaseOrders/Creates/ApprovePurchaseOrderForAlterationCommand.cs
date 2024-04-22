@@ -46,7 +46,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
                 await Repository.AddPurchaseorderItem(purchaseordertaxestem);
             }
 
-            purchaseorder.POValueCurrency = sumPOValueCurrency;
+            //purchaseorder.POValueCurrency = sumPOValueCurrency;
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
 

@@ -7,7 +7,7 @@
         <RadzenColumn Size="12" SizeLG="8">
             <RadzenStack Orientation="Orientation.Horizontal">
                 <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1 rz-ml-4"
-                              MouseEnter="@(args => ShowTooltip(args,$"Add new brand") )" Click="@(()=>AddNew())" />
+                              MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Add new brand",TooltipPosition.Top) )" Click="@(()=>AddNew())" />
 
             </RadzenStack>
 
@@ -44,9 +44,9 @@
                             <RadzenStack Orientation="Orientation.Horizontal" >
 
                                 <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
-                                              MouseEnter="@(args => ShowTooltip(args,$"Edit") )" Click="@(()=>Edit(detail))" />
+                                              MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit", TooltipPosition.Top) )" Click="@(()=>Edit(detail))" />
                                 <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2"
-                                              MouseEnter="@(args => ShowTooltip(args,$"Cancel") )"
+                                              MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel", TooltipPosition.Top) )"
                                               Click="@(()=>Delete(detail))" />
                             </RadzenStack>
 
@@ -69,21 +69,4 @@
     bool allowVirtualization = true;
 
 
-    void NotifyMessage(NotificationSeverity Severity, string Leyend, List<string> messages)
-    {
-        AlertStyle alertStyle = Severity == NotificationSeverity.Success ? AlertStyle.Success : AlertStyle.Danger;
-
-        NotificationService.Notify(new NotificationMessage
-            {
-                Severity = Severity,
-                SummaryContent = ns =>@<RadzenText TextStyle="TextStyle.H6">@Leyend</RadzenText>,
-            DetailContent = ns =>@<SimpleAlertMessage AlertStyle="@alertStyle" Messages=@messages></SimpleAlertMessage>,
-
-
-            Duration = Severity == NotificationSeverity.Success ? 2000 : 4000,
-        });
-
-    }
-    void ShowTooltip(ElementReference elementReference, string text) =>
-     TooltipService.Open(elementReference, text, new TooltipOptions() { Position = TooltipPosition.Right });
 }

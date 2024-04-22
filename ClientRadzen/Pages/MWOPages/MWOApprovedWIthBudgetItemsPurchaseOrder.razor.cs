@@ -1,9 +1,12 @@
+using Client.Infrastructure.Managers.BudgetItems;
 using Client.Infrastructure.Managers.PurchaseOrders;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.BudgetItems;
 using Shared.Models.PurchaseOrders.Responses;
 using Shared.Models.PurchaseorderStatus;
+using System.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 #nullable disable
 namespace ClientRadzen.Pages.MWOPages;
 public partial class MWOApprovedWIthBudgetItemsPurchaseOrder
@@ -17,7 +20,9 @@ public partial class MWOApprovedWIthBudgetItemsPurchaseOrder
     [Parameter]
     public Guid MWOId { get; set; }
     string nameFilter = string.Empty;
-    MWOApprovedResponse Response = null!;
+    MWOApprovedWithBudgetItemsResponse Response = null!;
+    [Inject]
+    private IBudgetItemService BudgetItemService { get; set; }
     protected override async Task OnInitializedAsync()
     {
 
@@ -32,61 +37,27 @@ public partial class MWOApprovedWIthBudgetItemsPurchaseOrder
 
         }
     }
-    private void GoToHome()
-    {
-        _NavigationManager.NavigateTo("/");
-    }
-    private void GoToMWOPage()
-    {
-        _NavigationManager.NavigateTo("/MWODataMain");
-    }
-    IQueryable<BudgetItemApprovedResponse> FilteredItems => GetFilteredItems();
-    Func<BudgetItemApprovedResponse, bool> fiterexpresion => x =>
+    
+    IQueryable<NewBudgetItemsWithPurchaseorders> FilteredItems => GetFilteredItems();
+    Func<NewBudgetItemsWithPurchaseorders, bool> fiterexpresion => x =>
        x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
        x.Nomenclatore.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
-       x.Brand.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
        x.Type.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
-       x.PurchaseOrders.Any(x => x.PurchaseorderName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
-       x.PurchaseOrders.Any(x => x.PONumber.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
-       x.PurchaseOrders.Any(x => x.PurchaseRequisition.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
-       x.PurchaseOrders.Any(x => x.SupplierName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
-       x.PurchaseOrders.Any(x => x.SupplierNickName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase))
-       ;
-    Func<BudgetItemApprovedResponse, bool> fiterexpresionPurchaseOrder => x =>
-
-       x.PurchaseOrders.Any(x => x.PurchaseorderName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
-       x.PurchaseOrders.Any(x => x.PONumber.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
-       x.PurchaseOrders.Any(x => x.PurchaseRequisition.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
-       x.PurchaseOrders.Any(x => x.SupplierName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
-       x.PurchaseOrders.Any(x => x.SupplierNickName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase))
-       ;
-    List<BudgetItemApprovedResponse> FilteredPurchaseorder = new();
-    IQueryable<BudgetItemApprovedResponse> GetFilteredItems()
+       x.PurchaseOrderItems.Any(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
+       x.PurchaseOrderItems.Any(x => x.PurchaseOrderNumber.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
+       x.PurchaseOrderItems.Any(x => x.PurchaseRequisition.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
+       x.PurchaseOrderItems.Any(x => x.Supplier.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) 
+      ;
+    
+    IQueryable<NewBudgetItemsWithPurchaseorders> GetFilteredItems()
     {
-        var result = Response.BudgetItems?.Where(fiterexpresion).AsQueryable();
-
-
-        if (!string.IsNullOrEmpty(nameFilter))
-        {
-            FilteredPurchaseorder = result.Where(fiterexpresionPurchaseOrder).ToList();
-            if (FilteredPurchaseorder.Count == 1)
-            {
-                ShowPurchaseOrders(FilteredPurchaseorder.First());
-            }
-            
-
-        }
-        else if(FilteredPurchaseorder.Count>0)
-        {
-            HidePurchaseOrders();
-            FilteredPurchaseorder.Clear();
-        }
+        var result = Response.BudgetItems.Where(fiterexpresion).AsQueryable();
 
 
 
         return result;
     }
-    void CreatePurchaseOrder(BudgetItemApprovedResponse approvedResponse)
+    void CreatePurchaseOrder(NewBudgetItemsWithPurchaseorders approvedResponse)
     {
         if (approvedResponse.CreateTaxPurchaseOrder)
         {
@@ -103,8 +74,8 @@ public partial class MWOApprovedWIthBudgetItemsPurchaseOrder
         }
 
     }
-    BudgetItemApprovedResponse seletedRow = null;
-    void ShowPurchaseOrders(BudgetItemApprovedResponse approvedResponse)
+    NewBudgetItemsWithPurchaseorders seletedRow = null;
+    void ShowPurchaseOrders(NewBudgetItemsWithPurchaseorders approvedResponse)
     {
         seletedRow = approvedResponse;
 
@@ -114,15 +85,15 @@ public partial class MWOApprovedWIthBudgetItemsPurchaseOrder
         seletedRow = null!;
 
     }
-    void ApprovedPurchaseOrder(PurchaseOrderResponse order)
+    void ApprovedPurchaseOrder(NewPurchaseOrderItemResponse order)
     {
         _NavigationManager.NavigateTo($"/ApprovePurchaseOrder/{order.PurchaseOrderId}");
     }
-    void ReceivePurchaseOrder(PurchaseOrderResponse order)
+    void ReceivePurchaseOrder(NewPurchaseOrderItemResponse order)
     {
         _NavigationManager.NavigateTo($"/ReceivePurchaseOrder/{order.PurchaseOrderId}");
     }
-    void EditPurchaseOrder(PurchaseOrderResponse order)
+    void EditPurchaseOrder(NewPurchaseOrderItemResponse order)
     {
         if (order.IsTaxEditable)
         {
@@ -147,14 +118,14 @@ public partial class MWOApprovedWIthBudgetItemsPurchaseOrder
         }
 
     }
-    public void ShowSapAlignmentofMWO(MWOApprovedResponse Response)
+    public void ShowSapAlignmentofMWO()
     {
         _NavigationManager.NavigateTo($"/SapAdjustListByMWO/{Response.Id}");
 
     }
-    async Task RemovePurchaseorder(PurchaseOrderResponse selectedRow)
+    async Task RemovePurchaseorder(NewPurchaseOrderItemResponse selectedRow)
     {
-        var resultDialog = await DialogService.Confirm($"Are you sure delete {selectedRow.PONumber}?", "Confirm Delete",
+        var resultDialog = await DialogService.Confirm($"Are you sure delete {selectedRow.PurchaseOrderNumber}?", "Confirm Delete",
            new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
         if (resultDialog.Value)
         {
@@ -171,5 +142,22 @@ public partial class MWOApprovedWIthBudgetItemsPurchaseOrder
             }
 
         }
+    }
+    async Task ExporApprovedToExcel()
+    {
+        var result = await BudgetItemService.ExporApprovedToExcel(MWOId);
+        if (result.Succeeded)
+        {
+            var downloadresult = await blazorDownloadFileService.DownloadFile(result.Data.ExportFileName,
+               result.Data.Data, contentType: result.Data.ContentType);
+            if (downloadresult.Succeeded)
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Success, "Export Excel", new() { "Export excel succesfully" });
+
+
+            }
+        }
+
+
     }
 }

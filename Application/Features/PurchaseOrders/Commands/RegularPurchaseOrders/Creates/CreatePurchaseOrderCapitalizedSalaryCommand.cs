@@ -40,8 +40,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.SPL = "";
             purchaseorder.IsCapitalizedSalary = true;
             purchaseorder.CurrencyDate = DateTime.UtcNow;
-            purchaseorder.POValueCurrency = request.Data.SumPOValueUSD;
-            purchaseorder.ActualCurrency = request.Data.SumPOValueUSD;
+     
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Closed.Id;
             purchaseorder.QuoteNo = "";
             purchaseorder.TaxCode = "";
@@ -57,7 +56,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             await Repository.AddPurchaseorderItem(purchaseorderitem);
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            //await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
+
             if (result > 0)
                 return Result.Success($"Purchase order created succesfully");
             return Result.Fail($"Purchase order was not created succesfully");

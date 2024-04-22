@@ -21,6 +21,8 @@ namespace Client.Infrastructure.Managers.UserManagement
         Task<bool> ValidateIfPasswordConfirmed(string email);
         Task<bool> ResetPassword(string email);
         Task<bool> ChangePasswordUser(ChangePasswordUserRequest request);
+
+        Task<bool> DeleteUser(string email);
     }
     public class AuthenticationService : IAuthenticationService
     {
@@ -129,7 +131,8 @@ namespace Client.Infrastructure.Managers.UserManagement
 
         public async Task<bool> ResetPassword(string email)
         {
-            var httpresult = await Http.PostAsJsonAsync($"accounts/ResetPassword", email);
+            var httpresult = await Http.GetAsync($"accounts/ResetPassword/{email}");
+           
 
             return await httpresult.ToObject<bool>();
         }
@@ -138,6 +141,14 @@ namespace Client.Infrastructure.Managers.UserManagement
         {
             var httpresult = await Http.PostAsJsonAsync($"accounts/ChangePassword", request);
 
+            return await httpresult.ToObject<bool>();
+        }
+
+        public async Task<bool> DeleteUser(string email)
+        {
+            var httpresult = await Http.GetAsync($"accounts/DeletedUser/{email}");
+          
+           
             return await httpresult.ToObject<bool>();
         }
     }

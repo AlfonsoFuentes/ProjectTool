@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Shared.Models.MWOStatus;
+using Radzen;
+using Client.Infrastructure.Managers.BudgetItems;
 
 namespace ClientRadzen.Pages.MWOPages;
 
@@ -13,9 +15,9 @@ public partial class MWODataApproved
     [CascadingParameter]
     public MWODataMain DataMain { get; set; }
     [Parameter]
-    public MWOResponse Data { get; set; }
+    public MWOApprovedResponse Data { get; set; }
     [CascadingParameter]
     private MWODataMain MainPage { get; set; }
-
-  
+   
+   
 }

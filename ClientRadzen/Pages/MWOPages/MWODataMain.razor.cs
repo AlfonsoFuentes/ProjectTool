@@ -18,10 +18,10 @@ namespace ClientRadzen.Pages.MWOPages
         public IMWOService Service { get; set; }
 
         public MWOResponseList Response { get; set; } = new();
-       
+
 
         string nameFilter = string.Empty;
-       
+
         protected override async Task OnInitializedAsync()
         {
             var result = await Service.GetAllMWO();
@@ -36,33 +36,49 @@ namespace ClientRadzen.Pages.MWOPages
         private void AddNew()
         {
             nameFilter = string.Empty;
-           _NavigationManager.NavigateTo("/CreateMWO");
+            _NavigationManager.NavigateTo("/CreateMWO");
 
-      
+
         }
-       
-      
-        public void EditByForm(MWOResponse Response)
+        async Task ExporToExcel()
+        {
+            var result = TabIndex == 0 ? await Service.ExportMWOsCreated() : TabIndex == 1 ? await Service.ExportMWOsApproved() : await Service.ExportMWOsClosed();
+            if (result.Succeeded)
+            {
+                var downloadresult = await blazorDownloadFileService.DownloadFile(result.Data.ExportFileName,
+                   result.Data.Data, contentType: result.Data.ContentType);
+                if (downloadresult.Succeeded)
+                {
+                    MainApp.NotifyMessage(NotificationSeverity.Success, "Export Excel", new() { "Export excel succesfully" });
+
+
+                }
+            }
+
+
+        }
+
+        public void EditByForm(MWOCreatedResponse Response)
         {
             _NavigationManager.NavigateTo($"/UpdateMWO/{Response.Id}");
 
         }
-        public void AddItemToMWO(MWOResponse Response)
+        public void AddItemToMWO(MWOCreatedResponse Response)
         {
             _NavigationManager.NavigateTo($"/CreateBudgetItem/{Response.Id}");
 
         }
-        public void ShowItemsofMWO(MWOResponse Response)
+        public void ShowItemsofMWO(MWOCreatedResponse Response)
         {
             _NavigationManager.NavigateTo($"/BudgetItemsDataList/{Response.Id}");
 
         }
-        public void ShowApprovedItemsofMWO(MWOResponse Response)
+        public void ShowApprovedItemsofMWO(MWOApprovedResponse Response)
         {
             _NavigationManager.NavigateTo($"/MWOApproved/{Response.Id}");
 
         }
-        public void ShowSapAlignmentofMWO(MWOResponse Response)
+        public void ShowSapAlignmentofMWO(MWOApprovedResponse Response)
         {
             _NavigationManager.NavigateTo($"/SapAdjustListByMWO/{Response.Id}");
 

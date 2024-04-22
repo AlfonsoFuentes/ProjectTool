@@ -18,7 +18,7 @@ namespace Application.Interfaces
         Task<BudgetItem> GetTaxBudgetItemNoProductive(Guid MWOId);
         Task<PurchaseOrder> GetPurchaseOrderById(Guid PurchaseOrderId);
         Task UpdatePurchaseOrder(PurchaseOrder purchaseOrder);
-        Task<IQueryable<PurchaseOrder>> GetAllPurchaseorders(Expression<Func<PurchaseOrder, bool>> filteruser);
+      
         Task<PurchaseOrderItem> GetPurchaseOrderItemById(Guid purchaseorderItemId);
         Task<PurchaseOrderItem> GetPurchaseOrderMainTaxItemById(Guid TaxBudgetItemId, Guid MWOId);
         Task UpdatePurchaseOrderItem(PurchaseOrderItem purchaseOrderItem);

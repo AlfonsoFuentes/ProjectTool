@@ -2,16 +2,18 @@
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddRoles : Migration
+    public partial class CheckStatus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "InternalRole",
+                table: "AspNetUsers");
+
             migrationBuilder.AlterColumn<string>(
                 name: "TenantId",
                 table: "TaxesItems",
@@ -67,15 +69,6 @@ namespace Infrastructure.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "68579c73-0676-4527-8a21-4b86c811ea9f", null, "Viewer", "VIEWER" },
-                    { "72a79cc4-d03e-40e1-823b-bdcee7e8e20d", null, "Administrator", "ADMINISTRATOR" }
-                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_TaxesItems_TenantId",
@@ -144,16 +137,6 @@ namespace Infrastructure.Migrations
                 name: "IX_BudgetItems_TenantId",
                 table: "BudgetItems");
 
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "68579c73-0676-4527-8a21-4b86c811ea9f");
-
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "72a79cc4-d03e-40e1-823b-bdcee7e8e20d");
-
             migrationBuilder.AlterColumn<string>(
                 name: "TenantId",
                 table: "TaxesItems",
@@ -209,6 +192,13 @@ namespace Infrastructure.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(450)");
+
+            migrationBuilder.AddColumn<string>(
+                name: "InternalRole",
+                table: "AspNetUsers",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
         }
     }
 }

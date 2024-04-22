@@ -152,14 +152,23 @@ namespace Server.Controllers.UserManagements
 
 
         }
-        [HttpPost("ResetPassword")]
+        [HttpGet("ResetPassword/{email}")]
         public async Task<IActionResult> ResetPassword(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null) return Ok(false);
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            await _userManager.ResetPasswordAsync(user, token, "RegisterUserPassword123*");
-            await _userManager.UpdateAsync(user);
+            try
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                await _userManager.ResetPasswordAsync(user, token, "RegisterUserPassword123*");
+                user.EmailConfirmed = false;
+                await _userManager.UpdateAsync(user);
+            }
+            catch(Exception ex)
+            {
+                string exm = ex.Message;
+            }
+            
 
             return Ok(true);
         }
@@ -190,7 +199,16 @@ namespace Server.Controllers.UserManagements
             return Ok(false);
         }
 
+        [HttpGet("DeletedUser/{email}")]
+        public async Task<IActionResult> DeletedUser(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return Ok(false);
+           
+            await _userManager.DeleteAsync(user);
 
+            return Ok(true);
+        }
 
     }
 }

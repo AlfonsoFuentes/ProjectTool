@@ -44,7 +44,7 @@ namespace Application.Features.MWOs.Queries
                 PercentageContingency = mwo!.PercentageContingency,
                 PercentageEngineering = mwo!.PercentageEngineering,
                 PercentageTaxForAlterations = mwo!.PercentageTaxForAlterations,
-                Status = MWOStatusEnum.GetType(mwo.Status),
+                MWOStatus = MWOStatusEnum.GetType(mwo.Status),
                 MWOType = MWOTypeEnum.GetType(mwo.Type),
 
 
@@ -92,15 +92,15 @@ namespace Application.Features.MWOs.Queries
                ).ToList(),
             };
 
-            mworesponse.PurchaseOrders = purchaseorders.Select(expressionpurchaseorder).ToList();
-            mworesponse.PurchaseOrders.ForEach(z => 
-            z.PurchaseOrderItems.ForEach(x => 
-            x.QuoteUnitaryValueCurrency = 
-            GetQuoteCurrencyValue(x.QuoteUnitaryValueCurrency, x.QuoteCurrency.Id, x.PurchaseOrderCurrency.Id
-            , x.USDCOP, x.USDEUR)
+            //mworesponse.PurchaseOrders = purchaseorders.Select(expressionpurchaseorder).ToList();
+            //mworesponse.PurchaseOrders.ForEach(z => 
+            //z.PurchaseOrderItems.ForEach(x => 
+            //x.QuoteUnitaryValueCurrency = 
+            //GetQuoteCurrencyValue(x.QuoteUnitaryValueCurrency, x.QuoteCurrency.Id, x.PurchaseOrderCurrency.Id
+            //, x.USDCOP, x.USDEUR)
 
 
-            ));
+            //));
             var budgetitems = await Repository.GetBudgetItemsByMWOId(request.MWOId);
             Expression<Func<BudgetItem, BudgetItemApprovedResponse>> expression = e => new BudgetItemApprovedResponse
             {
@@ -125,11 +125,11 @@ namespace Application.Features.MWOs.Queries
 
             };
             var budgetitemresponse = budgetitems.Select(expression).ToList();
-            mworesponse.BudgetItems = budgetitemresponse.OrderBy(x => x.Nomenclatore).ToList();
-            mworesponse.BudgetItems.ForEach(budgetitem =>
-            {
-                budgetitem.PurchaseOrders = mworesponse.PurchaseOrders.Where(x => x.PurchaseOrderItems.Any(x => x.BudgetItemId == budgetitem.BudgetItemId)).ToList();
-            });
+            //mworesponse.BudgetItems = budgetitemresponse.OrderBy(x => x.Nomenclatore).ToList();
+            //mworesponse.BudgetItems.ForEach(budgetitem =>
+            //{
+            //    budgetitem.PurchaseOrders = mworesponse.PurchaseOrders.Where(x => x.PurchaseOrderItems.Any(x => x.BudgetItemId == budgetitem.BudgetItemId)).ToList();
+            //});
 
             return Result<MWOApprovedResponse>.Success(mworesponse);
         }

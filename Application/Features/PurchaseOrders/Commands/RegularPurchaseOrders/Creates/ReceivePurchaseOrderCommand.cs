@@ -70,7 +70,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
 
             }
 
-            purchaseorder.ActualCurrency = sumPOactualCurrency;
+            //purchaseorder.ActualCurrency = sumPOactualCurrency;
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
         

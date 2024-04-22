@@ -40,11 +40,11 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
                 var TaxBudgetitem = await Repository.GetTaxBudgetItemNoProductive(purchaseorder.MWOId);
                 if (TaxBudgetitem != null)
                 {
-                    var sumPOValueCurrency = purchaseorder.POValueCurrency;
+                    //var sumPOValueCurrency = purchaseorder.POValueCurrency;
 
                     var purchaseordertaxestem = purchaseorder.AddPurchaseOrderItemForNoProductiveTax(TaxBudgetitem.Id,
                             $"{request.Data.PONumber} Tax {TaxBudgetitem.Percentage}%");
-                    purchaseordertaxestem.UnitaryValueCurrency = TaxBudgetitem.Percentage / 100.0 * sumPOValueCurrency;
+                    //purchaseordertaxestem.UnitaryValueCurrency = TaxBudgetitem.Percentage / 100.0 * sumPOValueCurrency;
                     purchaseordertaxestem.Quantity = 1;
                     await Repository.AddPurchaseorderItem(purchaseordertaxestem);
 
