@@ -2,9 +2,9 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Models.BudgetItemTypes;
+using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.MWOStatus;
 using Shared.Models.MWO;
-using Shared.Models.MWOStatus;
 
 namespace Application.Features.MWOs.Commands
 {
@@ -34,9 +34,9 @@ namespace Application.Features.MWOs.Commands
             mwo.MWONumber = request.Data.MWONumber;
             mwo.CostCenter = request.Data.CostCenter.Id;
             mwo.PercentageTaxForAlterations = request.Data.PercentageTaxForAlterations;
-            mwo.PercentageContingency = request.Data.PercentageContingency;
-            mwo.PercentageEngineering = request.Data.PercentageEngineering;
+         
             mwo.ApprovedDate=DateTime.Now;
+            
             if (mwo.IsAssetProductive && !request.Data.IsAssetProductive)
             {
                 mwo.IsAssetProductive = false;
@@ -57,7 +57,7 @@ namespace Application.Features.MWOs.Commands
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
             await RepositoryBudgetItem.UpdateTaxesAndEngineeringContingencyItems(mwo.Id, cancellationToken);
-            //await Repository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
+          
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} approved succesfully");
@@ -67,6 +67,7 @@ namespace Application.Features.MWOs.Commands
         }
         async Task CreateTaxesForNoProductive(MWO mwo, ApproveMWORequest Data)
         {
+
             var taxitem = mwo.AddBudgetItem(BudgetItemTypeEnum.Taxes.Id);
 
             taxitem.IsNotAbleToEditDelete = true;

@@ -109,7 +109,7 @@ public partial class EditTaxPurchaseOrder
 
         }
         item.QuoteCurrencyValue = currencyvalue;
-        item.ActualCurrency = currencyvalue;
+        item.ActualUSD = currencyvalue;
 
         await ValidateAsync();
     }

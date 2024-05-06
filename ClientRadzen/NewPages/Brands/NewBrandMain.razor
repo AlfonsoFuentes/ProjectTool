@@ -1,0 +1,38 @@
+﻿@page "/NewBrandMain"
+
+
+
+<RadzenStack Orientation="Orientation.Vertical">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeLG="8">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1 rz-ml-4"
+                              MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Add new brand",TooltipPosition.Top) )" Click="@(()=>AddNew())" />
+
+            </RadzenStack>
+
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeLG="4">
+            <RadzenTextBox Class="rz-ml-4" Style="width:100%;" Placeholder="Search..." @bind-Value="@nameFilter"
+                           @oninput=@((arg)=>nameFilter=arg.Value!.ToString()!)></RadzenTextBox>
+        </RadzenColumn>
+    </RadzenRow>
+    <CascadingValue Value="this">
+        <RadzenTabs @bind-SelectedIndex=@MainApp.TabIndexBrands TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" Change="ChangeIndex">
+            <Tabs>
+                <RadzenTabsItem Text="Table">
+                    <NewBrandTableList></NewBrandTableList>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Cards">
+                    <NewBrandListData></NewBrandListData>
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+    </CascadingValue>
+</RadzenStack>
+@code {
+    void ChangeIndex(int index)
+    {
+        MainApp.TabIndexBrands = index;
+    }
+}

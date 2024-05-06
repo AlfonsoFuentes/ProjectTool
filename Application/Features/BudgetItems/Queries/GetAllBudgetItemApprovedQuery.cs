@@ -1,10 +1,5 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.CostCenter;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.CostCenter;
 using Shared.Models.MWO;
 using System.Linq.Expressions;
 
@@ -50,7 +45,7 @@ namespace Application.Features.BudgetItems.Queries
                 Order = e.Order,
                 Type = BudgetItemTypeEnum.GetType(e.Type),
 
-                Budget = e.Budget,
+                BudgetUSD = e.Budget,
                 CreatedBy = e.CreatedByUserName,
                 CreatedOn = e.CreatedDate.ToString(),
                 IsMainItemTaxesNoProductive = e.IsMainItemTaxesNoProductive,

@@ -1,10 +1,7 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.CostCenter;
+using Shared.Enums.MWOTypes;
 using Shared.Models.MWO;
-using Shared.Models.MWOTypes;
 
 namespace Application.Features.MWOs.Queries
 {
@@ -28,10 +25,12 @@ namespace Application.Features.MWOs.Queries
                 Id = mwo.Id,
                 Name = mwo.Name,
                 Type=MWOTypeEnum.GetType(mwo.Type),
+                MWONumber=mwo.MWONumber,
+                CostCenter=CostCenterEnum.GetType(mwo.CostCenter),
                 IsAssetProductive = mwo.IsAssetProductive,
                 PercentageAssetNoProductive = mwo.PercentageAssetNoProductive,
                 PercentageContingency = mwo.PercentageContingency,
-                PercentageEngineering = mwo.PercentageEngineering,
+                PercentageEngineering = mwo.PercentageCapitalizedSalary,
                 PercentageTaxForAlterations = mwo.PercentageTaxForAlterations,
                 BudgetItems = mwo.BudgetItems.Select(x =>
                 new BudgetItemResponse()

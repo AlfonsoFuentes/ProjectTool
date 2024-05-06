@@ -1,5 +1,4 @@
-﻿using Shared.Models.Brands;
-using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 using Shared.Models.PurchaseOrders.Responses;
 
 namespace Shared.Models.MWO
@@ -32,8 +31,8 @@ namespace Shared.Models.MWO
        
         public double PendingToCommitUSD => BudgetUSD - AssignedUSD;
        
-        public double PendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
-            PurchaseOrderItems.Sum(x => x.PendingToReceiveUSD);
+        public double CommitmentUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.CommitmentUSD);
 
         public bool HasPurchaseOrders => PurchaseOrderItems.Count > 0;
         public string NomenclatoreName => $"{Nomenclatore} - {Name}";

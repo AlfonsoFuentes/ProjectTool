@@ -1,7 +1,6 @@
 ﻿
 using Blazored.LocalStorage;
-using Client.Infrastructure.Managers.CurrencyApis;
-using Client.Infrastructure.Managers.UserManagement;
+
 using System.Globalization;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
@@ -18,7 +17,7 @@ namespace Client.Infrastructure.RegisterServices
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             builder.Services.AddScoped<RefreshTokenService>();
-
+  
             var frontend = builder.Configuration["FrontendUrl"];
             var backend = builder.Configuration["BackendUrl"];
             // set base address for default host
@@ -35,7 +34,8 @@ namespace Client.Infrastructure.RegisterServices
 
 
             builder.Services.AddHttpClientInterceptor();
-           
+            builder.Services.AddScoped<IHttpClientService, HttpClientService>();
+
             builder.Services.AddScoped<HttpInterceptorService>();
             builder.Services.AddOptions();
             builder.Services.AddManagers();
@@ -43,7 +43,7 @@ namespace Client.Infrastructure.RegisterServices
             builder.Services.CurrencyService();
             return builder;
         }
-       
+
 
         public static IServiceCollection AddManagers(this IServiceCollection services)
         {

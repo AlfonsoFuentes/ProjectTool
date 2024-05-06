@@ -2,9 +2,9 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Models.Currencies;
+using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
@@ -109,10 +109,10 @@ namespace Application.Features.PurchaseOrders.Queries
                 {
                     PurchaseorderItemId = x.Id,
                     BudgetItemId = x.Id,
-                    QuoteUnitaryValueCurrency = GetQuoteCurrencyValue(x.UnitaryValueCurrency, e.QuoteCurrency, e.Currency,
+                    QuoteUnitaryValueCurrency = GetQuoteCurrencyValue(x.UnitaryValueCurrency, e.QuoteCurrency, e.PurchaseOrderCurrency,
                     e.USDCOP, e.USDEUR),
                     Quantity = x.Quantity,
-                    PurchaseOrderCurrency= CurrencyEnum.GetType(e.Currency),
+                    PurchaseOrderCurrency= CurrencyEnum.GetType(e.PurchaseOrderCurrency),
                     QuoteCurrency = CurrencyEnum.GetType(e.QuoteCurrency),
                     ActualCurrency = x.ActualCurrency,
                    

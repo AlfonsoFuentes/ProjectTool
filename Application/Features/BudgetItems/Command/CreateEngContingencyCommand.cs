@@ -30,7 +30,7 @@ namespace Application.Features.BudgetItems.Command
             row.Percentage = request.Data.Percentage;
             row.UnitaryCost = request.Data.UnitaryCost;
             row.Quantity = request.Data.Quantity;
-            row.Budget = request.Data.Percentage == 0 ? request.Data.Budget : 0;
+       
 
             if (!mwo.IsAssetProductive && request.Data.Budget > 0 && request.Data.Percentage == 0)
             {
@@ -43,7 +43,7 @@ namespace Application.Features.BudgetItems.Command
             await Repository.AddBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
-            //await MWORepository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
+    
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} created succesfully!");

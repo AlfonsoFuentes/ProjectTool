@@ -1,8 +1,7 @@
 ﻿@page "/CreateCapitalizedSalary/{BudgetItemId:guid}"
 
-@using Shared.Models.Currencies
-@using Shared.Models.PurchaseOrders
-@using System.Globalization
+
+
 <PageTitle>Create New Purchase Order </PageTitle>
 @if (debug)
 {
@@ -58,7 +57,7 @@
 
                     <RadzenRow>
                         <RadzenFormField Text="PO Value, USD" Style="width: 100%;">
-                            <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PurchaseOrderItem.ActualCurrency
+                            <RadzenNumeric ShowUpDown=false @bind-Value=@Model.PurchaseOrderItem.QuoteCurrencyValue
                                            @oninput="@((arg)=>ChangeCurrencyValue(Model.PurchaseOrderItem, arg.Value!.ToString()!))"></RadzenNumeric>
 
                         </RadzenFormField>

@@ -1,10 +1,8 @@
-﻿using Application.Interfaces;
-using DocumentFormat.OpenXml;
+﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Shared.Commons.Results;
 using System.Globalization;
-using System.Reflection;
 using FileResult = Shared.Models.FileResults.FileResult;
 
 namespace Infrastructure.Services

@@ -1,0 +1,94 @@
+﻿
+
+<RadzenRow>
+    <RadzenColumn Size="12" SizeLG="12">
+        <RadzenDataList AllowVirtualization=true Style="height:100%;overflow:auto;" PageSize=15
+                        WrapItems="false" AllowPaging="true" Density="Density.Compact"
+                        Data="@MWOApproved.FilteredItems" TItem="NewBudgetItemsWithPurchaseorders" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+
+            <Template Context="product">
+                <RadzenPanel AllowCollapse="true" Collapsed=true class="rz-m-1">
+                    <HeaderTemplate>
+                        <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-1">
+                            @(product.NomenclatoreName)
+                        </RadzenText>
+                    </HeaderTemplate>
+                    <ChildContent>
+                        <RadzenCard Style="width: 100%; padding: 0;">
+                            <RadzenRow>
+                                <RadzenColumn Size="12" SizeLG="3" Class="rz-p-2">
+                                    <RowTemplateData Label="Nomenclatore" Value="@(product.Nomenclatore)"></RowTemplateData>
+                                    <RowTemplateData Label="Type" Value="@(product.Type.Name)"></RowTemplateData>
+
+
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeLG="3" Class="rz-p-2">
+                                    <RowTemplateCurrency Label="Budget, USD" Value="@product.BudgetUSD"></RowTemplateCurrency>
+                                    <RowTemplateCurrency Label="Assigned, USD" Value="@product.AssignedUSD"></RowTemplateCurrency>
+                                    <RowTemplateCurrency Label="Pending, USD" Value="@product.PendingToCommitUSD"></RowTemplateCurrency>
+
+
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeLG="3" Class="rz-p-2">
+                                    <RowTemplateCurrency Label="Actual, USD" Value="@product.ActualUSD"></RowTemplateCurrency>
+                                    <RowTemplateCurrency Label="Commitment, USD" Value="@product.CommitmentUSD"></RowTemplateCurrency>
+                                    <RowTemplateCurrency Label="Potential, USD" Value="@product.PotentialCommitmentUSD"></RowTemplateCurrency>
+
+
+
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeLG="2" Class="rz-p-2">
+                                    <RadzenStack Orientation="Orientation.Horizontal">
+                                        @if (product.CanCreatePurchaseOrder)
+                                        {
+                                            <RadzenButton Icon="add_shopping_cart" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                                                          Click="@(()=>MWOApproved.CreatePurchaseOrder(product))" MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Create PR", TooltipPosition.Left) )" />
+                                        }
+
+                                        @if (product.HasPurchaseOrders)
+                                        {
+                                            @if (seletedRow == product)
+                                            {
+                                                <RadzenButton Icon="filter_list_off" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2"
+                                                              Click="@(()=>HidePurchaseOrders())" MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Hide POs for {product.Name}", TooltipPosition.Left) )" />
+
+                                            }
+                                            else
+                                            {
+                                                <RadzenButton Icon="filter_list" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2"
+                                                              Click="@(()=>ShowPurchaseOrders(product))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show POs for {product.Name}", TooltipPosition.Left) )" />
+
+                                            }
+
+
+
+
+                                        }
+
+                                    </RadzenStack>
+                                </RadzenColumn>
+                            </RadzenRow>
+
+
+
+                        </RadzenCard>
+                        @if (seletedRow != null && product.BudgetItemId == seletedRow.BudgetItemId)
+                        {
+                            <RadzenCard Style="width: 100%;" class="rz-m-1">
+                                <TemplatePurchaseOrderItemResponse PurchaseOrderItems=@product.PurchaseOrderItems
+                                                                   IsMainItemTaxesNoProductive=@product.IsMainItemTaxesNoProductive></TemplatePurchaseOrderItemResponse>
+                            </RadzenCard>
+                        }
+                    </ChildContent>
+                </RadzenPanel>
+
+
+            </Template>
+        </RadzenDataList>
+    </RadzenColumn>
+</RadzenRow>
+
+
+@code {
+
+}

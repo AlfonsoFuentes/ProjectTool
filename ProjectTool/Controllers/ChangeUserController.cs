@@ -1,6 +1,4 @@
 ﻿using Application.Features.ChangeUser;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Server.Controllers
 {

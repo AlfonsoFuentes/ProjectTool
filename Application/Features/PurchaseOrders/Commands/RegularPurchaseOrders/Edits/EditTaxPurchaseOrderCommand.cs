@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
+using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.PurchaseOrders.Requests.Taxes;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edits
 {
@@ -37,21 +37,21 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             purchaseorder.SPL = $"Tax for {request.Data.PurchaseOrderItem.Name}";
 
             purchaseorder.CurrencyDate = DateTime.UtcNow;
-            //purchaseorder.POValueCurrency = request.Data.PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
+          
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Closed.Id;
             purchaseorder.PONumber = request.Data.PONumber;
-            //purchaseorder.ActualCurrency = request.Data.SumPOValueCurrency;
+     
             purchaseorder.QuoteNo = $"Tax for {request.Data.PurchaseOrderItem.Name}";
             purchaseorder.TaxCode = $"Tax for {request.Data.PurchaseOrderItem.Name}";
             purchaseorder.USDCOP = request.Data.USDCOP;
             purchaseorder.AccountAssigment = request.Data.MWO.CECName;
             purchaseorder.MainBudgetItemId = request.Data.MainBudgetItem.BudgetItemId;
-            purchaseorder.Currency = request.Data.PurchaseOrderCurrency.Id;
+            purchaseorder.PurchaseOrderCurrency = request.Data.PurchaseOrderCurrency.Id;
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var purchaseorderitem = await Repository.GetPurchaseOrderItemById(request.Data.PurchaseOrderItem.PurchaseOrderItemId);
-            purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
+            purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.PurchaseOrderValuePurchaseOrderCurrency;
             purchaseorderitem.Quantity = 1;
-            purchaseorderitem.ActualCurrency = request.Data.PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
+            purchaseorderitem.ActualCurrency = request.Data.PurchaseOrderItem.PurchaseOrderValuePurchaseOrderCurrency;
             await Repository.UpdatePurchaseOrderItem(purchaseorderitem);
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);

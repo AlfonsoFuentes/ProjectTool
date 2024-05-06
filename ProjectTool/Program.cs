@@ -10,6 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 var frontend = builder.Configuration["FrontendUrl"];
 var backend = builder.Configuration["BackendUrl"];
+builder.Services.AddLazyCache();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

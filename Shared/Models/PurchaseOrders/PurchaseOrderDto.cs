@@ -1,13 +1,7 @@
-﻿using Shared.Models.BudgetItems;
-using Shared.Models.Currencies;
-using Shared.Models.PurchaseorderStatus;
-using Shared.Models.Suppliers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
+using Shared.Models.BudgetItems;
+using Shared.NewModels.Suppliers.Reponses;
 
 namespace Shared.Models.PurchaseOrders
 {
@@ -25,8 +19,8 @@ namespace Shared.Models.PurchaseOrders
 
         public List<PurchaseOrderItemRequestDto> PurchaseOrderItems { get; set; } = new();
         public List<PurchaseOrderItemRequestDto> ConcretePurchaseOrderItems => PurchaseOrderItems.Where(x => x.PurchaseOrderItemId != Guid.Empty).ToList();
-        public SupplierResponse? Supplier { get; set; }
-        public Guid SupplierId => Supplier == null ? Guid.Empty : Supplier.Id;
+        public NewSupplierResponse? Supplier { get; set; }
+        public Guid SupplierId => Supplier == null ? Guid.Empty : Supplier.SupplierId;
         public string SupplierName => Supplier == null ? string.Empty : Supplier.NickName;
         public string VendorCode => Supplier == null ? string.Empty : Supplier.VendorCode;
         public string TaxCode => Supplier == null ? string.Empty : IsAlteration || IsMWONoProductive ? Supplier.TaxCodeLP : Supplier.TaxCodeLD;
@@ -136,9 +130,9 @@ namespace Shared.Models.PurchaseOrders
             NomenclatoreName = _BudgetItem.NomenclatoreName;
             Name = _BudgetItem.Name;
             BudgetItemId = _BudgetItem.BudgetItemId;
-            Budget = _BudgetItem.Budget;
-            PriorAssigned = _BudgetItem.Assigned;
-            CurrentPotential = _BudgetItem.Potencial;
+            Budget = _BudgetItem.BudgetUSD;
+            PriorAssigned = _BudgetItem.AssignedUSD;
+            CurrentPotential = _BudgetItem.PotentialUSD;
             USDCOP = usdcop;
             USDEUR = usdeur;
             

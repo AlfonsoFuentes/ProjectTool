@@ -1,12 +1,9 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.CostCenter;
-using Shared.Models.Currencies;
-using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
+﻿
+
+using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.CostCenter;
+using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
 
 namespace Application.Features.BudgetItems.Queries
 {
@@ -33,7 +30,7 @@ namespace Application.Features.BudgetItems.Queries
             BudgetItemApprovedResponse budgetItemResponse = new()
             {
                 BudgetItemId = budgetItem.Id,
-                Budget = budgetItem.Budget,
+                BudgetUSD = budgetItem.Budget,
                 MWOCECName = $"CEC0000{budgetItem.MWO.MWONumber}",
                 MWOId = budgetItem.MWOId,
                 MWOName = budgetItem.MWO.Name,
@@ -46,45 +43,46 @@ namespace Application.Features.BudgetItems.Queries
 
 
             };
-            budgetItemResponse.PurchaseOrders = purchaseordersbyitem.Select(x => new PurchaseOrderResponse()
+            budgetItemResponse.PurchaseOrders = purchaseordersbyitem.Select(e => new NewPurchaseOrderResponse()
             {
-                AccountAssigment = x.AccountAssigment,
-                IsAlteration = x.IsAlteration,
-                IsCapitalizedSalary = x.IsCapitalizedSalary,
-                IsTaxEditable = x.IsTaxEditable,
-                MWOId = budgetItem.MWOId,
-                MWOName = budgetItemResponse.MWOName,
-                CECName = budgetItemResponse.MWOCECName,
-                IsTaxNoProductive = budgetItem.IsMainItemTaxesNoProductive,
-                PONumber = x.PONumber,
-                PurchaseOrderId = x.Id,
-                PurchaseorderName = x.PurchaseorderName,
-                PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(x.PurchaseOrderStatus),
-                CreatedBy = x.TenantId,
-                CreatedOn = x.CreatedDate.ToShortDateString(),
-                ExpectedOn = x.POExpectedDateDate == null ? string.Empty : x.POExpectedDateDate.Value.ToShortDateString(),
-                PurchaseRequisition = x.PurchaseRequisition,
-                QuoteNo = x.QuoteNo,
-                SupplierNickName = x.Supplier == null ? string.Empty : x.Supplier.NickName,
-                SupplierName = x.Supplier == null ? string.Empty : x.Supplier.Name,
-                SupplierId = x.SupplierId,
-                TaxCode = x.TaxCode,
-                VendorCode = x.Supplier == null ? string.Empty : x.Supplier.VendorCode,
-                ReceivedOn = x.POClosedDate == null ? string.Empty : x.POClosedDate.Value.ToShortDateString(),
-                PurchaseOrderItems = x.PurchaseOrderItems.Select(y => new PurchaseorderItemsResponse()
+                PurchaseOrderId = e.Id,
+                PurchaseOrderNumber = e.PONumber,
+                DateExpectedOn = e.POExpectedDateDate,
+                DateClosedOn = e.POClosedDate,
+                DateApprovedOn = e.POApprovedDate,
+                MWOId = e.MWOId,
+                MainBudgetItemId = e.MainBudgetItemId,
+                IsTaxEditable = e.IsTaxEditable,
+                AccountAssigment = e.AccountAssigment,
+                PurchaseOrderCurrency = CurrencyEnum.GetType(e.PurchaseOrderCurrency),
+                CurrencyDate = e.CurrencyDate.ToString("d"),
+                IsAlteration = e.IsAlteration,
+                IsCapitalizedSalary = e.IsCapitalizedSalary,
+
+                PurchaseorderName = e.PurchaseorderName,
+                PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(e.PurchaseOrderStatus),
+                PurchaseRequisition = e.PurchaseRequisition,
+                QuoteCurrency = CurrencyEnum.GetType(e.QuoteCurrency),
+                QuoteNo = e.QuoteNo,
+                SPL = e.SPL,
+                Supplier = e.Supplier == null ? new() : new NewSupplierResponse()
                 {
-                    PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(x.PurchaseOrderStatus),
-                    QuoteUnitaryValueCurrency=y.UnitaryValueCurrency,
-                    Quantity = y.Quantity,
-                    
-                    QuoteCurrency = CurrencyEnum.GetType(x.Currency),
-                    USDCOP = x.USDCOP,
-                    USDEUR = x.USDEUR,
-                    BudgetItemId = y.BudgetItemId,
-                    PurchaseorderItemId = y.PurchaseOrderId,
-                   
-                }
-                ).ToList(),
+                    SupplierId = e.Supplier.Id,
+                    Name = e.Supplier.Name,
+                    NickName = e.Supplier.NickName,
+                    VendorCode = e.Supplier.VendorCode,
+                    TaxCodeLD = e.Supplier.TaxCodeLD,
+                    TaxCodeLP = e.Supplier.TaxCodeLP,
+                },
+                TaxCode = e.TaxCode,
+                USDCOP = e.USDCOP,
+                USDEUR = e.USDEUR,
+                ActualUSD = e.ActualUSD,
+                ApprovedUSD = e.ApprovedUSD,
+                PotentialCommitmentUSD = e.PotentialCommitmentUSD,
+                MWOName = e.MWO.Name,
+                CECName = e.MWO.CECName,
+                AssignedUSD = e.AssignedUSD,
 
             }).ToList();
 

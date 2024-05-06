@@ -1,9 +1,5 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.NewModels.Brands.Reponses;
 using System.Linq.Expressions;
 
 namespace Application.Features.BudgetItems.Queries
@@ -34,7 +30,7 @@ namespace Application.Features.BudgetItems.Queries
                 Id = row.Id,
                 Name = row.Name,
                 Type = BudgetItemTypeEnum.GetType(row.Type),
-                Brand = row.Brand == null ? null : new Shared.Models.Brands.BrandResponse() { Id = row.Brand!.Id, Name = row.Brand!.Name },
+                Brand = row.Brand == null ? null : new NewBrandResponse() { BrandId = row.Brand!.Id, Name = row.Brand!.Name },
                 Existing = row.Existing,
                 MWOId = row.MWOId,
                 Budget = Math.Round(row.Budget, 2),

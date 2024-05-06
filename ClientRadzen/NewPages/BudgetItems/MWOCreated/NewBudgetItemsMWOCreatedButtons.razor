@@ -1,0 +1,27 @@
+﻿<RadzenRow>
+    <RadzenColumn Size="12" SizeLG="8">
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1 rz-ml-4" 
+            Click="@(()=>MainPage.AddNewBudgetItem())"
+                          MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Add new Item",TooltipPosition.Top) )" />
+
+            <RadzenButton Icon="verified" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                          Click="@(()=>MainPage.Approve())" 
+                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Approve MWO: {MainPage.Response.Name}",TooltipPosition.Top) )" />
+
+            <RadzenButton Icon="description" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1"
+                          MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Export To Excel",TooltipPosition.Top) )" 
+                          Click="@(()=>MainPage.ExporNotApprovedToExcel())" />
+        </RadzenStack>
+
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeLG="4">
+        <RadzenTextBox Class="rz-ml-4" Style="width:100%;" Placeholder="Search..." 
+        @bind-Value="@MainPage.nameFilter"
+                       @oninput=@((arg)=>MainPage.ChangeFilter(arg.Value!.ToString()!))></RadzenTextBox>
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+
+}

@@ -1,8 +1,5 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
+﻿using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Creates
 {
@@ -21,7 +18,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
 
         public async Task<IResult> Handle(ApprovePurchaseOrderForAlterationCommand request, CancellationToken cancellationToken)
         {
-           
+
 
             var purchaseorder = await Repository.GetPurchaseOrderToApproveAlterationById(request.Data.PurchaseOrderId);
             if (purchaseorder == null)
@@ -34,12 +31,13 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.POExpectedDateDate = request.Data.ExpectedDate!.Value;
 
             var sumPOValueCurrency = request.Data.PurchaseOrderItems.Count == 0 ? 0 :
-                   request.Data.PurchaseOrderItems.Sum(x => x.TotalValuePurchaseOrderCurrency);
+                   request.Data.PurchaseOrderItems.Sum(x => x.PurchaseOrderValuePurchaseOrderCurrency);
             foreach (var row in request.Data.PurchaseOrderItemNoBlank)
             {
-                var purchaseordertaxestem = purchaseorder.AddPurchaseOrderItemForAlteration(row.BudgetItemId,
-                    $"{request.Data.PONumber} Tax {row.BudgetItemName} {purchaseorder.MWO.PercentageTaxForAlterations}%");
-                var povalucurrency = purchaseorder.MWO.PercentageTaxForAlterations / 100.0 * row.TotalValuePurchaseOrderCurrency;
+                var purchaseordertaxestem = purchaseorder.AddPurchaseOrderItemForAlteration(row.BudgetItemId);
+                purchaseordertaxestem.Name = $"{request.Data.PONumber} Tax {row.BudgetItemName} {purchaseorder.MWO.PercentageTaxForAlterations}%";
+
+                var povalucurrency = purchaseorder.MWO.PercentageTaxForAlterations / 100.0 * row.PurchaseOrderValuePurchaseOrderCurrency;
                 purchaseordertaxestem.UnitaryValueCurrency = povalucurrency;
                 purchaseordertaxestem.Quantity = 1;
                 sumPOValueCurrency += povalucurrency;

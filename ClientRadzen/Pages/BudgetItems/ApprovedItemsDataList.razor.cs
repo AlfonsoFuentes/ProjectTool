@@ -1,11 +1,6 @@
 ﻿using Client.Infrastructure.Managers.BudgetItems;
-using ClientRadzen.Pages.PurchaseOrders;
-using Microsoft.AspNetCore.Components;
-using Radzen;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
+using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
 #nullable disable
 namespace ClientRadzen.Pages.BudgetItems
 {
@@ -22,9 +17,9 @@ namespace ClientRadzen.Pages.BudgetItems
         x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
         x.Nomenclatore.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
         x.Brand.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
-        x.Type.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)||
+        x.Type.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
         x.PurchaseOrders.Any(x => x.PurchaseorderName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
-        x.PurchaseOrders.Any(x => x.PONumber.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
+        x.PurchaseOrders.Any(x => x.PurchaseOrderNumber.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
         x.PurchaseOrders.Any(x => x.PurchaseRequisition.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
         x.PurchaseOrders.Any(x => x.SupplierName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
         x.PurchaseOrders.Any(x => x.SupplierNickName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase))
@@ -80,7 +75,7 @@ namespace ClientRadzen.Pages.BudgetItems
         {
             _NavigationManager.NavigateTo("/MWODataMain");
         }
-        void EditPurchaseOrder(PurchaseOrderResponse order)
+        void EditPurchaseOrder(NewPurchaseOrderResponse order)
         {
             if (order.IsTaxNoProductive)
             {
@@ -105,15 +100,15 @@ namespace ClientRadzen.Pages.BudgetItems
             }
 
         }
-        void ApprovedPurchaseOrder(PurchaseOrderResponse order)
+        public void ApprovedPurchaseOrder(NewPurchaseOrderResponse order)
         {
             _NavigationManager.NavigateTo($"/ApprovePurchaseOrder/{order.PurchaseOrderId}");
         }
-        void ReceivePurchaseOrder(PurchaseOrderResponse order)
+        public void ReceivePurchaseOrder(NewPurchaseOrderResponse order)
         {
             _NavigationManager.NavigateTo($"/ReceivePurchaseOrder/{order.PurchaseOrderId}");
         }
-        async Task ExporNotApprovedToExcel()
+        public async Task ExporNotApprovedToExcel()
         {
             var result = await Service.ExporApprovedToExcel(MWOId);
             if (result.Succeeded)

@@ -1,8 +1,4 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace Infrastructure.Persistence.Repositories
+﻿namespace Infrastructure.Persistence.Repositories
 {
     internal class PurchaseOrderValidatorRepository : IPurchaseOrderValidatorRepository
     {

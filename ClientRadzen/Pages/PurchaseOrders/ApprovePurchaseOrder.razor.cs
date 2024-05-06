@@ -1,16 +1,5 @@
 ﻿#nullable disable
-using Blazored.FluentValidation;
-using Client.Infrastructure.Managers.PurchaseOrders;
-using Client.Infrastructure.Managers.Suppliers;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Radzen;
-using Radzen.Blazor;
-using Shared.Models.BudgetItems;
-using Shared.Models.Currencies;
-using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using System.ComponentModel.DataAnnotations;
+using Shared.Enums.Currencies;
 
 namespace ClientRadzen.Pages.PurchaseOrders
 {
@@ -22,10 +11,6 @@ namespace ClientRadzen.Pages.PurchaseOrders
         public Guid PurchaseOrderId { get; set; }
         [Inject]
         private IPurchaseOrderService Service { get; set; }
-
-
-        [Inject]
-        private ISupplierService SupplierService { get; set; }
 
 
         ApprovedRegularPurchaseOrderRequest Model = new();
@@ -59,9 +44,10 @@ namespace ClientRadzen.Pages.PurchaseOrders
             {
                 Model = result.Data;
 
-                //Model.AddBlankItem();
+                
             }
-
+            Model.USDCOP = MainApp.RateList == null ? Model.USDCOP : Math.Round(MainApp.RateList.COP, 2);
+            Model.USDEUR = MainApp.RateList == null ? Model.USDEUR : Math.Round(MainApp.RateList.EUR, 2);
             var resultBudgetItems = await Service.GetBudgetItemsToCreatePurchaseOrder(Model.MainBudgetItemId);
             if (resultBudgetItems.Succeeded)
             {

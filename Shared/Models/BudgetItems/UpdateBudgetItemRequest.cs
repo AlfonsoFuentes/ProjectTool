@@ -1,5 +1,5 @@
-﻿using Shared.Models.Brands;
-using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.NewModels.Brands.Reponses;
 
 namespace Shared.Models.BudgetItems
 {
@@ -48,7 +48,7 @@ namespace Shared.Models.BudgetItems
         public bool IsNotAbleToEditDelete { get; set; }
         public double SumPercentage { get; set; }
         public double SumBudgetItems { get; set; }
-        public BrandResponse? Brand { get; set; }
+        public NewBrandResponse? Brand { get; set; }
        
     }
     

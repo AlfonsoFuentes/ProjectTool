@@ -1,11 +1,4 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.PurchaseorderStatus;
-using System.Linq.Expressions;
+﻿using Shared.Enums.BudgetItemTypes;
 
 namespace Application.Features.BudgetItems.Queries
 {

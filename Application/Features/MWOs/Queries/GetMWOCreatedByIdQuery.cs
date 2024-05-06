@@ -1,14 +1,7 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.CostCenter;
+﻿using Shared.Enums.CostCenter;
+using Shared.Enums.MWOStatus;
+using Shared.Enums.MWOTypes;
 using Shared.Models.MWO;
-using Shared.Models.MWOStatus;
-using Shared.Models.MWOTypes;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.MWOs.Queries
 {
@@ -36,7 +29,7 @@ namespace Application.Features.MWOs.Queries
                 IsAssetProductive = mwo.IsAssetProductive,
                 PercentageAssetNoProductive = mwo.PercentageAssetNoProductive,
                 PercentageContingency = mwo.PercentageContingency,
-                PercentageEngineering = mwo.PercentageEngineering,
+                PercentageEngineering = mwo.PercentageCapitalizedSalary,
                 MWOType = MWOTypeEnum.GetType(mwo.Type),
                 CapitalUSD = mwo.CapitalUSD,
                 CECName = $"CEC0000{mwo.MWONumber}",

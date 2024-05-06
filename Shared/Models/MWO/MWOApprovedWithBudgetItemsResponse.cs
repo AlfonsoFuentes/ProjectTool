@@ -1,5 +1,5 @@
-﻿using Shared.Models.MWOStatus;
-using Shared.Models.MWOTypes;
+﻿using Shared.Enums.MWOStatus;
+using Shared.Enums.MWOTypes;
 
 namespace Shared.Models.MWO
 {

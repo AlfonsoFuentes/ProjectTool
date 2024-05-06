@@ -1,0 +1,24 @@
+﻿@page "/NewUserversionManagement"
+
+<CascadingValue Value="this">
+
+
+    <RadzenTabs @bind-SelectedIndex=@MainApp.TabIndexVersionUsers TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client"
+                Change="ChangeIndex">
+        <Tabs>
+            <RadzenTabsItem Text="Users">
+                <NewUserList></NewUserList>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Software Version">
+                <NewVersionList></NewVersionList>
+            </RadzenTabsItem>
+          
+        </Tabs>
+    </RadzenTabs>
+</CascadingValue>
+@code {
+    void ChangeIndex(int index)
+    {
+        MainApp.TabIndexVersionUsers = index;
+    }
+}

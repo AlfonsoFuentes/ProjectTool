@@ -1,9 +1,4 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using Microsoft.EntityFrameworkCore;
-using Shared.Commons.Results;
-using Shared.Models.PurchaseorderStatus;
-using System.Linq.Expressions;
+﻿
 
 namespace Infrastructure.Persistence.Repositories
 {
@@ -196,6 +191,11 @@ namespace Infrastructure.Persistence.Repositories
         {
             Context.PurchaseOrderItems.Update(purchaseOrderItem);
             return Task.CompletedTask;
+        }
+        public async Task AddPurchaseOrderItemReceived(PurchaseOrderItemReceived purchaseOrderItem)
+        {
+            await Context.PurchaseOrderItemReceiveds.AddAsync(purchaseOrderItem);
+            
         }
         public async Task<bool> ReviewIfNameExist(Guid PurchaseorderId, string name)
         {

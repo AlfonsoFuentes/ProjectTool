@@ -1,13 +1,8 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.CostCenter;
-using Shared.Models.Currencies;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.CostCenter;
+using Shared.Enums.Currencies;
 using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Queries
 {
@@ -42,7 +37,7 @@ namespace Application.Features.PurchaseOrders.Queries
 
                 MainBudgetItem = new()
                 {
-                    Budget = budgtitem.Budget,
+                    BudgetUSD = budgtitem.Budget,
                     Brand = budgtitem.Brand == null ? string.Empty : budgtitem.Brand.Name,
                     BudgetItemId = budgtitem.Id,
                     Name = budgtitem.Name,
@@ -55,14 +50,14 @@ namespace Application.Features.PurchaseOrders.Queries
                 PurchaseOrderId = purchaseOrder.Id,
                 PurchaseRequisition = purchaseOrder.PurchaseRequisition,
                 QuoteNo = purchaseOrder.QuoteNo,
-                PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
+                PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.PurchaseOrderCurrency),
                 QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
                 USDCOP = purchaseOrder.USDCOP,
                 USDEUR = purchaseOrder.USDEUR,
-                CurrencyDate= purchaseOrder.CurrencyDate,
+                CurrencyDate = purchaseOrder.CurrencyDate,
                 PurchaseOrderItems = purchaseOrder.PurchaseOrderItems.Where(x => !x.IsTaxAlteration).Select(x => new PurchaseOrderItemRequest()
                 {
-                  
+
                     BudgetItemId = x.BudgetItemId,
                     PurchaseOrderItemId = x.Id,
                     Name = x.Name,
@@ -71,28 +66,21 @@ namespace Application.Features.PurchaseOrders.Queries
                     TRMUSDCOP = purchaseOrder.USDCOP,
                     TRMUSDEUR = purchaseOrder.USDEUR,
                     QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
-                    PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
-                    QuoteCurrencyValue = GetQuoteCurrencyValue(x.UnitaryValueCurrency, purchaseOrder.QuoteCurrency, purchaseOrder.Currency,
-                    purchaseOrder.USDCOP, purchaseOrder.USDEUR),
-                    Budget = x.BudgetItem.Budget,
-                    AssignedCurrency =x.BudgetItem.PurchaseOrderItems.Where(x=>
-                    x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x=>x.UnitaryValueCurrency*x.Quantity),
-
-                    PotencialCurrency = x.BudgetItem.PurchaseOrderItems.Where(x =>
-                    x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
-
-                    ActualCurrency = x.ActualCurrency,
-                    OriginalAssignedCurrency= x.BudgetItem.PurchaseOrderItems.Where(x =>
-                    x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
-                    OriginalPotencialCurrency=x.BudgetItem.PurchaseOrderItems.Where(x =>
-                    x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
+                    PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.PurchaseOrderCurrency),
+                    QuoteCurrencyValue = x.UnitaryValueCurrency,
+                    BudgetUSD = x.BudgetItem.Budget,
+                    AssignedUSD = x.AssignedUSD,
+                    PotencialUSD = x.PotentialCommitmentUSD,
+                    ActualUSD = x.ActualUSD,
+                    OriginalAssignedCurrency = x.AssignedUSD,
+                    OriginalPotencialCurrency = x.PotentialCommitmentUSD,
 
                 }).ToList(),
 
                 Supplier = purchaseOrder.Supplier == null ? new() : new()
                 {
-                    Id = purchaseOrder.Supplier.Id,
-                    Name= purchaseOrder.Supplier.Name,
+                    SupplierId= purchaseOrder.Supplier.Id,
+                    Name = purchaseOrder.Supplier.Name,
                     VendorCode = purchaseOrder.Supplier.VendorCode,
                     TaxCodeLD = purchaseOrder.Supplier.TaxCodeLD,
                     TaxCodeLP = purchaseOrder.Supplier.TaxCodeLP,

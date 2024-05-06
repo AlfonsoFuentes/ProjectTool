@@ -1,7 +1,4 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 using Shared.Models.SapAdjust;
 
 namespace Application.Features.SapAdjusts.Queries

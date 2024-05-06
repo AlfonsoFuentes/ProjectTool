@@ -26,9 +26,15 @@ public partial class CreateAdjustForMWO
             Model.MWOApproved = result.Data;
         }
         Model.Date = DateTime.UtcNow;
- 
 
+        var resultEbp = await MWOService.GetMWOEBPReport(MWOId);
+        if (resultEbp.Succeeded)
+        {
+            MWOEBPResponse = resultEbp.Data;
+        }
     }
+  
+    MWOEBPResponse MWOEBPResponse { get; set; } = new();
     async Task SaveAsync()
     {
         var result=await Service.CreateSapAdjust(Model);

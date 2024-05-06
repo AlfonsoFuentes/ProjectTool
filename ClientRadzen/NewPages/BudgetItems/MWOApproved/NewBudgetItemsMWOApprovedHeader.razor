@@ -1,0 +1,71 @@
+﻿<RadzenRow class="rz-ml-4">
+    <RadzenColumn Size="12" SizeLG="4">
+        <RadzenPanel AllowCollapse="true" Collapsed=true Class="rz-my-auto rz-mx-auto">
+            <HeaderTemplate>
+                <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0">
+                    <b>@MainPage.Response.Name</b>
+                </RadzenText>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard class="rz-mt-1">
+
+                    <RowTemplateData Label="MWO Type" Value="@(MainPage.Response.Type.Name)"></RowTemplateData>
+                    <RowTemplateData Label="CEC Name" Value="@(MainPage.Response.CECName)"></RowTemplateData>
+                    <RowTemplateData Label="Cost Center" Value="@(MainPage.Response.CostCenter.Name)"></RowTemplateData>
+                    <RowTemplateCurrency Label="Capital" Value="@MainPage.Response.CapitalUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Expenses" Value="@MainPage.Response.ExpensesUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Apropiation" Value="@MainPage.Response.AppropiationUSD"></RowTemplateCurrency>
+
+
+
+                </RadzenCard>
+            </ChildContent>
+        </RadzenPanel>
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeLG="4">
+        <RadzenPanel AllowCollapse="true" Collapsed=true Class="rz-my-auto rz-mx-auto">
+            <HeaderTemplate>
+                <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0">
+                    <b>Capital Status</b>
+                </RadzenText>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard class="rz-mt-1">
+                    <RowTemplateCurrency Label="Budget, USD" Value="@MainPage.Response.CapitalUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Assigned, USD" Value="@MainPage.Response.CapitalAssignedUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Pending, USD" Value="@MainPage.Response.CapitalPendingToCommitUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Actual, USD" Value="@MainPage.Response.CapitalActualUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Commitment, USD" Value="@MainPage.Response.CapitalPendingToReceiveUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Potential, USD" Value="@MainPage.Response.CapitalPotentialCommitmentUSD"></RowTemplateCurrency>
+                </RadzenCard>
+            </ChildContent>
+        </RadzenPanel>
+    </RadzenColumn>
+    @if (MainPage.Response.HasExpenses)
+    {
+        <RadzenColumn Size="12" SizeLG="4">
+            <RadzenPanel AllowCollapse="true" Collapsed=true Class="rz-my-auto rz-mx-auto">
+                <HeaderTemplate>
+                    <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0">
+                        <b>Expenses Status</b>
+                    </RadzenText>
+                </HeaderTemplate>
+                <ChildContent>
+                    <RadzenCard class="rz-mt-1">
+                        <RowTemplateCurrency Label="Budget, USD" Value="@MainPage.Response.ExpensesUSD"></RowTemplateCurrency>
+                        <RowTemplateCurrency Label="Assigned, USD" Value="@MainPage.Response.ExpensesAssignedUSD"></RowTemplateCurrency>
+                        <RowTemplateCurrency Label="Pending, USD" Value="@MainPage.Response.ExpensesPendingToCommitUSD"></RowTemplateCurrency>
+                        <RowTemplateCurrency Label="Actual, USD" Value="@MainPage.Response.ExpensesActualUSD"></RowTemplateCurrency>
+                        <RowTemplateCurrency Label="Commitment, USD" Value="@MainPage.Response.ExpensesPendingToReceiveUSD"></RowTemplateCurrency>
+                        <RowTemplateCurrency Label="Potential, USD" Value="@MainPage.Response.ExpensesPotentialCommitmentUSD"></RowTemplateCurrency>
+
+                    </RadzenCard>
+                </ChildContent>
+            </RadzenPanel>
+        </RadzenColumn>
+
+    }
+</RadzenRow>
+@code {
+
+}

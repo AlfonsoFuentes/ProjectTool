@@ -1,0 +1,63 @@
+﻿
+<RadzenColumn Size="12" SizeLG="3" Class="rz-p-2">
+    <RowTemplateTitle Title="@(Data.Name)"></RowTemplateTitle>
+</RadzenColumn>
+<RadzenColumn Size="12" SizeLG="7" Class="rz-p-2">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="6" SizeLG="4">
+            <RowTemplateData Label="MWO Type" Value="@(Data.Type.Name)"></RowTemplateData>
+            <RowTemplateData Label="CEC Name" Value="@(Data.CECName)"></RowTemplateData>
+            <RowTemplateData Label="Cost Center" Value="@(Data.CostCenter.Name)"></RowTemplateData>
+
+
+        </RadzenColumn>
+
+        <RadzenColumn Size="12" SizeMD="6" SizeLG="4">
+            <RowTemplateTitle Title="Capital Status"></RowTemplateTitle>
+            <RowTemplateCurrency Label="Budget, USD" Value="@Data.CapitalUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Assigned, USD" Value="@Data.CapitalAssignedUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Pending, USD" Value="@Data.CapitalPendingToCommitUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Actual, USD" Value="@Data.CapitalActualUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Commitment, USD" Value="@Data.CapitalPendingToReceiveUSD"></RowTemplateCurrency>
+            <RowTemplateCurrency Label="Potential, USD" Value="@Data.CapitalPotentialCommitmentUSD"></RowTemplateCurrency>
+
+        </RadzenColumn>
+        @if (Data.HasExpenses)
+        {
+
+            <RadzenColumn Size="12" SizeMD="6" SizeLG="4">
+                <RowTemplateTitle Title="Expenses Status"></RowTemplateTitle>
+                <RowTemplateCurrency Label="Budget, USD" Value="@Data.ExpensesUSD"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Assigned, USD" Value="@Data.ExpensesAssignedUSD"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Pending, USD" Value="@Data.ExpensesPendingToCommitUSD"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Actual, USD" Value="@Data.ExpensesActualUSD"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Commitment, USD" Value="@Data.ExpensesPendingToReceiveUSD"></RowTemplateCurrency>
+                <RowTemplateCurrency Label="Potential, USD" Value="@Data.ExpensesPotentialCommitmentUSD"></RowTemplateCurrency>
+
+            </RadzenColumn>
+        }
+    </RadzenRow>
+
+</RadzenColumn>
+<RadzenColumn Size="12" SizeLG="2" Class="rz-p-2">
+    <RadzenStack Orientation="Orientation.Vertical">
+        <RadzenRow>
+            <RadzenButton Icon="format_list_bulleted" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                          Click="@(()=>DataMain.ShowApprovedItemsofMWO(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show Items for MWO: {Data.CECName}",TooltipPosition.Left) )" />
+
+            <RadzenButton Icon="remove_done" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                          Click="@(()=>DataMain.UnApproveMWO(Data))"
+                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Un Approve MWO: {Data.CECName}",TooltipPosition.Left) )" />
+            <RadzenButton Icon="insights" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                          Click="@(()=>DataMain.ShowSapAlignmentofMWO(Data))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show SAP Alignment for MWO: {Data.CECName}",
+                          TooltipPosition.Left) )" />
+
+        </RadzenRow>
+
+    </RadzenStack>
+</RadzenColumn>
+
+
+@code {
+
+}

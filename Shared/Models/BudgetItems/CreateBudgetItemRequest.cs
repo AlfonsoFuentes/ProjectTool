@@ -1,12 +1,6 @@
-﻿using Shared.Models.Brands;
-using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 using Shared.Models.MWO;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Shared.NewModels.Brands.Reponses;
 
 namespace Shared.Models.BudgetItems
 {
@@ -43,7 +37,7 @@ namespace Shared.Models.BudgetItems
         public double UnitaryCost { get; set; }
         public double Budget { get; set; }
         public double Quantity { get; set; } = 1;
-        public BrandResponse? Brand { get; set; }
+        public NewBrandResponse? Brand { get; set; }
         public string? Model { get; set; } = string.Empty;
         public string? Reference { get; set; } = string.Empty;
         public double SumBudgetItems { get; set; }

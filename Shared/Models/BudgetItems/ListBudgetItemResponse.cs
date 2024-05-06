@@ -1,4 +1,4 @@
-﻿using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 using Shared.Models.MWO;
 
 namespace Shared.Models.BudgetItems
@@ -15,8 +15,9 @@ namespace Shared.Models.BudgetItems
         public List<BudgetItemResponse> CapitalItems => BudgetItems.Where(x => x.Type.Id != BudgetItemTypeEnum.Alterations.Id).ToList();
         public List<BudgetItemResponse> ExpensesItems => BudgetItems.Where(x => x.Type.Id == BudgetItemTypeEnum.Alterations.Id).ToList();
         public List<BudgetItemResponse> TaxesItems => BudgetItems.Where(x => x.Type.Id == BudgetItemTypeEnum.Taxes.Id && x.IsMainItemTaxesNoProductive).ToList();
-        public double Capital => CapitalItems.Sum(x => x.Budget);
         public double TaxesNoProductive => TaxesItems.Sum(x => x.Budget);
+        public double Capital => CapitalItems.Sum(x => x.Budget);
+       
         public double Expenses => ExpensesItems.Sum(x => x.Budget);
         public double EngineeringCost => EngineeringCostItems.Sum(x => x.Budget);
         public double Appropiation => Capital + Expenses;

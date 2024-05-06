@@ -1,9 +1,4 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
-using Shared.Models.PurchaseorderStatus;
+﻿using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edits
 {
@@ -22,7 +17,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
 
         public async Task<IResult> Handle(EditPurchaseOrderClosedCommand request, CancellationToken cancellationToken)
         {
-          
+
             var purchaseOrder = await Repository.GetPurchaseOrderById(request.Data.PurchaseOrderId);
 
             if (purchaseOrder == null)
@@ -46,15 +41,16 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                 var purchaseorderItem = await Repository.GetPurchaseOrderItemById(item.PurchaseOrderItemId);
                 if (purchaseorderItem == null)
                 {
-                    purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId, item.Name);
+                    purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId);
+                    purchaseorderItem.Name = item.Name;
                     purchaseorderItem.UnitaryValueCurrency = item.UnitaryValuePurchaseOrderCurrency;
                     purchaseorderItem.Quantity = item.Quantity;
                     await Repository.AddPurchaseorderItem(purchaseorderItem);
                     if (purchaseOrder.IsAlteration)
                     {
-                        var purchaseordertaxestem = purchaseOrder.AddPurchaseOrderItemForAlteration(item.BudgetItemId,
-                   $"{request.Data.PONumber} Tax {item.BudgetItemName} {purchaseOrder.MWO.PercentageTaxForAlterations}%");
-                        purchaseordertaxestem.UnitaryValueCurrency = purchaseOrder.MWO.PercentageTaxForAlterations / 100.0 * item.TotalValuePurchaseOrderCurrency;
+                        var purchaseordertaxestem = purchaseOrder.AddPurchaseOrderItemForAlteration(item.BudgetItemId);
+                        purchaseordertaxestem.Name = $"{request.Data.PONumber} Tax {item.BudgetItemName} {purchaseOrder.MWO.PercentageTaxForAlterations}%";
+                        purchaseordertaxestem.UnitaryValueCurrency = purchaseOrder.MWO.PercentageTaxForAlterations / 100.0 * item.PurchaseOrderValuePurchaseOrderCurrency;
                         purchaseordertaxestem.Quantity = 1;
 
                         await Repository.AddPurchaseorderItem(purchaseordertaxestem);
@@ -74,7 +70,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
 
             }
             var sumPOValueCurrency = request.Data.PurchaseOrderItemNoBlank.Count == 0 ? 0 :
-                  request.Data.PurchaseOrderItemNoBlank.Sum(x => x.TotalValuePurchaseOrderCurrency);
+                  request.Data.PurchaseOrderItemNoBlank.Sum(x => x.PurchaseOrderValuePurchaseOrderCurrency);
 
             if (purchaseOrder.IsAlteration)
             {
@@ -83,7 +79,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                     var alterationsitem = await Repository.GetPurchaseOrderItemsAlterationsById(purchaseOrder.Id, row.BudgetItemId);
                     if (alterationsitem != null)
                     {
-                        var currencyvalue= row.TotalValuePurchaseOrderCurrency * purchaseOrder.MWO.PercentageTaxForAlterations / 100;
+                        var currencyvalue = row.PurchaseOrderValuePurchaseOrderCurrency * purchaseOrder.MWO.PercentageTaxForAlterations / 100;
                         alterationsitem.UnitaryValueCurrency = currencyvalue;
                         alterationsitem.Quantity = 1;
                         await Repository.UpdatePurchaseOrderItem(alterationsitem);

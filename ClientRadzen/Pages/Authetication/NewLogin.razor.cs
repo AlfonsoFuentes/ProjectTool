@@ -1,5 +1,6 @@
 ﻿using Blazored.FluentValidation;
 using Client.Infrastructure.Managers.UserManagement;
+using Client.Infrastructure.Managers.VersionSoftwares;
 using Microsoft.AspNetCore.Components;
 using Shared.Models.UserAccounts.Logins;
 using Shared.Models.UserAccounts.Registers;
@@ -14,7 +15,8 @@ namespace ClientRadzen.Pages.Authetication
        
         [Inject]
         public IAuthenticationService AuthenticationService { get; set; }
-
+        [Inject]
+        private INewSoftwareVersionService VersionSoftwareService { get; set; }
         protected override void OnInitialized()
         {
         
@@ -39,7 +41,7 @@ namespace ClientRadzen.Pages.Authetication
             var result = await AuthenticationService.Login(model);
             if (result.IsAuthSuccessful)
             {
-               
+                var resultVersion = await VersionSoftwareService.CheckVersionForUser(result);
                 _NavigationManager.NavigateTo("/");
             }
 

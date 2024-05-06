@@ -9,8 +9,9 @@ namespace ClientRadzen.Pages.Authetication
     {
         [CascadingParameter]
         public App MainApp { get; set; }
-        [Inject]
-        public IAuthenticationService Service { get; set; }
+        [CascadingParameter]
+        public MainUserVersionManagement MainPage { get; set; }
+        IAuthenticationService Service => MainPage.AuthService;
         UserResponseList Response = new();
         string nameFilter = string.Empty;
         IQueryable<UserResponse> FilteredItems => Response.Users?.Where(x => x.Email.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)).AsQueryable();

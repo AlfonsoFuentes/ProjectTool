@@ -1,5 +1,5 @@
-﻿using Shared.Models.Currencies;
-using Shared.Models.PurchaseorderStatus;
+﻿using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
 
 namespace Shared.Models.PurchaseOrders.Responses
 {

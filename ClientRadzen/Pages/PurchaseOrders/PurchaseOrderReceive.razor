@@ -1,5 +1,5 @@
-﻿@using Shared.Models.PurchaseOrders.Responses
-@using Shared.Models.PurchaseorderStatus
+﻿
+
 <RadzenStack Orientation="Orientation.Vertical">
 
     <RadzenRow>
@@ -26,7 +26,7 @@
                                         <RowTemplateData Label="Account" Value="@product.AccountAssigment"></RowTemplateData>
                                         <RowTemplateData Label="Status" Value="@product.PurchaseOrderStatus.Name"></RowTemplateData>
                                     </RadzenColumn>
-                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" class="rz-p-1">
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" class="rz-p-1" >
 
                                         <RowTemplateData Label="PR#" Value="@product.PurchaseRequisition"></RowTemplateData>
                                         <RowTemplateData Label="PO#" Value="@product.PurchaseOrderNumber"></RowTemplateData>
@@ -38,13 +38,14 @@
 
                                         <RowTemplateCurrency Label="PO Value, USD" Value="@product.ApprovedUSD"></RowTemplateCurrency>
                                         <RowTemplateCurrency Label="Actual, USD" Value="@product.ActualUSD"></RowTemplateCurrency>
-                                        <RowTemplateCurrency Label="Pending, USD" Value="@product.PendingToReceiveUSD"></RowTemplateCurrency>
+                                        <RowTemplateCurrency Label="Pending, USD" Value="@product.CommitmentUSD"></RowTemplateCurrency>
 
                                     </RadzenColumn>
                                     <RadzenColumn Size="12" SizeMD="6" SizeLG="3" class="rz-p-1">
                                         <RowTemplateData Label="Created On" Value="@product.CreatedOn"></RowTemplateData>
 
-                                        <RowTemplateData Label="Expected On" Value="@product.ExpectedOn"></RowTemplateData>
+                                        <RowTemplateData Label="Expected On" Value="@product.ExpectedOn"
+                                                         Style="@(product.DueDate?"color:red":"")"></RowTemplateData>
                                         
 
                                     </RadzenColumn>

@@ -23,7 +23,11 @@ namespace ClientRadzen.Pages.MWOPages
                 Model = result.Data;
                
             }
-
+  
+            if(string.IsNullOrEmpty(Model.MWONumber))
+            {
+                NotValidated = true;
+            }
         }
       
         public async Task SaveAsync()
@@ -54,6 +58,8 @@ namespace ClientRadzen.Pages.MWOPages
             try
             {
                 NotValidated = !(await _fluentValidationValidator.ValidateAsync());
+
+           
                 return NotValidated;
             }
             catch (Exception ex)
@@ -63,7 +69,7 @@ namespace ClientRadzen.Pages.MWOPages
             return false;
 
         }
-        bool NotValidated = true;
+        bool NotValidated = false;
 
        
         public async Task ChangeMWONumber(string _mwonumber)

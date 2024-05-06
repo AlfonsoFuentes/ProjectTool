@@ -1,4 +1,4 @@
-﻿using Shared.Models.MWOTypes;
+﻿using Shared.Enums.MWOTypes;
 
 namespace Shared.Models.MWO
 {

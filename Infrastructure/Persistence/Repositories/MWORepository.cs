@@ -1,12 +1,4 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using Infrastructure.Services;
-using Microsoft.EntityFrameworkCore;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.MWOStatus;
-using System.Diagnostics;
-using System.Linq.Expressions;
+﻿
 
 namespace Infrastructure.Persistence.Repositories
 {
@@ -31,6 +23,10 @@ namespace Infrastructure.Persistence.Repositories
         {
 
             return await Context.MWOs.AnyAsync(x => x.Name.ToLower() == name.ToLower());
+        }
+        public async Task<bool> ReviewIfNumberExist(Guid MWOId, string cecNumber)
+        {
+            return await Context.MWOs.Where(x => x.Id != MWOId).AnyAsync(x => x.MWONumber.ToLower() == cecNumber.ToLower());
         }
         public async Task<bool> ReviewIfNameExist(Guid Id, string name)
         {
@@ -67,10 +63,7 @@ namespace Infrastructure.Persistence.Repositories
                 ;
             return result!;
         }
-        public async Task<bool> ReviewIfNumberExist(string cecNumber)
-        {
-            return await Context.MWOs.AnyAsync(x => x.MWONumber == cecNumber);
-        }
+       
         public async Task<MWO> GetMWOWithItemsById(Guid id)
         {
             return (await Context.MWOs

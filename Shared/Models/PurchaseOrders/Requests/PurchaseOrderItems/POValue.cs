@@ -1,4 +1,4 @@
-﻿using Shared.Models.Currencies;
+﻿using Shared.Enums.Currencies;
 using System;
 using System.Collections.Generic;
 using System.Linq;

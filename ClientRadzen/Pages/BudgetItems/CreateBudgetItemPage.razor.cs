@@ -2,12 +2,11 @@
 using Blazored.FluentValidation;
 using Client.Infrastructure.Managers.Brands;
 using Client.Infrastructure.Managers.BudgetItems;
-using ClientRadzen.Pages.Brands;
+using ClientRadzen.NewPages.Brands;
 using Microsoft.AspNetCore.Components;
 using Radzen;
-using Shared.Models.Brands;
 using Shared.Models.BudgetItems;
-using System.ComponentModel.DataAnnotations;
+using Shared.NewModels.Brands.Reponses;
 
 namespace ClientRadzen.Pages.BudgetItems
 {
@@ -24,11 +23,11 @@ namespace ClientRadzen.Pages.BudgetItems
         [Inject]
         private IBudgetItemService Service { get; set; } = null!;
         [Inject]
-        private IBrandService BrandService { get; set; }
+        private INewBrandService BrandService { get; set; }
 
         ListBudgetItemResponse Response { get; set; } = new();
 
-        List<BrandResponse> Brands { get; set; } = new();
+        List<NewBrandResponse> Brands { get; set; } = new();
 
       
 
@@ -45,7 +44,7 @@ namespace ClientRadzen.Pages.BudgetItems
             var resultbrands = await BrandService.GetAllBrand();
             if (resultbrands.Succeeded)
             {
-                Brands = resultbrands.Data;
+                Brands = resultbrands.Data.Brands;
             }
            
         }
@@ -70,16 +69,16 @@ namespace ClientRadzen.Pages.BudgetItems
        
         async Task CreateBrand()
         {
-            var result = await DialogService.OpenAsync<CreateBrandDialog>($"Create New Brand",
+            var result = await DialogService.OpenAsync<NewCreateBrandDialog>($"Create New Brand",
                 new Dictionary<string, object>() { },
                 new DialogOptions() { Width = "500px", Height = "312px", Resizable = true, Draggable = true });
-            if (result != null && result is BrandResponse)
+            if (result != null && result is NewBrandResponse)
             {
-                Model.Brand = result as BrandResponse;
+                Model.Brand = result as NewBrandResponse;
                 var resultData = await BrandService.GetAllBrand();
                 if (resultData.Succeeded)
                 {
-                    Brands = resultData.Data;
+                    Brands = resultData.Data.Brands;
 
                 }
 

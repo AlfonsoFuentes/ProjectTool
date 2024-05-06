@@ -1,0 +1,111 @@
+﻿<RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" class="rz-mt-4"
+                AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterPopupRenderMode="PopupRenderMode.OnDemand"
+                Data="@PurchaseOrders" TItem="NewPurchaseOrderResponse" ColumnWidth="300px"
+                LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+    <Columns>
+        <RadzenDataGridColumn TItem="NewPurchaseOrderResponse"
+                              Property="@nameof(NewPurchaseOrderResponse.PurchaseorderName)"
+                              Title="Name" Width="150px" TextAlign="TextAlign.Left" />
+        <RadzenDataGridColumn TItem="NewPurchaseOrderResponse"
+                              Title="Status" Width="70px" TextAlign="TextAlign.Left">
+            <Template Context="detail">
+                @detail.PurchaseOrderStatus.Name
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewPurchaseOrderResponse"
+                              Property="@nameof(NewPurchaseOrderResponse.PurchaseRequisition)" Visible=@(View== Enums.PurchaseorderView.Potential )
+                              Title="PR" Width="100px" TextAlign="TextAlign.Left" />
+        <RadzenDataGridColumn TItem="NewPurchaseOrderResponse"
+                              Property="@nameof(NewPurchaseOrderResponse.PurchaseOrderNumber)" Visible=@(View!= Enums.PurchaseorderView.Potential )
+                              Title="PO Number" Width="100px" TextAlign="TextAlign.Left" />
+        <RadzenDataGridColumn TItem="NewPurchaseOrderResponse"
+                             
+                              Title="Supplier" Width="100px" TextAlign="TextAlign.Left">
+            <Template Context="detail">
+                @detail.SupplierNickName
+
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewPurchaseOrderResponse"
+                              Property="@nameof(NewPurchaseOrderResponse.AssignedUSD)" Visible=@(View== Enums.PurchaseorderView.Potential )
+                              Title="Value, USD" Width="100px" TextAlign="TextAlign.Left">
+            <Template Context="detail">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.AssignedUSD)}")
+            </Template>
+            <FooterTemplate>
+                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MWOEBPResponse.AssignedUSD)}")</b>
+
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewPurchaseOrderResponse"
+                              Property="@nameof(NewPurchaseOrderResponse.ActualUSD)" Visible=@(View== Enums.PurchaseorderView.Actual )
+                              Title="Value, USD" Width="100px" TextAlign="TextAlign.Left">
+            <Template Context="detail">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.ActualUSD)}")
+            </Template>
+            <FooterTemplate>
+                <b>   @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MWOEBPResponse.ActualUSD)}")</b>
+
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewPurchaseOrderResponse"
+                              Property="@nameof(NewPurchaseOrderResponse.CommitmentUSD)" Visible=@(View== Enums.PurchaseorderView.Commitment )
+                              Title="Value, USD" Width="100px" TextAlign="TextAlign.Left">
+            <Template Context="detail">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.CommitmentUSD)}")
+            </Template>
+            <FooterTemplate>
+                <b>   @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MWOEBPResponse.CommitmentUSD)}")</b>
+
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="NewPurchaseOrderResponse"
+                              Title="Actions" Width="100px" TextAlign="TextAlign.Left">
+            <Template Context="order">
+
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="edit" Variant="Variant.Flat" Shade="Shade.Lighter"
+                              Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
+                              Click="@(args => EditPurchaseOrder(order.PurchaseOrderId,order.IsTaxEditable,order.IsCapitalizedSalary,order.PurchaseOrderStatus))" @onclick:stopPropagation="true"
+                              MouseEnter="@(args => MainApp.ShowTooltip(args,$"{order.LabelAction}", TooltipPosition.Left))">
+                </RadzenButton>
+
+
+                @if (order.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id)
+                {
+
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="done_outline" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                  Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
+                                  Click="@(args => ApprovedPurchaseOrder(order.PurchaseOrderId))" @onclick:stopPropagation="true"
+                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Approve {order.PurchaseRequisition}", TooltipPosition.Left))">
+                    </RadzenButton>
+
+                }
+                else if (order.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Approved.Id ||
+                order.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Receiving.Id)
+                {
+
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="shopping_bag" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                  Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
+                                  Click="@(args => ReceivePurchaseOrder(order.PurchaseOrderId))" @onclick:stopPropagation="true"
+                                  MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Receive {order.PurchaseOrderNumber}", TooltipPosition.Left))">
+                    </RadzenButton>
+                }
+                else
+                {
+
+                }
+                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
+                              MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete purchase order {order.PurchaseOrderNumber}",TooltipPosition.Left) )"
+                              class="rz-mr-1" Click="@(()=>RemovePurchaseorder(order.PurchaseOrderId,order.PurchaseOrderNumber))" />
+            </Template>
+        </RadzenDataGridColumn>
+
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+
+}

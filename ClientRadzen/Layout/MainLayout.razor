@@ -15,7 +15,7 @@
                                       MouseEnter="@(args => ShowTooltip(args,$"Go to Users") )" />
                     </Authorized>
                 </AuthorizeView>
-                <AuthorizeView Roles="Viewer">
+                <AuthorizeView >
                     <Authorized>
                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent=JustifyContent.Start class="m-2 ms-lg-5">
                             <RadzenButton Icon="home" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Medium" Click="@(()=>GoToHome())"
@@ -57,11 +57,11 @@
     }
     private void GoToBrands()
     {
-        _NavigationManager.NavigateTo("/BrandDatalist");
+        _NavigationManager.NavigateTo($"/{PageName.Brand.Main}");
     }
     private void GoToSupplier()
     {
-        _NavigationManager.NavigateTo("/SupplierDatalist");
+        _NavigationManager.NavigateTo($"/{PageName.Supplier.Main}");
     }
     private void GoToUsers()
     {

@@ -1,14 +1,16 @@
 ﻿#nullable disable
-using Azure;
-using Client.Infrastructure.Managers.PurchaseOrders;
-using Microsoft.AspNetCore.Components;
 using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
 
 namespace ClientRadzen.Pages.PurchaseOrders
 {
     public partial class PurchaseOrderDataMain
     {
+        [CascadingParameter]
+        public App MainApp { get; set; }
+        void ChangeIndex(int index)
+        {
+            MainApp.TabIndexPurchaseOrder = index;
+        }
         [Inject]
         public IPurchaseOrderService Service { get; set; } = null!;
 

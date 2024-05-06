@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface ISapAdjustRepository:IRepository
+    public interface ISapAdjustRepository
     {
         Task AddSapAdAjust(SapAdjust sapAdjust);
         Task UpdateSapAdjust(SapAdjust sapAdjust);

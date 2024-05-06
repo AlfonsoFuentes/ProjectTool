@@ -1,0 +1,37 @@
+﻿@page "/MWOApproved/{MWOId:guid}"
+@using ClientRadzen.Pages.MWOPages.Templates
+<RadzenStack Orientation="Orientation.Vertical">
+    @if (Response != null)
+    {
+        <CascadingValue Value="this">
+            <TemplateHeaderMWOApproved Response="@Response"></TemplateHeaderMWOApproved>
+
+            <RadzenTabs @bind-SelectedIndex=@MainApp.TabIndexMWOApproved TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" Change="ChangeIndex">
+                <Tabs>
+                    <RadzenTabsItem Text="Table">
+                        <TemplateMWOApprovedDataGrid Response="@Response"></TemplateMWOApprovedDataGrid>
+                    </RadzenTabsItem>
+                    <RadzenTabsItem Text="Cards">
+                        <TemplateMWOApprovedDataList Response="@Response"></TemplateMWOApprovedDataList>
+                    </RadzenTabsItem>
+                   
+                    <RadzenTabsItem Text="EBP">
+                        <MWOEBPReport MWOEBPResponse="@MWOEBPResponse"></MWOEBPReport>
+                    </RadzenTabsItem>
+                </Tabs>
+            </RadzenTabs>
+        </CascadingValue>
+    }
+
+</RadzenStack>
+
+
+
+
+@code {
+
+    void ChangeIndex(int index)
+    {
+        MainApp.TabIndexMWOApproved = index;
+    }
+}

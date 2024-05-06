@@ -1,8 +1,5 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
+﻿using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Creates
 {
@@ -34,17 +31,17 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Approved.Id;
             purchaseorder.PONumber = request.Data.PONumber;
             purchaseorder.POExpectedDateDate = request.Data.ExpectedDate!.Value;
-
+            purchaseorder.USDCOP=request.Data.USDCOP;
+            purchaseorder.USDEUR=request.Data.USDEUR;
             if (request.Data.IsMWONoProductive && !request.Data.IsAlteration)
             {
                 var TaxBudgetitem = await Repository.GetTaxBudgetItemNoProductive(purchaseorder.MWOId);
                 if (TaxBudgetitem != null)
                 {
-                    //var sumPOValueCurrency = purchaseorder.POValueCurrency;
-
-                    var purchaseordertaxestem = purchaseorder.AddPurchaseOrderItemForNoProductiveTax(TaxBudgetitem.Id,
-                            $"{request.Data.PONumber} Tax {TaxBudgetitem.Percentage}%");
-                    //purchaseordertaxestem.UnitaryValueCurrency = TaxBudgetitem.Percentage / 100.0 * sumPOValueCurrency;
+                  
+                    var purchaseordertaxestem = purchaseorder.AddPurchaseOrderItemForNoProductiveTax(TaxBudgetitem.Id);
+                    purchaseordertaxestem.Name = $"{request.Data.PONumber} Tax {TaxBudgetitem.Percentage}%";
+                purchaseordertaxestem.UnitaryValueCurrency = TaxBudgetitem.Percentage / 100.0 * purchaseorder.QuoteValueCurrency;
                     purchaseordertaxestem.Quantity = 1;
                     await Repository.AddPurchaseorderItem(purchaseordertaxestem);
 

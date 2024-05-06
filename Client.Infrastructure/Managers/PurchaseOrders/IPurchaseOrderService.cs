@@ -1,13 +1,8 @@
-﻿using Azure.Core;
-using Shared.Models.PurchaseOrders.Requests;
-using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
-using Shared.Models.PurchaseOrders.Requests.Taxes;
-using Shared.Models.PurchaseOrders.Responses;
+﻿using static Client.Infrastructure.Managers.PurchaseOrders.PurchaseOrderService;
 
 namespace Client.Infrastructure.Managers.PurchaseOrders
 {
+
     public interface IPurchaseOrderService : IManager
     {
         Task<IResult> ReceivePurchaseOrder(ReceiveRegularPurchaseOrderRequest request);
@@ -15,7 +10,7 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         Task<IResult> ApprovePurchaseOrderForAlteration(ApprovedRegularPurchaseOrderRequest request);
         Task<IResult> EditPurchaseOrderCreated(EditPurchaseOrderRegularCreatedRequest request);
 
-       
+
         Task<IResult> EditPurchaseOrderApproved(EditPurchaseOrderRegularApprovedRequest request);
         Task<IResult> EditPurchaseOrderClosed(EditPurchaseOrderRegularClosedRequest request);
         Task<IResult> EditPurchaseOrderTax(EditTaxPurchaseOrderRequest request);
@@ -24,9 +19,9 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         Task<IResult> CreatePurchaseOrderCapitalizedSalary(CreateCapitalizedSalaryPurchaseOrderRequest request);
         Task<IResult> CreateTaxPurchaseOrder(CreateTaxPurchaseOrderRequest request);
         Task<IResult<BudgetItemsListForPurchaseordersResponse>> GetBudgetItemsToCreatePurchaseOrder(Guid BudgetItemId);
-       
+
         Task<IResult<NewPurchaseOrdersListResponse>> GetAllPurchaseOrders();
-       
+
         Task<IResult<ApprovedRegularPurchaseOrderRequest>> GetPurchaseOrderToApproveById(Guid PurchaseOrderId);
         Task<IResult<ReceiveRegularPurchaseOrderRequest>> GetPurchaseOrderToReceiveById(Guid PurchaseOrderId);
 
@@ -42,11 +37,11 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
     public class PurchaseOrderService : IPurchaseOrderService
     {
         private HttpClient Http;
-  
+
         public PurchaseOrderService(IHttpClientFactory httpClientFactory)
         {
             Http = httpClientFactory.CreateClient("Auth");
-       
+
         }
         public async Task<IResult<BudgetItemsListForPurchaseordersResponse>> GetBudgetItemsToCreatePurchaseOrder(Guid BudgetItemId)
         {
@@ -55,8 +50,8 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         }
         public async Task<IResult> CreateRegularPurchaseOrder(CreatedRegularPurchaseOrderRequest request)
         {
-            
-            
+
+
             var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/CreateRegularPurchaseOrder", request);
             return await httpresult.ToResult();
         }
@@ -80,29 +75,29 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
 
         public async Task<IResult> EditPurchaseOrderCreated(EditPurchaseOrderRegularCreatedRequest request)
         {
-            
+
             var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderCreated", request);
             return await httpresult.ToResult();
         }
 
-       
+
 
         public async Task<IResult> ApproveRegularPurchaseOrder(ApprovedRegularPurchaseOrderRequest request)
         {
-            
+
 
             var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/ApproveRegularPurchaseOrder", request);
             return await httpresult.ToResult();
         }
         public async Task<IResult> ApprovePurchaseOrderForAlteration(ApprovedRegularPurchaseOrderRequest request)
         {
-            
+
             var httpresultAlteration = await Http.PostAsJsonAsync($"PurchaseOrder/ApprovePurchaseOrderForAlteration", request);
             return await httpresultAlteration.ToResult();
         }
         public async Task<IResult> EditPurchaseOrderApproved(EditPurchaseOrderRegularApprovedRequest request)
         {
-            
+
             var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderApproved", request);
             return await httpresult.ToResult();
         }
@@ -115,8 +110,8 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
 
         public async Task<IResult> ReceivePurchaseOrder(ReceiveRegularPurchaseOrderRequest request)
         {
-            
-            
+
+
             var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/ReceivePurchaseOrder", request);
             return await httpresult.ToResult();
         }
@@ -139,17 +134,17 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         }
         public async Task<IResult> EditPurchaseOrderClosed(EditPurchaseOrderRegularClosedRequest request)
         {
-            
+
             var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderClosed", request);
             return await httpresult.ToResult();
         }
 
-      
+
 
         public async Task<IResult> CreatePurchaseOrderCapitalizedSalary(CreateCapitalizedSalaryPurchaseOrderRequest request)
         {
-            
-            
+
+
             var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/CreatePurchaseOrderCapitalizedSalary", request);
             return await httpresult.ToResult();
         }
@@ -174,7 +169,7 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
 
         public async Task<IResult> EditPurchaseOrderCapitalizedSalary(EditCapitalizedSalaryPurchaseOrderRequest request)
         {
-            
+
             var httpresult = await Http.PostAsJsonAsync($"PurchaseOrder/EditPurchaseOrderCapitalizedSalary", request);
             return await httpresult.ToResult();
         }

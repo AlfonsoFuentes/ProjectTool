@@ -1,11 +1,4 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItemTypes;
-using System.Runtime.InteropServices;
-using System.Threading;
+﻿
 
 namespace Infrastructure.Persistence.Repositories
 {
@@ -272,8 +265,8 @@ namespace Infrastructure.Persistence.Repositories
 
             foreach (var item in engContItems)
             {
-
-                item.Budget = sumBudget * item.Percentage / (100 - sumPercEngCont);
+                item.UnitaryCost= sumBudget * item.Percentage / (100 - sumPercEngCont);
+                item.Quantity = 1; 
                 await UpdateBudgetItem(item);
             }
 
@@ -290,7 +283,9 @@ namespace Infrastructure.Persistence.Repositories
             foreach (var item in allItemsTaxes)
             {
                 var sumbudgetTaxesSelectedItems = item.TaxesItems.Sum(x => x.Selected.Budget);
-                item.Budget = item.Percentage / 100 * sumbudgetTaxesSelectedItems;
+                item.UnitaryCost = item.Percentage / 100 * sumbudgetTaxesSelectedItems;
+                item.Quantity = 1;
+                
                 await UpdateBudgetItem(item);
             }
 

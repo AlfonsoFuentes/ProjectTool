@@ -1,15 +1,8 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.CostCenter;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.CostCenter;
+using Shared.Enums.MWOStatus;
+using Shared.Enums.MWOTypes;
 using Shared.Models.MWO;
-using Shared.Models.MWOStatus;
-using Shared.Models.MWOTypes;
-using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.MWOs.Queries
 {
@@ -41,7 +34,7 @@ namespace Application.Features.MWOs.Queries
                 IsAssetProductive = mwo.IsAssetProductive,
                 PercentageAssetNoProductive = mwo.PercentageAssetNoProductive,
                 PercentageContingency = mwo.PercentageContingency,
-                PercentageEngineering = mwo.PercentageEngineering,
+                PercentageEngineering = mwo.PercentageCapitalizedSalary,
 
 
                 CECName = $"CEC0000{mwo.MWONumber}",
@@ -87,7 +80,8 @@ namespace Application.Features.MWOs.Queries
                     Percentage = budgetitem.Percentage,
                     
                 };
-                foreach (var purchaseorderitem in budgetitem.PurchaseOrderItems)
+                var purchaseorderitems = budgetitem.PurchaseOrderItems.Where(x => !x.IsTaxAlteration);
+                foreach (var purchaseorderitem in purchaseorderitems)
                 {
                     NewPurchaseOrderItemResponse purchaseorderiten = new();
                     purchaseorderiten.BudgetItemId = budgetitem.Id;
@@ -106,7 +100,7 @@ namespace Application.Features.MWOs.Queries
                     purchaseorderiten.PurchaseOrderNumber = purchaseorderitem.PurchaseOrderNumber;
                     purchaseorderiten.Supplier = purchaseorderitem.Supplier;
                     purchaseorderiten.PurchaseRequisition = purchaseorderitem.PurchaseRequisition;
-                    purchaseorderiten.ExpectedOn = purchaseorderitem.ExpectedDateDate;
+                    purchaseorderiten.ExpectedOn = purchaseorderitem.POExpectedDate;
                     purchaseorderiten.IsTaxEditable = purchaseorderitem.IsTaxEditable;
                     purchaseorderiten.IsCapitalizedSalary = purchaseorderitem.IsCapitalizedSalary;
                     budgetitemdto.PurchaseOrderItems.Add(purchaseorderiten);

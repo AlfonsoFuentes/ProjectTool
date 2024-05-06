@@ -1,9 +1,9 @@
-﻿using Shared.Models.BudgetItems;
-using Shared.Models.Currencies;
+﻿using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
+using Shared.Models.BudgetItems;
 using Shared.Models.MWO;
 using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
-using Shared.Models.PurchaseorderStatus;
-using Shared.Models.Suppliers;
+
 
 namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits
 {

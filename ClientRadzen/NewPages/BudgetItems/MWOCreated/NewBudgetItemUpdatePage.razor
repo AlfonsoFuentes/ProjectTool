@@ -1,0 +1,416 @@
+﻿@page "/NewUpdateBudgetItem/{BudgetItemId:guid}"
+
+
+<PageTitle>Create New BudgetItem</PageTitle>
+
+<RadzenStack Orientation="Orientation.Vertical">
+    <RadzenRow>
+        <RadzenText TextStyle="TextStyle.DisplayH5" Text="@($"Create new item in MWO: {MWOResponse.Name}")"></RadzenText>
+    </RadzenRow>
+    <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
+        <FluentValidationValidator @ref="_fluentValidationValidator" />
+        <RadzenRow>
+            <RadzenColumn SizeXS="8" SizeSM="4">
+                <RadzenFormField Text="Type" Style="width: 100%;">
+                    <RadzenDropDown @bind-Value=@Model.Type Data=@BudgetItemTypeEnum.ListForCreateItem Style="width: 100%;"
+                                    Disabled=@(Model.Type != BudgetItemTypeEnum.None)
+                                    AllowClear=true
+                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
+                                    AllowFiltering="true"
+                                    Name="type" TextProperty="Name"
+                                    TValue="BudgetItemTypeEnum" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+        <CascadingValue Value="_fluentValidationValidator">
+            @if (Model.IsAlteration)
+            {
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Name" Style="width: 100%;">
+                            <RadzenTextArea @bind-Value=@Model.Name class="w-100" Rows="2"
+                                            @oninput=@(args =>ChangeName(args.Value!.ToString()!)) Name="name" />
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                    </RadzenColumn>
+
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Quantity" Style="width: 100%;">
+                            <RadzenNumeric @bind-Value=@Model.Quantity class="w-100" TValue=double ShowUpDown=false
+                                           InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                           Name="Quantity" @oninput=@(args =>ChangeQuantityAlterationEquipment(args.Value!.ToString()!)) />
+
+                        </RadzenFormField>
+                    </RadzenColumn>
+
+
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Unitary Cost, USD" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown="false" @bind-Value=@Model.UnitaryCost class="w-100" TValue=double
+                                           InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                           Name="UnitaryCost" @oninput=@(args =>ChangeUnitaryCostAlterationEquipment(args.Value!.ToString()!)) />
+
+                        </RadzenFormField>
+                    </RadzenColumn>
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+
+                        <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                            <RadzenText class="rz-p-2"> @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.Budget)}")</RadzenText>
+
+
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Budget" style="color:red; font-size:x-small;" />
+                    </RadzenColumn>
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenStack Orientation="Orientation.Horizontal" class="rz-mt-2">
+                        <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Disabled=@NotValidated Click="SaveAsync"
+                                      MouseEnter="@(args => MainApp.ShowTooltip(args,$"{ButtonSaveName}",TooltipPosition.Top) )">@ButtonSaveName</RadzenButton>
+                            <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync"
+                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
+                        </RadzenStack>
+
+                    </RadzenRow>
+            }
+            else if (Model.IsEquipmentData)
+            {
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Name" Style="width: 100%;">
+                            <RadzenTextArea @bind-Value=@Model.Name class="w-100" Rows="2"
+                                            @oninput=@(args =>ChangeName(args.Value!.ToString()!)) Name="name" />
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                    </RadzenColumn>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenStack Orientation="Orientation.Horizontal">
+                            <RadzenColumn Size="12" SizeLG="7">
+                                <RadzenFormField Text="Brand" Style="width: 100%;">
+                                    <RadzenDropDown @bind-Value=@Model.Brand Data=@Brands Style="width: 100%;"
+                                                    AllowClear=true
+                                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
+                                                    AllowFiltering="true"
+                                                    Name="brand" TextProperty="Name"
+                                                    TValue="NewBrandResponse" />
+                                </RadzenFormField>
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeLG="5">
+                                <RadzenButton Text="Add Brand" Icon="store" Click="CreateBrand" Style="width: 100%;" class="mt-2"></RadzenButton>
+                            </RadzenColumn>
+                        </RadzenStack>
+
+                    </RadzenColumn>
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Quantity" Style="width: 100%;">
+                            <RadzenNumeric @bind-Value=@Model.Quantity class="w-100" TValue=double ShowUpDown=false
+                                           InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                           Name="Quantity" @oninput=@(args =>ChangeQuantityAlterationEquipment(args.Value!.ToString()!)) />
+
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Model" Style="width: 100%;">
+                            <RadzenTextBox @bind-Value=@Model.Model class="w-100" Name="Model" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Unitary Cost, USD" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown="false" @bind-Value=@Model.UnitaryCost class="w-100" TValue=double
+                                           InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                           Name="UnitaryCost" @oninput=@(args =>ChangeUnitaryCostAlterationEquipment(args.Value!.ToString()!)) />
+
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Reference" Style="width: 100%;">
+                            <RadzenTextBox @bind-Value=@Model.Reference class="w-100" Name="Reference" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenLabel Text="Is Existing in Plant?" Component="True" />
+                        <RadzenSwitch @bind-Value=@Model.Existing
+                                      InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})"></RadzenSwitch>
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+
+                        <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                            <RadzenText class="rz-p-2"> @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.Budget)}")</RadzenText>
+
+
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Budget" style="color:red; font-size:x-small;" />
+                    </RadzenColumn>
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenStack Orientation="Orientation.Horizontal" class="rz-mt-2">
+                        <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Disabled=@NotValidated Click="SaveAsync"
+                                      MouseEnter="@(args => MainApp.ShowTooltip(args,$"{ButtonSaveName}",TooltipPosition.Top) )">@ButtonSaveName</RadzenButton>
+                            <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync"
+                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
+                        </RadzenStack>
+
+                    </RadzenRow>
+            }
+            else if (Model.IsTaxesData)
+            {
+
+                @if (Model.IsNotAbleToEditDelete)
+                {
+                    <RadzenRow>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+                            <RadzenFormField Text="Name" Style="width: 100%;">
+                                <RadzenTextArea @bind-Value=@Model.Name class="w-100" Rows="2"
+                                                @oninput=@(args =>ChangeName(args.Value!.ToString()!)) Name="name" />
+                            </RadzenFormField>
+                            <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                        </RadzenColumn>
+
+
+                    </RadzenRow>
+                    <RadzenRow>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+                            <RadzenFormField Text="Percentage" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" Value=@Model.Percentage class="w-100" TValue=double
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="Percentage" @oninput=@(args =>ChangePercentageTaxesNotProductive(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+                            <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" Value=@Model.UnitaryCost class="w-100" TValue=double
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="Percentage" @oninput=@(args =>ChangeUnitaryCostTaxesNotProductive(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow>
+                        <RadzenStack Orientation="Orientation.Horizontal" class="rz-mt-2">
+                            <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Disabled=@NotValidated Click="SaveAsync"
+                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"{ButtonSaveName}",TooltipPosition.Top) )">@ButtonSaveName</RadzenButton>
+                                <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync"
+                                              MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
+                            </RadzenStack>
+
+                        </RadzenRow>
+                }
+                else
+                {
+                    <RadzenRow>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+                            <RadzenFormField Text="Name" Style="width: 100%;">
+                                <RadzenTextArea @bind-Value=@Model.Name class="w-100" Rows="2"
+                                                @oninput=@(args =>ChangeName(args.Value!.ToString()!)) Name="name" />
+                            </RadzenFormField>
+                            <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                            <RadzenFormField Text="Percentage" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" Value=@Model.Percentage class="w-100 rz-p-2" TValue=double
+                                               Max=100 Min=0
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="Percentage" @oninput=@(args =>ChangePercentageAbleToEdit(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+                            <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                                <RadzenText class="rz-p-2"> @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.Budget)}")</RadzenText>
+
+
+                            </RadzenFormField>
+                            <ValidationMessage For="() => Model.Budget" style="color:red; font-size:x-small;" />
+                            <RadzenStack Orientation="Orientation.Horizontal" class="rz-mt-2">
+                                <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Disabled=@NotValidated Click="SaveAsync"
+                                              MouseEnter="@(args => MainApp.ShowTooltip(args,$"{ButtonSaveName}",TooltipPosition.Top) )">@ButtonSaveName</RadzenButton>
+                                    <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync"
+                                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
+                                </RadzenStack>
+                            </RadzenColumn>
+                            <RadzenColumn SizeXS="8" SizeSM="4">
+                                <RadzenText Text="Items to apply taxes" Style="width: 100%;"></RadzenText>
+                                <RadzenListBox AllowFiltering=true @bind-Value=@Model.TaxesSelectedItems Data="@MWOResponse.BudgetItemsForTaxes"
+                                               TextProperty="Name" TValue="List<NewBudgetItemMWOCreatedResponse>"
+                                               Multiple=true AllowClear=true Placeholder="Select items" Style="width: 100%;  height: 200px"
+                                               Change="ChangeTaxesItemList"
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select items" }})" />
+                                @if (Model.TaxesSelectedItems.Count == 0)
+                                {
+                                    <AlertMessage Message="There is no items to apply Taxes"></AlertMessage>
+                                }
+                                else
+                                {
+                                    <RadzenFormField Text="Sum taxes applied, USD" Style="width: 100%;">
+                                        <RadzenNumeric ShowUpDown="false" Value=@Model.TotalTaxesApplied class="w-100" TValue=double
+                                                       Name="Budget" Disabled=true />
+
+                                    </RadzenFormField>
+                                }
+                        </RadzenColumn>
+
+                    </RadzenRow>
+                    <RadzenRow>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+
+
+                        </RadzenColumn>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+
+                        </RadzenColumn>
+                    </RadzenRow>
+                }
+
+
+            }
+            else if (Model.IsEngContData)
+            {
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Name" Style="width: 100%;">
+                            <RadzenTextArea @bind-Value=@Model.Name class="w-100" Rows="2"
+                                            @oninput=@(args =>ChangeName(args.Value!.ToString()!)) Name="name" />
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                    </RadzenColumn>
+
+
+                </RadzenRow>
+                @if (Model.IsNotAbleToEditDelete)
+                {
+                    <RadzenRow>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+                            <RadzenFormField Text="Percentage" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" Value=@Model.Percentage class="w-100" TValue=double
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="Percentage" @oninput=@(args =>ChangePercentageEngineering(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+                            <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" Value=@Model.UnitaryCost class="w-100" TValue=double
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="Percentage" @oninput=@(args =>ChangeUnitaryCostEngineeringNotEditable(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+                }
+                else
+                {
+                    <RadzenRow>
+                        <RadzenColumn SizeXS="8" SizeSM="4">
+                            <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                                <RadzenNumeric ShowUpDown="false" Value=@Model.UnitaryCost class="w-100" TValue=double
+                                               InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                               Name="Percentage" @oninput=@(args =>ChangeUnitaryCostEngineering(args.Value!.ToString()!)) />
+
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+                }
+
+
+                <RadzenRow>
+                    <RadzenStack Orientation="Orientation.Horizontal" class="rz-mt-2">
+                        <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Disabled=@NotValidated Click="SaveAsync"
+                                      MouseEnter="@(args => MainApp.ShowTooltip(args,$"{ButtonSaveName}",TooltipPosition.Top) )">@ButtonSaveName</RadzenButton>
+                            <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync"
+                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
+                        </RadzenStack>
+
+                    </RadzenRow>
+
+            }
+            else if (Model.IsRegularData)
+            {
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Name" Style="width: 100%;">
+                            <RadzenTextArea @bind-Value=@Model.Name class="w-100" Rows="2"
+                                            @oninput=@(args =>ChangeName(args.Value!.ToString()!)) Name="name" />
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+                    </RadzenColumn>
+
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Quantity" Style="width: 100%;">
+                            <RadzenNumeric @bind-Value=@Model.Quantity class="w-100" TValue=double ShowUpDown=false
+                                           InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                           Name="Quantity" @oninput=@(args =>ChangeQuantityAlterationEquipment(args.Value!.ToString()!)) />
+
+                        </RadzenFormField>
+                    </RadzenColumn>
+
+
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+                        <RadzenFormField Text="Unitary Cost, USD" Style="width: 100%;">
+                            <RadzenNumeric ShowUpDown="false" @bind-Value=@Model.UnitaryCost class="w-100" TValue=double
+                                           InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "enter value" }})"
+                                           Name="UnitaryCost" @oninput=@(args =>ChangeUnitaryCostAlterationEquipment(args.Value!.ToString()!)) />
+
+                        </RadzenFormField>
+                    </RadzenColumn>
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeXS="8" SizeSM="4">
+
+                        <RadzenFormField Text="Budget, USD" Style="width: 100%;">
+                            <RadzenText class="rz-p-2"> @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", Model.Budget)}")</RadzenText>
+
+
+                        </RadzenFormField>
+                        <ValidationMessage For="() => Model.Budget" style="color:red; font-size:x-small;" />
+                    </RadzenColumn>
+
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenStack Orientation="Orientation.Horizontal" class="rz-mt-2">
+                        <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Disabled=@NotValidated Click="SaveAsync"
+                                      MouseEnter="@(args => MainApp.ShowTooltip(args,$"{ButtonSaveName}",TooltipPosition.Top) )">@ButtonSaveName</RadzenButton>
+                            <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync"
+                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
+                        </RadzenStack>
+
+                    </RadzenRow>
+            }
+
+        </CascadingValue>
+    </EditForm>
+
+
+</RadzenStack>
+
+@code {
+    public string ButtonSaveName { get; set; } = "Update";
+}

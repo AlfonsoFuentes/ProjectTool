@@ -1,8 +1,4 @@
-﻿using Domain.Entities.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace Infrastructure.Configurations
+﻿namespace Infrastructure.Configurations
 {
     internal class PurchaseOrderConfiguration : IEntityTypeConfiguration<PurchaseOrder>
     {
@@ -15,6 +11,8 @@ namespace Infrastructure.Configurations
             builder.HasMany(c => c.DownPayments).WithOne(t => t.PurchaseOrder).HasForeignKey(e => e.PurchaseOrderId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(c => c.PurchaseOrderItems).WithOne(t => t.PurchaseOrder).HasForeignKey(e => e.PurchaseOrderId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+
+            
         }
 
     }

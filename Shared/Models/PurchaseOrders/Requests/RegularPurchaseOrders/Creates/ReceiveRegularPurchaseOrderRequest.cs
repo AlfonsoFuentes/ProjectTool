@@ -1,9 +1,9 @@
-﻿using Shared.Models.BudgetItems;
-using Shared.Models.Currencies;
+﻿using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
+using Shared.Enums.WayToReceivePurchaseOrdersEnums;
+using Shared.Models.BudgetItems;
 using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
-using Shared.Models.PurchaseorderStatus;
-using Shared.Models.Suppliers;
-using Shared.Models.WayToReceivePurchaseOrdersEnums;
+using Shared.NewModels.Suppliers.Reponses;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
@@ -16,7 +16,7 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
         public Guid PurchaseOrderId { get; set; }
         public string PONumber { get; set; } = string.Empty;
         public string PurchaseorderName { get; set; } = string.Empty;
-        public SupplierResponse? Supplier { get; set; }
+        public NewSupplierResponse? Supplier { get; set; }
         public string SupplierName => Supplier == null ? string.Empty : Supplier.NickName;
         public string VendorCode => Supplier == null ? string.Empty : Supplier.VendorCode;
         public string TaxCode => Supplier == null ? string.Empty : IsAlteration || IsMWONoProductive ? Supplier.TaxCodeLP : Supplier.TaxCodeLD;

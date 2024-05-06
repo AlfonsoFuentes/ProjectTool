@@ -1,15 +1,9 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Account;
-using Infrastructure.Context;
-using Infrastructure.Persistence.Repositories;
-using Infrastructure.Services;
+﻿
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Infrastructure
 {
@@ -55,14 +49,14 @@ namespace Infrastructure
             });
 
             services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
-            services.AddScoped<IBrandRepository, BrandRepository>();
-            services.AddScoped<ISupplierRepository, SupplierRepository>();
+      
             services.AddScoped<IMWORepository, MWORepository>();
             services.AddScoped<IBudgetItemRepository, BudgetItemRepository>();
             services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
             services.AddScoped<IPurchaseOrderValidatorRepository, PurchaseOrderValidatorRepository>();
-     
-          
+            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IQueryRepository, QueryRepository>();
+            services.AddScoped<IQueryValidationsRepository, QueryValidationsRepository>();
             services.AddScoped<ISapAdjustRepository, SapAdjustRepository>();
             services.AddScoped<IExcelService, ExcelService>();
      

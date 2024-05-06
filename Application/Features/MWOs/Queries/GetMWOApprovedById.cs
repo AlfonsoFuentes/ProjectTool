@@ -1,16 +1,10 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.CostCenter;
-using Shared.Models.Currencies;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.CostCenter;
+using Shared.Enums.Currencies;
+using Shared.Enums.MWOStatus;
+using Shared.Enums.MWOTypes;
+using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.MWO;
-using Shared.Models.MWOStatus;
-using Shared.Models.MWOTypes;
-using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
 using System.Linq.Expressions;
 
 namespace Application.Features.MWOs.Queries
@@ -42,7 +36,7 @@ namespace Application.Features.MWOs.Queries
                 IsAssetProductive = mwo.IsAssetProductive,
                 PercentageAssetNoProductive = mwo.PercentageAssetNoProductive,
                 PercentageContingency = mwo!.PercentageContingency,
-                PercentageEngineering = mwo!.PercentageEngineering,
+                PercentageEngineering = mwo!.PercentageCapitalizedSalary,
                 PercentageTaxForAlterations = mwo!.PercentageTaxForAlterations,
                 MWOStatus = MWOStatusEnum.GetType(mwo.Status),
                 MWOType = MWOTypeEnum.GetType(mwo.Type),
@@ -79,9 +73,9 @@ namespace Application.Features.MWOs.Queries
                 {
                     BudgetItemId = x.BudgetItemId,
                     ActualCurrency = x.ActualCurrency,
-                    QuoteUnitaryValueCurrency = x.UnitaryValueCurrency, /*GetQuoteCurrencyValue(x.UnitaryValueCurrency, e.QuoteCurrency, e.Currency,e.USDCOP, e.USDEUR),*/
+                    QuoteUnitaryValueCurrency = x.UnitaryValueCurrency, 
                     Quantity = x.Quantity,
-                    PurchaseOrderCurrency = CurrencyEnum.GetType(e.Currency),
+                    PurchaseOrderCurrency = CurrencyEnum.GetType(e.PurchaseOrderCurrency),
                     QuoteCurrency = CurrencyEnum.GetType(e.QuoteCurrency),
                    
                     PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(e.PurchaseOrderStatus),
@@ -92,15 +86,6 @@ namespace Application.Features.MWOs.Queries
                ).ToList(),
             };
 
-            //mworesponse.PurchaseOrders = purchaseorders.Select(expressionpurchaseorder).ToList();
-            //mworesponse.PurchaseOrders.ForEach(z => 
-            //z.PurchaseOrderItems.ForEach(x => 
-            //x.QuoteUnitaryValueCurrency = 
-            //GetQuoteCurrencyValue(x.QuoteUnitaryValueCurrency, x.QuoteCurrency.Id, x.PurchaseOrderCurrency.Id
-            //, x.USDCOP, x.USDEUR)
-
-
-            //));
             var budgetitems = await Repository.GetBudgetItemsByMWOId(request.MWOId);
             Expression<Func<BudgetItem, BudgetItemApprovedResponse>> expression = e => new BudgetItemApprovedResponse
             {
@@ -113,7 +98,7 @@ namespace Application.Features.MWOs.Queries
                 MWOCECName = mworesponse.CECName,
                 CostCenter = mworesponse.CostCenter,
                 MWOName = mworesponse.Name,
-                Budget = e.Budget,
+                BudgetUSD = e.Budget,
                 CreatedBy = e.CreatedByUserName,
                 CreatedOn = e.CreatedDate.ToString(),
                 IsMainItemTaxesNoProductive = e.IsMainItemTaxesNoProductive,

@@ -1,10 +1,6 @@
-﻿using Domain.Entities.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+
+using Domain.Entities.Account;
 
 namespace Application.Interfaces
 {
@@ -18,9 +14,14 @@ namespace Application.Interfaces
         DbSet<TaxesItem> TaxesItems { get; set; }
         DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
-      
+        DbSet<SoftwareVersion> SoftwareVersions { get; set; }
         DbSet<DownPayment> DownPayments { get; set; }
         DbSet<SapAdjust> SapAdjusts { get; set; }
+        DbSet<UpdatedSoftwareVersion> UpdatedSoftwareVersions { get; set; }
+        
+        DbSet<PurchaseOrderItemReceived> PurchaseOrderItemReceiveds { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        Task<int> SaveChangesAndRemoveCacheAsync(CancellationToken cancellationToken, params string[] cacheKeys);
+        Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> addItemFactory);
     }
 }

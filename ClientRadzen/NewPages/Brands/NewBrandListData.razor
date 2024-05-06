@@ -1,0 +1,41 @@
+﻿<RadzenRow>
+        <RadzenColumn Size="12" SizeLG="12">
+            <RadzenDataList AllowVirtualization=true Style="height:100%;overflow:auto;"
+                            WrapItems="false" AllowPaging="false" Density="Density.Compact"
+                        Data="@BrandMain.FilteredItems" TItem="NewBrandResponse" PageSize="15"
+                            PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+
+                <Template Context="detail">
+
+                    <RadzenRow>
+                        <RadzenColumn Size="12" SizeLG="2">
+                            <RowTemplateTitle Title="@(detail.Name)"></RowTemplateTitle>
+
+
+                        </RadzenColumn>
+
+
+                        <RadzenColumn Size="12" SizeLG="2">
+                            <RadzenStack Orientation="Orientation.Horizontal">
+
+                                <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                                          MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit", TooltipPosition.Top) )" Click="@(()=>BrandMain.Edit(detail))" />
+                                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2"
+                                              MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel", TooltipPosition.Top) )"
+                                          Click="@(()=>BrandMain.Delete(detail))" />
+                            </RadzenStack>
+
+                        </RadzenColumn>
+                    </RadzenRow>
+
+
+                </Template>
+            </RadzenDataList>
+        </RadzenColumn>
+    </RadzenRow>
+
+@code {
+    bool allowVirtualization = true;
+    
+
+}

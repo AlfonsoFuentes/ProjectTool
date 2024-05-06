@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿
 
 namespace Infrastructure.Configurations
 {

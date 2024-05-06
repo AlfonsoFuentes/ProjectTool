@@ -1,7 +1,5 @@
 ﻿using Application.Features.MWOs.Commands;
 using Application.Features.MWOs.Queries;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Shared.Models.MWO;
 
 namespace Server.Controllers.MWOS
@@ -24,7 +22,7 @@ namespace Server.Controllers.MWOS
             return Ok(await Mediator.Send(new CreateMWOCommand(request)));
         }
 
-       
+
         [HttpPost("updateMWO")]
         public async Task<IActionResult> UpdateMWO(UpdateMWORequest request)
         {
@@ -37,7 +35,13 @@ namespace Server.Controllers.MWOS
 
             return Ok(await Mediator.Send(new ApproveMWOCommand(request)));
         }
-        
+        [HttpPost("UnapproveMWO")]
+        public async Task<IActionResult> UnApproveMWO(UnApproveMWORequest request)
+        {
+
+            return Ok(await Mediator.Send(new UnApproveMWOCommand(request)));
+        }
+
         [HttpGet("GetMWOCreated/{Id}")]
         public async Task<IActionResult> GetById(Guid Id)
         {
@@ -48,12 +52,17 @@ namespace Server.Controllers.MWOS
         {
             return Ok(await Mediator.Send(new GetMWOToUpdateByIdQuery(Id)));
         }
+        [HttpGet("GetMWOEBPReport/{Id}")]
+        public async Task<IActionResult> GetMWOEBPReport(Guid Id)
+        {
+            return Ok(await Mediator.Send(new GetMWOEBPById(Id)));
+        }
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await Mediator.Send(new GetAllMWOResponseQuery()));
         }
-       
+
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete(MWOCreatedResponse request)
         {

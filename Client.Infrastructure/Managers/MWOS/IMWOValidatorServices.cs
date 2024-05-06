@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Client.Infrastructure.Managers.MWOS
+﻿namespace Client.Infrastructure.Managers.MWOS
 {
     public interface IMWOValidatorService : IManager
     {
         Task<bool> ValidateMWONameExist(string mwoname);
         Task<bool> ValidateMWONameExist(Guid MWOId, string mwoname);
-        Task<bool> ValidateMWONumberExist(string mwonumber);
+        Task<bool> ValidateMWONumberExist(Guid MWOId, string mwonumber);
     }
     public class MWOValidatorService : IMWOValidatorService
     {
@@ -20,9 +14,9 @@ namespace Client.Infrastructure.Managers.MWOS
             Http = httpClientFactory.CreateClient("Auth");
         }
 
-        public async Task<bool> ValidateMWONumberExist(string mwonumber)
+        public async Task<bool> ValidateMWONumberExist(Guid MWOId, string mwonumber)
         {
-            var httpresult = await Http.GetAsync($"MWOValidator/ValidateMWONumberExist/{mwonumber}");
+            var httpresult = await Http.GetAsync($"MWOValidator/ValidateMWONumberExist/{MWOId}/{mwonumber}");
             return await httpresult.ToObject<bool>();
         }
         public async Task<bool> ValidateMWONameExist(string mwoname)

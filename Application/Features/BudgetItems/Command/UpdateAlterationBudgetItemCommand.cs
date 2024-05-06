@@ -24,14 +24,14 @@ namespace Application.Features.BudgetItems.Command
             var row = await Repository.GetBudgetItemById(request.Data.Id);
             row.Name = request.Data.Name;
             row.UnitaryCost = request.Data.UnitaryCost;
-            row.Budget = request.Data.UnitaryCost * request.Data.Quantity;
+     
             row.Quantity = request.Data.Quantity;
 
 
 
             await Repository.UpdateBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            //await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
+           
 
             if (result > 0)
             {

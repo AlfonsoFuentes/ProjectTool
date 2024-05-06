@@ -3,9 +3,9 @@ using Client.Infrastructure.Managers.PurchaseOrders;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Radzen;
+using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.BudgetItems;
 using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
 #nullable disable
 namespace ClientRadzen.Pages.PurchaseOrders
 {
@@ -56,10 +56,6 @@ namespace ClientRadzen.Pages.PurchaseOrders
 
             _NavigationManager.NavigateTo($"/ApprovePurchaseOrder/{selectedRow.PurchaseOrderId}");
         }
-        void ReceivePurchaseorder(NewPurchaseOrderCreatedResponse selectedRow)
-        {
-            _NavigationManager.NavigateTo($"/ReceivePurchaseOrder/{selectedRow.PurchaseOrderId}");
-        }
         async Task RemovePurchaseorder(NewPurchaseOrderCreatedResponse selectedRow)
         {
             var resultDialog = await DialogService.Confirm($"Are you sure delete {selectedRow.PurchaseRequisition}?", "Confirm Delete",
@@ -80,5 +76,10 @@ namespace ClientRadzen.Pages.PurchaseOrders
 
             }
         }
+        void ReceivePurchaseorder(NewPurchaseOrderCreatedResponse selectedRow)
+        {
+            _NavigationManager.NavigateTo($"/ReceivePurchaseOrder/{selectedRow.PurchaseOrderId}");
+        }
+       
     }
 }

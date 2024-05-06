@@ -1,8 +1,4 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 using Shared.Models.MWO;
 
 namespace Application.Features.MWOs.Commands
@@ -27,15 +23,15 @@ namespace Application.Features.MWOs.Commands
           
             var row = MWO.Create(request.Data.Name, request.Data.Type.Id);
             row.IsAssetProductive = request.Data.IsAssetProductive;
-            row.PercentageEngineering = request.Data.PercentageEngineering;
-            row.PercentageContingency = request.Data.PercentageContingency;
+           
             row.PercentageTaxForAlterations= request.Data.PercentageTaxForAlterations;
+            
+            await Repository.AddMWO(row);
             if (!row.IsAssetProductive)
             {
-                row.PercentageAssetNoProductive = request.Data.PercentageAssetNoProductive;
+
                 await CreateTaxesForNoProductive(row, request.Data);
             }
-            await Repository.AddMWO(row);
             await CreateEngineeringItem(row, request.Data);
             await CreateContingencyItem(row, request.Data);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);

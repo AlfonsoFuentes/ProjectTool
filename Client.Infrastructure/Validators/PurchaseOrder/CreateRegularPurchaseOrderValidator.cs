@@ -1,6 +1,5 @@
 ﻿using Client.Infrastructure.Managers.PurchaseOrders;
-using Shared.Models.Currencies;
-using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
+using Shared.Enums.Currencies;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
 
 namespace Client.Infrastructure.Validators.PurchaseOrder

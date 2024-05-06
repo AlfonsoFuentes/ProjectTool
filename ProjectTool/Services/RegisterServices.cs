@@ -1,10 +1,6 @@
 ﻿using Application;
 using Infrastructure;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Shared.Commons.Results;
-using System.Text;
 namespace Server.Services
 {
     public static class RegisterServices

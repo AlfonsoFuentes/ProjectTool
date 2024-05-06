@@ -1,0 +1,138 @@
+﻿@page "/NewSupplierUpdate/{SupplierId:guid}"
+
+<PageTitle>Update Supplier</PageTitle>
+
+<RadzenStack Orientation="Orientation.Vertical">
+    <RadzenRow>
+        <RadzenText TextStyle="TextStyle.DisplayH5" Text="@($"Update Supplier {Model.Name}")"></RadzenText>
+    </RadzenRow>
+
+
+    <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
+        <FluentValidationValidator @ref="_fluentValidationValidator" />
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="Name" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.Name class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.Name"
+                                   @oninput="@((arg)=>ChangeName(arg.Value!.ToString()!))"
+                                   Name="name" />
+
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.Name" style="color:red; font-size:x-small;" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="Contact Name" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.ContactName class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.AdditionalName"
+                                   @oninput="@((arg)=>Model.ContactName=arg.Value!.ToString()!)"
+                                   Name="ContactName" />
+
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="Nick Name" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.NickName class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.Nickname"
+                                   @oninput="@((arg)=>ChangeNickName(arg.Value!.ToString()!))"
+                                   Name="nickname" />
+
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.NickName" style="color:red; font-size:x-small;" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="Email" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.ContactEmail class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.Email"
+                                   @oninput="@((arg)=>ChangeEmail(arg.Value!.ToString()!))"
+                                   Name="email" />
+
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.ContactEmail" style="color:red; font-size:x-small;" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="Vendor Code" Style="width: 100%;">
+                    <RadzenTextBox @bind-Value=@Model.VendorCode class="w-100" AutoComplete=true AutoCompleteType="AutoCompleteType.GivenName"
+                                   @oninput="@((arg)=>ChangeVendorCode(arg.Value!.ToString()!))"
+                                   Name="vendorcode" />
+
+                </RadzenFormField>
+                <ValidationMessage For="() => Model.VendorCode" style="color:red; font-size:x-small;" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenFormField Text="Phone Number" Style="width: 100%;">
+
+                    <RadzenMask Mask="(***) ***-****" CharacterPattern="[0-9]" Placeholder="(000) 000-0000" Name="Phone"
+                                @bind-Value=@Model.PhoneNumber @oninput="@((arg)=>Model.PhoneNumber=arg.Value!.ToString()!)"
+                                AutoComplete AutoCompleteType="AutoCompleteType.TelCountryCode"
+                                 Style="width: 100%;" aria-label="Phone" />
+
+                 </RadzenFormField>
+             </RadzenColumn>
+         </RadzenRow>
+         <RadzenRow>
+             <RadzenColumn Size="12" SizeMD="2">
+                 <RadzenFormField Text="Tax Code LD" Style="width: 100%; height:100%">
+                     <RadzenText Text=@Model.TaxCodeLD class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;" />
+                 </RadzenFormField>
+             </RadzenColumn>
+             <RadzenColumn Size="12" SizeMD="2">
+                 <RadzenFormField Text="Tax Code LP" Style="width: 100%; height:100%">
+                     <RadzenText Text=@Model.TaxCodeLP class=@UISettings.TextBoxWithFieldNameclass Style="width: 100%;" />
+                 </RadzenFormField>
+             </RadzenColumn>
+             <RadzenColumn Size="12" SizeMD="4">
+                 <RadzenFormField Text="Address" Style="width: 100%;">
+                     <RadzenTextBox @bind-Value=@Model.Address class="w-100" AutoComplete AutoCompleteType="AutoCompleteType.AddressLevel1"
+                                    @oninput="@((arg)=>Model.Address=arg.Value!.ToString()!)"
+                                    Name="address" />
+
+                 </RadzenFormField>
+             </RadzenColumn>
+         </RadzenRow>
+         <RadzenRow>
+             <RadzenColumn Size="12" SizeMD="4">
+                 <RadzenFormField Text="Supplier Currency" Style="width: 100%;">
+                     <RadzenDropDown @bind-Value=@Model.SupplierCurrency Data=@CurrencyEnum.List Style="width: 100%; "
+                                     Name="suppliercurrency" TextProperty="Name"
+                                     AllowClear=true
+                                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
+                                     AllowFiltering="true"
+                                     Change="ChangeSupplierCurrency"
+                                     TValue="CurrencyEnum" />
+
+
+
+                 </RadzenFormField>
+                 <ValidationMessage For="() => Model.SupplierCurrency.Id" style="color:red; font-size:x-small;" />
+             </RadzenColumn>
+
+         </RadzenRow>
+
+
+
+
+
+
+     </EditForm>
+
+
+
+     <RadzenRow>
+         <RadzenStack Orientation="Orientation.Horizontal">
+             <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Click="SaveAsync" Disabled=@NotValidated
+                           MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Create",TooltipPosition.Top) )">Update</RadzenButton>
+             <RadzenButton ButtonStyle=ButtonStyle.Primary Variant="Variant.Outlined" Click="CancelAsync"
+                           MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel",TooltipPosition.Top) )">Cancel</RadzenButton>
+         </RadzenStack>
+
+     </RadzenRow>
+ </RadzenStack>
+
+@code {
+   
+}
+
+
+
+

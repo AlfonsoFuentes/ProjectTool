@@ -17,7 +17,7 @@ public partial class UpdateSapAdjust
     [Parameter]
     public Guid SapAdjustId { get; set; }
     UpdateSapAdjustRequest Model { get; set; } = new();
-
+    MWOEBPResponse MWOEBPResponse { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
         var resultAdjust = await Service.GetSapAdjustById(SapAdjustId);
@@ -26,9 +26,13 @@ public partial class UpdateSapAdjust
             Model = resultAdjust.Data;
             
         }
-        
-  
-      
+        var resultEbp = await MWOService.GetMWOEBPReport(Model.MWOId);
+        if (resultEbp.Succeeded)
+        {
+            MWOEBPResponse = resultEbp.Data;
+        }
+
+
 
     }
     async Task SaveAsync()

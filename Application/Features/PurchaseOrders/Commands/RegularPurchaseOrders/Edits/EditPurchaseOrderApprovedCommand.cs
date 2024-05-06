@@ -44,15 +44,16 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                 var purchaseorderItem = await Repository.GetPurchaseOrderItemById(item.PurchaseOrderItemId);
                 if (purchaseorderItem == null)
                 {
-                    purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId, item.Name);
+                    purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId);
+                    purchaseorderItem.Name = item.Name;
                     purchaseorderItem.UnitaryValueCurrency = item.UnitaryValuePurchaseOrderCurrency;
                     purchaseorderItem.Quantity = item.Quantity;
                     await Repository.AddPurchaseorderItem(purchaseorderItem);
                     if (purchaseOrder.IsAlteration)
                     {
-                        var purchaseordertaxestem = purchaseOrder.AddPurchaseOrderItemForAlteration(item.BudgetItemId,
-                   $"{request.Data.PONumber} Tax {item.BudgetItemName} {purchaseOrder.MWO.PercentageTaxForAlterations}%");
-                        purchaseordertaxestem.UnitaryValueCurrency = purchaseOrder.MWO.PercentageTaxForAlterations / 100.0 * item.TotalValuePurchaseOrderCurrency;
+                        var purchaseordertaxestem = purchaseOrder.AddPurchaseOrderItemForAlteration(item.BudgetItemId);
+                        purchaseordertaxestem.Name = $"{request.Data.PONumber} Tax {item.BudgetItemName} {purchaseOrder.MWO.PercentageTaxForAlterations}%";
+                        purchaseordertaxestem.UnitaryValueCurrency = purchaseOrder.MWO.PercentageTaxForAlterations / 100.0 * item.PurchaseOrderValuePurchaseOrderCurrency;
                         purchaseordertaxestem.Quantity = 1;
 
                         await Repository.AddPurchaseorderItem(purchaseordertaxestem);
@@ -72,7 +73,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
 
             }
             var sumPOValueCurrency = request.Data.PurchaseOrderItems.Count == 0 ? 0 :
-                  request.Data.PurchaseOrderItems.Sum(x => x.TotalValuePurchaseOrderCurrency);
+                  request.Data.PurchaseOrderItems.Sum(x => x.PurchaseOrderValuePurchaseOrderCurrency);
            
             if (purchaseOrder.IsAlteration)
             {
@@ -81,7 +82,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                     var alterationsitem = await Repository.GetPurchaseOrderItemsAlterationsById(purchaseOrder.Id, row.BudgetItemId);
                     if (alterationsitem != null)
                     {
-                        var unitaryvalue = row.TotalValuePurchaseOrderCurrency * purchaseOrder.MWO.PercentageTaxForAlterations / 100;
+                        var unitaryvalue = row.PurchaseOrderValuePurchaseOrderCurrency * purchaseOrder.MWO.PercentageTaxForAlterations / 100;
                         alterationsitem.UnitaryValueCurrency = unitaryvalue;
                         await Repository.UpdatePurchaseOrderItem(alterationsitem);
                         sumPOValueCurrency += unitaryvalue;

@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Account;
-using Domain.Interfaces;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Services
 {

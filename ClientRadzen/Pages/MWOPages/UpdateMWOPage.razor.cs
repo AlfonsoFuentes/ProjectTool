@@ -1,11 +1,5 @@
 ﻿#nullable disable
-using Blazored.FluentValidation;
-using Microsoft.AspNetCore.Components;
-using Radzen;
-using Shared.Models.MWOTypes;
-using System;
-using System.ComponentModel.DataAnnotations;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Shared.Enums.MWOTypes;
 
 namespace ClientRadzen.Pages.MWOPages
 {

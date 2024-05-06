@@ -1,0 +1,42 @@
+﻿@page "/NewMWOMain"
+@using ClientRadzen.NewPages.MWOS.Tables
+<RadzenStack Orientation="Orientation.Vertical">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeLG="8">
+            <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-ml-4 rz-mt-2" Click="@(()=>AddNew())"
+                          MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Add new MWO", TooltipPosition.Top) )" />
+            <RadzenButton Icon="description" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-ml-1"
+                          MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Export To Excel",TooltipPosition.Top) )" Click="@(()=>ExporToExcel())" />
+
+        </RadzenColumn>
+
+        <RadzenColumn Size="12" SizeLG="4">
+            <RadzenFormField Text="Search...." Style="width:100%;">
+                <RadzenTextBox Placeholder="Search..." @bind-Value="@nameFilter" @oninput=@((arg)=>ChangeNameFilter(arg.Value!.ToString()!))></RadzenTextBox>
+            </RadzenFormField>
+
+        </RadzenColumn>
+    </RadzenRow>
+
+    <CascadingValue Value=this>
+        <RadzenTabs @bind-SelectedIndex=@MainApp.TabIndexMWO TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" Change="ChangeIndex">
+            <Tabs>
+                <RadzenTabsItem Text="Created">
+                    <NewMWOCreatedTableList></NewMWOCreatedTableList>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Approved">
+                    <NewMWODataListApproved></NewMWODataListApproved>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Closed">
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+
+    </CascadingValue>
+
+</RadzenStack>
+
+
+@code {
+
+}

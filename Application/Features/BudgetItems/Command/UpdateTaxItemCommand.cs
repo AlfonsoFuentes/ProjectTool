@@ -34,11 +34,7 @@ namespace Application.Features.BudgetItems.Command
             }
             row.Name = request.Data.Name;
             row.Percentage = request.Data.Percentage;
-            if(row.IsMainItemTaxesNoProductive)
-            {
-                mwo.PercentageAssetNoProductive = row.Percentage;
-                await Repository.UpdateMWO(mwo);
-            }
+            
             foreach (var taxitem in row.TaxesItems)
             {
                 if (!request.Data.SelectedBudgetItemDtos.Any(x => x.SelectedItemId == taxitem.SelectedId))
@@ -58,7 +54,8 @@ namespace Application.Features.BudgetItems.Command
 
 
             }
-            row.Budget = sumBudget;
+            row.UnitaryCost = sumBudget;
+            row.Quantity = 1;
             await Repository.UpdateBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);

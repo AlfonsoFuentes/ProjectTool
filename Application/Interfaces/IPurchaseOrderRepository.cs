@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Application.Interfaces
 {
-    public interface IPurchaseOrderRepository : IRepository
+    public interface IPurchaseOrderRepository 
     {
         Task<MWO> GetMWOById(Guid MWOId);
         Task<MWO> GetMWOWithBudgetItemsAndPurchaseOrderById(Guid MWOId);
@@ -39,5 +39,6 @@ namespace Application.Interfaces
         Task<IQueryable<PurchaseOrder>> GetAllPurchaseordersCreated();
         Task<PurchaseOrder> GetPurchaseOrderToDeleteById(Guid PurchaseOrderId);
         Task RemovePurchaseOrder(PurchaseOrder item);
+        Task AddPurchaseOrderItemReceived(PurchaseOrderItemReceived purchaseOrderItem);
     }
 }

@@ -1,6 +1,7 @@
-﻿using Shared.Models.Currencies;
-using Shared.Models.PurchaseorderStatus;
-using Shared.Models.Suppliers;
+﻿using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
+using Shared.NewModels.Suppliers.Reponses;
+
 
 namespace Shared.Models.PurchaseOrders.Responses
 {
@@ -11,8 +12,8 @@ namespace Shared.Models.PurchaseOrders.Responses
         public string MWOName { get; set; } = string.Empty;
         public string CECName { get; set; } = string.Empty;
         public Guid MainBudgetItemId { get; set; }
-        public Guid? SupplierId => Supplier == null ? Guid.Empty : Supplier.Id;
-        public SupplierResponse? Supplier { get; set; } = null!;
+        public Guid? SupplierId => Supplier == null ? Guid.Empty : Supplier.SupplierId;
+        public NewSupplierResponse? Supplier { get; set; } = null!;
         public string SupplierNickName => Supplier == null ? string.Empty : Supplier.NickName;
         public string SupplierName => Supplier == null ? string.Empty : Supplier.Name;
         public string VendorCode => Supplier == null ? string.Empty : Supplier.VendorCode;
@@ -22,8 +23,9 @@ namespace Shared.Models.PurchaseOrders.Responses
         public PurchaseOrderStatusEnum PurchaseOrderStatus { get; set; } = PurchaseOrderStatusEnum.None;
         public string PurchaseRequisition { get; set; } = string.Empty;
         public string CreatedOn { get; set; } = string.Empty;
-        public string ExpectedOn { get; set; } = string.Empty;
-        
+        public string ExpectedOn => DateExpectedOn.ToString("d");
+        public DateTime DateExpectedOn {  get; set; } = DateTime.MinValue;
+        public bool DueDate => DateTime.Now > DateExpectedOn;
         public string PurchaseOrderNumber { get; set; } = string.Empty;
         public string SPL { get; set; } = string.Empty;
         public string TaxCode { get; set; } = string.Empty;
@@ -36,7 +38,7 @@ namespace Shared.Models.PurchaseOrders.Responses
         public bool IsCapitalizedSalary { get; set; } = false;
         public bool IsTaxEditable { get; set; } = false;
         public double ActualUSD { get; set; }
-        public double PendingToReceiveUSD => ApprovedUSD - ActualUSD;
+        public double CommitmentUSD => ApprovedUSD - ActualUSD;
         public double ApprovedUSD { get; set; }
 
     }

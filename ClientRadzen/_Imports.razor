@@ -17,12 +17,12 @@
 @inject NavigationBack Navigation
 @inject IBlazorDownloadFileService blazorDownloadFileService
 
-
+@using Shared.Models.PurchaseOrders.Responses
 @using System.Globalization
 @using ClientRadzen
 @using ClientRadzen.Layout
 @using ClientRadzen.Pages.Commons
-@using Shared.Models.CostCenter
+
 @using Radzen 
 @using Radzen.Blazor
 @using Microsoft.AspNetCore.Components.Authorization
@@ -31,28 +31,44 @@
 @using Shared.Models.UserAccounts.Registers
 
 @using Client.Infrastructure.Managers.PurchaseOrders
+@using Shared.ExtensionsMetods
 
-@using Shared.Models.BudgetItemTypes
-@using Shared.Models.MWOTypes
 @using Shared.Models.Logins
 @using Shared.Models.Roles
 
 @using Shared.Models.ChangePasswords
-@using Shared.Models.Suppliers
-@using Shared.Models.Brands
+
+
 @using Shared.Models.BudgetItems
 
 @using Shared.Models.PurchaseOrders
-@using Shared.Models.Currencies
-@using Shared.Models.MWOStatus
-@using Shared.Models.PurchaseOrders.Responses
-@using Shared.Models.PurchaseorderStatus
+
 @using Shared.Models.PurchaseOrders.Requests
-@using Shared.Models.WayToReceivePurchaseOrdersEnums
+
 @using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems
 @using ClientRadzen.UISettings
-@using Shared.Models.Views
+
 @using ClientRadzen.Pages.Templates
 
 @using Shared.Models.SapAdjust
 @using Shared.Models.UserAccounts.Reponses
+
+@* new Objects *@
+@using Shared.NewModels.Brands.Reponses
+@using Shared.NewModels.Suppliers.Reponses
+@using ClientRadzen.PagesNames
+@using Shared.Enums.PurchaseorderStatus
+@using Shared.Enums.MWOStatus
+@using Shared.Enums.BudgetItemTypes
+@using Shared.Enums.CostCenter
+@using Shared.Enums.Currencies
+@using Shared.Enums.MWOTypes
+@using Shared.Enums.WayToReceivePurchaseOrdersEnums
+@using Shared.Enums.Focuses
+@using ClientRadzen.NewPages.MWOS.MWOCreatedPages
+@using Shared.NewModels.MWOs.Reponses
+@using ClientRadzen.NewPages.MWOS.MWOApprovedPages
+@using Shared.NewModels.BudgetItems.Responses
+@using Shared.NewModels.PurchaseOrders.Responses
+@using Shared.NewModels.SoftwareVersion
+@using Shared.NewModels.PurchaseOrders.Request

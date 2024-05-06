@@ -1,0 +1,91 @@
+﻿<RadzenRow class="rz-ml-4">
+    <RadzenColumn Size="12" SizeLG="4">
+        <RadzenPanel AllowCollapse="true" Collapsed=true Class="rz-my-auto rz-mx-auto">
+            <HeaderTemplate>
+                <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0">
+                    <b>@Response.Name</b>
+                </RadzenText>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard class="rz-mt-1">
+
+                    <RowTemplateData Label="MWO Type" Value="@(Response.Type.Name)"></RowTemplateData>
+                    <RowTemplateData Label="CEC Name" Value="@(Response.CECName)"></RowTemplateData>
+                    <RowTemplateData Label="Cost Center" Value="@(Response.CostCenter)"></RowTemplateData>
+                    <RowTemplateCurrency Label="Capital" Value="@Response.Capital.BudgetUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Expenses" Value="@Response.Expenses.BudgetUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Apropiation" Value="@Response.AppropiationUSD"></RowTemplateCurrency>
+
+
+
+                </RadzenCard>
+            </ChildContent>
+        </RadzenPanel>
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeLG="4">
+        <RadzenPanel AllowCollapse="true" Collapsed=true Class="rz-my-auto rz-mx-auto">
+            <HeaderTemplate>
+                <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0">
+                    <b>Capital Status</b>
+                </RadzenText>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard class="rz-mt-1">
+                    <RowTemplateCurrency Label="Budget, USD" Value="@Response.Capital.BudgetUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Assigned, USD" Value="@Response.Capital.AssignedUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Pending, USD" Value="@Response.Capital.PendingToCommitUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Actual, USD" Value="@Response.Capital.ActualUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Commitment, USD" Value="@Response.Capital.CommitmentUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Potential, USD" Value="@Response.Capital.PotentialCommitmentUSD"></RowTemplateCurrency>
+                </RadzenCard>
+            </ChildContent>
+        </RadzenPanel>
+    </RadzenColumn>
+    @if (Response.HasExpenses)
+    {
+        <RadzenColumn Size="12" SizeLG="4">
+            <RadzenPanel AllowCollapse="true" Collapsed=true Class="rz-my-auto rz-mx-auto">
+                <HeaderTemplate>
+                    <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0">
+                        <b>Expenses Status</b>
+                    </RadzenText>
+                </HeaderTemplate>
+                <ChildContent>
+                    <RadzenCard class="rz-mt-1">
+                        <RowTemplateCurrency Label="Budget, USD" Value="@Response.Expenses.BudgetUSD"></RowTemplateCurrency>
+                        <RowTemplateCurrency Label="Assigned, USD" Value="@Response.Expenses.AssignedUSD"></RowTemplateCurrency>
+                        <RowTemplateCurrency Label="Pending, USD" Value="@Response.Expenses.PendingToCommitUSD"></RowTemplateCurrency>
+                        <RowTemplateCurrency Label="Actual, USD" Value="@Response.Expenses.ActualUSD"></RowTemplateCurrency>
+                        <RowTemplateCurrency Label="Commitment, USD" Value="@Response.Expenses.CommitmentUSD"></RowTemplateCurrency>
+                        <RowTemplateCurrency Label="Potential, USD" Value="@Response.Expenses.PotentialCommitmentUSD"></RowTemplateCurrency>
+
+                    </RadzenCard>
+                </ChildContent>
+            </RadzenPanel>
+        </RadzenColumn>
+
+    }
+</RadzenRow>
+<RadzenRow class="rz-ml-4">
+    <RadzenColumn Size="12" SizeLG="7">
+        <RadzenButton Icon="insights" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                      Click="@(()=>MWOApproved.ShowSapAlignmentofMWO())"
+                      MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show SAP Alignment for MWO: {Response.CECName}",TooltipPosition.Right) )" />
+
+        <RadzenButton Icon="remove_done" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                      Click="@(()=>MWOApproved.UnApproveMWO())"
+                      MouseEnter="@(args => MainApp.ShowTooltip(args,$"Un Approve MWO: {Response.CECName}",TooltipPosition.Right) )" />
+
+        <RadzenButton Icon="description" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1"
+                      MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Export To Excel",TooltipPosition.Top) )" Click="@(()=>MWOApproved.ExporApprovedToExcel())" />
+
+
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeLG="5">
+        <RadzenTextBox Style="width:100%" Placeholder="Search..." @bind-Value="@MWOApproved.nameFilter" @oninput=@((arg)=>MWOApproved.nameFilter=arg.Value!.ToString()!)></RadzenTextBox>
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+
+}

@@ -2,12 +2,12 @@
 
 namespace Application.Interfaces
 {
-    public interface IMWORepository : IRepository
+    public interface IMWORepository 
     {
         Task UpdateMWO(MWO entity);
         Task AddMWO(MWO mWO);
         Task<bool> ReviewIfNameExist(string name);
-        Task<bool> ReviewIfNumberExist(string cecNumber);
+        Task<bool> ReviewIfNumberExist(Guid MWOId, string cecNumber);
         Task<bool> ReviewIfNameExist(Guid id,string name);
                
         Task<MWO> GetMWOById(Guid id);

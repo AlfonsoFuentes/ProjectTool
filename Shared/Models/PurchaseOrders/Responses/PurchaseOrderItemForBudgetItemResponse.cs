@@ -1,6 +1,4 @@
-﻿using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.PurchaseorderStatus;
+﻿using Shared.Enums.PurchaseorderStatus;
 
 namespace Shared.Models.PurchaseOrders.Responses
 {

@@ -5,7 +5,6 @@ using Shared.Models.UserAccounts.Reponses;
 using Shared.Models.UserManagements;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Client.Infrastructure.Managers.UserManagement
 {
@@ -64,14 +63,14 @@ namespace Client.Infrastructure.Managers.UserManagement
             var result = JsonSerializer.Deserialize<AuthResponseDto>(authContent, _options);
 
             if (!authResult.IsSuccessStatusCode)
-                return result;
+                return result!;
 
-            await _localStorage.SetItemAsync("authToken", result.Token);
+            await _localStorage.SetItemAsync("authToken", result!.Token);
             await _localStorage.SetItemAsync("refreshToken", result.RefreshToken);
             ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Token);
             Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Token);
 
-            return new AuthResponseDto { IsAuthSuccessful = true };
+            return new AuthResponseDto { UserId = result.UserId, IsAuthSuccessful = true };
         }
 
         public async Task Logout()
@@ -132,7 +131,7 @@ namespace Client.Infrastructure.Managers.UserManagement
         public async Task<bool> ResetPassword(string email)
         {
             var httpresult = await Http.GetAsync($"accounts/ResetPassword/{email}");
-           
+
 
             return await httpresult.ToObject<bool>();
         }
@@ -147,8 +146,8 @@ namespace Client.Infrastructure.Managers.UserManagement
         public async Task<bool> DeleteUser(string email)
         {
             var httpresult = await Http.GetAsync($"accounts/DeletedUser/{email}");
-          
-           
+
+
             return await httpresult.ToObject<bool>();
         }
     }

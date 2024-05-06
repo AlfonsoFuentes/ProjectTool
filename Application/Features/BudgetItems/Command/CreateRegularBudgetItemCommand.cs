@@ -29,7 +29,7 @@ namespace Application.Features.BudgetItems.Command
             var row = mwo.AddBudgetItem(request.Data.Type.Id);
             row.Name = request.Data.Name;
             row.UnitaryCost = request.Data.UnitaryCost;
-            row.Budget = request.Data.UnitaryCost * request.Data.Quantity;
+       
             row.Existing = request.Data.Existing;
             row.Quantity = request.Data.Quantity;
             if (!mwo.IsAssetProductive)
@@ -44,7 +44,7 @@ namespace Application.Features.BudgetItems.Command
             await Repository.AddBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
-            //await MWORepository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
+           
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} created succesfully!");

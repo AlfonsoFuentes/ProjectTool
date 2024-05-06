@@ -1,0 +1,104 @@
+﻿<RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" class="rz-mt-4" Style="height:100%;overflow:auto;"
+                AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterPopupRenderMode="PopupRenderMode.OnDemand"
+                Data="@MainPage.FilteredItems" TItem="NewBudgetItemMWOApprovedResponse" ColumnWidth="60px"
+                LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+             
+    <Template Context="BudgetItem" >
+        @if (BudgetItem.PurchaseOrderItems.Count>0)
+        {
+            <RadzenCard Style="width: 100%;" class="rz-m-1">
+                <NewBudgetItemsMWOApprovedPurchaseOrderIten PurchaseOrderItems=@BudgetItem.PurchaseOrderItems
+                                                   IsMainItemTaxesNoProductive=@BudgetItem.IsMainItemTaxesNoProductive></NewBudgetItemsMWOApprovedPurchaseOrderIten>
+            </RadzenCard>
+        }
+       
+    </Template>
+    <Columns>
+        <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
+                              Property="@nameof(NewBudgetItemMWOApprovedResponse.Nomeclatore)"
+                              Title="ID" TextAlign="TextAlign.Left" Width="30px" />
+        <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
+                              Property="@nameof(NewBudgetItemMWOApprovedResponse.Name)"
+                              Title="#-Name" TextAlign="TextAlign.Left" Width="100px" />
+        <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
+                              Title="Type" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @order.Type.Name
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
+                              Title="Budget" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.BudgetUSD)}")
+            </Template>
+            <FooterTemplate>
+                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MainPage.FilteredItems.Sum(x => x.BudgetUSD))}")</b>
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
+                              Title="Assigned" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.AssignedUSD)}")
+            </Template>
+            <FooterTemplate>
+                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MainPage.FilteredItems.Sum(x => x.AssignedUSD))}")</b>
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
+                              Title="Pending" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.PendingToCommitUSD)}")
+            </Template>
+            <FooterTemplate>
+                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MainPage.FilteredItems.Sum(x => x.PendingToCommitUSD))}")</b>
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
+                              Title="Actual" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.ActualUSD)}")
+            </Template>
+            <FooterTemplate>
+                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MainPage.FilteredItems.Sum(x => x.ActualUSD))}")</b>
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
+                              Title="Commitment" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.PendingToReceiveUSD)}")
+            </Template>
+            <FooterTemplate>
+                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MainPage.FilteredItems.Sum(x => x.PendingToReceiveUSD))}")</b>
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
+                              Title="Potential" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.PotentialCommitmentUSD)}")
+            </Template>
+            <FooterTemplate>
+                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MainPage.FilteredItems.Sum(x => x.PotentialCommitmentUSD))}")</b>
+            </FooterTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
+                              Title="Actions" TextAlign="TextAlign.Left">
+            <Template Context="product">
+                @if (product.CanCreatePurchaseOrder)
+                {
+                    <RadzenButton Icon="add_shopping_cart" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                                  Click="@(()=>MainPage.CreatePurchaseOrder(product))" MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Create PR", TooltipPosition.Left) )" />
+                }
+
+
+            </Template>
+
+        </RadzenDataGridColumn>
+
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+
+}

@@ -1,9 +1,3 @@
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components;
-using Shared.Models.MWOStatus;
-using Radzen;
-using Client.Infrastructure.Managers.BudgetItems;
-
 namespace ClientRadzen.Pages.MWOPages;
 
 #nullable disable

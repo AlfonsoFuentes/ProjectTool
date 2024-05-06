@@ -1,0 +1,85 @@
+﻿
+<RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" class="rz-mt-4"
+                AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterPopupRenderMode="PopupRenderMode.OnDemand"
+                Data="@MWOApproved.FilteredItems" TItem="NewBudgetItemsWithPurchaseorders" ColumnWidth="60px"
+                LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+             
+    <Template Context="BudgetItem" >
+        @if (BudgetItem.PurchaseOrderItems.Count>0)
+        {
+            <RadzenCard Style="width: 100%;" class="rz-m-1">
+                <TemplatePurchaseOrderItemResponse PurchaseOrderItems=@BudgetItem.PurchaseOrderItems
+                                                   IsMainItemTaxesNoProductive=@BudgetItem.IsMainItemTaxesNoProductive></TemplatePurchaseOrderItemResponse>
+            </RadzenCard>
+        }
+       
+    </Template>
+    <Columns>
+        <RadzenDataGridColumn TItem="NewBudgetItemsWithPurchaseorders"
+                              Property="@nameof(NewBudgetItemsWithPurchaseorders.NomenclatoreName)"
+                              Title="#-Name" TextAlign="TextAlign.Left" Width="100px" />
+        <RadzenDataGridColumn TItem="NewBudgetItemsWithPurchaseorders"
+                              Title="Type" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @order.Type.Name
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemsWithPurchaseorders"
+                              Title="Budget, USD" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.BudgetUSD)}")
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemsWithPurchaseorders"
+                              Title="Assigned, USD" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.AssignedUSD)}")
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemsWithPurchaseorders"
+                              Title="Pending, USD" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.PendingToCommitUSD)}")
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemsWithPurchaseorders"
+                              Title="Actual, USD" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.ActualUSD)}")
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemsWithPurchaseorders"
+                              Title="Commitment, USD" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.CommitmentUSD)}")
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemsWithPurchaseorders"
+                              Title="Potential, USD" TextAlign="TextAlign.Left">
+            <Template Context="order">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.PotentialCommitmentUSD)}")
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewBudgetItemsWithPurchaseorders"
+                              Title="Actions" TextAlign="TextAlign.Left">
+            <Template Context="product">
+                @if (product.CanCreatePurchaseOrder)
+                {
+                    <RadzenButton Icon="add_shopping_cart" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                                  Click="@(()=>MWOApproved.CreatePurchaseOrder(product))" MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Create PR", TooltipPosition.Left) )" />
+                }
+
+
+            </Template>
+
+        </RadzenDataGridColumn>
+
+    </Columns>
+</RadzenDataGrid>
+
+
+@code {
+
+}

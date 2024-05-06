@@ -1,17 +1,10 @@
 ﻿#nullable disable
-using Blazored.FluentValidation;
-using Client.Infrastructure.Managers.PurchaseOrders;
-using Client.Infrastructure.Managers.Suppliers;
-using ClientRadzen.Pages.Suppliers;
-using Microsoft.AspNetCore.Components;
-using Radzen;
-using Shared.Models.BudgetItems;
-using Shared.Models.Currencies;
-using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.Models.Suppliers;
-using Shared.Models.WayToReceivePurchaseOrdersEnums;
-using System.ComponentModel.DataAnnotations;
+
+
+
+
+using Shared.Enums.Currencies;
+using Shared.Enums.WayToReceivePurchaseOrdersEnums;
 
 namespace ClientRadzen.Pages.PurchaseOrders
 {
@@ -26,7 +19,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
 
 
         [Inject]
-        private ISupplierService SupplierService { get; set; }
+        private INewSupplierService SupplierService { get; set; }
 
 
         ReceiveRegularPurchaseOrderRequest Model { get; set; } = new();
@@ -63,11 +56,12 @@ namespace ClientRadzen.Pages.PurchaseOrders
                
                
             }
-
+            Model.TRMUSDCOP = MainApp.RateList == null ? Model.TRMUSDCOP : Math.Round(MainApp.RateList.COP, 2);
+            Model.TRMUSDEUR = MainApp.RateList == null ? Model.TRMUSDEUR : Math.Round(MainApp.RateList.EUR, 2);
             var resultSupplier = await SupplierService.GetAllSupplier();
             if (resultSupplier.Succeeded)
             {
-                Suppliers = resultSupplier.Data;
+                Suppliers = resultSupplier.Data.Suppliers;
 
             }
             var resultBudgetItems = await Service.GetBudgetItemsToCreatePurchaseOrder(Model.MainBudgetItemId);
@@ -110,19 +104,19 @@ namespace ClientRadzen.Pages.PurchaseOrders
         {
             Navigation.NavigateBack();
         }
-        List<SupplierResponse> Suppliers { get; set; } = new();
+        List<NewSupplierResponse> Suppliers { get; set; } = new();
         async Task CreateSupplier()
         {
-            var result = await DialogService.OpenAsync<CreateSupplierForPurchaseOrderDialog>($"Create Supplier",
+            var result = await DialogService.OpenAsync<NewCreateSupplierDialog>($"Create Supplier",
                 new Dictionary<string, object>() { },
                 new DialogOptions() { Width = "400px", Height = "450px", Resizable = true, Draggable = true });
             if (result != null)
             {
-                await SetSupplier(result as SupplierResponse);
+                await SetSupplier(result as NewSupplierResponse);
                 var resultData = await SupplierService.GetAllSupplier();
                 if (resultData.Succeeded)
                 {
-                    Suppliers = resultData.Data;
+                    Suppliers = resultData.Data.Suppliers;
 
                 }
 
@@ -183,7 +177,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
                 row.ReceivePercentagePurchaseOrder = 0;
             }
         }
-        public async Task SetSupplier(SupplierResponse? _Supplier)
+        public async Task SetSupplier(NewSupplierResponse? _Supplier)
         {
 
             if (_Supplier == null)

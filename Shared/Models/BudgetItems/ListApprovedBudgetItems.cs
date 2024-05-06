@@ -1,4 +1,4 @@
-﻿using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 using Shared.Models.MWO;
 
 namespace Shared.Models.BudgetItems
@@ -14,19 +14,19 @@ namespace Shared.Models.BudgetItems
 
         public List<BudgetItemApprovedResponse> BudgetItemsCapital => BudgetItems.Where(x => x.Type.Id != BudgetItemTypeEnum.Alterations.Id).ToList();
 
-        public double Expenses => BudgetItemsAlterations.Sum(x => x.Budget);
-        public double Capital => BudgetItemsCapital.Sum(x => x.Budget);
+        public double Expenses => BudgetItemsAlterations.Sum(x => x.BudgetUSD);
+        public double Capital => BudgetItemsCapital.Sum(x => x.BudgetUSD);
         public double Appropiation => Expenses + Capital;
 
 
-        public double ActualExpenses => BudgetItemsAlterations.Sum(x => x.Actual);
-        public double ActualCapital => BudgetItemsCapital.Sum(x => x.Actual);
+        public double ActualExpenses => BudgetItemsAlterations.Sum(x => x.ActualUSD);
+        public double ActualCapital => BudgetItemsCapital.Sum(x => x.ActualUSD);
 
-        public double AssignedExpenses => BudgetItemsAlterations.Sum(x => x.Assigned);
-        public double AssignedCapital => BudgetItemsCapital.Sum(x => x.Assigned);
+        public double AssignedExpenses => BudgetItemsAlterations.Sum(x => x.AssignedUSD);
+        public double AssignedCapital => BudgetItemsCapital.Sum(x => x.AssignedUSD);
 
-        public double PotencialExpenses => BudgetItemsAlterations.Sum(x => x.Potencial);
-        public double PotencialCapital => BudgetItemsCapital.Sum(x => x.Potencial);
+        public double PotencialExpenses => BudgetItemsAlterations.Sum(x => x.PotentialUSD);
+        public double PotencialCapital => BudgetItemsCapital.Sum(x => x.PotentialUSD);
 
         public double CommitmentExpenses => AssignedExpenses - ActualExpenses;
         public double PendingExpenses => Expenses - AssignedExpenses - PotencialExpenses;

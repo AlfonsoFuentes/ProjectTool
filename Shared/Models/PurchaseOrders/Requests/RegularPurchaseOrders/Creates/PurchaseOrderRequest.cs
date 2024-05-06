@@ -1,8 +1,9 @@
-﻿using Shared.Models.BudgetItems;
-using Shared.Models.Currencies;
+﻿using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
+using Shared.Models.BudgetItems;
 using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
-using Shared.Models.PurchaseorderStatus;
-using Shared.Models.Suppliers;
+using Shared.NewModels.Suppliers.Reponses;
+
 
 namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
 {
@@ -11,8 +12,8 @@ namespace Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates
         public abstract PurchaseOrderStatusEnum PurchaseOrderStatus { get; set; } 
 
         public string PurchaseorderName { get; set; } = string.Empty;
-        public SupplierResponse? Supplier { get; set; }
-        public Guid SupplierId => Supplier == null ? Guid.Empty : Supplier.Id;
+        public NewSupplierResponse? Supplier { get; set; }
+        public Guid SupplierId => Supplier == null ? Guid.Empty : Supplier.SupplierId;
         public string SupplierName => Supplier == null ? string.Empty : Supplier.NickName;
         public string VendorCode => Supplier == null ? string.Empty : Supplier.VendorCode;
         public string TaxCode => Supplier == null ? string.Empty : IsAlteration || IsMWONoProductive ? Supplier.TaxCodeLP : Supplier.TaxCodeLD;

@@ -1,6 +1,7 @@
-﻿using Shared.Models.Currencies;
-using Shared.Models.PurchaseorderStatus;
-using Shared.Models.Suppliers;
+﻿using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
+using Shared.NewModels.Suppliers.Reponses;
+
 
 namespace Shared.Models.PurchaseOrders.Responses
 {
@@ -11,8 +12,8 @@ namespace Shared.Models.PurchaseOrders.Responses
         public string MWOName { get; set; } = string.Empty;
         public string CECName {  get; set; } = string.Empty;
         public Guid MainBudgetItemId { get; set; }
-        public Guid? SupplierId => Supplier == null ? Guid.Empty : Supplier.Id;
-        public SupplierResponse? Supplier { get; set; } = null!;
+        public Guid? SupplierId => Supplier == null ? Guid.Empty : Supplier.SupplierId;
+        public NewSupplierResponse? Supplier { get; set; } = null!;
         public string SupplierNickName => Supplier == null ? string.Empty : Supplier.NickName;
         public string SupplierName => Supplier == null ? string.Empty : Supplier.Name;
         public string VendorCode => Supplier == null ? string.Empty : Supplier.VendorCode;

@@ -1,0 +1,43 @@
+﻿@page "/NewPurchaseOrderMain"
+@using ClientRadzen.NewPages.PurchaseOrder.Tables
+
+<RadzenStack Orientation="Orientation.Vertical">
+
+    <RadzenRow JustifyContent="JustifyContent.SpaceBetween">
+
+        <div></div>
+        <RadzenColumn Size="12" SizeLG="4">
+            <RadzenFormField Text="Search...." Style="width:100%;">
+                <RadzenTextBox Placeholder="Search..." @bind-Value="@nameFilter" @oninput=@((arg)=>nameFilter=arg.Value!.ToString()!)></RadzenTextBox>
+            </RadzenFormField>
+
+        </RadzenColumn>
+    </RadzenRow>
+
+    <CascadingValue Value=this>
+        <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" @bind-SelectedIndex=@MainApp.TabIndexPurchaseOrder Change="ChangeIndex">
+            <Tabs>
+                <RadzenTabsItem Text="Created">
+                    <NewPurchaseOrderCreatedTable></NewPurchaseOrderCreatedTable>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Approved">
+                    <NewPurchaseOrderApprovedTable></NewPurchaseOrderApprovedTable>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Closed">
+                    <NewPurchaseOrderClosedTable></NewPurchaseOrderClosedTable>
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+
+    </CascadingValue>
+
+
+
+
+
+
+</RadzenStack>
+
+@code {
+
+}

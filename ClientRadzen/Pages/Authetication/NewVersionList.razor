@@ -1,0 +1,46 @@
+﻿
+<RadzenStack Orientation="Orientation.Vertical">
+
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeLG="8">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1 rz-ml-4" Click="@(()=>AddNew())"
+                              MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Register new user", TooltipPosition.Top) )" />
+
+            </RadzenStack>
+
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeLG="4">
+            <RadzenTextBox Class="rz-ml-4" Style="width:100%;" Placeholder="Search..." @bind-Value="@nameFilter" @oninput=@((arg)=>nameFilter=arg.Value!.ToString()!)></RadzenTextBox>
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeLG="12">
+            <RadzenDataList AllowVirtualization=true Style="height:100%;overflow:auto;"
+                            WrapItems="false" AllowPaging="true" Density="Density.Compact" PageSize=15
+                            Data="@FilteredItems" TItem="NewSoftwareVersionResponse" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                <Template Context="user">
+                    <RadzenCard Style="width: 100%; padding: 0;">
+                        <RadzenRow>
+                            <RadzenColumn Size="12" Class="rz-p-2">
+                                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-black">@(user.Name)</RadzenText>
+                            </RadzenColumn>
+
+                           
+
+                        </RadzenRow>
+                    </RadzenCard>
+                </Template>
+
+            </RadzenDataList>
+        </RadzenColumn>
+    </RadzenRow>
+
+
+
+
+</RadzenStack>
+@code {
+
+}

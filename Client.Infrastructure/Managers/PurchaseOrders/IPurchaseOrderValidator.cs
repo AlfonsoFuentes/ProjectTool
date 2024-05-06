@@ -1,14 +1,5 @@
-﻿using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.Models.PurchaseOrders.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Client.Infrastructure.Managers.PurchaseOrders
+﻿namespace Client.Infrastructure.Managers.PurchaseOrders
 {
-
     public interface IPurchaseOrderValidator : IManager
     {
         Task<bool> ValidateNameExistInPurchaseOrder(Guid MWOId,string name);

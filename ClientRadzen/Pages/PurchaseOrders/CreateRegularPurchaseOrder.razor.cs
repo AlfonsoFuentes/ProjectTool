@@ -1,20 +1,5 @@
-﻿using Blazored.FluentValidation;
-using Client.Infrastructure.Managers.BudgetItems;
-using Client.Infrastructure.Managers.CurrencyApis;
-using Client.Infrastructure.Managers.PurchaseOrders;
-using Client.Infrastructure.Managers.Suppliers;
-using ClientRadzen.Pages.Suppliers;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Radzen;
-using Radzen.Blazor;
-using Shared.Models.BudgetItems;
-using Shared.Models.Currencies;
-using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.Suppliers;
-using System.ComponentModel.DataAnnotations;
+﻿using Client.Infrastructure.Managers.BudgetItems;
+using Shared.Enums.Currencies;
 
 #nullable disable
 namespace ClientRadzen.Pages.PurchaseOrders
@@ -29,7 +14,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
         private IPurchaseOrderService Service { get; set; }
 
         [Inject]
-        private ISupplierService SupplierService { get; set; }
+        private INewSupplierService SupplierService { get; set; }
         [Inject]
         private IBudgetItemService BudgetItemService { get; set; }
 
@@ -49,7 +34,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
 
             return response;
         }
-        List<SupplierResponse> Suppliers { get; set; } = new();
+        List<NewSupplierResponse> Suppliers { get; set; } = new();
 
         FluentValidationValidator _fluentValidationValidator = null!;
 
@@ -62,7 +47,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             var resultSupplier = await SupplierService.GetAllSupplier();
             if (resultSupplier.Succeeded)
             {
-                Suppliers = resultSupplier.Data;
+                Suppliers = resultSupplier.Data.Suppliers;
 
             }
             Model = new();
@@ -116,16 +101,16 @@ namespace ClientRadzen.Pages.PurchaseOrders
         }
         async Task CreateSupplier()
         {
-            var result = await DialogService.OpenAsync<CreateSupplierForPurchaseOrderDialog>($"Create Supplier",
+            var result = await DialogService.OpenAsync<NewCreateSupplierDialog>($"Create Supplier",
                 new Dictionary<string, object>() { },
                 new DialogOptions() { Width = "400px", Height = "450px", Resizable = true, Draggable = true });
             if (result != null)
             {
-                await SetSupplier((result as SupplierResponse));
+                await SetSupplier((result as NewSupplierResponse));
                 var resultData = await SupplierService.GetAllSupplier();
                 if (resultData.Succeeded)
                 {
-                    Suppliers = resultData.Data;
+                    Suppliers = resultData.Data.Suppliers;
 
                 }
 
@@ -215,7 +200,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
             await ValidateAsync();
         }
 
-        public async Task SetSupplier(SupplierResponse? _Supplier)
+        public async Task SetSupplier(NewSupplierResponse? _Supplier)
         {
 
             if (_Supplier == null)
@@ -258,7 +243,7 @@ namespace ClientRadzen.Pages.PurchaseOrders
         public async Task ChangeCurrency(PurchaseOrderItemRequest item, CurrencyEnum newCurrency)
         {
 
-            double originalValueInUsd = item.UnitaryValueUSD;
+            double originalValueInUsd = item.UnitaryValueFromQuoteUSD;
             if (newCurrency.Id == CurrencyEnum.COP.Id)
             {
                 item.QuoteCurrencyValue = originalValueInUsd * Model.USDCOP;

@@ -2,8 +2,8 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
+using Shared.Enums.BudgetItemTypes;
 using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
 using Shared.Models.PurchaseOrders.Responses;
 
 namespace Application.Features.PurchaseOrders.Queries
@@ -44,7 +44,7 @@ namespace Application.Features.PurchaseOrders.Queries
             {
                 BudgetItemId = x.Id,
                 Name = x.Name,
-                Budget = x.Budget,
+                BudgetUSD = x.Budget,
                 Order = x.Order,
      
                 Type = BudgetItemTypeEnum.GetType(x.Type),

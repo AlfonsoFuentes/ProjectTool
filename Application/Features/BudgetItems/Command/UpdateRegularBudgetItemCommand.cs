@@ -29,7 +29,7 @@ namespace Application.Features.BudgetItems.Command
             }
             row.Name = request.Data.Name;
             row.UnitaryCost = request.Data.UnitaryCost;
-            row.Budget = request.Data.UnitaryCost * request.Data.Quantity;
+      
             row.Existing = request.Data.Existing;
             row.Quantity = request.Data.Quantity;
 

@@ -1,9 +1,4 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 using System.Linq.Expressions;
 
 namespace Application.Features.BudgetItems.Queries
@@ -34,7 +29,7 @@ namespace Application.Features.BudgetItems.Queries
                 IsAssetProductive = mwo!.IsAssetProductive,
                 PercentageAssetNoProductive = mwo!.PercentageAssetNoProductive,
                 PercentageContingency = mwo!.PercentageContingency,
-                PercentageEngineering = mwo!.PercentageEngineering,
+                PercentageEngineering = mwo!.PercentageCapitalizedSalary,
                 PercentageTaxForAlterations = mwo!.PercentageTaxForAlterations,
 
 

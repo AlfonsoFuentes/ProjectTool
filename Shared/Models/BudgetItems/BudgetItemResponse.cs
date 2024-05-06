@@ -1,4 +1,4 @@
-﻿using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 using Shared.Models.MWO;
 using Shared.Models.PurchaseOrders.Responses;
 

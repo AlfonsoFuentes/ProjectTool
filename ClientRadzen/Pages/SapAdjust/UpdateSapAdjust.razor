@@ -1,4 +1,5 @@
 ﻿@page "/UpdateAdjustForMWO/{SapAdjustId:guid}"
+@using ClientRadzen.Pages.MWOPages
 
 <PageTitle>Update SAP Adjust</PageTitle>
 
@@ -11,7 +12,7 @@
 
     <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
         <FluentValidationValidator @ref="_fluentValidationValidator" />
-        <RadzenRow>
+          <RadzenRow>
             <RadzenColumn Size="12" SizeLG="6">
                 <RadzenRow>
                     <RadzenColumn Size="4" SizeMD="4">
@@ -106,6 +107,28 @@
 
                     </RadzenColumn>
                 </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn Size="12" SizeLG="12">
+                        <RadzenRow>
+
+                            <RadzenFileInput @bind-Value=@Model.ImageData @bind-FileName=@Model.ImageTitle @bind-FileSize=@fileSize TValue="string" class="w-100"
+                                             Change=@(args =>ChangeImage(args)) Error=@(args => OnError(args, "FileInput")) Accept="image/*"
+                                             ChooseText="Select SAP Image"
+                                             InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})" />
+                            <ValidationMessage For="() => Model.ImageData" style="color:red; font-size:x-small;" />
+                        </RadzenRow>
+                        <RadzenRow>
+                            @if (!string.IsNullOrEmpty(Model.ImageData))
+                            {
+                                <RadzenImage Path="@($"{Model.ImageData}")" AlternateText="binary image" Style="width:100%" />
+                            }
+
+
+                        </RadzenRow>
+
+                    </RadzenColumn>
+
+                </RadzenRow>
                 <RadzenRow class="rz-m-2">
                     <RadzenStack Orientation="Orientation.Horizontal">
                         <RadzenButton ButtonStyle=ButtonStyle.Primary ButtonType=ButtonType.Submit Click="SaveAsync" Disabled=@NotValidated Style="width:100%"
@@ -116,28 +139,11 @@
 
                 </RadzenRow>
             </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow>
             <RadzenColumn Size="12" SizeLG="6">
-                <RadzenRow>
+                <MWOEBPReport MWOEBPResponse="@MWOEBPResponse">
 
-                    <RadzenFileInput @bind-Value=@Model.ImageData @bind-FileName=@Model.ImageTitle @bind-FileSize=@fileSize TValue="string" class="w-100"
-                                     Change=@(args =>ChangeImage(args)) Error=@(args => OnError(args, "FileInput")) Accept="image/*"
-                                     ChooseText="Select SAP Image"
-                                     InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})" />
-                    <ValidationMessage For="() => Model.ImageData" style="color:red; font-size:x-small;" />
-                </RadzenRow>
-                <RadzenRow>
-                    @if (!string.IsNullOrEmpty(Model.ImageData))
-                    {
-                        <RadzenImage Path="@($"{Model.ImageData}")" AlternateText="binary image" Style="width:100%" />
-                    }
-
-
-                </RadzenRow>
-
+                </MWOEBPReport>
             </RadzenColumn>
-
         </RadzenRow>
 
     </EditForm>

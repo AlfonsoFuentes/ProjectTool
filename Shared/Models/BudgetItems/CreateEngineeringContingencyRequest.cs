@@ -1,6 +1,4 @@
-﻿using Shared.Models.BudgetItemTypes;
-
-namespace Shared.Models.BudgetItems
+﻿namespace Shared.Models.BudgetItems
 {
     public class CreateEngineeringContingencyRequest
     {

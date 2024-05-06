@@ -92,7 +92,7 @@ public partial class EditCapitalizedSalary
 
         }
         item.QuoteCurrencyValue = currencyvalue;
-        item.ActualCurrency = currencyvalue;
+        item.ActualUSD = currencyvalue;
 
         await ValidateAsync();
     }

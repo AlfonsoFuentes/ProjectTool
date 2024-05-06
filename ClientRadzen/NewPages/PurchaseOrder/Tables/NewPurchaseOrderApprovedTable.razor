@@ -1,0 +1,86 @@
+﻿<RadzenStack Orientation="Orientation.Vertical">
+
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeLG="12">
+            <RadzenDataList AllowVirtualization=true Style="height:100%;overflow:auto;" PageSize=15
+                            WrapItems="false" AllowPaging="true" Density="Density.Compact"
+                            Data="@FilteredItems" TItem="NewPriorPurchaseOrderResponse" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+                <Template Context="product">
+                    <RadzenCard Style="width: 100%; padding: 0;">
+                        <RadzenRow>
+                            <RadzenColumn Size="12" SizeLG="3" Class="rz-p-1">
+                                <RadzenRow>
+
+                                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" Class="rz-color-black" Style="width:100%;">@(product.PurchaseorderName)</RadzenText>
+                                </RadzenRow>
+
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeLG="7" >
+                                <RadzenRow>
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" >
+
+                                        <RowTemplateData Label="MWO" Value="@product.CECName"></RowTemplateData>
+                                        <RowTemplateData Label="Account" Value="@product.AccountAssigment"></RowTemplateData>
+                                        <RowTemplateData Label="PR#" Value="@product.PurchaseRequisition"></RowTemplateData>
+                                        <RowTemplateData Label="PO#" Value="@product.PurchaseOrderNumber"></RowTemplateData>
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" >
+                                        
+                                        <RowTemplateData Label="Supplier" Value="@product.SupplierNickName"></RowTemplateData>
+                                        <RowTemplateData Label="Vendor Code" Value="@product.SupplierVendorCode"></RowTemplateData>
+                                        <RowTemplateData Label="Tax Code" Value="@product.TaxCode"></RowTemplateData>
+                                        
+                                    </RadzenColumn>
+
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" >
+
+
+                                        <RowTemplateCurrency Label="PO Value, USD" Value="@product.ApprovedUSD"></RowTemplateCurrency>
+                                        <RowTemplateCurrency Label="Actual, USD" Value="@product.ActualUSD"></RowTemplateCurrency>
+                                        <RowTemplateCurrency Label="Pending, USD" Value="@product.PendingToReceiveUSD"></RowTemplateCurrency>
+
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" >
+                                        <RowTemplateData Label="Created On" Value="@product.CreatedOn"></RowTemplateData>
+
+                                        <RowTemplateData Label="Expected On" Value="@product.ExpectedOn"
+                                                         Style="@(product.DueDate?"color:red":"")"></RowTemplateData>
+
+
+                                    </RadzenColumn>
+                                </RadzenRow>
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeLG="2" >
+                                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
+                                    <RadzenButton Icon="remove_done" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+                                                  MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Un approve purchase order {product.PurchaseOrderNumber}",TooltipPosition.Left) )"
+                                                   Click="@(()=>MainPage.UnApprovePurchaseorder(product))" />
+
+                                    <RadzenButton Icon="shopping_bag" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+                                                  MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Receive purchase order {product.PurchaseOrderNumber}",TooltipPosition.Left) )"
+                                                   Click="@(()=>MainPage.ReceivePurchaseorder(product))" />
+
+                                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+                                                  MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete purchase order {product.PurchaseOrderNumber}",TooltipPosition.Left) )"
+                                                   Click="@(()=>MainPage.RemovePurchaseorder(product))" />
+
+                                </RadzenStack>
+                            </RadzenColumn>
+                        </RadzenRow>
+                    </RadzenCard>
+                </Template>
+
+            </RadzenDataList>
+        </RadzenColumn>
+    </RadzenRow>
+
+
+
+
+</RadzenStack>
+
+
+
+@code {
+
+}

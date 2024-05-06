@@ -1,13 +1,4 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.PurchaseOrders.Requests;
-using Shared.Models.PurchaseorderStatus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Shared.Enums.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands
 {

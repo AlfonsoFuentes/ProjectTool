@@ -1,5 +1,5 @@
-﻿using Shared.Models.BudgetItems;
-using Shared.Models.Currencies;
+﻿using Shared.Enums.Currencies;
+using Shared.Models.BudgetItems;
 
 namespace Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems
 {
@@ -11,30 +11,26 @@ namespace Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems
             BudgetItemName = _BudgetItem.NomenclatoreName;
             Name = _BudgetItem.Name;
             BudgetItemId = _BudgetItem.BudgetItemId;
-            Budget = _BudgetItem.Budget;
-            AssignedCurrency = _BudgetItem.Assigned;
-            PotencialCurrency = _BudgetItem.Potencial;
+            BudgetUSD = _BudgetItem.BudgetUSD;
             TRMUSDCOP = usdcop;
             TRMUSDEUR = usdeur;
-            OriginalAssignedCurrency = AssignedCurrency;
-            OriginalPotencialCurrency = PotencialCurrency;
+            AssignedUSD = _BudgetItem.AssignedUSD;
+            PotencialUSD = _BudgetItem.PotentialUSD;
+            ApprovedUSD = _BudgetItem.ApprovedUSD;
+            OriginalAssignedCurrency = AssignedUSD;
+            OriginalPotencialCurrency = PotencialUSD;
 
         }
         public double OriginalAssignedCurrency { get; set; }
         public double OriginalPotencialCurrency { get; set; }
-        public double Budget { get; set; }
-        public double AssignedCurrency { get; set; }
-        public double PotencialCurrency { get; set; }
-        public double ActualCurrency { get; set; }
-        public double AssignedUSD => PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? AssignedCurrency :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? AssignedCurrency / TRMUSDCOP :
-            AssignedCurrency / TRMUSDEUR;
-        public double PotencialUSD => PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? PotencialCurrency :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? PotencialCurrency / TRMUSDCOP :
-            PotencialCurrency / TRMUSDEUR;
-        public double ActualUSD => PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? ActualCurrency :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? ActualCurrency / TRMUSDCOP :
-            ActualCurrency / TRMUSDEUR;
+        public double BudgetUSD { get; set; }
+        public double ApprovedUSD { get; set; }
+        public double CommitmentUSD => ApprovedUSD - ActualUSD;
+        public double AssignedUSD { get; set; }
+        
+        public double PotencialUSD { get; set; }
+        public double NewPotencialUSD => PotencialUSD + PurchaseOrderValueUSD;
+        public double ActualUSD { get; set; }
         public Guid PurchaseOrderItemId { get; set; }
         public string Name { get; set; } = string.Empty;
 
@@ -42,12 +38,13 @@ namespace Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems
         public string BudgetItemName { get; set; } = string.Empty;
         public double Quantity { get; set; } = 1;
 
+        public double NewAssignedUSD => AssignedUSD + PurchaseOrderValueUSD;
 
-        public double POItemPendingUSD => Budget - AssignedUSD - PotencialUSD;
+        public double PendingToCommitmUSD => BudgetUSD - NewAssignedUSD;
 
         public void ChangeCurrency(CurrencyEnum newCurrency)
         {
-            double originalValueInUsd = UnitaryValueUSD;
+            double originalValueInUsd = UnitaryValueFromQuoteUSD;
             if (newCurrency.Id == CurrencyEnum.COP.Id)
             {
                 QuoteCurrencyValue = originalValueInUsd * TRMUSDCOP;
@@ -68,15 +65,10 @@ namespace Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems
         public CurrencyEnum QuoteCurrency { get; set; } = CurrencyEnum.COP;
         public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.COP;
 
-
-        public double POValueUSD => Quantity * UnitaryValueUSD;
-        public double UnitaryValueUSD => PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ?
-            UnitaryValuePurchaseOrderCurrency : PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ?
-           TRMUSDCOP == 0 ? 0 : UnitaryValuePurchaseOrderCurrency / TRMUSDCOP : TRMUSDEUR == 0 ? 0 : UnitaryValuePurchaseOrderCurrency / TRMUSDEUR;
         public double TRMUSDCOP { get; set; } = 1;
         public double TRMUSDEUR { get; set; } = 1;
 
-        double _QuoteCurrencyValue;
+        double _QuoteCurrencyValue { get; set; }
         public double QuoteCurrencyValue
         {
             get
@@ -86,22 +78,30 @@ namespace Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems
             set
             {
                 _QuoteCurrencyValue = value;
-               
+
+
             }
         }
 
-        public double UnitaryValuePurchaseOrderCurrency =>
-            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id && QuoteCurrency.Id == CurrencyEnum.USD.Id ? QuoteCurrencyValue :
-            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id && QuoteCurrency.Id == CurrencyEnum.COP.Id ? QuoteCurrencyValue / TRMUSDCOP :
-            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id && QuoteCurrency.Id == CurrencyEnum.EUR.Id ? QuoteCurrencyValue / TRMUSDEUR :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id && QuoteCurrency.Id == CurrencyEnum.USD.Id ? QuoteCurrencyValue * TRMUSDCOP :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id && QuoteCurrency.Id == CurrencyEnum.COP.Id ? QuoteCurrencyValue :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id && QuoteCurrency.Id == CurrencyEnum.EUR.Id ? QuoteCurrencyValue * TRMUSDCOP * TRMUSDEUR :
-            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id && QuoteCurrency.Id == CurrencyEnum.USD.Id ? QuoteCurrencyValue * TRMUSDEUR :
-            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id && QuoteCurrency.Id == CurrencyEnum.COP.Id ? QuoteCurrencyValue / TRMUSDCOP * TRMUSDEUR :
-            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id && QuoteCurrency.Id == CurrencyEnum.EUR.Id ? QuoteCurrencyValue : 0;
+        public double UnitaryValueFromQuoteUSD =>
+          QuoteCurrency.Id == CurrencyEnum.USD.Id ? QuoteCurrencyValue :
+          QuoteCurrency.Id == CurrencyEnum.COP.Id ? QuoteCurrencyValue / TRMUSDCOP :
+          QuoteCurrency.Id == CurrencyEnum.EUR.Id ? QuoteCurrencyValue / TRMUSDEUR :
+          0;
+        public double PurchaseOrderValueUSD => Quantity * UnitaryValueFromQuoteUSD;
 
-        public double TotalValuePurchaseOrderCurrency => Quantity * UnitaryValuePurchaseOrderCurrency;
+        public double UnitaryValuePurchaseOrderCurrency =>
+           PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? UnitaryValueFromQuoteUSD :
+           PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? UnitaryValueFromQuoteUSD * TRMUSDCOP :
+           PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? UnitaryValueFromQuoteUSD * TRMUSDEUR :
+           0;
+        public double PurchaseOrderValuePurchaseOrderCurrency => Quantity * UnitaryValuePurchaseOrderCurrency;
+
+      
+
+       
+
+
 
     }
 

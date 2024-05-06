@@ -1,9 +1,6 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.Currencies;
+﻿using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Creates
 {
@@ -47,10 +44,11 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.POClosedDate=DateTime.UtcNow;
             purchaseorder.AccountAssigment = request.Data.MWOCECName;
             purchaseorder.MainBudgetItemId = request.Data.MainBudgetItemId;
-            purchaseorder.Currency = CurrencyEnum.USD.Id;
+            purchaseorder.PurchaseOrderCurrency = CurrencyEnum.USD.Id;
             await Repository.AddPurchaseOrder(purchaseorder);
-            var purchaseorderitem = purchaseorder.AddPurchaseOrderItem(purchaseorder.MainBudgetItemId,request.Data.PurchaseOrderItem.Name);
-            purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.POValueUSD;
+            var purchaseorderitem = purchaseorder.AddPurchaseOrderItem(purchaseorder.MainBudgetItemId);
+            purchaseorderitem.Name=request.Data.PurchaseOrderItem.Name;
+            purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.UnitaryValuePurchaseOrderCurrency;
             purchaseorderitem.Quantity = 1;
             purchaseorderitem.ActualCurrency = request.Data.SumPOValueUSD;
             await Repository.AddPurchaseorderItem(purchaseorderitem);

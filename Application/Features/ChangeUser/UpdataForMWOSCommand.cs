@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Commons.Results;
-using Shared.Models.MWOStatus;
+using Shared.Enums.MWOStatus;
 
 namespace Application.Features.ChangeUser
 {

@@ -72,11 +72,11 @@
                         <RadzenDropDown @bind-Value=@Model.Supplier Data=@Suppliers
                                         Name="supplier" TextProperty="Name"
                                         Placeholder="Select Supplier"
-                                        Change="@((arg)=>SetSupplier((SupplierResponse?)arg))"
+                                        Change="@((arg)=>SetSupplier((NewSupplierResponse?)arg))"
                                         AllowClear=true 
                                         FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith"
                                         AllowFiltering="true"
-                                        TValue="SupplierResponse?" />
+                                        TValue="NewSupplierResponse?" />
 
 
 

@@ -1,11 +1,14 @@
-﻿<RadzenRow JustifyContent="JustifyContent.SpaceBetween">
-    <RadzenText TextStyle="TextStyle.Caption" TagName="TagName.H5"><b>@Label</b></RadzenText>
-    <RadzenText TextStyle="TextStyle.Caption">@Value</RadzenText>
+﻿<RadzenRow JustifyContent="JustifyContent.SpaceBetween" >
+    <RadzenText TextStyle="TextStyle.Caption" Style="@Style"><b>@Label</b></RadzenText>
+    <RadzenText TextStyle="TextStyle.Caption" Style="@Style">@Value</RadzenText>
 </RadzenRow>
-@code {
+    @code {
     [Parameter]
     public string Label { get; set; } = string.Empty;
     [Parameter]
     public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Style { get; set; } = string.Empty;
 
 }

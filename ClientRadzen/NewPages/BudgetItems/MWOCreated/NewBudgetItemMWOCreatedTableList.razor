@@ -1,0 +1,59 @@
+﻿<RadzenRow>
+    <RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" class="rz-mt-4" 
+                    AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                    Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowVirtualization=true
+                    Data="@MainPage.FilteredItems" TItem="NewBudgetItemMWOCreatedResponse" ColumnWidth="50px"
+                    LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+
+
+        <Columns>
+            <RadzenDataGridColumn TItem="NewBudgetItemMWOCreatedResponse"
+                                  Property="@nameof(NewBudgetItemMWOCreatedResponse.Nomeclatore)"
+                                  Title="ID" TextAlign="TextAlign.Left" Width="120px" />
+            <RadzenDataGridColumn TItem="NewBudgetItemMWOCreatedResponse"
+                                  Property="@nameof(NewBudgetItemMWOCreatedResponse.ComposedName)"
+                                  Title="Name" TextAlign="TextAlign.Left" Width="120px" />
+            <RadzenDataGridColumn TItem="NewBudgetItemMWOCreatedResponse"
+                                  Property="@nameof(NewBudgetItemMWOCreatedResponse.Type)"
+                                  Title="Type" TextAlign="TextAlign.Left">
+                <Template Context="detail">
+                    @detail.Type.Name
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="NewBudgetItemMWOCreatedResponse"
+                                  Property="@nameof(NewBudgetItemMWOCreatedResponse.Budget)"
+                                  Title="Budget, USD" TextAlign="TextAlign.Left">
+                <Template Context="detail">
+                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Budget)}")
+                </Template>
+            </RadzenDataGridColumn>
+         
+            <RadzenDataGridColumn TItem="NewBudgetItemMWOCreatedResponse" Width="80px"
+                                  Title="Actions" TextAlign="TextAlign.Left">
+                <Template Context="product">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1" Click="@(()=>MainPage.Edit(product))"
+                                  MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit {product.Name}",TooltipPosition.Left) )" />
+
+                    @if (!product.IsNotAbleToEditDelete)
+                    {
+                        <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-ml-2" Click="@(()=>MainPage.Delete(product))"
+                                      MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete {product.Name}",TooltipPosition.Left) )" />
+                    }
+
+                </Template>
+
+            </RadzenDataGridColumn>
+
+        </Columns>
+    </RadzenDataGrid>
+</RadzenRow>
+@if (debug)
+{
+
+}
+@code {
+    bool debug = true;
+
+}

@@ -2,10 +2,10 @@
 using Domain.Entities.Data;
 using MediatR;
 using Shared.Commons.Results;
-using Shared.Models.Currencies;
+using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
-using Shared.Models.Suppliers;
+
 using System.Diagnostics;
 using System.Linq.Expressions;
 
@@ -68,9 +68,9 @@ namespace Application.Features.PurchaseOrders.Queries
             PurchaseOrderId=e.Id,
             MWOId = e.MWOId,
             MainBudgetItemId = e.MainBudgetItemId,
-            Supplier = e.Supplier == null ? null! : new SupplierResponse()
+            Supplier = e.Supplier == null ? null! : new NewSupplierResponse()
             {
-                Id = e.Supplier.Id,
+                SupplierId = e.Supplier.Id,
                 Name = e.Supplier.Name,
                 NickName = e.Supplier.NickName,
 
@@ -79,7 +79,7 @@ namespace Application.Features.PurchaseOrders.Queries
             CECName=e.MWO.CECName,
             QuoteNo = e.QuoteNo,
             QuoteCurrency = CurrencyEnum.GetType(e.QuoteCurrency),
-            PurchaseOrderCurrency = CurrencyEnum.GetType(e.Currency),
+            PurchaseOrderCurrency = CurrencyEnum.GetType(e.PurchaseOrderCurrency),
             PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(e.PurchaseOrderStatus),
             PurchaseRequisition = e.PurchaseRequisition,
             SPL = e.SPL,
@@ -109,9 +109,9 @@ namespace Application.Features.PurchaseOrders.Queries
             PurchaseOrderId = e.Id,
             MWOId = e.MWOId,
             MainBudgetItemId = e.MainBudgetItemId,
-            Supplier = e.Supplier == null ? null! : new SupplierResponse()
+            Supplier = e.Supplier == null ? null! : new NewSupplierResponse()
             {
-                Id = e.Supplier.Id,
+                SupplierId = e.Supplier.Id,
                 Name = e.Supplier.Name,
                 NickName = e.Supplier.NickName,
 
@@ -119,11 +119,11 @@ namespace Application.Features.PurchaseOrders.Queries
             CECName = e.MWO.CECName,
             QuoteNo = e.QuoteNo,
             QuoteCurrency = CurrencyEnum.GetType(e.QuoteCurrency),
-            PurchaseOrderCurrency = CurrencyEnum.GetType(e.Currency),
+            PurchaseOrderCurrency = CurrencyEnum.GetType(e.PurchaseOrderCurrency),
             PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(e.PurchaseOrderStatus),
             PurchaseRequisition = e.PurchaseRequisition,
             PurchaseOrderNumber=e.PONumber,
-            ExpectedOn=e.POExpectedDateDate==null?string.Empty:e.POExpectedDateDate.Value.ToString("d"),
+            DateExpectedOn = e.POExpectedDateDate!.Value,
             SPL = e.SPL,
             TaxCode = e.TaxCode,
             USDCOP = e.USDCOP,
@@ -149,9 +149,9 @@ namespace Application.Features.PurchaseOrders.Queries
             PurchaseOrderId = e.Id,
             MWOId = e.MWOId,
             MainBudgetItemId = e.MainBudgetItemId,
-            Supplier = e.Supplier == null ? null! : new SupplierResponse()
+            Supplier = e.Supplier == null ? null! : new NewSupplierResponse()
             {
-                Id = e.Supplier.Id,
+                SupplierId = e.Supplier.Id,
                 Name = e.Supplier.Name,
                 NickName = e.Supplier.NickName,
 
@@ -159,7 +159,7 @@ namespace Application.Features.PurchaseOrders.Queries
             CECName = e.MWO.CECName,
             QuoteNo = e.QuoteNo,
             QuoteCurrency = CurrencyEnum.GetType(e.QuoteCurrency),
-            PurchaseOrderCurrency = CurrencyEnum.GetType(e.Currency),
+            PurchaseOrderCurrency = CurrencyEnum.GetType(e.PurchaseOrderCurrency),
             PurchaseOrderStatus = PurchaseOrderStatusEnum.GetType(e.PurchaseOrderStatus),
             PurchaseRequisition = e.PurchaseRequisition,
             PurchaseOrderNumber = e.PONumber,

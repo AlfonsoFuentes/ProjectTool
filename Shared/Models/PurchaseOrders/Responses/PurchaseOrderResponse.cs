@@ -1,4 +1,4 @@
-﻿using Shared.Models.PurchaseorderStatus;
+﻿using Shared.Enums.PurchaseorderStatus;
 using System.Net.Http.Headers;
 
 namespace Shared.Models.PurchaseOrders.Responses

@@ -1,13 +1,8 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.CostCenter;
-using Shared.Models.Currencies;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.CostCenter;
+using Shared.Enums.Currencies;
 using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
 using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Queries
 {
@@ -40,7 +35,7 @@ namespace Application.Features.PurchaseOrders.Queries
                 MWOName = purchaseOrder.MWO.Name,
                 MainBudgetItem = new()
                 {
-                    Budget = budgtitem.Budget,
+                    BudgetUSD = budgtitem.Budget,
                     Brand = budgtitem.Brand == null ? string.Empty : budgtitem.Brand.Name,
                     BudgetItemId = budgtitem.Id,
                     Name = budgtitem.Name,
@@ -52,7 +47,7 @@ namespace Application.Features.PurchaseOrders.Queries
                 PurchaseOrderName = purchaseOrder.PurchaseorderName,
                 PurchaseOrderId = purchaseOrder.Id,
                 PurchaseorderNumber = purchaseOrder.PONumber,
-                PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
+                PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.PurchaseOrderCurrency),
                 QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
                 IsCapitalizedSalary = purchaseOrder.PONumber == string.Empty,
                 USDCOP = purchaseOrder.USDCOP,
@@ -60,30 +55,22 @@ namespace Application.Features.PurchaseOrders.Queries
                 CurrencyDate = purchaseOrder.CurrencyDate,
                 PurchaseOrderItem = purchaseOrder.PurchaseOrderItems.Select(x => new PurchaseOrderItemRequest()
                 {
-                    Budget = x.BudgetItem.Budget,
                     BudgetItemId = x.BudgetItemId,
                     PurchaseOrderItemId = x.Id,
-                    ActualCurrency = x.ActualCurrency,
-
-                    QuoteCurrency = CurrencyEnum.GetType(CurrencyEnum.USD.Id),
-                    PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
                     Name = x.Name,
                     Quantity = x.Quantity,
                     BudgetItemName = x.BudgetItem.Name,
                     TRMUSDCOP = purchaseOrder.USDCOP,
                     TRMUSDEUR = purchaseOrder.USDEUR,
+                    QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
+                    PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.PurchaseOrderCurrency),
                     QuoteCurrencyValue = x.UnitaryValueCurrency,
-                    AssignedCurrency = x.BudgetItem.PurchaseOrderItems.Where(x =>
-                   x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
-
-                    PotencialCurrency = x.BudgetItem.PurchaseOrderItems.Where(x =>
-                    x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
-
-                   
-                    OriginalAssignedCurrency = x.BudgetItem.PurchaseOrderItems.Where(x =>
-                    x.PurchaseOrder.PurchaseOrderStatus != PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
-                    OriginalPotencialCurrency = x.BudgetItem.PurchaseOrderItems.Where(x =>
-                    x.PurchaseOrder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Created.Id).Sum(x => x.UnitaryValueCurrency * x.Quantity),
+                    BudgetUSD = x.BudgetItem.Budget,
+                    AssignedUSD = x.AssignedUSD,
+                    PotencialUSD = x.PotentialCommitmentUSD,
+                    ActualUSD = x.ActualUSD,
+                    OriginalAssignedCurrency = x.AssignedUSD,
+                    OriginalPotencialCurrency = x.PotentialCommitmentUSD,
 
                 }).FirstOrDefault()!,
 

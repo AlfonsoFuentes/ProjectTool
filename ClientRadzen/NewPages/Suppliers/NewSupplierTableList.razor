@@ -1,0 +1,64 @@
+﻿
+    <RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false" class="rz-mt-1" AllowVirtualization="true" Style="height:700px"
+                    AllowGrouping="false" AllowSorting="false" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                    Density="Density.Default" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+           
+                    Data="@SupplierMain.FilteredItems" TItem="NewSupplierResponse" ColumnWidth="40px"
+                    >
+
+
+        <Columns>
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Property="@nameof(NewSupplierResponse.Name)"
+                                  Title="Name" TextAlign="TextAlign.Left" Width="100px" />
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Property="@nameof(NewSupplierResponse.NickName)"
+                                  Title="Nick Name" TextAlign="TextAlign.Left"  />
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Property="@nameof(NewSupplierResponse.SupplierCurrency)"
+                                  Title="Currency" TextAlign="TextAlign.Left">
+                              <Template Context="detail">
+                                  @detail.SupplierCurrency.Name
+                              </Template>
+                              </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Property="@nameof(NewSupplierResponse.VendorCode)"
+                                  Title="Vendor Code" TextAlign="TextAlign.Left"  />
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Property="@nameof(NewSupplierResponse.TaxCodeLD)"
+                                  Title="Tax Code LD" TextAlign="TextAlign.Left" />
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Property="@nameof(NewSupplierResponse.TaxCodeLP)"
+                                  Title="Tax Code LP" TextAlign="TextAlign.Left"  />
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Property="@nameof(NewSupplierResponse.ContactName)"
+                                  Title="Contact" TextAlign="TextAlign.Left" />
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Property="@nameof(NewSupplierResponse.ContactEmail)"
+                                  Title="Email" TextAlign="TextAlign.Left" />
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Property="@nameof(NewSupplierResponse.PhoneNumber)"
+                                  Title="Mobil" TextAlign="TextAlign.Left" />
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Property="@nameof(NewSupplierResponse.CreatedBy)"
+                                  Title="Created By" TextAlign="TextAlign.Left" />
+            <RadzenDataGridColumn TItem="NewSupplierResponse"
+                                  Title="Actions" TextAlign="TextAlign.Left">
+                <Template Context="product">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="rz-mr-1"
+                                  MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit", TooltipPosition.Top) )" Click="@(()=>SupplierMain.Edit(product))" />
+                <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="rz-ml-2"
+                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel", TooltipPosition.Top) )"
+                                  Click="@(()=>SupplierMain.Delete(product))" />
+
+                </Template>
+
+            </RadzenDataGridColumn>
+
+        </Columns>
+    </RadzenDataGrid>
+
+
+@code {
+
+}

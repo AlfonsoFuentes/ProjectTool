@@ -1,0 +1,9 @@
+﻿global using Shared.NewModels.Suppliers.Reponses;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;
+global using Shared.Enums.Focuses;
+global using Shared.Enums.MWOTypes;
+global using Shared.Enums.Currencies;
+global using Shared.NewModels.BudgetItems.Responses;
+global using Shared.Enums.BudgetItemTypes;
+global using Shared.NewModels.Brands.Reponses;

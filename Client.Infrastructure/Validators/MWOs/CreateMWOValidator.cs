@@ -1,4 +1,6 @@
-﻿namespace Client.Infrastructure.Validators.MWOs
+﻿
+
+namespace Client.Infrastructure.Validators.MWOs
 {
     public class CreateMWOValidator : AbstractValidator<CreateMWORequest>
     {

@@ -1,6 +1,5 @@
-﻿using Shared.Models.Currencies;
-using Shared.Models.PurchaseorderStatus;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Shared.Enums.Currencies;
+using Shared.Enums.PurchaseorderStatus;
 
 namespace Shared.Models.PurchaseOrders.Responses
 {
@@ -55,10 +54,11 @@ namespace Shared.Models.PurchaseOrders.Responses
         public double ApprovedUSD =>
             PurchaseOrderStatus.Id != PurchaseOrderStatusEnum.Created.Id ? AssignedUSD : 0;
 
-        public double PendingToReceiveUSD =>
+        public double CommitmentUSD =>
             PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? 0 : ApprovedUSD - ActualUSD;
 
-        public string ExpectedOn { get; set; } = string.Empty;
+        public DateTime? ExpectedOn { get; set; }
+        public DateTime? ClosedOn { get; set; }
         public string LabelAction => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ?
            $"Edit {PurchaseRequisition}" : $"Edit {PurchaseOrderNumber}";
     }

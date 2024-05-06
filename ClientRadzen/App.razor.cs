@@ -28,4 +28,12 @@ public partial class App
 
 
     }
+    public int TabIndexMWOApproved { get; set; } = 0;
+    public int TabIndexMWO { get; set; } = 0;
+    public int TabIndexMWOCreated { get; set; } = 0;
+    public int TabIndexPurchaseOrder { get; set; } = 0;
+    public int TabIndexBrands {  get; set; } = 0;
+    public int TabIndexSuppliers { get; set; } = 0;
+    public int TabIndexBudgetItemsMWOCreated { get; set; } = 0;
+    public int TabIndexVersionUsers { get; set; } = 0;
 }

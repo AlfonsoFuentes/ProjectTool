@@ -20,7 +20,7 @@
     </RadzenRow>
 
     <CascadingValue Value=this>
-        <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Server" Change="ChangeIndex">
+        <RadzenTabs @bind-SelectedIndex=@MainApp.TabIndexMWO TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" Change="ChangeIndex">
             <Tabs>
                 <RadzenTabsItem Text="Created">
                     <MWODataListCreated></MWODataListCreated>
@@ -42,10 +42,6 @@
 
 </RadzenStack>
 @code {
-    int TabIndex = 0;
-    void ChangeIndex(int index)
-    {
-        TabIndex = index;
-    }
+   
 
 }

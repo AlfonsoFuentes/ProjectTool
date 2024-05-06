@@ -1,7 +1,7 @@
-﻿using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.CostCenter;
-using Shared.Models.MWOTypes;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.CostCenter;
+using Shared.Enums.MWOTypes;
+using Shared.Models.BudgetItems;
 using System.ComponentModel.DataAnnotations;
 
 namespace Shared.Models.MWO

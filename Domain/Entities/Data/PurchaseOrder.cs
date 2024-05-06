@@ -1,5 +1,4 @@
-﻿using Shared.Models.Currencies;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.Data
 {
@@ -13,6 +12,7 @@ namespace Domain.Entities.Data
         public Supplier? Supplier { get; set; } = null!;
         public ICollection<DownPayment> DownPayments { get; set; } = new List<DownPayment>();
         public ICollection<PurchaseOrderItem> PurchaseOrderItems { get; set; } = new List<PurchaseOrderItem>();
+        
         public static PurchaseOrder Create(Guid mwoid)
         {
             PurchaseOrder item = new PurchaseOrder();
@@ -21,31 +21,27 @@ namespace Domain.Entities.Data
 
             return item;
         }
-        public PurchaseOrderItem AddPurchaseOrderItem(Guid mwobudgetitemid, string name)
+        
+        public PurchaseOrderItem AddPurchaseOrderItem(Guid mwobudgetitemid)
         {
             var row = PurchaseOrderItem.Create(Id, mwobudgetitemid);
-            row.Name = name;
-
             return row;
         }
-        public PurchaseOrderItem AddPurchaseOrderItemForNoProductiveTax(Guid mwobudgetitemid, string name)
+        public PurchaseOrderItem AddPurchaseOrderItemForNoProductiveTax(Guid mwobudgetitemid)
         {
             var row = PurchaseOrderItem.Create(Id, mwobudgetitemid);
-            row.Name = name;
             row.IsTaxNoProductive = true;
             return row;
         }
-        public PurchaseOrderItem AddPurchaseOrderItemForAlteration(Guid mwobudgetitemid, string name)
+        public PurchaseOrderItem AddPurchaseOrderItemForAlteration(Guid mwobudgetitemid)
         {
             var row = PurchaseOrderItem.Create(Id, mwobudgetitemid);
-            row.Name = name;
-
             row.IsTaxAlteration = true;
             return row;
         }
         public string QuoteNo { get; set; } = "";
         public int QuoteCurrency { get; set; }
-        public int Currency { get; set; }
+        public int PurchaseOrderCurrency { get; set; }
         public int PurchaseOrderStatus { get; set; }
         public string PurchaseRequisition { get; set; } = "";
         public DateTime? POApprovedDate { get; set; }
@@ -58,16 +54,22 @@ namespace Domain.Entities.Data
         public double USDEUR { get; set; }
         public DateTime CurrencyDate { get; set; }
         public string AccountAssigment { get; set; } = "";
-     
+
         public string PurchaseorderName { get; set; } = string.Empty;
-       
+
         public bool IsAlteration { get; set; } = false;
         public bool IsCapitalizedSalary { get; set; } = false;
-       
+
         public bool IsTaxEditable { get; set; } = false;
+        [NotMapped]
+        public double ActualCurrency => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.ActualCurrency);
         [NotMapped]
         public double ActualUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.ActualUSD);
+        [NotMapped]
+        public double NewActualUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.NewActualUSD);
         [NotMapped]
         public double AssignedUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.AssignedUSD);
@@ -77,9 +79,14 @@ namespace Domain.Entities.Data
         [NotMapped]
         public double PotentialCommitmentUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.PotentialCommitmentUSD);
-       
+        [NotMapped]
+        public double NewPendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.NewPendingToReceiveUSD);
         [NotMapped]
         public double PendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.PendingToReceiveUSD);
+        [NotMapped]
+        public double QuoteValueCurrency => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.QuoteValueCurrency);
     }
 }

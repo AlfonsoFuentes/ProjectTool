@@ -25,18 +25,18 @@ namespace Application.Features.BudgetItems.Command
 
             row.Name = request.Data.Name;
             row.UnitaryCost = request.Data.UnitaryCost;
-            row.Budget = request.Data.UnitaryCost * request.Data.Quantity;
+          
             row.Existing = request.Data.Existing;
             row.Quantity = request.Data.Quantity;
             row.Model = request.Data.Model;
             row.Reference = request.Data.Reference;
-            row.BrandId = request.Data.Brand == null ? null : request.Data.Brand.Id;
+            row.BrandId = request.Data.Brand == null ? null : request.Data.Brand.BrandId;
 
             await Repository.UpdateBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
 
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
-            //await MWORepository.UpdateDataForNotApprovedMWO(row.MWOId, cancellationToken);
+     
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} updated succesfully!");

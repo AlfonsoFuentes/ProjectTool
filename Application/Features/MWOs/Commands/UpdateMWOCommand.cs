@@ -1,9 +1,5 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItemTypes;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.Enums.BudgetItemTypes;
 using Shared.Models.MWO;
 
 namespace Application.Features.MWOs.Commands
@@ -33,16 +29,12 @@ namespace Application.Features.MWOs.Commands
             }
             mwo.Name = request.Data.Name;
             mwo.Type = request.Data.Type.Id;
-            mwo.PercentageContingency = request.Data.PercentageContingency;
-            mwo.PercentageEngineering = request.Data.PercentageEngineering;
-            mwo.PercentageAssetNoProductive = request.Data.PercentageAssetNoProductive;
+           
             mwo.PercentageTaxForAlterations=request.Data.PercentageTaxForAlterations;
             if (mwo.IsAssetProductive && !request.Data.IsAssetProductive)
             {
                 mwo.IsAssetProductive = false;
-            
-
-                await CreateTaxesForNoProductive(mwo, request.Data);
+            await CreateTaxesForNoProductive(mwo, request.Data);
 
             }
             else if (!mwo.IsAssetProductive && request.Data.IsAssetProductive)

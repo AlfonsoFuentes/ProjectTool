@@ -1,7 +1,6 @@
-﻿using Application.Features.Brands.Queries;
-using Application.Features.PurchaseorderValidators.Queries;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿
+
+
 
 namespace Server.Controllers.Brands
 {
@@ -18,12 +17,12 @@ namespace Server.Controllers.Brands
         [HttpGet("ValidateNameExist/{name}")]
         public async Task<IActionResult> ValidateNameExistInPurchaseOrder(string name)
         {
-            return Ok(await Mediator.Send(new ValidateBrandNameExistQuery(name)));
+            return Ok(await Mediator.Send(new NewBrandValidateNameQuery(name)));
         }
         [HttpGet("ValidateNameExist/{BrandId}/{name}")]
         public async Task<IActionResult> ValidateNameExistInPurchaseOrder(Guid BrandId,string name)
         {
-            return Ok(await Mediator.Send(new ValidateExistingBrandNameExistQuery(BrandId, name)));
+            return Ok(await Mediator.Send(new NewBrandValidateNameExistQuery(BrandId, name)));
         }
     }
 }

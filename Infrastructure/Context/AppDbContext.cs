@@ -1,28 +1,17 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Account;
-using Domain.Entities.Data;
-using Domain.Interfaces;
-using Infrastructure.Services;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Shared.Commons.Results;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿
 
 namespace Infrastructure.Context
 {
-    public class AppDbContext : IdentityDbContext<AplicationUser>,IAppDbContext
+    public class AppDbContext : IdentityDbContext<AplicationUser>, IAppDbContext
     {
         private string CurrentTenant { get; set; }
-      
-        public AppDbContext(DbContextOptions<AppDbContext> options, ITenantService TenantService) : base(options)
+        private readonly IAppCache _cache;
+        public AppDbContext(DbContextOptions<AppDbContext> options, ITenantService TenantService, IAppCache cache) : base(options)
         {
-            CurrentTenant=TenantService.GetTenantId();  
-
-           
+            CurrentTenant = TenantService.GetTenantId();
+            _cache = cache;
         }
-       
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -87,6 +76,17 @@ namespace Infrastructure.Context
                 entity!.TenantId = CurrentTenant;
 
             }
+            var entittes = ChangeTracker.Entries<BaseEntity>().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified).ToList();
+
+            var currentUser = await Users.FindAsync(CurrentTenant);
+            foreach (var row in entittes)
+            {
+                if (row.State == EntityState.Added)
+                    row.Entity.CreatedDate = DateTime.Now;
+                if (row.State == EntityState.Modified)
+                    row.Entity.LastModifiedOn = DateTime.Now;
+                row.Entity.CreatedByUserName = currentUser == null ? string.Empty : currentUser!.Email!;
+            }
             var ModifyEntities = ChangeTracker.Entries<IBaseEntity>().Where(e => e.State == EntityState.Modified && e.Entity is ITenantEntity);
             foreach (var entry in ModifyEntities)
             {
@@ -111,6 +111,32 @@ namespace Infrastructure.Context
         public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
         public DbSet<DownPayment> DownPayments { get; set; }
         public DbSet<SapAdjust> SapAdjusts { get; set; }
-       
+        public DbSet<SoftwareVersion> SoftwareVersions { get; set; }
+        public DbSet<UpdatedSoftwareVersion> UpdatedSoftwareVersions { get; set; }
+
+        public DbSet<PurchaseOrderItemReceived> PurchaseOrderItemReceiveds { get; set; }
+        public async Task<int> SaveChangesAndRemoveCacheAsync(CancellationToken cancellationToken, params string[] cacheKeys)
+        {
+            var result = await SaveChangesAsync(cancellationToken);
+            foreach (var cacheKey in cacheKeys)
+            {
+                var key = $"{cacheKey}-{CurrentTenant}";
+                _cache.Remove(key);
+            }
+            return result;
+        }
+        public void RemoveCacheByUserChange()
+        {
+
+        }
+        public Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> addItemFactory)
+        {
+            if (_cache == null)
+            {
+                throw new ArgumentNullException("cache");
+            }
+            key = $"{key}-{CurrentTenant}";
+            return _cache.GetOrAddAsync(key, addItemFactory);
+        }
     }
 }

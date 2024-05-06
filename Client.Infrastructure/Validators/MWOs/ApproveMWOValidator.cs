@@ -1,7 +1,11 @@
-﻿using Shared.Models.CostCenter;
+﻿
+
+using FluentValidation;
+using Shared.Enums.CostCenter;
 
 namespace Client.Infrastructure.Validators.MWOs
 {
+
     public class ApproveMWOValidator : AbstractValidator<ApproveMWORequest>
     {
         private IMWOValidatorService _Service;
@@ -29,9 +33,9 @@ namespace Client.Infrastructure.Validators.MWOs
             RuleFor(x => x.PercentageContingency).NotEqual(0).WithMessage("Must define Percentage for Contingency");
             RuleFor(x => x.PercentageAssetNoProductive).NotEqual(0).When(x => !x.IsAssetProductive).WithMessage("Must define Tax For Items");
         }
-        async Task<bool> ReviewIfNumberExist(string cecnumber, CancellationToken cancellationToken)
+        async Task<bool> ReviewIfNumberExist(ApproveMWORequest mwo, string cecnumber, CancellationToken cancellationToken)
         {
-            return !await _Service.ValidateMWONumberExist(cecnumber);
+            return !await _Service.ValidateMWONumberExist(mwo.Id,cecnumber);
         }
         async Task<bool> ReviewIfNameExist(ApproveMWORequest mwo, string name, CancellationToken cancellationToken)
         {

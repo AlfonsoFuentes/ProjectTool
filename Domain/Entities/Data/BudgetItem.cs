@@ -1,4 +1,4 @@
-﻿using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.Data
@@ -9,15 +9,19 @@ namespace Domain.Entities.Data
         public MWO MWO { get; set; } = null!;
         public Guid MWOId { get; set; }
         public string Name { get; set; } = string.Empty;
+        public string MWOName => MWO == null ? string.Empty : MWO.Name;
+        public string MWOCECName => MWO == null ? string.Empty : MWO.CECName;
+        public string MWOCostCenter => MWO == null ? string.Empty : MWO.CostCenterName;
         public int Type { get; set; } = 0;
         public double UnitaryCost { get; set; }
-        public double Budget { get; set; }
+
         public int Order { get; set; }
         public bool Existing { get; set; }
         public double Quantity { get; set; }
         public Guid? BrandId { get; set; }
         public Brand? Brand { get; set; } = null!;
         public bool IsMainItemTaxesNoProductive { get; set; }
+        public bool IsEngineeringItem { get; set; }
         public string? Model { get; set; } = string.Empty;
         public string? Reference { get; set; } = string.Empty;
         public double Percentage { get; set; }
@@ -32,23 +36,15 @@ namespace Domain.Entities.Data
             result.Id = Guid.NewGuid();
             result.BudgetItemId = Id;
             result.SelectedId = SelectedItemId;
-
+            TaxesItems.Add(result);
             return result;
         }
-        public TaxesItem AddTaxItemNoProductive(Guid SelectedItemId)
-        {
-            TaxesItem result = new TaxesItem();
-            result.Id = Guid.NewGuid();
-            result.BudgetItemId = Id;
-            result.SelectedId = SelectedItemId;
 
-            return result;
-        }
         [NotMapped]
-        public string Nomeclatore =>$"{BudgetItemTypeEnum.GetLetter(Type)}{Order}";
+        public string Nomeclatore => $"{BudgetItemTypeEnum.GetLetter(Type)}{Order}";
         [NotMapped]
         public bool IsAlteration => Type == BudgetItemTypeEnum.Alterations.Id;
-        
+
         [NotMapped]
         public double ActualUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.ActualUSD);
@@ -66,5 +62,7 @@ namespace Domain.Entities.Data
         [NotMapped]
         public double PendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.PendingToReceiveUSD);
+        [NotMapped]
+        public double Budget => UnitaryCost * Quantity;
     }
 }

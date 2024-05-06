@@ -35,11 +35,13 @@ namespace Application.Features.BudgetItems.Command
                 var taxItem = row.AddTaxItem(itemdto.BudgetItemId);
                 await Repository.AddTaxSelectedItem(taxItem);
             }
-            row.Budget = sumBudget;
+            row.UnitaryCost = sumBudget;
+            row.Quantity = 1;
+            
             await Repository.AddBudgetItem(row);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
             await Repository.UpdateTaxesAndEngineeringContingencyItems(row.MWOId, cancellationToken);
-            //await MWORepository.UpdateDataForNotApprovedMWO(mwo.Id, cancellationToken);
+            
             if (result > 0)
             {
                 return Result.Success($"{request.Data.Name} created succesfully!");

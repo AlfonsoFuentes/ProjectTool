@@ -1,7 +1,5 @@
-﻿using Shared.Models.BudgetItemTypes;
-using Shared.Models.MWO;
+﻿using Shared.Enums.BudgetItemTypes;
 using Shared.Models.PurchaseOrders.Responses;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Shared.Models.BudgetItems
 {
@@ -28,7 +26,7 @@ namespace Shared.Models.BudgetItems
 
         public double Quantity { get; set; }
 
-        public List<PurchaseOrderResponse> PurchaseOrders { get; set; } = new();
+        public List<NewPurchaseOrderResponse> PurchaseOrders { get; set; } = new();
         public bool HasPurchaseOrders => PurchaseOrders.Count > 0;
         public string NomenclatoreName => $"{Nomenclatore} - {Name}";
         public BudgetItemTypeEnum Type { get; set; } = BudgetItemTypeEnum.None;
@@ -55,12 +53,13 @@ namespace Shared.Models.BudgetItems
         public bool CreateNormalPurchaseOrder => IsRegularData;
         public bool CreateTaxPurchaseOrder => Type.Id == BudgetItemTypeEnum.Taxes.Id && !IsMainItemTaxesNoProductive;
         public bool CreateCapitalizedSalaries => IsEngineeringData;
-        public double Budget { get; set; }
-        public double Assigned => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetAssignedByItem(BudgetItemId));
-        public double Potencial => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetPotentialByItem(BudgetItemId));
-        public double Actual => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.GetActualByItem(BudgetItemId));
-        public double Commitment => Assigned - Actual - Potencial;
-        public double Pending => Budget - Assigned;
+        public double BudgetUSD { get; set; }
+        public double AssignedUSD => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.AssignedUSD);
+        public double PotentialUSD => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.PotentialCommitmentUSD);
+        public double ActualUSD => PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.ActualUSD);
+        public double ApprovedUSD=> PurchaseOrders.Count == 0 ? 0 : PurchaseOrders.Sum(x => x.ApprovedUSD);
+        public double CommitmentUSD => ApprovedUSD - ActualUSD ;
+        public double Pending => BudgetUSD - AssignedUSD;
         public double Percentage { get; set; }
 
 

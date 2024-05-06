@@ -1,0 +1,77 @@
+﻿<RadzenRow>
+    <RadzenColumn Size="12" SizeLG="4">
+        <RadzenPanel AllowCollapse="true" Collapsed=true Class="rz-my-1 rz-mx-auto">
+            <HeaderTemplate>
+                <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0">
+                    <b>General Info</b>
+                </RadzenText>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard class="rz-mt-1">
+                    <RowTemplateData Label="Name" Value="@(Response.Name)"></RowTemplateData>
+                    <RowTemplateDataPercentage Label="Taxes for Alterations" Value="@(Response.PercentageTaxForAlterations)"></RowTemplateDataPercentage>
+                    <RowTemplateDataPercentage Label="Engineering Percentage" Value="@(Response.PercentageEngineering)"></RowTemplateDataPercentage>
+                    <RowTemplateDataPercentage Label="Contingency Percentage" Value="@(Response.PercentageContingency)"></RowTemplateDataPercentage>
+                    <RowTemplateDataBool Label="Is Productive Assets?" Value=@(Response.IsAssetProductive)></RowTemplateDataBool>
+                    @if (!Response.IsAssetProductive){
+                        <RowTemplateDataPercentage Label="Taxes no productive" Value="@(Response.PercentageAssetNoProductive)"></RowTemplateDataPercentage>
+                    }
+
+
+                </RadzenCard>
+            </ChildContent>
+        </RadzenPanel>
+    </RadzenColumn>
+
+
+    <RadzenColumn Size="12" SizeLG="4">
+        <RadzenPanel AllowCollapse="true" Collapsed=true Class="rz-my-1 rz-mx-auto">
+            <HeaderTemplate>
+                <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0">
+                    <b>Summary</b>
+                </RadzenText>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard class="rz-mt-1">
+                    <RowTemplateCurrency Label="Apropiation, USD" Value="@Response.AppropiationUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Capital, USD" Value="@Response.CapitalUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Expenses, USD" Value="@Response.ExpensesUSD"></RowTemplateCurrency>
+               
+
+                </RadzenCard>
+            </ChildContent>
+        </RadzenPanel>
+    </RadzenColumn>
+
+    <RadzenColumn Size="12" SizeLG="4">
+        <RadzenPanel AllowCollapse="true" Collapsed=true Class="rz-my-1 rz-mx-auto">
+            <HeaderTemplate>
+                <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-0">
+                    <b>Summary detailed</b>
+                </RadzenText>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard class="rz-mt-1">
+                    <RowTemplateCurrency Label="Expenses, USD" Value="@Response.ExpensesUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Budget, USD" Value="@Response.BudgetUSD"></RowTemplateCurrency>
+                    <RowTemplateCurrency Label="Engineering + Contingency, USD" Value="@Response.EngineeringUSD"></RowTemplateCurrency>
+                    @if (!Response.IsAssetProductive)
+                    {
+                        <RowTemplateCurrency Label="Taxes No Productive, USD" Value="@Response.TaxesNoProductiveUSD"></RowTemplateCurrency>
+
+                    }
+
+                </RadzenCard>
+            </ChildContent>
+        </RadzenPanel>
+    </RadzenColumn>
+
+
+</RadzenRow>
+@if(debug)
+{
+    
+}
+@code {
+    bool debug = true;
+}

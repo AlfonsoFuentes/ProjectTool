@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.Features.MWOs.Queries
 {
-    public record ValidateMWONumberExist(string mwonumber):IRequest<bool>;
+    public record ValidateMWONumberExist(Guid MWOId, string mwonumber):IRequest<bool>;
 
     public class ValidateMWONumberExistHandler : IRequestHandler<ValidateMWONumberExist, bool>
     {
@@ -16,7 +16,7 @@ namespace Application.Features.MWOs.Queries
 
         public async Task<bool> Handle(ValidateMWONumberExist request, CancellationToken cancellationToken)
         {
-            return await repository.ReviewIfNumberExist(request.mwonumber);
+            return await repository.ReviewIfNumberExist(request.MWOId,request.mwonumber);
         }
     }
 

@@ -6,9 +6,9 @@
     }
     internal class Rates : IRate
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientService _httpClient;
 
-        public Rates(HttpClient httpClient)
+        public Rates(IHttpClientService httpClient)
         {
             _httpClient = httpClient;
         }

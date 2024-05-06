@@ -1,5 +1,5 @@
-﻿using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.Models.WayToReceivePurchaseOrdersEnums;
+﻿using Shared.Enums.WayToReceivePurchaseOrdersEnums;
+using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
 
 namespace Client.Infrastructure.Validators.PurchaseOrder
 {

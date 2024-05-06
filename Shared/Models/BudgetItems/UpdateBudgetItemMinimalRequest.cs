@@ -1,4 +1,4 @@
-﻿using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 
 namespace Shared.Models.BudgetItems
 {

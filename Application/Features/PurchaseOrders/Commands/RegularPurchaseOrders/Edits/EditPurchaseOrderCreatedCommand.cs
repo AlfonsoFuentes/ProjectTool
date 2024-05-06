@@ -50,7 +50,8 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
                 var purchaseorderItem = await Repository.GetPurchaseOrderItemById(item.PurchaseOrderItemId);
                 if(purchaseorderItem==null)
                 {
-                    purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId, item.Name);
+                    purchaseorderItem = purchaseOrder.AddPurchaseOrderItem(item.BudgetItemId);
+                    purchaseorderItem.Name=item.Name;
                     purchaseorderItem.UnitaryValueCurrency = item.UnitaryValuePurchaseOrderCurrency;
                     purchaseorderItem.Quantity = item.Quantity;
                     await Repository.AddPurchaseorderItem(purchaseorderItem);

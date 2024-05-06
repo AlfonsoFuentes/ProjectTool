@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Client.Infrastructure.Managers.UserManagement
+﻿namespace Client.Infrastructure.Managers.UserManagement
 {
     public class RefreshTokenService
     {

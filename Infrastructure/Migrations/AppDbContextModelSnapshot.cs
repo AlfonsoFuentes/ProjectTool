@@ -94,6 +94,42 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Account.UpdatedSoftwareVersion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SoftwareVersionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AplicationUserId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("UpdatedSoftwareVersions");
+                });
+
             modelBuilder.Entity("Domain.Entities.Data.Brand", b =>
                 {
                     b.Property<Guid>("Id")
@@ -128,9 +164,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("BrandId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Budget")
-                        .HasColumnType("float");
-
                     b.Property<string>("CreatedByUserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -139,6 +172,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Existing")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEngineeringItem")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsMainItemTaxesNoProductive")
@@ -295,6 +331,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Focus")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsAssetProductive")
                         .HasColumnType("bit");
 
@@ -308,15 +347,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("PercentageAssetNoProductive")
-                        .HasColumnType("float");
-
-                    b.Property<double>("PercentageContingency")
-                        .HasColumnType("float");
-
-                    b.Property<double>("PercentageEngineering")
-                        .HasColumnType("float");
 
                     b.Property<double>("PercentageTaxForAlterations")
                         .HasColumnType("float");
@@ -355,9 +385,6 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Currency")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CurrencyDate")
                         .HasColumnType("datetime2");
 
@@ -391,6 +418,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("PONumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PurchaseOrderCurrency")
+                        .HasColumnType("int");
 
                     b.Property<int>("PurchaseOrderStatus")
                         .HasColumnType("int");
@@ -498,6 +528,50 @@ namespace Infrastructure.Migrations
                     b.ToTable("PurchaseOrderItems");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Data.PurchaseOrderItemReceived", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CurrencyDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PurchaseOrderItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("USDCOP")
+                        .HasColumnType("float");
+
+                    b.Property<double>("USDEUR")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ValueReceivedCurrency")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PurchaseOrderItemId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("PurchaseOrderItemReceiveds");
+                });
+
             modelBuilder.Entity("Domain.Entities.Data.SapAdjust", b =>
                 {
                     b.Property<Guid>("Id")
@@ -564,6 +638,34 @@ namespace Infrastructure.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("SapAdjusts");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Data.SoftwareVersion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SoftwareVersions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Data.Supplier", b =>
@@ -792,6 +894,17 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Account.UpdatedSoftwareVersion", b =>
+                {
+                    b.HasOne("Domain.Entities.Account.AplicationUser", "AplicationUser")
+                        .WithMany("UpdatedSoftwareVersions")
+                        .HasForeignKey("AplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AplicationUser");
+                });
+
             modelBuilder.Entity("Domain.Entities.Data.BudgetItem", b =>
                 {
                     b.HasOne("Domain.Entities.Data.Brand", "Brand")
@@ -856,6 +969,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("BudgetItem");
 
                     b.Navigation("PurchaseOrder");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Data.PurchaseOrderItemReceived", b =>
+                {
+                    b.HasOne("Domain.Entities.Data.PurchaseOrderItem", "PurchaseOrderItem")
+                        .WithMany("PurchaseOrderReceiveds")
+                        .HasForeignKey("PurchaseOrderItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PurchaseOrderItem");
                 });
 
             modelBuilder.Entity("Domain.Entities.Data.SapAdjust", b =>
@@ -939,6 +1063,11 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.Account.AplicationUser", b =>
+                {
+                    b.Navigation("UpdatedSoftwareVersions");
+                });
+
             modelBuilder.Entity("Domain.Entities.Data.Brand", b =>
                 {
                     b.Navigation("BudgetItems");
@@ -967,6 +1096,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("DownPayments");
 
                     b.Navigation("PurchaseOrderItems");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Data.PurchaseOrderItem", b =>
+                {
+                    b.Navigation("PurchaseOrderReceiveds");
                 });
 
             modelBuilder.Entity("Domain.Entities.Data.Supplier", b =>

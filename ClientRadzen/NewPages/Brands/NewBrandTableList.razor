@@ -1,0 +1,36 @@
+﻿
+<RadzenRow>
+    <RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" class="rz-mt-4"
+                    AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                    Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    FilterPopupRenderMode="PopupRenderMode.OnDemand"
+                    Data="@BrandMain.FilteredItems" TItem="NewBrandResponse" ColumnWidth="60px"
+                    LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+
+
+        <Columns>
+            <RadzenDataGridColumn TItem="NewBrandResponse"
+                                  Property="@nameof(NewBrandResponse.Name)"
+                                  Title="Name" TextAlign="TextAlign.Left" Width="100px" />
+
+            <RadzenDataGridColumn TItem="NewBrandResponse"
+                                  Title="Actions" TextAlign="TextAlign.Left">
+                <Template Context="product">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="rz-mr-1"
+                                  MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit", TooltipPosition.Top) )" Click="@(()=>BrandMain.Edit(product))" />
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="rz-ml-2"
+                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel", TooltipPosition.Top) )"
+                                  Click="@(()=>BrandMain.Delete(product))" />
+
+                </Template>
+
+            </RadzenDataGridColumn>
+
+        </Columns>
+    </RadzenDataGrid>
+</RadzenRow>
+
+
+@code {
+
+}

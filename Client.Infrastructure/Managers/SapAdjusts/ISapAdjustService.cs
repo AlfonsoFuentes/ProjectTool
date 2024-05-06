@@ -1,6 +1,6 @@
 ﻿
 
-using Shared.Models.SapAdjust;
+
 
 namespace Client.Infrastructure.Managers.SapAdjusts
 {

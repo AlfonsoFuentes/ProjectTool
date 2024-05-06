@@ -1,13 +1,4 @@
 ﻿#nullable disable
-using Azure;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
-using Radzen;
-using Shared.Models.BudgetItems;
-using Shared.Models.MWO;
-using Shared.Models.MWOTypes;
-using Shared.Models.Views;
-
 namespace ClientRadzen.Pages.MWOPages
 {
     public partial class MWODataMain
@@ -21,8 +12,18 @@ namespace ClientRadzen.Pages.MWOPages
 
 
         string nameFilter = string.Empty;
-
+       
+     
+        void ChangeIndex(int index)
+        {
+            MainApp.TabIndexMWO = index;
+        }
         protected override async Task OnInitializedAsync()
+        {
+       
+            await UpdateAll();
+        }
+        async Task UpdateAll()
         {
             var result = await Service.GetAllMWO();
             if (result.Succeeded)
@@ -30,9 +31,7 @@ namespace ClientRadzen.Pages.MWOPages
                 Response = result.Data;
 
             }
-            StateHasChanged();
         }
-
         private void AddNew()
         {
             nameFilter = string.Empty;
@@ -42,7 +41,9 @@ namespace ClientRadzen.Pages.MWOPages
         }
         async Task ExporToExcel()
         {
-            var result = TabIndex == 0 ? await Service.ExportMWOsCreated() : TabIndex == 1 ? await Service.ExportMWOsApproved() : await Service.ExportMWOsClosed();
+            var result = MainApp.TabIndexMWO == 0 ? await Service.ExportMWOsCreated() : 
+                MainApp.TabIndexMWO == 1 ? await Service.ExportMWOsApproved() : 
+                await Service.ExportMWOsClosed();
             if (result.Succeeded)
             {
                 var downloadresult = await blazorDownloadFileService.DownloadFile(result.Data.ExportFileName,
@@ -83,7 +84,31 @@ namespace ClientRadzen.Pages.MWOPages
             _NavigationManager.NavigateTo($"/SapAdjustListByMWO/{Response.Id}");
 
         }
+       public async Task UnApproveMWO(MWOApprovedResponse Response)
+        {
+            UnApproveMWORequest UnApproveMWORequest = new()
+            {
+                MWOId = Response.Id,
+                Name = Response.Name,
+                CECName = Response.CECName,
+            };
+            var resultDialog = await DialogService.Confirm($"Are you sure Un Approve {UnApproveMWORequest.Name}?", "Confirm",
+               new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+            if (resultDialog.Value)
+            {
 
+                var result = await Service.UnApproveMWO(UnApproveMWORequest);
+                if (result.Succeeded)
+                {
+                    MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+                    await UpdateAll();
+                }
+                else
+                {
+                    MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+                }
+            }
+        }
 
     }
 }

@@ -1,8 +1,4 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
+﻿using Shared.Enums.BudgetItemTypes;
 
 namespace Application.Features.BudgetItems.Command
 {
@@ -36,17 +32,8 @@ namespace Application.Features.BudgetItems.Command
             row.Percentage = request.Data.Percentage;
             row.UnitaryCost = request.Data.UnitaryCost;
             row.Quantity = request.Data.Quantity;
-            row.Budget = request.Data.Percentage == 0 ? request.Data.Budget : 0;
-            if(row.Type==BudgetItemTypeEnum.Engineering.Id)
-            {
-                mwo.PercentageEngineering = row.Percentage;
-                await Repository.UpdateMWO(mwo);
-            }
-            if (row.Type == BudgetItemTypeEnum.Contingency.Id)
-            {
-                mwo.PercentageContingency = row.Percentage;
-                await Repository.UpdateMWO(mwo);
-            }
+       
+            
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
            
             await AppDbContext.SaveChangesAsync(cancellationToken);

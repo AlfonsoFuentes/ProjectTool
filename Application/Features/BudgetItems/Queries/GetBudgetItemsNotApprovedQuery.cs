@@ -1,10 +1,5 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.Suppliers;
+﻿using Shared.Enums.BudgetItemTypes;
+
 using System.Linq.Expressions;
 
 namespace Application.Features.BudgetItems.Queries

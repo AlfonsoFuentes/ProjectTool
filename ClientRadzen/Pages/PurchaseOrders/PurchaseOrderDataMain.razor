@@ -13,7 +13,7 @@
     </RadzenRow>
 
     <CascadingValue Value=this>
-        <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Server">
+        <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" @bind-SelectedIndex=@MainApp.TabIndexPurchaseOrder Change="ChangeIndex">
             <Tabs>
                 <RadzenTabsItem Text="Created">
                     <PurchaseordersCreated></PurchaseordersCreated>

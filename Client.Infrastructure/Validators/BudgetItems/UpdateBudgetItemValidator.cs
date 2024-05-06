@@ -1,4 +1,5 @@
 ﻿using Client.Infrastructure.Managers.BudgetItems;
+using FluentValidation;
 using Shared.Models.BudgetItems;
 
 namespace Client.Infrastructure.Validators.BudgetItems

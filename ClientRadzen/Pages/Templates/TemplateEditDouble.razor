@@ -1,0 +1,56 @@
+﻿<RadzenTextBox @bind-Value=@sValue Style="width:100%"
+               Placeholder="Input formula then push Enter button"
+               @oninput="@((arg)=>OnInputValue(arg.Value!))"
+               @onkeydown="@((arg)=>OnKeyDownCurrency(arg,sValue))"></RadzenTextBox>
+
+@code {
+
+    string sValue { get; set; } = string.Empty;
+    [Parameter]
+    public double Value { get; set; }
+
+    [Parameter]
+    public EventCallback<double> ValueChanged { get; set; }
+    [Parameter]
+    public EventCallback Change { get; set; }
+    [Parameter]
+    public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
+    protected override void OnInitialized()
+    {
+        sValue = Value.ToString();
+    }
+
+    async Task OnInputValue(object svalue)
+    {
+        sValue = svalue.ToString()!;
+        await Convert(sValue);
+
+    }
+    async Task OnKeyDownCurrency(KeyboardEventArgs arg, string svalue)
+    {
+        if (arg.Key == "Enter")
+        {
+
+            await Convert(svalue);
+            if (OnKeyDown.HasDelegate) await OnKeyDown.InvokeAsync(arg);
+
+        }
+    }
+    async Task Convert(string svalue)
+    {
+        try
+        {
+            Value = svalue.ToDouble();
+            sValue = Value.ToString();
+            await ValueChanged.InvokeAsync(Value);
+            if (Change.HasDelegate) await Change.InvokeAsync();
+
+        }
+        catch (Exception ex)
+        {
+            string exm = ex.Message;
+        }
+    }
+
+
+}

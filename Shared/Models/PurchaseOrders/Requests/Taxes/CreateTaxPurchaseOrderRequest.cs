@@ -1,7 +1,5 @@
-﻿using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.Currencies;
-using Shared.Models.MWO;
+﻿using Shared.Enums.Currencies;
+using Shared.Models.BudgetItems;
 using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 
 namespace Shared.Models.PurchaseOrders.Requests.Taxes
@@ -74,12 +72,12 @@ namespace Shared.Models.PurchaseOrders.Requests.Taxes
 
 
         }
-        public double SumPOValueUSD => PurchaseOrderItem.POValueUSD;
-        public double SumPOValueCurrency => PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
-        public double SumBudget => PurchaseOrderItem.Budget;
+        public double SumPOValueUSD => PurchaseOrderItem.PurchaseOrderValueUSD;
+        public double SumPOValueCurrency => PurchaseOrderItem.PurchaseOrderValuePurchaseOrderCurrency;
+        public double SumBudget => PurchaseOrderItem.BudgetUSD;
         public double SumBudgetAssigned => PurchaseOrderItem.AssignedUSD;
         public double SumBudgetPotencialAssigned => PurchaseOrderItem.PotencialUSD;
-        public double SumPendingUSD => PurchaseOrderItem.POItemPendingUSD;
+        public double SumPendingUSD => PurchaseOrderItem.PendingToCommitmUSD;
         public double SumActualUSD => PurchaseOrderItem.ActualUSD;
     }
 

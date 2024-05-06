@@ -1,4 +1,5 @@
 ﻿@page "/SapAdjustListByMWO/{MWOId:guid}"
+@using ClientRadzen.Pages.MWOPages
 
 @if (Response != null)
 {
@@ -6,6 +7,30 @@
         
        
         <RadzenRow>
+            <RadzenColumn Size="12" SizeLG="7">
+                <RadzenCard>
+                    <RadzenChart Style="height: 450px;">
+                        @foreach (var row in Response.Series)
+                        {
+                            <RadzenLineSeries Data=@row.DataCollection ValueProperty="YValue" CategoryProperty="XValue" Title="@row.Name" Smooth="true">
+                                <RadzenMarkers MarkerType="MarkerType.Circle" />
+                                <RadzenSeriesDataLabels Visible="false" />
+                            </RadzenLineSeries>
+
+                        }
+
+
+
+                        <RadzenLegend Visible="true" />
+                        <RadzenAxisTitle Text="USD" />
+                        <RadzenCategoryAxis Padding="20" />
+                        <RadzenValueAxis Formatter="@FormatAsUSD">
+                            <RadzenGridLines Visible="true" />
+                            <RadzenAxisTitle Text="USD" />
+                        </RadzenValueAxis>
+                    </RadzenChart>
+                </RadzenCard>
+            </RadzenColumn>
             <RadzenColumn Size="12" SizeLG="5">
                 <RadzenRow>
                     <RowTemplateTitle Title="@($"Data for {Response.MWOCECName}-{Response.MWOName} ")"></RowTemplateTitle>
@@ -77,31 +102,9 @@
                 </RadzenRow>
                
             </RadzenColumn>
-            <RadzenColumn Size="12" SizeLG="7">
-                <RadzenCard>
-                    <RadzenChart Style="height: 450px;">
-                        @foreach (var row in Response.Series)
-                        {
-                            <RadzenLineSeries Data=@row.DataCollection ValueProperty="YValue" CategoryProperty="XValue" Title="@row.Name" Smooth="true">
-                                <RadzenMarkers MarkerType="MarkerType.Circle" />
-                                <RadzenSeriesDataLabels Visible="false" />
-                            </RadzenLineSeries>
-
-                        }
-
-
-
-                        <RadzenLegend Visible="true" />
-                        <RadzenAxisTitle Text="USD" />
-                        <RadzenCategoryAxis Padding="20" />
-                        <RadzenValueAxis Formatter="@FormatAsUSD">
-                            <RadzenGridLines Visible="true" />
-                            <RadzenAxisTitle Text="USD" />
-                        </RadzenValueAxis>
-                    </RadzenChart>
-                </RadzenCard>
-            </RadzenColumn>
+          
         </RadzenRow>
+      
     </RadzenStack>
 }
 @code {

@@ -1,8 +1,5 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
+﻿using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.PurchaseOrders.Requests.Taxes;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Creates
 {
@@ -30,7 +27,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             }
             var purchaseorder = mwo.AddPurchaseOrder();
             purchaseorder.PurchaseorderName = request.Data.Name;
-            purchaseorder.PurchaseRequisition = $"Tax for {request.Data.PurchaseOrderItem.Name}";
+           
             purchaseorder.QuoteCurrency = request.Data.PurchaseOrderCurrency.Id;
             purchaseorder.IsAlteration = false;
             purchaseorder.USDEUR = request.Data.USDEUR;
@@ -38,25 +35,27 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.SPL = $"Tax for {request.Data.PurchaseOrderItem.Name}";
             purchaseorder.IsTaxEditable = true;
             purchaseorder.CurrencyDate = DateTime.UtcNow;
-            //purchaseorder.POValueCurrency = request.Data.SumPOValueCurrency;
+          
             purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Closed.Id;
             purchaseorder.PONumber = request.Data.PONumber;
-            //purchaseorder.ActualCurrency = request.Data.SumPOValueCurrency;
+
+            purchaseorder.PurchaseRequisition = $"Tax for {request.Data.PurchaseOrderItem.Name}";
             purchaseorder.QuoteNo = $"Tax for {request.Data.PurchaseOrderItem.Name}";
             purchaseorder.TaxCode = $"Tax for {request.Data.PurchaseOrderItem.Name}";
          
             purchaseorder.AccountAssigment = request.Data.MWOCECName;
             purchaseorder.MainBudgetItemId = request.Data.MainBudgetItem.BudgetItemId;
-            purchaseorder.Currency = request.Data.PurchaseOrderCurrency.Id;
+            purchaseorder.PurchaseOrderCurrency = request.Data.PurchaseOrderCurrency.Id;
             await Repository.AddPurchaseOrder(purchaseorder);
-            var purchaseorderitem = purchaseorder.AddPurchaseOrderItem(request.Data.PurchaseOrderItem.BudgetItemId, request.Data.PurchaseOrderItem.Name);
+            var purchaseorderitem = purchaseorder.AddPurchaseOrderItem(request.Data.PurchaseOrderItem.BudgetItemId);
+            purchaseorderitem.Name = request.Data.PurchaseOrderItem.Name;
             purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.QuoteCurrencyValue;
             purchaseorderitem.Quantity = 1;
-            purchaseorderitem.ActualCurrency = request.Data.PurchaseOrderItem.TotalValuePurchaseOrderCurrency;
+            purchaseorderitem.ActualCurrency = request.Data.PurchaseOrderItem.PurchaseOrderValueUSD;
             await Repository.AddPurchaseorderItem(purchaseorderitem);
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            //await MWORepository.UpdateDataForApprovedMWO(purchaseorder.MWOId, cancellationToken);
+    
             if (result > 0)
                 return Result.Success($"Purchase order created succesfully");
             return Result.Fail($"Purchase order was not created succesfully");

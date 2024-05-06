@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Client.Infrastructure.Managers.BudgetItems
+﻿namespace Client.Infrastructure.Managers.BudgetItems
 {
     public interface IBudgetItemValidatorService : IManager
     {

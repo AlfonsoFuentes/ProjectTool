@@ -1,0 +1,89 @@
+﻿<RadzenRow>
+    <RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false" class="rz-mt-4" AllowVirtualization=true
+                    AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                    Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    FilterPopupRenderMode="PopupRenderMode.OnDemand"
+                    Data="@FilteredItems" TItem="NewMWOCreatedResponse" ColumnWidth="50px"
+                    LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+
+
+        <Columns>
+            <RadzenDataGridColumn TItem="NewMWOCreatedResponse"
+                                  Property="@nameof(NewMWOCreatedResponse.Name)"
+                                  Title="Name" TextAlign="TextAlign.Left" Width="120px" />
+            <RadzenDataGridColumn TItem="NewMWOCreatedResponse"
+                                  Property="@nameof(NewMWOCreatedResponse.Type)"
+                                  Title="Type" TextAlign="TextAlign.Left">
+                <Template Context="detail">
+                    @detail.Type.Name
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="NewMWOCreatedResponse"
+                                  Property="@nameof(NewMWOCreatedResponse.Focus)"
+                                  Title="Focus" TextAlign="TextAlign.Left">
+                <Template Context="detail">
+                    @detail.Focus.Name
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="NewMWOCreatedResponse"
+                                  Property="@nameof(NewMWOCreatedResponse.Focus)"
+                                  Title="Focus" TextAlign="TextAlign.Left">
+                <Template Context="detail">
+                    @detail.Focus.ShortName
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="NewMWOCreatedResponse"
+                                  Property="@nameof(NewMWOCreatedResponse.AppropiationUSD)"
+                                  Title="Appropiation" TextAlign="TextAlign.Left">
+                <Template Context="detail">
+                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.AppropiationUSD)}")
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="NewMWOCreatedResponse"
+                                  Property="@nameof(NewMWOCreatedResponse.CapitalUSD)"
+                                  Title="Capital" TextAlign="TextAlign.Left">
+                <Template Context="detail">
+                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.CapitalUSD)}")
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="NewMWOCreatedResponse"
+                                  Property="@nameof(NewMWOCreatedResponse.ExpensesUSD)"
+                                  Title="Expenses" TextAlign="TextAlign.Left">
+                <Template Context="detail">
+                    @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.ExpensesUSD)}")
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="NewMWOCreatedResponse" Width="80px"
+                                  Title="Actions" TextAlign="TextAlign.Left">
+                <Template Context="product">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="rz-mr-1"
+                                  MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit MWO: {product.Name}", TooltipPosition.Left) )" 
+                                  Click="@(()=>MainPage.EditMWOCreated(product))" />
+
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="rz-mr-1"
+                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Delete MWO: {product.Name}", TooltipPosition.Left) )"
+                                  Click="@(()=>MainPage.Delete(product))" />
+
+                    <RadzenButton Icon="verified" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="rz-mr-1"
+                                  Click="@(()=>MainPage.ApproveMWO(product))" 
+                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Approve MWO: {product.Name}",TooltipPosition.Left) )" />
+
+                    <RadzenButton Icon="new_label" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="rz-mr-1"
+                                  Click="@(()=>MainPage.AddItemToMWO(product))" 
+                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"Add Item to MWO: {product.Name}",TooltipPosition.Left) )" />
+
+                    <RadzenButton Icon="format_list_bulleted" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="rz-mr-1"
+                                  Click="@(()=>MainPage.ShowItemsofMWO(product))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show Items for MWO: {product.Name}",TooltipPosition.Left) )" />
+
+                </Template>
+
+            </RadzenDataGridColumn>
+
+        </Columns>
+    </RadzenDataGrid>
+</RadzenRow>
+
+
+@code {
+
+}

@@ -1,0 +1,21 @@
+﻿@page "/NewBudgetItemsMWOCreated/{MWOId:guid}"
+
+<RadzenStack Orientation="Orientation.Vertical">
+    <CascadingValue Value="this">
+        <NewBudgetItemsMWOCreatedHeader></NewBudgetItemsMWOCreatedHeader>
+        <NewBudgetItemsMWOCreatedButtons></NewBudgetItemsMWOCreatedButtons>
+        <NewBudgetItemMWOCreatedTableList></NewBudgetItemMWOCreatedTableList>
+    </CascadingValue>
+</RadzenStack>
+@if (debug)
+{
+
+}
+@code {
+    bool debug = true;
+
+    void ChangeIndex(int index)
+    {
+        MainApp.TabIndexBudgetItemsMWOCreated = index;
+    }
+}

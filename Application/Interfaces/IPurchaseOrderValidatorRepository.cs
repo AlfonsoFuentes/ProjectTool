@@ -1,7 +1,7 @@
 ﻿
 namespace Application.Interfaces
 {
-    public interface IPurchaseOrderValidatorRepository : IRepository
+    public interface IPurchaseOrderValidatorRepository 
     {
         Task<bool> ValidateNameExist(Guid MWOId,string name);
         Task<bool> ValidateNameExist(Guid MWOId, Guid PurchaseOrderId, string name);

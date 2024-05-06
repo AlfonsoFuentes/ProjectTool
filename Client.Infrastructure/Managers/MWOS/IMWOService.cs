@@ -1,15 +1,13 @@
-﻿using Shared.Models.FileResults;
-
-namespace Client.Infrastructure.Managers.MWOS
+﻿namespace Client.Infrastructure.Managers.MWOS
 {
     public interface IMWOService : IManager
     {
         Task<IResult<ApproveMWORequest>> GetMWOByIdToApprove(Guid MWOId);
-    
+        Task<IResult<MWOEBPResponse>> GetMWOEBPReport(Guid MWOId);
         Task<IResult> UpdateMWO(UpdateMWORequest request);
         Task<IResult> CreateMWO(CreateMWORequest request);
         Task<IResult> ApproveMWO(ApproveMWORequest request);
- 
+        Task<IResult> UnApproveMWO(UnApproveMWORequest request);
         Task<IResult<MWOResponseList>> GetAllMWO();
         Task<IResult<FileResult>> ExportMWOsCreated();
         Task<IResult<UpdateMWORequest>> GetMWOToUpdateById(Guid id);
@@ -99,6 +97,21 @@ namespace Client.Infrastructure.Managers.MWOS
             }
             return await Result.FailAsync();
         }
+        public async Task<IResult> UnApproveMWO(UnApproveMWORequest request)
+        {
+            try
+            {
+
+                var httpresult = await Http.PostAsJsonAsync("MWO/UnapproveMWO", request);
+
+                return await httpresult.ToResult();
+            }
+            catch (Exception ex)
+            {
+                string message = ex.Message;
+            }
+            return await Result.FailAsync();
+        }
 
         public async Task<IResult<ApproveMWORequest>> GetMWOByIdToApprove(Guid MWOId)
         {
@@ -134,6 +147,12 @@ namespace Client.Infrastructure.Managers.MWOS
         {
             var httpresult = await Http.GetAsync($"ExportToFile/MWOsClosed");
             return await httpresult.ToResult<FileResult>();
+        }
+
+        public async Task<IResult<MWOEBPResponse>> GetMWOEBPReport(Guid MWOId)
+        {
+            var httpresult = await Http.GetAsync($"mwo/GetMWOEBPReport/{MWOId}");
+            return await httpresult.ToResult<MWOEBPResponse>();
         }
     }
 }

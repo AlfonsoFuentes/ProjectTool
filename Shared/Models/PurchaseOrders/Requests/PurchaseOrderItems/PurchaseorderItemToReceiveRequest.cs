@@ -1,4 +1,4 @@
-﻿using Shared.Models.Currencies;
+﻿using Shared.Enums.Currencies;
 
 namespace Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems
 {

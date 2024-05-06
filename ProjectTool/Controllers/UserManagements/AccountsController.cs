@@ -94,7 +94,7 @@ namespace Server.Controllers.UserManagements
                 return Unauthorized(new AuthResponseDto { ErrorMessage = "Invalid Authentication" });
             }
 
-            return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token, RefreshToken = user.RefreshToken });
+            return Ok(new AuthResponseDto { UserId = user.Id, IsAuthSuccessful = true, Token = token, RefreshToken = user.RefreshToken });
         }
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetUserList()
@@ -102,7 +102,7 @@ namespace Server.Controllers.UserManagements
             UserResponseList response = new();
 
             var userlist = await _userManager.Users.ToListAsync();
-            var roles = (await _roleManager.Roles.ToListAsync()).Select(x=>x.Name);
+            var roles = (await _roleManager.Roles.ToListAsync()).Select(x => x.Name);
 
             foreach (var user in userlist)
             {
@@ -116,7 +116,7 @@ namespace Server.Controllers.UserManagements
                 };
                 response.Users.Add(userReponse);
             }
-            
+
             return Ok(response);
         }
         [HttpPost("ValidatePasswordMatch")]
@@ -164,11 +164,11 @@ namespace Server.Controllers.UserManagements
                 user.EmailConfirmed = false;
                 await _userManager.UpdateAsync(user);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string exm = ex.Message;
             }
-            
+
 
             return Ok(true);
         }
@@ -204,7 +204,7 @@ namespace Server.Controllers.UserManagements
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null) return Ok(false);
-           
+
             await _userManager.DeleteAsync(user);
 
             return Ok(true);

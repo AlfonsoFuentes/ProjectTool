@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces;
 using MediatR;
 using Shared.Commons.Results;
+using Shared.Enums.PurchaseorderStatus;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Creates
 {
@@ -31,12 +31,23 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorder.PurchaseOrderStatus = request.Data.SumPONewPendingCurrency == 0 ? PurchaseOrderStatusEnum.Closed.Id : PurchaseOrderStatusEnum.Receiving.Id;
             var sumPOactualCurrency = request.Data.SumPONewActualCurrency;
             purchaseorder.POClosedDate = purchaseorder.PurchaseOrderStatus == PurchaseOrderStatusEnum.Closed.Id ? DateTime.UtcNow : null;
+
+            purchaseorder.USDCOP = request.Data.TRMUSDCOP;
+            purchaseorder.USDEUR = request.Data.TRMUSDEUR;
             foreach (var row in request.Data.PurchaseOrderItemsToReceive)
             {
                 var item = await Repository.GetPurchaseOrderItemById(row.PurchaseOrderItemId);
                 if (item != null)
                 {
-                    item.ActualCurrency= row.PONewActualCurrency;
+                    item.ActualCurrency = row.PONewActualCurrency;
+                    var received = item.AddPurchaseOrderReceived();
+                    received.ValueReceivedCurrency = row.ReceivingCurrency;
+                    received.USDCOP = request.Data.TRMUSDCOP;
+                    received.USDEUR = request.Data.TRMUSDEUR;
+                    received.CurrencyDate = DateTime.UtcNow;
+
+                    await Repository.AddPurchaseOrderItemReceived(received);
+                    
                     await Repository.UpdatePurchaseOrderItem(item);
                 }
 
@@ -60,7 +71,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
                     var purchaseorderItemTaxForAlteration = await Repository.GetPurchaseOrderItemForTaxesForAlterationById(purchaseorder.Id, row.BudgetItemId);
                     if (purchaseorderItemTaxForAlteration != null)
                     {
-                        var TaxAlterationCurrency= row.PONewActualCurrency * request.Data.PercentageAlteration / 100.0;
+                        var TaxAlterationCurrency = row.PONewActualCurrency * request.Data.PercentageAlteration / 100.0;
                         sumPOactualCurrency += TaxAlterationCurrency;
                         purchaseorderItemTaxForAlteration.ActualCurrency = TaxAlterationCurrency;
                         await Repository.UpdatePurchaseOrderItem(purchaseorderItemTaxForAlteration);
@@ -73,7 +84,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             //purchaseorder.ActualCurrency = sumPOactualCurrency;
             await Repository.UpdatePurchaseOrder(purchaseorder);
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-        
+
             if (result > 0)
             {
                 return Result.Success($"Purchase order: {purchaseorder.PONumber} was received succesfully"); ;

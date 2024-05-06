@@ -1,9 +1,5 @@
 ﻿using Application.Features.BudgetItems.Queries;
 using Application.Features.MWOs.Queries;
-using Application.Features.Suppliers.Queries;
-using Application.Interfaces;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Server.Controllers.ExportToFiles
 {
@@ -18,13 +14,7 @@ namespace Server.Controllers.ExportToFiles
             Mediator = mediator;
             ExcelService = excelService;
         }
-        [HttpGet("SupplierExcel")]
-        public async Task<IActionResult> GetSuppliers()
-        {
-            var result = await Mediator.Send(new GetAllSupplierForFileResultQuery());
-            var resultExcel = await ExcelService.ExportAsync(result, "Supplier List");
-            return Ok(resultExcel);
-        }
+       
         [HttpGet("BudgetItemsNotApprovedExcel/{MWOId}")]
         public async Task<IActionResult> GetBudgetItemsNotApproved(Guid MWOId)
         {

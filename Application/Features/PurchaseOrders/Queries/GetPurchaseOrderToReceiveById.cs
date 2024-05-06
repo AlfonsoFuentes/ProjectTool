@@ -1,13 +1,8 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.CostCenter;
-using Shared.Models.Currencies;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.CostCenter;
+using Shared.Enums.Currencies;
 using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.Models.PurchaseorderStatus;
 
 namespace Application.Features.PurchaseOrders.Queries
 {
@@ -42,7 +37,7 @@ namespace Application.Features.PurchaseOrders.Queries
                 PONumber = purchaseOrder.PONumber,
                 MainBudgetItem = new()
                 {
-                    Budget = budgtitem.Budget,
+                    BudgetUSD = budgtitem.Budget,
                     Brand = budgtitem.Brand == null ? string.Empty : budgtitem.Brand.Name,
                     BudgetItemId = budgtitem.Id,
                     Name = budgtitem.Name,
@@ -55,14 +50,14 @@ namespace Application.Features.PurchaseOrders.Queries
                 PurchaseOrderId = purchaseOrder.Id,
                 PurchaseRequisition = purchaseOrder.PurchaseRequisition,
                 QuoteNo = purchaseOrder.QuoteNo,
-                PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
+                PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.PurchaseOrderCurrency),
                 QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
                 TRMUSDCOP = purchaseOrder.USDCOP,
                 TRMUSDEUR = purchaseOrder.USDEUR,
                 CurrencyDate = purchaseOrder.CurrencyDate,
                 Supplier = purchaseOrder.Supplier == null ? new() : new()
                 {
-                    Id = purchaseOrder.Supplier.Id,
+                    SupplierId = purchaseOrder.Supplier.Id,
                     Name = purchaseOrder.Supplier.Name,
                     VendorCode = purchaseOrder.Supplier.VendorCode,
                     TaxCodeLD = purchaseOrder.Supplier.TaxCodeLD,
@@ -80,8 +75,8 @@ namespace Application.Features.PurchaseOrders.Queries
                     Name = x.Name,
                     BudgetItemName = x.BudgetItem.Name,
                     QuoteCurrency = CurrencyEnum.GetType(purchaseOrder.QuoteCurrency),
-                    PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.Currency),
-                    UnitaryValueCurrency = GetQuoteCurrencyValue(x.UnitaryValueCurrency, purchaseOrder.QuoteCurrency, purchaseOrder.Currency,
+                    PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.PurchaseOrderCurrency),
+                    UnitaryValueCurrency = GetQuoteCurrencyValue(x.UnitaryValueCurrency, purchaseOrder.QuoteCurrency, purchaseOrder.PurchaseOrderCurrency,
                     purchaseOrder.USDCOP, purchaseOrder.USDEUR),
                     POActualCurrency = x.ActualCurrency,
                     Quantity = x.Quantity,

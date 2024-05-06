@@ -1,6 +1,6 @@
-﻿using Shared.Models.BudgetItems;
-using Shared.Models.BudgetItemTypes;
-using Shared.Models.MWOTypes;
+﻿using Shared.Enums.BudgetItemTypes;
+using Shared.Enums.MWOTypes;
+using Shared.Models.BudgetItems;
 using System.Reflection;
 
 namespace Shared.Models.MWO

@@ -1,0 +1,24 @@
+﻿<RadzenRow class="rz-ml-4">
+    <RadzenColumn Size="12" SizeLG="7">
+        <RadzenButton Icon="insights" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                      Click="@(()=>MainPage.ShowSapAlignmentofMWO())"
+                      MouseEnter="@(args => MainApp.ShowTooltip(args,$"Show SAP Alignment for MWO: {MainPage.Response.CECName}",TooltipPosition.Right) )" />
+
+        <RadzenButton Icon="remove_done" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" class="rz-mr-1"
+                      Click="@(()=>MainPage.UnApproveMWO())"
+                      MouseEnter="@(args => MainApp.ShowTooltip(args,$"Un Approve MWO: {MainPage.Response.CECName}",TooltipPosition.Right) )" />
+
+        <RadzenButton Icon="description" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Class="rz-mr-1"
+                      MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Export To Excel",TooltipPosition.Top) )"
+                      Click="@(()=>MainPage.ExporApprovedToExcel())" />
+
+
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeLG="5">
+        <RadzenTextBox Style="width:100%" Placeholder="Search..." @bind-Value="@MainPage.nameFilter" @oninput=@((arg)=>MainPage.ChangeFilter(arg.Value!.ToString()!))></RadzenTextBox>
+    </RadzenColumn>
+</RadzenRow>
+
+@code {
+
+}

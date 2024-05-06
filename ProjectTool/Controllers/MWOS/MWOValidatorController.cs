@@ -1,6 +1,4 @@
-﻿using Application.Features.MWOs.Queries;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿
 
 namespace Server.Controllers.MWOS
 {
@@ -14,20 +12,20 @@ namespace Server.Controllers.MWOS
         {
             Mediator = mediator;
         }
-        [HttpGet("ValidateMWONumberExist/{mwonumber}")]
-        public async Task<IActionResult> ValidateMWONumberExist(string mwonumber)
+        [HttpGet("ValidateMWONumberExist/{MWOId}/{mwonumber}")]
+        public async Task<IActionResult> ValidateMWONumberExist(Guid MWOId, string mwonumber)
         {
-            return Ok(await Mediator.Send(new ValidateMWONumberExist(mwonumber)));
+            return Ok(await Mediator.Send(new NewMWOValidateNumberExistQuery(MWOId,mwonumber)));
         }
         [HttpGet("ValidateMWONameExist/{mwoname}")]
         public async Task<IActionResult> ValidateMWONameExist(string mwoname)
         {
-            return Ok(await Mediator.Send(new ValidateMWONameExist(mwoname)));
+            return Ok(await Mediator.Send(new NewMWOValidateNameQuery(mwoname)));
         }
         [HttpGet("ValidateMWONameExist/{MWOId}/{mwoname}")]
         public async Task<IActionResult> ValidateMWONameExist(Guid MWOId, string mwoname)
         {
-            return Ok(await Mediator.Send(new ValidateMWOExistingNameExist(MWOId, mwoname)));
+            return Ok(await Mediator.Send(new NewMWOValidateNameExistQuery(MWOId, mwoname)));
         }
     }
 }

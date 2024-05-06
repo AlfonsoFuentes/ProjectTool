@@ -1,11 +1,3 @@
-using Radzen.Blazor;
-using Radzen;
-using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
-using Microsoft.AspNetCore.Components;
-using Shared.Models.BudgetItems;
-using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Microsoft.AspNetCore.Components.Web;
-using Shared.Models.PurchaseorderStatus;
 #nullable disable
 namespace ClientRadzen.Pages.Templates;
 public partial class DataGridForPurchaseOrderItems
@@ -109,14 +101,7 @@ public partial class DataGridForPurchaseOrderItems
 
         }
         item.Quantity = quantity;
-        if(Model.PurchaseOrderStatus.Id==PurchaseOrderStatusEnum.Created.Id)
-        {
-            item.PotencialCurrency = item.OriginalPotencialCurrency + item.TotalValuePurchaseOrderCurrency;
-        }
-        else
-        {
-            item.AssignedCurrency = item.TotalValuePurchaseOrderCurrency;
-        }
+        
         
         if (ValidateAsync.HasDelegate)
             await ValidateAsync.InvokeAsync();
@@ -128,27 +113,11 @@ public partial class DataGridForPurchaseOrderItems
             await ordersGrid.UpdateRow(order);
         }
     }
-    public async Task ChangeCurrencyValue(PurchaseOrderItemRequest item, string arg)
+    public async Task ChangeCurrencyValue(PurchaseOrderItemRequest item, double value)
     {
 
-        if (string.IsNullOrEmpty(arg))
-        {
-            return;
-        }
-        double currencyvalue = item.Quantity;
-        if (!double.TryParse(arg, out currencyvalue))
-        {
-
-        }
-        item.QuoteCurrencyValue = currencyvalue;
-        if (Model.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id)
-        {
-            item.PotencialCurrency = item.OriginalPotencialCurrency + item.TotalValuePurchaseOrderCurrency;
-        }
-        else
-        {
-            item.AssignedCurrency = item.TotalValuePurchaseOrderCurrency;
-        }
+        item.QuoteCurrencyValue = value;
+        
         if (ValidateAsync.HasDelegate)
             await ValidateAsync.InvokeAsync();
     }

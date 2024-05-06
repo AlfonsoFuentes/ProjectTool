@@ -13,7 +13,9 @@ namespace ClientRadzen.Pages.Authetication
         public App MainApp { get; set; }
 
         RegisterUserRequest Model = new();
-        
+
+        [Inject]
+        public IAuthenticationService Service { get; set; }
 
         [Inject]
         public IAuthenticationService AuthenticationService { get; set; }
@@ -30,7 +32,7 @@ namespace ClientRadzen.Pages.Authetication
             var result2 = await AuthenticationService.RegisterUser(_userForRegistration);
             if (result2.IsSuccessfulRegistration)
             {
-                _NavigationManager.NavigateTo("/NewUserList");
+                _NavigationManager.NavigateTo("/NewUserversionManagement");
             }
         }
         FluentValidationValidator _fluentValidationValidator = null!;
