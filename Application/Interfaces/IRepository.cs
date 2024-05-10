@@ -19,5 +19,7 @@ namespace Application.Interfaces
         Task<BudgetItem?> GetBudgetItemToUpdateTaxes(Guid BudgetItemId);
         Task<List<PurchaseOrder>> GetPurchaseOrderToUpdateVersion1();
         Task<List<PurchaseOrderItem>> GetPurchaseOrderItemsToUpdateVersion2();
+        Task<PurchaseOrder?> GetPurchaseOrderByIdCreatedAsync(Guid PurchaseOrderId);
+        Task<BudgetItem> GetTaxBudgetItemNoProductive(Guid MWOId);
     }
 }

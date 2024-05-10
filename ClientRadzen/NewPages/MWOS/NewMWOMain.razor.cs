@@ -1,3 +1,5 @@
+using Shared.NewModels.EBPReport;
+
 namespace ClientRadzen.NewPages.MWOS;
 #nullable disable
 public partial class NewMWOMain
@@ -11,6 +13,7 @@ public partial class NewMWOMain
     public List<NewMWOApprovedReponse> MWOsApproved => MWOApprovedList.MWOsApproved;
     NewMWOCreatedListResponse MWOCreatedList { get; set; } = new();
     NewMWOApprovedListReponse MWOApprovedList { get; set; } = new();
+
     protected override async Task OnInitializedAsync()
     {
         await UpdateAllCreated();
@@ -27,6 +30,7 @@ public partial class NewMWOMain
         {
             MWOApprovedList = resultApproved.Data;
         }
+      
         StateHasChanged();
     }
     public string nameFilterCreated { get; set; } = string.Empty;

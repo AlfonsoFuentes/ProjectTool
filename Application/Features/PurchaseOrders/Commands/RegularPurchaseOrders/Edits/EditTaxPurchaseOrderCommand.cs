@@ -51,7 +51,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             var purchaseorderitem = await Repository.GetPurchaseOrderItemById(request.Data.PurchaseOrderItem.PurchaseOrderItemId);
             purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.PurchaseOrderValuePurchaseOrderCurrency;
             purchaseorderitem.Quantity = 1;
-            purchaseorderitem.ActualCurrency = request.Data.PurchaseOrderItem.PurchaseOrderValuePurchaseOrderCurrency;
+
             await Repository.UpdatePurchaseOrderItem(purchaseorderitem);
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);

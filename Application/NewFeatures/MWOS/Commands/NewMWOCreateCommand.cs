@@ -16,20 +16,20 @@
 
         public async Task<IResult> Handle(NewMWOCreateCommand request, CancellationToken cancellationToken)
         {
-            var row = MWO.Create();
+            var mwo = MWO.Create();
 
-            request.Data.FromMWOCreateRequest(row);
-            if (!row.IsAssetProductive)
+            request.Data.FromMWOCreateRequest(mwo);
+            if (!mwo.IsAssetProductive)
             {
                 
-                await CreateTaxesForNoProductive(row, request.Data);
+                await CreateTaxesForNoProductive(mwo, request.Data);
             }
            
-            await CreateEngineeringItem(row, request.Data);
-            await CreateContingencyItem(row, request.Data);
-            await repository.AddAsync(row);
+            await CreateEngineeringItem(mwo, request.Data);
+            await CreateContingencyItem(mwo, request.Data);
+            await repository.AddAsync(mwo);
        
-            var result = await appDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCacheMWO(row.Id));
+            var result = await appDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCacheMWO(mwo));
             return result > 0 ?
                Result.Success(ResponseMessages.ReponseSuccesfullyMessage(request.Data.Name, ResponseType.Created, ClassNames.MWO)) :
                Result.Fail(ResponseMessages.ReponseFailMessage(request.Data.Name, ResponseType.Created, ClassNames.MWO));

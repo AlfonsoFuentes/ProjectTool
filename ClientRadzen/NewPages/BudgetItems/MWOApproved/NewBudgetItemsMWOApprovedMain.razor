@@ -1,11 +1,28 @@
 ﻿@page "/NewBudgetItemsMWOApproved/{MWOId:guid}"
+
 <RadzenStack Orientation="Orientation.Vertical">
     <CascadingValue Value="this">
         <NewBudgetItemsMWOApprovedHeader></NewBudgetItemsMWOApprovedHeader>
         <NewBudgetItemsMWOApprovedButtons></NewBudgetItemsMWOApprovedButtons>
-        <NewBudgetItemsMWOApprovedTableList></NewBudgetItemsMWOApprovedTableList>
+
+        <RadzenTabs @bind-SelectedIndex=@MainApp.TabIndexMWOApproved TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client" Change="ChangeIndex">
+            <Tabs>
+                <RadzenTabsItem Text="Table">
+                    <NewBudgetItemsMWOApprovedTableList></NewBudgetItemsMWOApprovedTableList>
+                </RadzenTabsItem>
+
+
+                <RadzenTabsItem Text="EBP">
+                    <NewMWOEBPReport></NewMWOEBPReport>
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+
     </CascadingValue>
 </RadzenStack>
 @code {
-
+    void ChangeIndex(int index)
+    {
+        MainApp.TabIndexMWOApproved = index;
+    }
 }

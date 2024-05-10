@@ -1,4 +1,5 @@
 ﻿using Client.Infrastructure.Managers.PurchaseOrders;
+using FluentValidation;
 using Shared.Enums.Currencies;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Edits;
 

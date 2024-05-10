@@ -67,9 +67,7 @@ namespace Domain.Entities.Data
         [NotMapped]
         public double ActualUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.ActualUSD);
-        [NotMapped]
-        public double NewActualUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
-            PurchaseOrderItems.Sum(x => x.NewActualUSD);
+       
         [NotMapped]
         public double AssignedUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.AssignedUSD);
@@ -79,12 +77,10 @@ namespace Domain.Entities.Data
         [NotMapped]
         public double PotentialCommitmentUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.PotentialCommitmentUSD);
-        [NotMapped]
-        public double NewPendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
-            PurchaseOrderItems.Sum(x => x.NewPendingToReceiveUSD);
+        
         [NotMapped]
         public double PendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
-            PurchaseOrderItems.Sum(x => x.PendingToReceiveUSD);
+            PurchaseOrderItems.Sum(x => x.CommitmentUSD);
         [NotMapped]
         public double QuoteValueCurrency => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.QuoteValueCurrency);

@@ -11,6 +11,7 @@ namespace Application.Mappers.PurchaseOrders
             received.USDCOP = request.USDCOP;
             received.CurrencyDate = request.CurrencyDate;
             received.ValueReceivedCurrency = request.ItemQuoteValueCurrency;
+            
 
             return received;
         }
@@ -25,7 +26,7 @@ namespace Application.Mappers.PurchaseOrders
                 USDCOP = purchaseOrderReceived.USDCOP,
                 USDEUR = purchaseOrderReceived.USDEUR,
                 ValueReceivedCurrency = purchaseOrderReceived.ValueReceivedCurrency,
-
+            
 
             };
         }

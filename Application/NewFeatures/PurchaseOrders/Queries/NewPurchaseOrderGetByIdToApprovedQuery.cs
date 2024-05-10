@@ -3,7 +3,6 @@ using Shared.NewModels.PurchaseOrders.Request;
 
 namespace Application.NewFeatures.PurchaseOrders.Queries
 {
-    
     public record NewPurchaseOrderGetByIdToApprovedQuery(Guid PurchaseOrderId) : IRequest<IResult<NewPurchaseOrderApproveRequest>>;
 
     internal class NewPurchaseOrderGetByIdToApprovedQueryHandler : IRequestHandler<NewPurchaseOrderGetByIdToApprovedQuery, IResult<NewPurchaseOrderApproveRequest>>

@@ -1,4 +1,5 @@
-﻿using Application.NewFeatures.PurchaseOrders.Commands;
+﻿using Application.Features.PurchaseOrders.Queries;
+using Application.NewFeatures.PurchaseOrders.Commands;
 using Application.NewFeatures.PurchaseOrders.Queries;
 using Shared.NewModels.PurchaseOrders.Request;
 using Shared.NewModels.PurchaseOrders.Responses;
@@ -20,10 +21,40 @@ namespace Server.Controllers.PurchaseOrders
         {
             return Ok(await Mediator.Send(new NewPurchaseOrderCreateCommand(request)));
         }
+        [HttpPost(nameof(ClientEndPoint.Actions.CreateSalary))]
+        public async Task<IActionResult> CreateSalary(NewPurchaseOrderCreateSalaryRequest request)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderCreateSalaryCommand(request)));
+        }
+        [HttpPost(nameof(ClientEndPoint.Actions.EditCreate))]
+        public async Task<IActionResult> EditCreate(NewPurchaseOrderCreateEditRequest request)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderCreateEditCommand(request)));
+        }
+        [HttpPost(nameof(ClientEndPoint.Actions.EditApproved))]
+        public async Task<IActionResult> EditApproved(NewPurchaseOrderEditApprovedRequest request)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderEditApprovedCommand(request)));
+        }
         [HttpPost(nameof(ClientEndPoint.Actions.Approve))]
         public async Task<IActionResult> Approve(NewPurchaseOrderApproveRequest request)
         {
             return Ok(await Mediator.Send(new NewPurchaseOrderApproveCommand(request)));
+        }
+        [HttpPost(nameof(ClientEndPoint.Actions.Receive))]
+        public async Task<IActionResult> Receive(NewPurchaseOrderReceiveRequest request)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderReceiveCommand(request)));
+        }
+        [HttpPost(nameof(ClientEndPoint.Actions.EditReceive))]
+        public async Task<IActionResult> EditReceive(NewPurchaseOrderEditReceiveRequest request)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderEditReceiveCommand(request)));
+        }
+        [HttpPost(nameof(ClientEndPoint.Actions.EditSalary))]
+        public async Task<IActionResult> EditSalary(NewPurchaseOrderEditSalaryRequest request)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderEditSalaryCommand(request)));
         }
         [HttpPost(nameof(ClientEndPoint.Actions.UnApprove))]
         public async Task<IActionResult> UnApprove(NewPurchaseOrderUnApproveRequest request)
@@ -55,10 +86,36 @@ namespace Server.Controllers.PurchaseOrders
         {
             return Ok(await Mediator.Send(new NewPurchaseOrderGetAllClosedQuery()));
         }
-        [HttpGet("GetPurchaseOrderToApprove/{PurchaseOrderId}")]
+        [HttpGet("GetToApprove/{PurchaseOrderId}")]
         public async Task<IActionResult> GetPurchaseOrderToApprove(Guid PurchaseOrderId)
         {
             return Ok(await Mediator.Send(new NewPurchaseOrderGetByIdToApprovedQuery(PurchaseOrderId)));
         }
+        [HttpGet("GetCreatedToEdit/{PurchaseOrderId}")]
+        public async Task<IActionResult> GetPurchaseOrderCreatedToEdit(Guid PurchaseOrderId)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderGetByIdToEditCreatedQuery(PurchaseOrderId)));
+        }
+        [HttpGet("GetApprovedToReceive/{PurchaseOrderId}")]
+        public async Task<IActionResult> GetPurchaseOrderApprovedToReceive(Guid PurchaseOrderId)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderGetByIdToReceiveQuery(PurchaseOrderId)));
+        }
+        [HttpGet("GetReceivedToEdit/{PurchaseOrderId}")]
+        public async Task<IActionResult> GetPurchaseOrderReceivedToEdit(Guid PurchaseOrderId)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderGetByIdToEditReceiveQuery(PurchaseOrderId)));
+        }
+        [HttpGet("GetApprovedToEdit/{PurchaseOrderId}")]
+        public async Task<IActionResult> GetPurchaseOrderApprovedToEdit(Guid PurchaseOrderId)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderGetByIdToEditApprovedQuery(PurchaseOrderId)));
+        }
+        [HttpGet("GetSalaryToEdit/{PurchaseOrderId}")]
+        public async Task<IActionResult> GetPurchaseOrderSalaryToEdit(Guid PurchaseOrderId)
+        {
+            return Ok(await Mediator.Send(new NewPurchaseOrderGetByIdToEditSalaryQuery(PurchaseOrderId)));
+        }
+
     }
 }

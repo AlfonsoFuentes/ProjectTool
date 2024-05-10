@@ -1,7 +1,4 @@
-﻿using Application.Caches;
-using Application.Interfaces;
-
-namespace Application.NewFeatures.MWOS.Queries
+﻿namespace Application.NewFeatures.MWOS.Queries
 {
     public record NewMWOGetByIdToApproveQuery(Guid MWOId) : IRequest<IResult<NewMWOApproveRequest>>;
     internal class NewMWOGetByIdToApproveQueryHandler : IRequestHandler<NewMWOGetByIdToApproveQuery, IResult<NewMWOApproveRequest>>
@@ -21,7 +18,7 @@ namespace Application.NewFeatures.MWOS.Queries
             try
             {
                
-                var mwo = await _cache.GetOrAddAsync($"{Cache.GetMWOByApproved}:{request.MWOId}", getbyid);
+                var mwo = await _cache.GetOrAddAsync($"{Cache.GetMWOByCreated}:{request.MWOId}", getbyid);
                 if (mwo == null)
                 {
                     return Result<NewMWOApproveRequest>.Fail(ResponseMessages.ReponseFailMessage("", ResponseType.NotFound, ClassNames.MWO));

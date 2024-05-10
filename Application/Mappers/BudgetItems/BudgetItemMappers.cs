@@ -123,7 +123,7 @@ namespace Application.Mappers.BudgetItems
                 Reference = budgetItem.Reference,
                 Type = BudgetItemTypeEnum.GetType(budgetItem.Type),
                 UnitaryCostUSD = budgetItem.UnitaryCost,
-                PurchaseOrderItems = budgetItem.PurchaseOrderItems.Select(x => x.ToPurchaseOrderItemResponse()).ToList(),
+                PurchaseOrderItems = budgetItem.PurchaseOrderItems.Where(x => x.IsTaxAlteration == false).Select(x => x.ToPurchaseOrderItemResponse()).ToList(),
 
             };
         }
@@ -148,7 +148,7 @@ namespace Application.Mappers.BudgetItems
             
                 Type = BudgetItemTypeEnum.GetType(budgetItem.Type),
                 UnitaryCostUSD = budgetItem.UnitaryCost,
-                PurchaseOrderItems = budgetItem.PurchaseOrderItems.Select(x => x.ToPurchaseOrderItemResponse()).ToList(),
+                PurchaseOrderItems = budgetItem.PurchaseOrderItems.Where(x => x.IsTaxAlteration == false).Select(x => x.ToPurchaseOrderItemResponse()).ToList(),
 
             };
         }

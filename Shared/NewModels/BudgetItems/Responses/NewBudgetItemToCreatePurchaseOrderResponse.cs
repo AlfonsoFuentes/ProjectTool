@@ -33,7 +33,7 @@ namespace Shared.NewModels.BudgetItems.Responses
 
         public double ActualUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.ActualUSD);
-
+   
         public double AssignedUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.AssignedUSD);
 

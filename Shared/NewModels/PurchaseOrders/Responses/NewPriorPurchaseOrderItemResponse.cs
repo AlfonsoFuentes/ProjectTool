@@ -5,7 +5,7 @@ namespace Shared.NewModels.PurchaseOrders.Responses
     public class NewPriorPurchaseOrderItemResponse
     {
         public List<NewPriorPurchaseOrderReceivedResponse> PurchaseOrderReceiveds { get; set; } = new List<NewPriorPurchaseOrderReceivedResponse>();
-        public Guid NewPriorPurchaseOrderItemResponseId { get; set; }
+        public Guid PurchaseOrderItemId { get; set; }
         public Guid BudgetItemId { get; set; }
         public Guid PurchaseOrderId { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -32,20 +32,16 @@ namespace Shared.NewModels.PurchaseOrders.Responses
         public double QuoteValueCurrency => UnitaryValueCurrency * Quantity;
 
         public double AssignedUSD =>
-            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? QuoteValueCurrency :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? QuoteValueCurrency / USDCOP :
-            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? QuoteValueCurrency / USDEUR :
-            0;
-
-        public double QuoteValueUSD =>
             QuoteCurrency.Id == CurrencyEnum.USD.Id ? QuoteValueCurrency :
             QuoteCurrency.Id == CurrencyEnum.COP.Id ? QuoteValueCurrency / USDCOP :
             QuoteCurrency.Id == CurrencyEnum.EUR.Id ? QuoteValueCurrency / USDEUR :
             0;
-        public double ActualCurrency => (PurchaseOrderReceiveds == null || PurchaseOrderReceiveds.Count == 0) ? 0 :
+
+       public double ActualCurrency => (PurchaseOrderReceiveds == null || PurchaseOrderReceiveds.Count == 0) ? 0 :
             PurchaseOrderReceiveds.Sum(x => x.ValueReceivedCurrency);
 
-        public double PendintToReceiveCurrency => QuoteValueCurrency - ActualCurrency;
+        public double PendingToReceiveCurrency => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? 0 : QuoteValueCurrency - ActualCurrency;
+       
         public double ActualUSD => (PurchaseOrderReceiveds == null || PurchaseOrderReceiveds.Count == 0) ? 0 :
             PurchaseOrderReceiveds.Sum(x => x.ValueReceivedUSD);
 
@@ -55,11 +51,8 @@ namespace Shared.NewModels.PurchaseOrders.Responses
         public double ApprovedUSD =>
             PurchaseOrderStatus.Id != PurchaseOrderStatusEnum.Created.Id ? AssignedUSD : 0;
 
-        public double PendingToReceiveUSD =>
-            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? PendintToReceiveCurrency :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? PendintToReceiveCurrency / USDCOP :
-            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? PendintToReceiveCurrency / USDEUR :
-            0;
+        public double PendingToReceiveUSD => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? 0 : AssignedUSD - ActualUSD;
+      
         public string LabelAction => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ?
           $"Edit {PurchaseRequisition}" : $"Edit {PurchaseOrderNumber}";
     }

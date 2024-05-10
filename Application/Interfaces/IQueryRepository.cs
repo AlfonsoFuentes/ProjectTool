@@ -21,5 +21,7 @@ namespace Application.Interfaces
         Task<List<PurchaseOrder>> GetAllPurchaseOrderClosedAsync();
 
         Task<PurchaseOrder?> GetPurchaseOrderByIdCreatedAsync(Guid PurchaseOrderId);
+        Task<PurchaseOrder?> GetPurchaseOrderByIdToReceiveAsync(Guid PurchaseOrderId);
+        Task<MWO?> GetMWOByIdWithPurchaseOrderAsync(Guid MWOId);
     }
 }

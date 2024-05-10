@@ -5,6 +5,8 @@
 using Application.Mappers.BudgetItems;
 using Application.Mappers.PurchaseOrders;
 using Shared.Enums.CostCenter;
+using Shared.Enums.MWOStatus;
+using Shared.NewModels.EBPReport;
 
 namespace Application.Mappers.MWOS
 {
@@ -77,7 +79,7 @@ namespace Application.Mappers.MWOS
                 MWONumber = mwo.MWONumber,
                 MWOId = mwo.Id,
                 Focus = FocusEnum.GetType(mwo.Focus),
-                CostCenter=CostCenterEnum.GetType(mwo.CostCenter),  
+                CostCenter = CostCenterEnum.GetType(mwo.CostCenter),
                 IsAssetProductive = mwo.IsAssetProductive,
                 Name = mwo.Name,
                 PercentageAssetNoProductive = mwo.PercentageAssetNoProductive,
@@ -85,7 +87,7 @@ namespace Application.Mappers.MWOS
                 PercentageEngineering = mwo.PercentageCapitalizedSalary,
                 PercentageTaxForAlterations = mwo.PercentageTaxForAlterations,
                 Type = MWOTypeEnum.GetType(mwo.Type),
-                BudgetItems=mwo.BudgetItems.Select(x=>x.ToBudgetItemMWOCreatedResponse()).ToList(),
+                BudgetItems = mwo.BudgetItems.Select(x => x.ToBudgetItemMWOCreatedResponse()).ToList(),
 
 
 
@@ -126,7 +128,7 @@ namespace Application.Mappers.MWOS
                 Type = MWOTypeEnum.GetType(mwo.Type),
                 BudgetItems = (mwo.BudgetItems == null || mwo.BudgetItems.Count == 0) ? new() :
                 mwo.BudgetItems.Select(x => x.ToBudgetItemMWOApprovedResponse()).ToList(),
-               
+
 
 
             };
@@ -148,6 +150,23 @@ namespace Application.Mappers.MWOS
                 mwo.BudgetItems.Select(x => x.ToBudgetItemToCreatePurchaseOrder()).ToList(),
 
 
+
+            };
+        }
+        public static NewEBPReportResponse ToMWOEBPReportResponse(this MWO mwo)
+        {
+            return new()
+            {
+                ApprovedDate = mwo.ApprovedDate,
+                CostCenter = CostCenterEnum.GetType(mwo.CostCenter),
+                Focus = FocusEnum.GetType(mwo.Focus),
+                IsAssetProductive = mwo.IsAssetProductive,
+                Name = mwo.Name,
+                MWOId = mwo.Id,
+                MWONumber = $"CEC0000{mwo.MWONumber}",
+                Type = MWOTypeEnum.GetType(mwo.Type),
+                PurchaseOrders = mwo.PurchaseOrders == null || mwo.PurchaseOrders.Count == 0 ? new() :
+                mwo.PurchaseOrders.Select(x => x.ToPurchaseOrderResponse()).ToList(),
 
             };
         }

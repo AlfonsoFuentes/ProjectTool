@@ -129,6 +129,22 @@ namespace Infrastructure.Persistence.Repositories
 
 
         }
+        public async Task<MWO?> GetMWOByIdWithPurchaseOrderAsync(Guid MWOId)
+        {
+            var result = await Context.MWOs
+                .Include(x => x.PurchaseOrders).ThenInclude(x => x.PurchaseOrderItems).ThenInclude(x => x.PurchaseOrderReceiveds)
+                .Include(x => x.PurchaseOrders).ThenInclude(x => x.PurchaseOrderItems).ThenInclude(x => x.BudgetItem)
+                .Include(x => x.PurchaseOrders).ThenInclude(x => x.Supplier)
+
+                .AsNoTracking()
+                .AsSplitQuery()
+                .AsQueryable()
+                .SingleOrDefaultAsync(x => x.Id == MWOId);
+
+            return result;
+
+
+        }
         public async Task<MWO?> GetMWOByIdApprovedAsync(Guid MWOId)
         {
             var result = await Context.MWOs
@@ -175,7 +191,7 @@ namespace Infrastructure.Persistence.Repositories
         public async Task<List<PurchaseOrder>> GetAllPurchaseOrderCreatedAsync()
         {
             var result = await Context.PurchaseOrders
-              .Include(x=>x.MWO)
+              .Include(x => x.MWO)
               .Include(x => x.Supplier)
               .Include(x => x.PurchaseOrderItems)
               .AsNoTracking()
@@ -209,11 +225,25 @@ namespace Infrastructure.Persistence.Repositories
             var result = await Context.PurchaseOrders
               .Include(x => x.MWO)
               .Include(x => x.Supplier)
-              .Include(x => x.PurchaseOrderItems).ThenInclude(x=>x.BudgetItem)
+              .Include(x => x.PurchaseOrderItems).ThenInclude(x => x.BudgetItem)
               .AsNoTracking()
               .AsSplitQuery()
               .AsQueryable()
-              .SingleOrDefaultAsync(x=>x.Id== PurchaseOrderId);
+              .SingleOrDefaultAsync(x => x.Id == PurchaseOrderId);
+
+            return result;
+        }
+        public async Task<PurchaseOrder?> GetPurchaseOrderByIdToReceiveAsync(Guid PurchaseOrderId)
+        {
+            var result = await Context.PurchaseOrders
+              .Include(x => x.MWO)
+              .Include(x => x.Supplier)
+              .Include(x => x.PurchaseOrderItems).ThenInclude(x => x.BudgetItem)
+              .Include(x => x.PurchaseOrderItems).ThenInclude(x => x.PurchaseOrderReceiveds)
+              .AsNoTracking()
+              .AsSplitQuery()
+              .AsQueryable()
+              .SingleOrDefaultAsync(x => x.Id == PurchaseOrderId);
 
             return result;
         }

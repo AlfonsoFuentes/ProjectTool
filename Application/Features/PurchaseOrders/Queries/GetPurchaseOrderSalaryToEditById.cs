@@ -6,9 +6,9 @@ using Shared.Models.PurchaseOrders.Requests.PurchaseOrderItems;
 
 namespace Application.Features.PurchaseOrders.Queries
 {
-    public record GetPurchaseOrderCapitalizedSalaryToEditById(Guid PurchaseOrderId) : IRequest<IResult<EditCapitalizedSalaryPurchaseOrderRequest>>;
+    public record GetPurchaseOrderSalaryToEditById(Guid PurchaseOrderId) : IRequest<IResult<EditCapitalizedSalaryPurchaseOrderRequest>>;
 
-    internal class GetPurchaseOrderCapitalizedSalaryToEditByIdHandler : IRequestHandler<GetPurchaseOrderCapitalizedSalaryToEditById, IResult<EditCapitalizedSalaryPurchaseOrderRequest>>
+    internal class GetPurchaseOrderCapitalizedSalaryToEditByIdHandler : IRequestHandler<GetPurchaseOrderSalaryToEditById, IResult<EditCapitalizedSalaryPurchaseOrderRequest>>
     {
         private IPurchaseOrderRepository _purchaseOrderRepository;
 
@@ -17,7 +17,7 @@ namespace Application.Features.PurchaseOrders.Queries
             _purchaseOrderRepository = purchaseOrderRepository;
         }
 
-        public async Task<IResult<EditCapitalizedSalaryPurchaseOrderRequest>> Handle(GetPurchaseOrderCapitalizedSalaryToEditById request, CancellationToken cancellationToken)
+        public async Task<IResult<EditCapitalizedSalaryPurchaseOrderRequest>> Handle(GetPurchaseOrderSalaryToEditById request, CancellationToken cancellationToken)
         {
             PurchaseOrder purchaseOrder = await _purchaseOrderRepository.GetPurchaseOrderWithItemsAndSupplierById(request.PurchaseOrderId);
             var budgtitem = await _purchaseOrderRepository.GetBudgetItemWithMWOById(purchaseOrder.MainBudgetItemId);

@@ -144,7 +144,7 @@ namespace Domain.Entities.Data
 
         [NotMapped]
         public double CapitalPendingToReceiveUSD => BudgetItemsCapital == null || BudgetItemsCapital.Count == 0 ? 0 :
-            BudgetItemsCapital.Sum(x => x.PendingToReceiveUSD);
+            BudgetItemsCapital.Sum(x => x.CommitmentUSD);
         #endregion
         #region ExpensesMWOApproved
         [NotMapped]
@@ -162,7 +162,7 @@ namespace Domain.Entities.Data
 
         [NotMapped]
         public double ExpensesPendingToReceiveUSD => BudgetItemsExpenses == null || BudgetItemsExpenses.Count == 0 ? 0 :
-            BudgetItemsExpenses.Sum(x => x.PendingToReceiveUSD);
+            BudgetItemsExpenses.Sum(x => x.CommitmentUSD);
         #endregion
         #endregion
         [NotMapped]

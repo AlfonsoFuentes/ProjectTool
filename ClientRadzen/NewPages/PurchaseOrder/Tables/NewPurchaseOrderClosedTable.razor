@@ -17,25 +17,25 @@
                             </RadzenColumn>
                             <RadzenColumn Size="12" SizeLG="7">
                                 <RadzenRow>
-                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" >
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
                                         <RowTemplateData Label="MWO" Value="@product.CECName"></RowTemplateData>
                                         <RowTemplateData Label="Account" Value="@product.AccountAssigment"></RowTemplateData>
                                         <RowTemplateData Label="PR#" Value="@product.PurchaseRequisition"></RowTemplateData>
                                         <RowTemplateData Label="PO#" Value="@product.PurchaseOrderNumber"></RowTemplateData>
                                     </RadzenColumn>
-                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" >
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
                                         <RowTemplateData Label="Supplier" Value="@product.SupplierNickName"></RowTemplateData>
                                         <RowTemplateData Label="Vendor Code" Value="@product.SupplierVendorCode"></RowTemplateData>
                                         <RowTemplateData Label="Tax Code" Value="@product.TaxCode"></RowTemplateData>
 
                                     </RadzenColumn>
 
-                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" >
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
                                         <RowTemplateCurrency Label="PO Value" Value="@product.ApprovedUSD"></RowTemplateCurrency>
 
 
                                     </RadzenColumn>
-                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3" >
+                                    <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
                                         <RowTemplateData Label="Created On" Value="@product.CreatedOn"></RowTemplateData>
 
                                         <RowTemplateData Label="Closed On" Value="@product.ClosedOn"></RowTemplateData>
@@ -44,15 +44,28 @@
                                     </RadzenColumn>
                                 </RadzenRow>
                             </RadzenColumn>
-                            <RadzenColumn Size="12" SizeLG="2" >
+                            <RadzenColumn Size="12" SizeLG="2">
                                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
-                                    <RadzenButton Icon="shopping_bag" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+                                    @if(product.IsCapitalizedSalary)
+                                    {
+                                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+                                                      MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit purchase order {product.PurchaseOrderNumber}",TooltipPosition.Left) )"
+                                                      Click="@(()=>MainPage.EditPurchaseOrderSalary(product))" />
+                                    }
+                                    else
+                                    {
+                                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
+                                                      MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit purchase order {product.PurchaseOrderNumber}",TooltipPosition.Left) )"
+                                                      Click="@(()=>MainPage.EditPurchaseOrderReceiving(product))" />
+                                    }
+                                    
+                                    <RadzenButton Icon="remove_done" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
                                                   MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Reopen purchase order {product.PurchaseOrderNumber}",TooltipPosition.Left) )"
                                                   Click="@(()=>MainPage.ReOpenPurchaseOrder(product))" />
 
                                     <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
                                                   MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete purchase order {product.PurchaseOrderNumber}",TooltipPosition.Left) )"
-                                             Click="@(()=>MainPage.RemovePurchaseorder(product))" />
+                                                  Click="@(()=>MainPage.RemovePurchaseorder(product))" />
 
                                 </RadzenStack>
                             </RadzenColumn>

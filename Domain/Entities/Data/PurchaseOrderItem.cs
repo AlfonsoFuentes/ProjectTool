@@ -36,12 +36,12 @@ namespace Domain.Entities.Data
         }
 
         public double UnitaryValueCurrency { get; set; }
-        public double ActualCurrency { get; set; }
+
         public double Quantity { get; set; }
         public bool IsTaxNoProductive { get; set; } = false;
         public bool IsTaxAlteration { get; set; } = false;
         [NotMapped]
-        public double NewActualCurrency => (PurchaseOrderReceiveds == null || PurchaseOrderReceiveds.Count == 0) ? 0 : PurchaseOrderReceiveds.Sum(x => x.ValueReceivedCurrency);
+        public double ActualCurrency => (PurchaseOrderReceiveds == null || PurchaseOrderReceiveds.Count == 0) ? 0 : PurchaseOrderReceiveds.Sum(x => x.ValueReceivedCurrency);
         [NotMapped]
         public DateTime? POExpectedDate => PurchaseOrder == null ? null! : PurchaseOrder.POExpectedDateDate;
         [NotMapped]
@@ -58,8 +58,7 @@ namespace Domain.Entities.Data
         [NotMapped]
         public string Supplier => PurchaseOrder == null ? string.Empty : PurchaseOrder.Supplier == null ? string.Empty : PurchaseOrder.Supplier.NickName;
         [NotMapped]
-        public PurchaseOrderStatusEnum PurchaseorderStatus =>
-            PurchaseOrder == null ? PurchaseOrderStatusEnum.None :
+        public PurchaseOrderStatusEnum PurchaseorderStatus => PurchaseOrder == null ? PurchaseOrderStatusEnum.None :
             PurchaseOrderStatusEnum.GetType(PurchaseOrder.PurchaseOrderStatus);
         [NotMapped]
         public double USDCOP => PurchaseOrder == null ? 0 : PurchaseOrder.USDCOP;
@@ -77,25 +76,11 @@ namespace Domain.Entities.Data
             PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? QuoteValueCurrency / USDCOP :
             PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? QuoteValueCurrency / USDEUR :
             0;
+        
+         
+       
         [NotMapped]
-        public double QuoteValueUSD =>
-            QuoteCurrency.Id == CurrencyEnum.USD.Id ? QuoteValueCurrency :
-            QuoteCurrency.Id == CurrencyEnum.COP.Id ? QuoteValueCurrency / USDCOP :
-            QuoteCurrency.Id == CurrencyEnum.EUR.Id ? QuoteValueCurrency / USDEUR :
-            0;
-
-        [NotMapped]
-        public double ActualUSD =>
-            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? ActualCurrency :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? ActualCurrency / USDCOP :
-            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? ActualCurrency / USDEUR :
-            0;
-        [NotMapped]
-        public double NewActualUSD =>
-            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? NewActualCurrency :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? NewActualCurrency / USDCOP :
-            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? NewActualCurrency / USDEUR :
-            0;
+        public double ActualUSD => (PurchaseOrderReceiveds == null || PurchaseOrderReceiveds.Count == 0) ? 0 : PurchaseOrderReceiveds.Sum(x => x.ValueReceivedUSD);
         [NotMapped]
         public double PotentialCommitmentUSD =>
             PurchaseorderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? AssignedUSD : 0;
@@ -103,11 +88,9 @@ namespace Domain.Entities.Data
         public double ApprovedUSD =>
             PurchaseorderStatus.Id != PurchaseOrderStatusEnum.Created.Id ? AssignedUSD : 0;
         [NotMapped]
-        public double PendingToReceiveUSD =>
+        public double CommitmentUSD =>
             PurchaseorderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? 0 : ApprovedUSD - ActualUSD;
-        [NotMapped]
-        public double NewPendingToReceiveUSD =>
-            PurchaseorderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? 0 : ApprovedUSD - NewActualUSD;
+        
 
 
     }

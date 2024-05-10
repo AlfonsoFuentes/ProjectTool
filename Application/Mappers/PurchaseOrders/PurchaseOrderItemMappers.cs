@@ -20,7 +20,7 @@ namespace Application.Mappers.PurchaseOrders
                 IsTaxEditable = purchaseOrderItem.IsTaxEditable,
                 IsTaxNoProductive = purchaseOrderItem.IsTaxNoProductive,
                 Name = purchaseOrderItem.Name,
-                NewPriorPurchaseOrderItemResponseId = purchaseOrderItem.Id,
+                PurchaseOrderItemId = purchaseOrderItem.Id,
                 POExpectedDate = purchaseOrderItem.POExpectedDate,
                 PurchaseOrderCurrency = purchaseOrderItem.PurchaseOrderCurrency,
                 PurchaseOrderId = purchaseOrderItem.PurchaseOrderId,
@@ -41,6 +41,7 @@ namespace Application.Mappers.PurchaseOrders
         {
             return new()
             {
+                PurchaseOrderItemId = purchaseOrderItem.Id,
                 BudgetItem = purchaseOrderItem.BudgetItem == null ? null! : purchaseOrderItem.BudgetItem.ToBudgetItemToCreatePurchaseOrder(),
                 IsTaxAlteration = purchaseOrderItem.IsTaxAlteration,
                 IsTaxNoProductive = purchaseOrderItem.IsTaxNoProductive,
@@ -52,11 +53,58 @@ namespace Application.Mappers.PurchaseOrders
                 USDCOP = purchaseOrderItem.USDCOP,
                 USDEUR = purchaseOrderItem.USDEUR,
                 CurrencyDate = purchaseOrderItem.PurchaseOrder.CurrencyDate,
-               
+
 
             };
         }
+        public static NewPurchaseOrderReceiveItemRequest ToPurchaseOrderReceiveItemRequest(this PurchaseOrderItem purchaseOrderItem)
+        {
+            return new()
+            {
+                PurchaseOrderItemId = purchaseOrderItem.Id,
+                BudgetItem = purchaseOrderItem.BudgetItem == null ? null! : purchaseOrderItem.BudgetItem.ToBudgetItemToCreatePurchaseOrder(),
+                IsTaxAlteration = purchaseOrderItem.IsTaxAlteration,
+                IsTaxNoProductive = purchaseOrderItem.IsTaxNoProductive,
+                Name = purchaseOrderItem.Name,
+                PurchaseOrderCurrency = purchaseOrderItem.PurchaseOrderCurrency,
+                Quantity = purchaseOrderItem.Quantity,
+                QuoteCurrency = purchaseOrderItem.QuoteCurrency,
+                UnitaryValueCurrency = purchaseOrderItem.UnitaryValueCurrency,
+                USDCOP = purchaseOrderItem.USDCOP,
+                USDEUR = purchaseOrderItem.USDEUR,
+                CurrencyDate = purchaseOrderItem.PurchaseOrder.CurrencyDate,
+
+                PurchaseOrderStatus = purchaseOrderItem.PurchaseorderStatus,
+                Receiveds = (purchaseOrderItem.PurchaseOrderReceiveds == null || purchaseOrderItem.PurchaseOrderReceiveds.Count == 0) ? new() :
+                 purchaseOrderItem.PurchaseOrderReceiveds.Select(x => x.ToPurchaseOrderReceivedRequest()).ToList(),
+
+
+
+            };
+        }
+        public static NewPurchaseOrderReceiveItemActualRequest ToPurchaseOrderReceivedRequest(this PurchaseOrderItemReceived purchaseOrderItemReceived)
+        {
+            return new NewPurchaseOrderReceiveItemActualRequest()
+            {
+                POItemName= purchaseOrderItemReceived.PurchaseOrderItem.Name,
+                ReceivedId = purchaseOrderItemReceived.Id,
+                PurchaseOrderCurrency = purchaseOrderItemReceived.PurchaseOrderCurrency,
+                ReceivedCurrency = purchaseOrderItemReceived.ValueReceivedCurrency,
+                USDCOP = purchaseOrderItemReceived.USDCOP,
+                USDEUR = purchaseOrderItemReceived.USDEUR,
+                CurrencyDate=purchaseOrderItemReceived.CurrencyDate,
+            };
+        }
         public static PurchaseOrderItem ToPurchaseOrderItemFromCreateRequest(this NewPurchaseOrderCreateItemRequest request, PurchaseOrderItem item)
+        {
+            item.Quantity = request.Quantity;
+            item.UnitaryValueCurrency = request.UnitaryValueCurrency;
+            item.Name = request.Name;
+
+
+            return item;
+        }
+        public static PurchaseOrderItem ToPurchaseOrderItemFromReceivedRequest(this NewPurchaseOrderReceiveItemRequest request, PurchaseOrderItem item)
         {
             item.Quantity = request.Quantity;
             item.UnitaryValueCurrency = request.UnitaryValueCurrency;

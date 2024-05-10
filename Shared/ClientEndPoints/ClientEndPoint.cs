@@ -7,9 +7,15 @@
         {
             public static string ReOpen = "ReOpen";
             public static string Create = "Create";
+            public static string CreateSalary="CreateSalary";
+            public static string EditCreate = "EditCreate";
+            public static string EditApproved = "EditApproved";
             public static string CreateAndReponse = "Create";
             public static string UnApprove = "UnApprove";
             public static string Approve = "Approve";
+            public static string Receive = "Receive";
+            public static string EditReceive = "EditReceive";
+            public static string EditSalary = "EditSalary";
             public static string Update = "Update";
             public static string GetAll = "GetAll";
             public static string GetToApproved = "GetToApproved";
@@ -23,9 +29,15 @@
             public static string GetById = "GetById";
             public static string GetByIdToUpdate = "GetByIdUpdate";
             public static string GetByIdMWOApproved = "GetByIdMWOApproved";
-            public static string GetPurchaseOrderToApprove = "GetPurchaseOrderToApprove";
+            public static string GetCreateToApprove = "GetToApprove";
             public static string ExportToExcel = "ExportToExcel";
             public static string GetMWOItemsToApplyTaxes = "GetMWOItemsToApplyTaxes";
+            public static string GetCreatedToEdit = "GetCreatedToEdit";
+            public static string GetApprovedToReceive = "GetApprovedToReceive";
+            public static string GetReceivedToEdit = "GetReceivedToEdit";
+            public static string GetApprovedToEdit = "GetApprovedToEdit";
+            public static string GetSalaryToEdit = "GetSalaryToEdit";
+            public static string GetEBPReport = "GetEBPReport";
         }
         public static class Controller
         {
@@ -68,6 +80,7 @@
             public static string GetAllCreated = $"{Controller.MWO}/{Actions.GetAllCreated}";
             public static string GetAllApproved = $"{Controller.MWO}/{Actions.GetAllApproved}";
             public static string GetToApproved = $"{Controller.MWO}/{Actions.GetToApproved}";
+            public static string GetEBPReport = $"{Controller.MWO}/{Actions.GetEBPReport}";
 
 
             public static string Create = $"{Controller.MWO}/{Actions.Create}";
@@ -93,15 +106,29 @@
         public static class NewPurchaseOrder
         {
             public static string Approve = $"{Controller.PurchaseOrder}/{Actions.Approve}";
+            public static string Receive = $"{Controller.PurchaseOrder}/{Actions.Receive}";
             public static string ReOpen = $"{Controller.PurchaseOrder}/{Actions.ReOpen}";
             public static string UnApprove = $"{Controller.PurchaseOrder}/{Actions.UnApprove}";
-
             public static string Create = $"{Controller.PurchaseOrder}/{Actions.Create}";
+            public static string CreateSalary = $"{Controller.PurchaseOrder}/{Actions.CreateSalary}";
+
             public static string Delete = $"{Controller.PurchaseOrder}/{Actions.Delete}";
             public static string GetAllCreated = $"{Controller.PurchaseOrder}/{Actions.GetAllCreated}";
             public static string GetAllApproved = $"{Controller.PurchaseOrder}/{Actions.GetAllApproved}";
-            public static string GetAllClosed = $"{Controller.PurchaseOrder}/{Actions.GetAllClosed}";
-            public static string GetPurchaseOrderToApprove = $"{Controller.PurchaseOrder}/{Actions.GetPurchaseOrderToApprove}";
+            public static string GetAllClosed = $"{Controller.PurchaseOrder}/{Actions.GetAllClosed}";           
+            
+            
+            public static string EditCreate = $"{Controller.PurchaseOrder}/{Actions.EditCreate}";
+            public static string EditReceive = $"{Controller.PurchaseOrder}/{Actions.EditReceive}";
+            public static string EditApproved = $"{Controller.PurchaseOrder}/{Actions.EditApproved}";
+            public static string EditSalary = $"{Controller.PurchaseOrder}/{Actions.EditSalary}";
+
+            public static string GetCreateToApprove = $"{Controller.PurchaseOrder}/{Actions.GetCreateToApprove}";
+            public static string GetApprovedToReceive = $"{Controller.PurchaseOrder}/{Actions.GetApprovedToReceive}";
+            public static string GetReceivedToEdit = $"{Controller.PurchaseOrder}/{Actions.GetReceivedToEdit}";
+            public static string GetApprovedToEdit = $"{Controller.PurchaseOrder}/{Actions.GetApprovedToEdit}";
+            public static string GetSalaryToEdit = $"{Controller.PurchaseOrder}/{Actions.GetSalaryToEdit}";
+            public static string GetCreateToEdit = $"{Controller.PurchaseOrder}/{Actions.GetCreatedToEdit}";
         }
     }
 }

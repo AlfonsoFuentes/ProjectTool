@@ -50,7 +50,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Edi
             var purchaseorderitem = await Repository.GetPurchaseOrderItemById(request.Data.PurchaseOrderItem.PurchaseOrderItemId);
             purchaseorderitem.UnitaryValueCurrency = request.Data.SumPOValueCurrency;
             purchaseorderitem.Quantity = 1;
-            purchaseorderitem.ActualCurrency = request.Data.SumPOValueCurrency;
+ 
 
             await Repository.UpdatePurchaseOrderItem(purchaseorderitem);
 

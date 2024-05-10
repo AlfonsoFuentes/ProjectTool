@@ -1,9 +1,11 @@
 ﻿using Client.Infrastructure.Managers.PurchaseOrders;
+using FluentValidation;
 using Shared.Models.PurchaseOrders.Requests.CapitalizedSalaries;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
 
 namespace Client.Infrastructure.Validators.PurchaseOrder
 {
+
     public class CreateCapitalizedSalaryPurchaseOrderValidator : AbstractValidator<CreateCapitalizedSalaryPurchaseOrderRequest>
     {
         private IPurchaseOrderValidator PurchaseOrderValidator { get; set; }

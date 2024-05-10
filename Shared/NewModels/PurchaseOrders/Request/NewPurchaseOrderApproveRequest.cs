@@ -6,12 +6,9 @@ namespace Shared.NewModels.PurchaseOrders.Request
     {
         public Guid PurchaseOrderId { get; set; }
         public string PurchaseOrderNumber { get; set; } = string.Empty;
-      
-
         public CurrencyEnum QuoteCurrency { get; set; } = CurrencyEnum.None;
         public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.None;
         public Guid MWOId { get; set; }
-
         public string CECName { get; set; } = string.Empty;
         public string MWOName { get; set; } = string.Empty;
         public Guid MainBudgetItemId { get; set; }
@@ -36,6 +33,7 @@ namespace Shared.NewModels.PurchaseOrders.Request
 
         public string MWOCECName { get; set; } = string.Empty;
         public string PurchaseorderName { get; set; } = string.Empty;
+        public bool IsAssetProductive {  get; set; }
         public bool IsAlteration { get; set; }
         public bool IsCapitalizedSalary { get; set; }
 

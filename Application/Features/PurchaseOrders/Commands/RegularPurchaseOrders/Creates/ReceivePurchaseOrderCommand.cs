@@ -39,7 +39,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
                 var item = await Repository.GetPurchaseOrderItemById(row.PurchaseOrderItemId);
                 if (item != null)
                 {
-                    item.ActualCurrency = row.PONewActualCurrency;
+                    
                     var received = item.AddPurchaseOrderReceived();
                     received.ValueReceivedCurrency = row.ReceivingCurrency;
                     received.USDCOP = request.Data.TRMUSDCOP;
@@ -59,7 +59,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
                 {
                     var sumTaxPOCurrency = request.Data.SumPONewActualCurrency;
                     sumPOactualCurrency += sumTaxPOCurrency;
-                    PurchaseorderItemTax.ActualCurrency = sumTaxPOCurrency * PurchaseorderItemTax.BudgetItem.Percentage / 100;
+           
                     await Repository.UpdatePurchaseOrderItem(PurchaseorderItemTax);
 
                 }
@@ -73,7 +73,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
                     {
                         var TaxAlterationCurrency = row.PONewActualCurrency * request.Data.PercentageAlteration / 100.0;
                         sumPOactualCurrency += TaxAlterationCurrency;
-                        purchaseorderItemTaxForAlteration.ActualCurrency = TaxAlterationCurrency;
+             
                         await Repository.UpdatePurchaseOrderItem(purchaseorderItemTaxForAlteration);
                     }
 

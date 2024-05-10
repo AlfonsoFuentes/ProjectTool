@@ -37,23 +37,16 @@ namespace Application.NewFeatures.PurchaseOrders.Commands
 
                 await Repository.AddAsync(purchaseorderitem);
 
-                //if (request.Data.IsTaxEditable || request.Data.IsCapitalizedSalary)
-                //{
-                //    purchaseorder.PurchaseOrderStatus = PurchaseOrderStatusEnum.Closed.Id;
-                //    var received = purchaseorderitem.AddPurchaseOrderReceived();
-                //    item.ToPurchaseOrderItemReceived(received);
-                //    await Repository.AddAsync(received);
-                //}
+                
 
             }
             await Repository.AddAsync(purchaseorder);
          
-            var result = await AppDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, 
-                Cache.GetParamsCachePurchaseOrderCreated(mwo.Id, request.Data.PurchaseOrderItems));
+            var result = await AppDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCachePurchaseOrder(purchaseorder));
 
             return result > 0 ?
-              Result.Success(ResponseMessages.ReponseSuccesfullyMessage(request.Data.PurchaseorderName, ResponseType.Created, ClassNames.MWO)) :
-              Result.Fail(ResponseMessages.ReponseFailMessage(request.Data.PurchaseorderName, ResponseType.Created, ClassNames.MWO));
+              Result.Success(ResponseMessages.ReponseSuccesfullyMessage(request.Data.PurchaseorderName, ResponseType.Created, ClassNames.PurchaseOrders)) :
+              Result.Fail(ResponseMessages.ReponseFailMessage(request.Data.PurchaseorderName, ResponseType.Created, ClassNames.PurchaseOrders));
         }
     }
 }

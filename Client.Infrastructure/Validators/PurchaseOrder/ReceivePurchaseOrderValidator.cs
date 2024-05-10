@@ -3,6 +3,7 @@ using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
 
 namespace Client.Infrastructure.Validators.PurchaseOrder
 {
+
     public class ReceivePurchaseOrderValidator : AbstractValidator<ReceiveRegularPurchaseOrderRequest>
     {
         public ReceivePurchaseOrderValidator()

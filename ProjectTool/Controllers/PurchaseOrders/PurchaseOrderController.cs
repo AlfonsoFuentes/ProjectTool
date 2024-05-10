@@ -129,7 +129,7 @@ namespace Server.Controllers.PurchaseOrders
         [HttpGet("GetPurchaseOrderCapitalizedSalaryToEdit/{PurchaseOrderId}")]
         public async Task<IActionResult> GetPurchaseOrderCapitalizedSalaryEdit(Guid PurchaseOrderId)
         {
-            return Ok(await Mediator.Send(new GetPurchaseOrderCapitalizedSalaryToEditById(PurchaseOrderId)));
+            return Ok(await Mediator.Send(new GetPurchaseOrderSalaryToEditById(PurchaseOrderId)));
         }
         [HttpGet("GetAllPurchaseOrder")]
         public async Task<IActionResult> GetAllPurchaseorder()

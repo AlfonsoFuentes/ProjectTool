@@ -16,7 +16,7 @@ namespace Application.NewFeatures.MWOS.Commands
 
         public async Task<IResult> Handle(NewMWOUnApproveCommand request, CancellationToken cancellationToken)
         {
-            var row = await repository.GetByIdAsync<MWO>(request.Data.MWOId);
+            var row = await repository.GetMWOById(request.Data.MWOId);
             if (row == null)
             {
                 return Result.Fail(ResponseMessages.ReponseFailMessage(request.Data.Name, ResponseType.NotFound, ClassNames.MWO));
@@ -24,7 +24,7 @@ namespace Application.NewFeatures.MWOS.Commands
             row.Status = MWOStatusEnum.Created.Id;
          
             await repository.UpdateAsync(row);
-            var result = await appDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCacheMWO(request.Data.MWOId));
+            var result = await appDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCacheMWO(row));
             return result > 0 ?
                Result.Success(ResponseMessages.ReponseSuccesfullyMessage(request.Data.Name, ResponseType.UnApprove, ClassNames.MWO)) :
                Result.Fail(ResponseMessages.ReponseFailMessage(request.Data.Name, ResponseType.UnApprove, ClassNames.MWO));

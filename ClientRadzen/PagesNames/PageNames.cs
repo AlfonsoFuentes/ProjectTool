@@ -30,9 +30,16 @@
         }
         public static class PurchaseOrder
         {
+            public static string EditCreate = "NewEditCreatePurchaseOrder";
             public static string Create = "NewCreatePurchaseOrder";
             public static string Main = "NewPurchaseOrderMain";
             public static string Approve = "NewApprovePurchaseOrder";
+            public static string Receive = "NewReceivePurchaseOrder";
+            public static string EditReceive = "NewEditReceivePurchaseOrder";
+            public static string EditApproved = "NewEditAprovedPurchaseOrder";
+            public static string Reopen = "NewReceivePurchaseOrder";
+            public static string CreateSalary = "NewCreateSalaryPurchaseOrder";
+            public static string EditSalary = "NewEditSalaryPurchaseOrder";
         }
     }
 }

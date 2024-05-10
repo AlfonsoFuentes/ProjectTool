@@ -1,6 +1,4 @@
-﻿
-
-namespace Application.NewFeatures.MWOS.Queries
+﻿namespace Application.NewFeatures.MWOS.Queries
 {
     public record NewMWOApprovedGetByIdWithItemsQuery(Guid MWOId) : IRequest<IResult<NewMWOApprovedReponse>>;
     internal class NewMWOApprovedGetByIdWithItemsQueryHandler : IRequestHandler<NewMWOApprovedGetByIdWithItemsQuery, IResult<NewMWOApprovedReponse>>
@@ -17,16 +15,18 @@ namespace Application.NewFeatures.MWOS.Queries
         {
             string message = string.Empty;
             Func<Task<MWO?>> getbyid = () => QueryRepository.GetMWOByIdApprovedAsync(request.MWOId);
+            Func<Task<MWO?>> getbyebpid = () => QueryRepository.GetMWOByIdWithPurchaseOrderAsync(request.MWOId);
             try
             {
-                var testCache = $"{Cache.GetMWOByApproved}:{request.MWOId}";
-                var mwo = await _cache.GetOrAddAsync(testCache, getbyid);
-                if (mwo == null)
+                var mwoebp = await _cache.GetOrAddAsync($"{Cache.GetMWOPurchaseOrderById}:{request.MWOId}", getbyebpid);
+                var mwo = await _cache.GetOrAddAsync($"{Cache.GetMWOByApproved}:{request.MWOId}", getbyid);
+                if (mwo == null || mwoebp == null)
                 {
                     return Result<NewMWOApprovedReponse>.Fail(ResponseMessages.ReponseFailMessage("", ResponseType.NotFound, ClassNames.MWO));
                 }
 
                 NewMWOApprovedReponse response = mwo.ToMWOApprovedReponse();
+                response.EBPReportResponse = mwoebp.ToMWOEBPReportResponse();
                 return Result<NewMWOApprovedReponse>.Success(response);
             }
             catch (Exception ex)

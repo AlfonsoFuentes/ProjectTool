@@ -10,13 +10,13 @@
         public double USDCOP { get; set; }
         public double USDEUR { get; set; }
         public DateTime CurrencyDate { get; set; }
-
+     
         public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.None;
 
         public double ValueReceivedUSD =>
            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? ValueReceivedCurrency :
-           PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? ValueReceivedCurrency / USDCOP :
-           PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? ValueReceivedCurrency / USDEUR :
+           PurchaseOrderCurrency.Id ==  CurrencyEnum.COP.Id ? USDCOP == 0 ? 0 : ValueReceivedCurrency / USDCOP :
+           PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? USDEUR == 0 ? 0 : ValueReceivedCurrency / USDEUR :
              0;
     }
 }

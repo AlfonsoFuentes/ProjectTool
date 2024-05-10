@@ -25,7 +25,7 @@ namespace Application.Features.MWOs.Commands
 
             await Repository.RemoveAsync(mwo);
  
-            var result = await _appDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCacheMWO(request.Data.MWOId));
+            var result = await _appDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCacheMWO(mwo));
 
             return result > 0 ?
                Result.Success(ResponseMessages.ReponseSuccesfullyMessage(request.Data.Name, ResponseType.Delete, ClassNames.MWO)) :

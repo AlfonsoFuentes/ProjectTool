@@ -1,0 +1,117 @@
+﻿@if (Model != null)
+{
+    <RadzenRow class="rz-mt-2">
+        <RadzenColumn Size="12" SizeMD="MaxColumn">
+            <RadzenDataGrid @ref="ordersGrid" AllowAlternatingRows="false" AllowFiltering="false" AllowPaging="true" PageSize="5"
+                            AllowSorting="false" EditMode="DataGridEditMode.Single" Density="@Density" 
+                            Data="@MainPage.Items" TItem="NewPurchaseOrderReceiveItemActualRequest"  Responsive=true
+                            CellClick=ClickCell AllowRowSelectOnRowClick=true RowDoubleClick=EditRow
+                            
+                            ColumnWidth="200px">
+
+                <Columns>
+                   
+                    <RadzenDataGridColumn TItem="NewPurchaseOrderReceiveItemActualRequest" Property="@nameof(NewPurchaseOrderReceiveItemActualRequest.POItemName)"
+                                          Title="PO Item Name" Width="50px">
+                      
+                    </RadzenDataGridColumn>
+               
+                    <RadzenDataGridColumn TItem="NewPurchaseOrderReceiveItemActualRequest"
+                                          Property="@nameof(NewPurchaseOrderReceiveItemActualRequest.ReceivedCurrency)"
+                                          Title="@($"Value, {Model.QuoteCurrency.Name}")"
+                                          Width="30px">
+                        <Template Context="detail">
+                            @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.ReceivedCurrency)
+
+                        </Template>
+                        <EditTemplate Context="order">
+                            <RadzenNumeric ShowUpDown=false @bind-Value=@order.ReceivedCurrency
+                                           @oninput="@((arg)=>MainPage.ChangeReceiving(order,arg.Value!.ToString()!))">
+                            </RadzenNumeric>
+                        </EditTemplate>
+                        <FooterTemplate>
+                            <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.ReceivedCurrency)}")</b>
+                        </FooterTemplate>
+                    </RadzenDataGridColumn>
+                    
+                    <RadzenDataGridColumn TItem="NewPurchaseOrderReceiveItemActualRequest"
+                                          Property="@nameof(NewPurchaseOrderReceiveItemActualRequest.ReceivedUSD)"
+                                          Title="@($"Receiving, USD")" Width="30px">
+                        <Template Context="detail">
+                            @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.ReceivedUSD)
+                        </Template>
+                        <EditTemplate Context="detail">
+                            @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.ReceivedUSD)
+                          
+                        </EditTemplate>
+                        <FooterTemplate>
+                            <b>@($"{String.Format(new CultureInfo("en-US"), "{0:C0}", Model.ReceivedUSD)}")</b>
+                        </FooterTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="NewPurchaseOrderReceiveItemActualRequest"
+                                          Property="@nameof(NewPurchaseOrderReceiveItemActualRequest.CurrencyDate)"
+                                          Title="Currency date" Width="30px">
+                        <Template Context="detail">
+                            @detail.CurrencyDatestring
+                            
+                        </Template>
+                        <EditTemplate Context="order">
+                            @order.CurrencyDatestring
+                        </EditTemplate>
+
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="NewPurchaseOrderReceiveItemActualRequest"
+                                          Property="@nameof(NewPurchaseOrderReceiveItemActualRequest.USDCOP)"
+                                          Title="TRM USD" Width="30px">
+                        <Template Context="detail">
+
+                            @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.USDCOP)
+                        </Template>
+                        <EditTemplate Context="order">
+                            <RadzenNumeric ShowUpDown=false @bind-Value=@order.USDCOP
+                                           @oninput="@((arg)=>MainPage.ChangeUSDCOP(order,arg.Value!.ToString()!))">
+                            </RadzenNumeric>
+                        </EditTemplate>
+                        
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="NewPurchaseOrderReceiveItemActualRequest"
+                                          Property="@nameof(NewPurchaseOrderReceiveItemActualRequest.USDEUR)"
+                                          Title="@($"TRM EUR")" Width="30px">
+                        <Template Context="detail">
+                            @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C2}", detail.USDEUR)
+                        </Template>
+                        <EditTemplate Context="order">
+                            <RadzenNumeric ShowUpDown=false @bind-Value=@order.USDEUR
+                                           @oninput="@((arg)=>MainPage.ChangeUSDEUR(order,arg.Value!.ToString()!))">
+                            </RadzenNumeric>
+                        </EditTemplate>
+                        
+                    </RadzenDataGridColumn>
+                    
+                    <RadzenDataGridColumn TItem="NewPurchaseOrderReceiveItemActualRequest" Context="order" Filterable="false" Sortable="false"
+                                          TextAlign="TextAlign.Right" Width="25px">
+                        <Template Context="order">
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Edit", TooltipPosition.Top) )"
+                                          Click="@(args => EditRowButton(order))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="order">
+                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                          Click="@((args) => SaveRow(order))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Save", TooltipPosition.Top) )">
+                            </RadzenButton>
+                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall"
+                                          class="my-1 ms-1" Click="@((args) => CancelEdit(order))" MouseEnter="@(args => MainApp.ShowTooltip(args,$"Cancel", TooltipPosition.Left) )">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenColumn>
+    </RadzenRow>
+}
+
+@code {
+    bool IsSameCurrency => Model == null ? false : Model.QuoteCurrency.Id == Model.PurchaseOrderCurrency.Id;
+}

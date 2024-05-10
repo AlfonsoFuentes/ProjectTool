@@ -61,7 +61,7 @@ namespace Application.NewFeatures.MWOS.Commands
             }
             await Repository.UpdateAsync(mwo!);
    
-            var result = await AppDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCacheMWO(request.Data.MWOId));
+            var result = await AppDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCacheMWO(mwo));
 
             await Repository.UpdateTaxesAndEgineeringItems(mwo, !request.Data.IsAssetProductive, true, cancellationToken);
 

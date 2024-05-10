@@ -50,7 +50,7 @@ namespace Application.Features.PurchaseOrders.Commands.RegularPurchaseOrders.Cre
             purchaseorderitem.Name=request.Data.PurchaseOrderItem.Name;
             purchaseorderitem.UnitaryValueCurrency = request.Data.PurchaseOrderItem.UnitaryValuePurchaseOrderCurrency;
             purchaseorderitem.Quantity = 1;
-            purchaseorderitem.ActualCurrency = request.Data.SumPOValueUSD;
+       
             await Repository.AddPurchaseorderItem(purchaseorderitem);
 
             var result = await AppDbContext.SaveChangesAsync(cancellationToken);

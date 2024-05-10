@@ -17,6 +17,7 @@
         public static string UnApprove = "un approved";
         public static string Approve = "approved";
         public static string Reopen = "re opened";
+        public static string Received = "received";
     }
     public static class ClassNames
     {

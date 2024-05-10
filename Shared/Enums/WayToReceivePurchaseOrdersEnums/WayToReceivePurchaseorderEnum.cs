@@ -13,12 +13,12 @@
         public static WayToReceivePurchaseorderEnum None = Create(-1, "NONE");
         public static WayToReceivePurchaseorderEnum CompleteOrder = Create(0, "Receive PO 100%");
         public static WayToReceivePurchaseorderEnum PercentageOrder = Create(1, "Receive PO By Percentage");
-        public static WayToReceivePurchaseorderEnum MoneyByItem = Create(2, "Receive By Item");
-        public static WayToReceivePurchaseorderEnum PercentageByItem = Create(3, "Receive Percentage By Item");
 
+        public static WayToReceivePurchaseorderEnum MoneyByItem = Create(2, "MoneyByItem");
+        public static WayToReceivePurchaseorderEnum PercentageByItem = Create(3, "PercentageByItem");
         public static List<WayToReceivePurchaseorderEnum> List = new List<WayToReceivePurchaseorderEnum>()
             {
-          None,  CompleteOrder, PercentageOrder, MoneyByItem, PercentageByItem
+          None,  CompleteOrder, PercentageOrder
             };
         public static string GetName(int id) => List.Exists(x => x.Id == id) ? List.FirstOrDefault(x => x.Id == id)!.Name : string.Empty;
 

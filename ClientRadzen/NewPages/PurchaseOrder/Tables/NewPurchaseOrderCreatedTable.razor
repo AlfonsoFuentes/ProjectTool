@@ -44,7 +44,7 @@
                                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
                                     <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" 
                                                   MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Edit purchase requisition {product.PurchaseorderName}",TooltipPosition.Left) )"
-                                                  Click="@(()=>MainPage.EditPurchaseOrder(product))" />
+                                                  Click="@(()=>MainPage.EditPurchaseOrderCreated(product))" />
                                     <RadzenButton Icon="done_outline" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small"
                                                   MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Approve purchase requisition {product.PurchaseRequisition}",TooltipPosition.Left) )"
                                                    Click="@(()=>MainPage.ApprovePurchaseOrder(product))" />

@@ -55,6 +55,9 @@ namespace Shared.NewModels.PurchaseOrders.Responses
         public bool IsAlteration { get; set; } = false;
         public bool IsCapitalizedSalary { get; set; } = false;
 
+        public string PurchaseOrderLegendToDelete => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ?
+          PurchaseRequisition : PurchaseOrderNumber;
+
         public bool IsTaxEditable { get; set; } = false;
 
         public double ActualCurrency => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :

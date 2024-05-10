@@ -16,14 +16,14 @@ namespace Application.NewFeatures.PurchaseOrders.Commands
 
         public async Task<IResult> Handle(NewPurchaseOrderDeleteCommand request, CancellationToken cancellationToken)
         {
-            var row = await Repository.GetByIdAsync<PurchaseOrder>(request.Data.PurchaseOrderId);
+            var row = await Repository.GetPurchaseOrderByIdCreatedAsync(request.Data.PurchaseOrderId);
             if (row == null)
             {
                 return Result.Fail(ResponseMessages.ReponseFailMessage(request.Data.Name, ResponseType.NotFound, ClassNames.PurchaseOrders));
             }
                 await Repository.RemoveAsync(row);
            
-            var result = await _appDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCachePurchaseOrderCreated(row.MWOId));
+            var result = await _appDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, Cache.GetParamsCachePurchaseOrder(row));
 
             return result > 0 ?
                Result.Success(ResponseMessages.ReponseSuccesfullyMessage(request.Data.Name, ResponseType.Delete, ClassNames.PurchaseOrders)) :

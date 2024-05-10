@@ -1,5 +1,6 @@
 ﻿using Shared.Enums.CostCenter;
 using Shared.Enums.MWOStatus;
+using Shared.NewModels.EBPReport;
 using Shared.NewModels.PurchaseOrders.Responses;
 
 namespace Shared.NewModels.MWOs.Reponses
@@ -16,11 +17,12 @@ namespace Shared.NewModels.MWOs.Reponses
         public MWOStatusEnum Status => MWOStatusEnum.Approved;
         public bool IsAssetProductive { get; set; }
         public double PercentageTaxForAlterations { get; set; }
+        public DateTime ApprovedDate { get; set; }
 
         public List<NewBudgetItemMWOApprovedResponse> BudgetItems { get; set; } = new List<NewBudgetItemMWOApprovedResponse>();
 
+        public NewEBPReportResponse EBPReportResponse { get; set; } = new();
 
-        public DateTime ApprovedDate { get; set; }
 
         public List<NewBudgetItemMWOApprovedResponse> BudgetItemsExpenses => BudgetItems == null ? new() : BudgetItems.Where(x => x.IsAlteration).ToList();
 

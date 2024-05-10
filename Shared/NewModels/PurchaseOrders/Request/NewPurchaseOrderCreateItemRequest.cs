@@ -4,6 +4,7 @@ namespace Shared.NewModels.PurchaseOrders.Request
 {
     public class NewPurchaseOrderCreateItemRequest
     {
+        public Guid PurchaseOrderItemId { get; set; }
         public Guid BudgetItemId => BudgetItem == null ? Guid.Empty : BudgetItem.BudgetItemId;
        
         public bool IsNameEmpty=>string.IsNullOrEmpty(Name);

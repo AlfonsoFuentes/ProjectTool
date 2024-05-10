@@ -132,6 +132,21 @@
 
             return purchaseorders;
         }
+        public async Task<PurchaseOrder?> GetPurchaseOrderByIdCreatedAsync(Guid PurchaseOrderId)
+        {
+            var result = await Context.PurchaseOrders
+              .Include(x => x.MWO)
+              .Include(x => x.Supplier)
+              .Include(x => x.PurchaseOrderItems).ThenInclude(x => x.BudgetItem)
+             
+              .SingleOrDefaultAsync(x => x.Id == PurchaseOrderId);
 
+            return result;
+        }
+        public async Task<BudgetItem> GetTaxBudgetItemNoProductive(Guid MWOId)
+        {
+            var result = await Context.BudgetItems.SingleOrDefaultAsync(x => x.MWOId == MWOId && x.IsMainItemTaxesNoProductive == true);
+            return result!;
+        }
     }
 }

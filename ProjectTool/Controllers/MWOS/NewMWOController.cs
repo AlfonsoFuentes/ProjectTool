@@ -59,7 +59,11 @@ namespace Server.Controllers.MWOS
         {
             return Ok(await Mediator.Send(new NewMWOGetByIdToApproveQuery(Id)));
         }
-
+        [HttpGet("GetEBPReport/{MWOId}")]
+        public async Task<IActionResult> GetEBPReport(Guid MWOId)
+        {
+            return Ok(await Mediator.Send(new NewMWOEBPReportQuery(MWOId)));
+        }
 
     }
    

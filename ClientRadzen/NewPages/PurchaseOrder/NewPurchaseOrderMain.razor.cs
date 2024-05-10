@@ -47,32 +47,32 @@ public partial class NewPurchaseOrderMain
         }
         StateHasChanged();
     }
-    public void EditPurchaseOrder(NewPriorPurchaseOrderResponse selectedRow)
+    public void EditPurchaseOrderCreated(NewPriorPurchaseOrderResponse selectedRow)
     {
-        if (selectedRow.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id)
-        {
-            _NavigationManager.NavigateTo($"/EditPurchaseOrderCreated/{selectedRow.PurchaseOrderId}");
-        }
-        else if (selectedRow.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Approved.Id)
-        {
-            _NavigationManager.NavigateTo($"/EditPurchaseOrderApproved/{selectedRow.PurchaseOrderId}");
-        }
-        else if (selectedRow.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Closed.Id)
-        {
-            _NavigationManager.NavigateTo($"/EditPurchaseOrderClosed/{selectedRow.PurchaseOrderId}");
-        }
-
-
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.EditCreate}/{selectedRow.PurchaseOrderId}");
     }
+ 
     public void ApprovePurchaseOrder(NewPriorPurchaseOrderResponse selectedRow)
     {
 
         _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.Approve}/{selectedRow.PurchaseOrderId}");
     }
+    public void EditPurchaseOrderApproved(NewPriorPurchaseOrderResponse selectedRow)
+    {
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.EditApproved}/{selectedRow.PurchaseOrderId}");
+    }
+    public void EditPurchaseOrderReceiving(NewPriorPurchaseOrderResponse selectedRow)
+    {
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.EditReceive}/{selectedRow.PurchaseOrderId}");
+    }
+    public void EditPurchaseOrderSalary(NewPriorPurchaseOrderResponse selectedRow)
+    {
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.EditSalary}/{selectedRow.PurchaseOrderId}");
+    }
     public void ReceivePurchaseorder(NewPriorPurchaseOrderResponse selectedRow)
     {
 
-        _NavigationManager.NavigateTo($"/ApprovePurchaseOrder/{selectedRow.PurchaseOrderId}");
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.Receive}/{selectedRow.PurchaseOrderId}");
     }
     public async Task UnApprovePurchaseorder(NewPriorPurchaseOrderResponse selectedRow)
     {
@@ -100,10 +100,33 @@ public partial class NewPurchaseOrderMain
             }
         }
     }
-    public void ReOpenPurchaseOrder(NewPriorPurchaseOrderResponse selectedRow)
+    public async Task ReOpenPurchaseOrder(NewPriorPurchaseOrderResponse selectedRow)
     {
 
-        _NavigationManager.NavigateTo($"/ApprovePurchaseOrder/{selectedRow.PurchaseOrderId}");
+        var resultDialog = await DialogService.Confirm($"Are you sure reopen {selectedRow.PurchaseRequisition}?", "Confirm Reopen",
+           new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (resultDialog.Value)
+        {
+            NewPurchaseOrderReOpenRequest request = new()
+            {
+                PurchaseorderName = selectedRow.PurchaseorderName,
+                PurchaseOrderId = selectedRow.PurchaseOrderId,
+                PurchaseOrderNumber = selectedRow.PurchaseOrderNumber,
+
+            };
+            var result = await Service.ReOpenPurchaseOrderAsync(request);
+            if (result.Succeeded)
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+
+                await UpdateAll();
+            }
+            else
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+            }
+
+        }
     }
     public async Task RemovePurchaseorder(NewPriorPurchaseOrderResponse selectedRow)
     {

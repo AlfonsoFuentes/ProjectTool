@@ -17,32 +17,12 @@ public partial class NewPurchaseOrderItemRequestCreateTable
     RadzenDataGrid<NewPurchaseOrderCreateItemRequest> ordersGrid = null!;
     Density Density = Density.Compact;
 
-    async Task EditRow(DataGridRowMouseEventArgs<NewPurchaseOrderCreateItemRequest> order)
-    {
-
-        await ordersGrid.EditRow(order.Data);
-
-    }
+   
     [Parameter]
     [EditorRequired]
     public EventCallback<Task<bool>> ValidateAsync { get; set; }
 
-
-    async Task ClickCell(DataGridCellMouseEventArgs<NewPurchaseOrderCreateItemRequest> order)
-    {
-        var column = order.Column;
-        var row = order.Data.BudgetItemId == Guid.Empty;
-        if (order.Column.Property == "BudgetItemName" && order.Data.BudgetItemId == Guid.Empty)
-        {
-
-            await ordersGrid.EditRow(order.Data);
-
-            if (ValidateAsync.HasDelegate)
-                await ValidateAsync.InvokeAsync();
-        }
-
-
-    }
+   
     NewBudgetItemToCreatePurchaseOrderResponse ItemToAdd;
     async Task AddNewItem(NewPurchaseOrderCreateItemRequest order)
     {
@@ -64,7 +44,27 @@ public partial class NewPurchaseOrderItemRequestCreateTable
             await ordersGrid.UpdateRow(order);
         }
     }
+    async Task EditRow(DataGridRowMouseEventArgs<NewPurchaseOrderCreateItemRequest> order)
+    {
 
+        await ordersGrid.EditRow(order.Data);
+
+    }
+    async Task ClickCell(DataGridCellMouseEventArgs<NewPurchaseOrderCreateItemRequest> order)
+    {
+        var column = order.Column;
+        var row = order.Data.BudgetItemId == Guid.Empty;
+        if (order.Column.Property == "BudgetItemName" && order.Data.BudgetItemId == Guid.Empty)
+        {
+
+            await ordersGrid.EditRow(order.Data);
+
+            if (ValidateAsync.HasDelegate)
+                await ValidateAsync.InvokeAsync();
+        }
+
+
+    }
     async Task EditRowButton(NewPurchaseOrderCreateItemRequest order)
     {
 

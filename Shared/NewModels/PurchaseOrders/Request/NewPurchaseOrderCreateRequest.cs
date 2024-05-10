@@ -24,13 +24,13 @@ namespace Shared.NewModels.PurchaseOrders.Request
 
         public PurchaseOrderStatusEnum PurchaseOrderStatus { get; set; } = PurchaseOrderStatusEnum.Created;
         public string PurchaseRequisition { get; set; } = "";
-        public string SPL => MainBudgetItem == null ? string.Empty : MainBudgetItem.IsAlteration ? "0735015000" : "151605000";
+       
         public double USDCOP { get; set; }
         public double USDEUR { get; set; }
         public DateTime CurrencyDate { get; set; }
         public string AccountAssigment => (MainBudgetItem == null) ? string.Empty :
             MainBudgetItem.IsAlteration ? MainBudgetItem.MWOCostCenter : MainBudgetItem.MWOCECName;
-
+        public string SPL => MainBudgetItem == null ? string.Empty : MainBudgetItem.IsAlteration ? "0735015000" : "151605000";
         public string MWOCECName => (MainBudgetItem == null) ? string.Empty : MainBudgetItem.MWOCECName;
         public string PurchaseorderName { get; set; } = string.Empty;
         public bool IsAlteration => MainBudgetItem == null ? false : MainBudgetItem.IsAlteration;

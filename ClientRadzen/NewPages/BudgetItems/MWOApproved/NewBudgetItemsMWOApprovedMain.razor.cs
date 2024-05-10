@@ -1,6 +1,8 @@
 using Client.Infrastructure.Managers.PurchaseOrders;
+using Shared.Enums.BudgetItemTypes;
 using Shared.Enums.PurchaseorderStatus;
 using Shared.NewModels.BudgetItems.Responses;
+using Shared.NewModels.EBPReport;
 using Shared.NewModels.PurchaseOrders.Request;
 using Shared.NewModels.PurchaseOrders.Responses;
 
@@ -16,9 +18,12 @@ public partial class NewBudgetItemsMWOApprovedMain
     private INewBudgetItemService Service { get; set; }
     [Inject]
     private INewPurchaseOrderService PurchaseOrderService { get; set; }
+    [Inject]
+    private INewMWOService MWOService { get; set; }
     public NewMWOApprovedReponse Response { get; set; } = new();
     public string nameFilter { get; set; } = string.Empty;
 
+    public NewEBPReportResponse EBPReport { get; set; }=new();
     protected override async Task OnInitializedAsync()
     {
         await UpdateAll();
@@ -29,6 +34,12 @@ public partial class NewBudgetItemsMWOApprovedMain
         if (result.Succeeded)
         {
             Response = result.Data;
+            EBPReport = Response.EBPReportResponse;
+        }
+        var resultEBP=await MWOService.GetMWOEBPReportById(MWOId);
+        if(resultEBP.Succeeded)
+        {
+            //EBPReport=resultEBP.Data;
         }
         StateHasChanged();
     }
@@ -101,19 +112,40 @@ public partial class NewBudgetItemsMWOApprovedMain
     }
     public void CreatePurchaseOrder(NewBudgetItemMWOApprovedResponse approvedResponse)
     {
-        //if (approvedResponse.CreateTaxPurchaseOrder)
-        //{
-        //    _NavigationManager.NavigateTo($"/CreateTaxPurchaseOrder/{approvedResponse.BudgetItemId}");
-        //}
-        //else if (approvedResponse.CreateCapitalizedSalaries)
-        //{
-        //    _NavigationManager.NavigateTo($"/CreateCapitalizedSalary/{approvedResponse.BudgetItemId}");
-        //}
+        if (approvedResponse.IsCapitalizedSalary)
+        {
+            _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.CreateSalary}/{approvedResponse.BudgetItemId}");
+        }
+        else
+        {
+            _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.Create}/{approvedResponse.BudgetItemId}");
+        }
 
-        //else if (approvedResponse.CreateNormalPurchaseOrder)
-        //{
-        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.Create}/{approvedResponse.BudgetItemId}");
-        //}
+
+    }
+    public void EditPurchaseOrderCreated(NewPriorPurchaseOrderItemResponse selectedRow)
+    {
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.EditCreate}/{selectedRow.PurchaseOrderId}");
+
+    }
+    public void EditPurchaseOrderClosed(NewPriorPurchaseOrderItemResponse selectedRow)
+    {
+
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.EditReceive}/{selectedRow.PurchaseOrderId}");
+    }
+    public void EditPurchaseOrderSalary(NewPriorPurchaseOrderItemResponse selectedRow)
+    {
+
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.EditSalary}/{selectedRow.PurchaseOrderId}");
+    }
+    public void EditPurchaseOrderApproved(NewPriorPurchaseOrderItemResponse selectedRow)
+    {
+
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.EditApproved}/{selectedRow.PurchaseOrderId}");
+    }
+    public void EditPurchaseOrderReceiving(NewPriorPurchaseOrderItemResponse selectedRow)
+    {
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.EditReceive}/{selectedRow.PurchaseOrderId}");
 
     }
     public void EditPurchaseOrder(Guid PurchaseOrderId, bool IsTaxEditable, bool IsCapitalizedSalary, PurchaseOrderStatusEnum PurchaseOrderStatus)
@@ -143,11 +175,11 @@ public partial class NewBudgetItemsMWOApprovedMain
     }
     public void ApprovedPurchaseOrder(Guid PurchaseOrderId)
     {
-        _NavigationManager.NavigateTo($"/ApprovePurchaseOrder/{PurchaseOrderId}");
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.Approve}/{PurchaseOrderId}");
     }
     public void ReceivePurchaseOrder(Guid PurchaseOrderId)
     {
-        //_NavigationManager.NavigateTo($"/ReceivePurchaseOrder/{PurchaseOrderId}");
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.Receive}/{PurchaseOrderId}");
     }
     public async Task RemovePurchaseorder(NewPriorPurchaseOrderItemResponse purchaseOrderItemResponse)
     {
@@ -165,6 +197,31 @@ public partial class NewBudgetItemsMWOApprovedMain
             {
                 MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
                 await UpdateAll();
+
+            }
+            else
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+            }
+
+        }
+    }
+    public async Task RemovePurchaseorder(NewPriorPurchaseOrderResponse purchaseOrderResponse)
+    {
+        var resultDialog = await DialogService.Confirm($"Are you sure delete {purchaseOrderResponse.PurchaseOrderLegendToDelete}?", "Confirm Delete",
+           new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (resultDialog.Value)
+        {
+            NewPurchaseOrderDeleteRequest request = new NewPurchaseOrderDeleteRequest()
+            {
+                PurchaseOrderId = purchaseOrderResponse.PurchaseOrderId,
+                Name = purchaseOrderResponse.PurchaseOrderNumber,
+            };
+            var result = await PurchaseOrderService.DeletePurchaseOrderAsync(request);
+            if (result.Succeeded)
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+
 
             }
             else

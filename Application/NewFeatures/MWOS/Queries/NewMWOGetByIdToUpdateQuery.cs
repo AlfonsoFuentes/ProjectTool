@@ -1,9 +1,4 @@
-﻿
-
-using Application.Caches;
-using Application.NewFeatures.Brands.Queries;
-
-namespace Application.NewFeatures.MWOS.Queries
+﻿namespace Application.NewFeatures.MWOS.Queries
 {
     public record NewMWOGetByIdToUpdateQuery(Guid MWOId) : IRequest<IResult<NewMWOUpdateRequest>>;
 

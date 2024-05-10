@@ -478,9 +478,6 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("ActualCurrency")
-                        .HasColumnType("float");
-
                     b.Property<Guid>("BudgetItemId")
                         .HasColumnType("uniqueidentifier");
 

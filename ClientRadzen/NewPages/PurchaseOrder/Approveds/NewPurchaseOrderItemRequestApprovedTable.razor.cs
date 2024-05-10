@@ -29,6 +29,11 @@ public partial class NewPurchaseOrderItemRequestApprovedTable
     public EventCallback<Task<bool>> ValidateAsync { get; set; }
 
 
+  
+    NewBudgetItemToCreatePurchaseOrderResponse ItemToAdd;
+
+
+
     async Task ClickCell(DataGridCellMouseEventArgs<NewPurchaseOrderCreateItemRequest> order)
     {
         var column = order.Column;
@@ -44,11 +49,6 @@ public partial class NewPurchaseOrderItemRequestApprovedTable
 
 
     }
-    NewBudgetItemToCreatePurchaseOrderResponse ItemToAdd;
-    
-
-
-
     async Task OnKeyDownCurrency(KeyboardEventArgs arg, NewPurchaseOrderCreateItemRequest order)
     {
         if (arg.Key == "Enter")

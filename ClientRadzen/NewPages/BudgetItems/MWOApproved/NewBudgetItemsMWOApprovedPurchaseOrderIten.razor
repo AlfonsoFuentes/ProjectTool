@@ -79,17 +79,17 @@
                                   Title="Actions" Width="100px" TextAlign="TextAlign.Left">
                 <Template Context="order">
 
-                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="edit" Variant="Variant.Flat" Shade="Shade.Lighter"
-                                  Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
-                                  Click="@(args =>
-MainPage.EditPurchaseOrder(order.PurchaseOrderId,order.IsTaxEditable,order.IsCapitalizedSalary,order.PurchaseOrderStatus))" @onclick:stopPropagation="true"
-                                  MouseEnter="@(args => MainApp.ShowTooltip(args,$"{order.LabelAction}", TooltipPosition.Left))">
-                    </RadzenButton>
+                    
 
 
                     @if (order.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id)
                     {
-
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="edit" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                       Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
+                                       Click="@(args =>
+                                  MainPage.EditPurchaseOrderCreated(order))" @onclick:stopPropagation="true"
+                                       MouseEnter="@(args => MainApp.ShowTooltip(args,$"Edit PR: {order.PurchaseRequisition}", TooltipPosition.Left))">
+                        </RadzenButton>
                         <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="done_outline" Variant="Variant.Flat" Shade="Shade.Lighter"
                                       Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
                                       Click="@(args => MainPage.ApprovedPurchaseOrder(order.PurchaseOrderId))" @onclick:stopPropagation="true"
@@ -97,10 +97,27 @@ MainPage.EditPurchaseOrder(order.PurchaseOrderId,order.IsTaxEditable,order.IsCap
                         </RadzenButton>
 
                     }
-                    else if (order.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Approved.Id ||
-                    order.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Receiving.Id)
+                    else if (order.PurchaseOrderStatus.Id != PurchaseOrderStatusEnum.Closed.Id)
                     {
-
+                        if (order.PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Approved.Id)
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="edit" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                          Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
+                                          Click="@(args =>
+                                  MainPage.EditPurchaseOrderApproved(order))" @onclick:stopPropagation="true"
+                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Edit PO {order.PurchaseOrderNumber}", TooltipPosition.Left))">
+                            </RadzenButton>
+                        }
+                        else
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="edit" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                          Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
+                                          Click="@(args =>
+                                  MainPage.EditPurchaseOrderReceiving(order))" @onclick:stopPropagation="true"
+                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Edit PO {order.PurchaseOrderNumber}", TooltipPosition.Left))">
+                            </RadzenButton>
+                        }
+                        
                         <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="shopping_bag" Variant="Variant.Flat" Shade="Shade.Lighter"
                                       Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
                                       Click="@(args => MainPage.ReceivePurchaseOrder(order.PurchaseOrderId))" @onclick:stopPropagation="true"
@@ -109,7 +126,26 @@ MainPage.EditPurchaseOrder(order.PurchaseOrderId,order.IsTaxEditable,order.IsCap
                     }
                     else
                     {
-
+                        @if (order.IsCapitalizedSalary)
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="edit" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                          Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
+                                          Click="@(args =>
+                                  MainPage.EditPurchaseOrderSalary(order))" @onclick:stopPropagation="true"
+                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Edit PO {order.PurchaseOrderNumber}", TooltipPosition.Left))">
+                            </RadzenButton>
+                        }
+                        else
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="edit" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                          Size="ButtonSize.ExtraSmall" class="my-1 ms-1"
+                                          Click="@(args =>
+                                  MainPage.EditPurchaseOrderClosed(order))" @onclick:stopPropagation="true"
+                                          MouseEnter="@(args => MainApp.ShowTooltip(args,$"Edit PO {order.PurchaseOrderNumber}", TooltipPosition.Left))">
+                            </RadzenButton>
+                        }
+                        
+                        
                     }
                     <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
                                   MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete purchase order {order.PurchaseOrderNumber}",TooltipPosition.Left) )"

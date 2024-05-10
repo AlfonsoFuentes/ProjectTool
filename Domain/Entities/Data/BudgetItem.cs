@@ -60,8 +60,8 @@ namespace Domain.Entities.Data
         [NotMapped]
         public double PendingToCommitUSD => Budget - AssignedUSD;
         [NotMapped]
-        public double PendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
-            PurchaseOrderItems.Sum(x => x.PendingToReceiveUSD);
+        public double CommitmentUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.CommitmentUSD);
         [NotMapped]
         public double Budget => UnitaryCost * Quantity;
     }

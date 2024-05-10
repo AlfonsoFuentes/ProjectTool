@@ -1,7 +1,4 @@
-﻿using Azure.Core;
-using Shared.NewModels.PurchaseOrders.Request;
-
-namespace Application.Caches
+﻿namespace Application.Caches
 {
     public static class Cache
     {
@@ -13,45 +10,48 @@ namespace Application.Caches
         public static string GetAllMWOsApproved = "all-MWOs-Approved";
         public static string GetMWOByCreated = "MWO-ById-Created";
         public static string GetMWOByApproved = "MWO-ById-Approved";
-     
-   
+        public static string GetMWOPurchaseOrderById= "MWO-PurchaseOrderd-ById";
         public static string GetBudgetItemMWOApproved = "BudgetItem-MWO-Approved";
         public static string GetAllPurchaseOrderCreated = "all-PurchaseOrder-Created";
         public static string GetAllPurchaseOrderApproved = "all-PurchaseOrder-Approved";
         public static string GetAllPurchaseOrderClosed = "all-PurchaseOrder-Closed";
-        public static string[] GetParamsCacheMWO(Guid MWOId)
+        public static string[] GetParamsCacheMWO(MWO mwo)
         {
             List<string> parametros = new List<string>();
             parametros.Add(Cache.GetAllMWOsCreated);
             parametros.Add(Cache.GetAllMWOsApproved);
-            parametros.Add($"{Cache.GetMWOByApproved}:{MWOId}");
-            parametros.Add($"{Cache.GetMWOByCreated}:{MWOId}");
-
-            return parametros.ToArray();
-        }
-        public static string[] GetParamsCachePurchaseOrderCreated(Guid MWOId, List<NewPurchaseOrderCreateItemRequest> PurchaseOrderItems)
-        {
-            List<string> parametros = new List<string>();
-            foreach (var row in PurchaseOrderItems)
+            parametros.Add($"{Cache.GetMWOByApproved}:{mwo.Id}");
+            parametros.Add($"{Cache.GetMWOByCreated}:{mwo.Id}");
+            parametros.Add($"{Cache.GetMWOPurchaseOrderById}:{mwo.Id}");
+            if (mwo.BudgetItems != null)
             {
-                parametros.Add($"{Cache.GetBudgetItemMWOApproved}:{row.BudgetItemId}");
+                foreach (var item in mwo.BudgetItems)
+                {
+                    parametros.Add($"{Cache.GetBudgetItemMWOApproved}:{item.Id}");
+                }
             }
 
-            parametros.Add($"{Cache.GetAllPurchaseOrderCreated}");
-            parametros.Add($"{Cache.GetAllPurchaseOrderApproved}");
-            parametros.Add($"{Cache.GetAllPurchaseOrderClosed}");
-            parametros.Add($"{Cache.GetMWOByApproved}:{MWOId}");
             return parametros.ToArray();
         }
-        public static string[] GetParamsCachePurchaseOrderCreated(Guid MWOId)
+
+        public static string[] GetParamsCachePurchaseOrder(PurchaseOrder purchaseOrder)
         {
             List<string> parametros = new List<string>();
-            
+
 
             parametros.Add($"{Cache.GetAllPurchaseOrderCreated}");
             parametros.Add($"{Cache.GetAllPurchaseOrderApproved}");
             parametros.Add($"{Cache.GetAllPurchaseOrderClosed}");
-            parametros.Add($"{Cache.GetMWOByApproved}:{MWOId}");
+            parametros.Add($"{Cache.GetMWOByApproved}:{purchaseOrder.MWOId}");
+            parametros.Add($"{Cache.GetMWOPurchaseOrderById}:{purchaseOrder.MWOId}");
+            if (purchaseOrder.PurchaseOrderItems != null)
+            {
+                foreach(var item in purchaseOrder.PurchaseOrderItems)
+                {
+                    parametros.Add($"{Cache.GetBudgetItemMWOApproved}:{item.BudgetItemId}");
+                }
+            }
+
             return parametros.ToArray();
         }
     }

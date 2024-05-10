@@ -30,6 +30,7 @@ namespace Server.Controllers.BudgetItems
         {
             return Ok(await Mediator.Send(new NewBudgetItemDeleteCommand(request)));
         }
+        
 
         [HttpGet("{nameof(ClientEndPoint.Actions.GetByIdToUpdate)}/{BudgetItemId}")]
         public async Task<IActionResult> GetById(Guid BudgetItemId)
