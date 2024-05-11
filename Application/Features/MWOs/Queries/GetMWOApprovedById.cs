@@ -72,7 +72,7 @@ namespace Application.Features.MWOs.Queries
                 PurchaseOrderItems = e.PurchaseOrderItems.Select(x => new PurchaseorderItemsResponse
                 {
                     BudgetItemId = x.BudgetItemId,
-                    ActualCurrency = x.ActualCurrency,
+                    ActualCurrency = x.POItemActualCurrency,
                     QuoteUnitaryValueCurrency = x.UnitaryValueCurrency, 
                     Quantity = x.Quantity,
                     PurchaseOrderCurrency = CurrencyEnum.GetType(e.PurchaseOrderCurrency),

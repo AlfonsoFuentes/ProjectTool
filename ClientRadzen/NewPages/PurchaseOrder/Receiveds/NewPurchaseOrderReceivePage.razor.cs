@@ -18,7 +18,7 @@ public partial class NewPurchaseOrderReceivePage
 
 
 
-    public NewPurchaseOrderReceiveRequest Model = null;
+    public OldPurchaseOrderReceiveRequest Model = null;
 
 
     List<NewSupplierResponse> Suppliers { get; set; } = new();
@@ -39,7 +39,7 @@ public partial class NewPurchaseOrderReceivePage
         }
         USDCOP = MainApp.RateList == null ? 4000 : Math.Round(MainApp.RateList.COP, 2);
         USDEUR = MainApp.RateList == null ? 1 : Math.Round(MainApp.RateList.EUR, 2);
-        var result = await Service.GetPurchaseOrderToReceive(PurchaseOrderId);
+        var result = await Service.OldGetPurchaseOrderToReceive(PurchaseOrderId);
         if (result.Succeeded)
         {
             Model = result.Data;
@@ -69,7 +69,7 @@ public partial class NewPurchaseOrderReceivePage
     bool Validated = false;
     public async Task SaveAsync()
     {
-        var result = await Service.ReceivePurchaseOrderAsync(Model);
+        var result = await Service.OldReceivePurchaseOrderAsync(Model);
         if (result.Succeeded)
         {
             MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);

@@ -9,7 +9,7 @@ namespace Shared.NewModels.PurchaseOrders.Responses
         public Guid BudgetItemId { get; set; }
         public Guid PurchaseOrderId { get; set; }
         public string Name { get; set; } = string.Empty;
-        public double UnitaryValueCurrency { get; set; }
+       
         public double Quantity { get; set; }
         public bool IsTaxNoProductive { get; set; } = false;
         public bool IsTaxAlteration { get; set; } = false;
@@ -29,7 +29,19 @@ namespace Shared.NewModels.PurchaseOrders.Responses
         public string PurchaseOrderLegendToDelete => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ?
             PurchaseRequisition : PurchaseOrderNumber;
 
-        public double QuoteValueCurrency => UnitaryValueCurrency * Quantity;
+        public double UnitaryValuePurchaseOrderCurrency { get; set; }
+        public double UnitaryValuePurchaseOrderUSD =>
+            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? UnitaryValuePurchaseOrderCurrency :
+            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? UnitaryValuePurchaseOrderCurrency / USDCOP :
+            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? UnitaryValuePurchaseOrderCurrency / USDEUR :
+            0;
+        public double UnitaryValueQuoteCurrency =>
+            QuoteCurrency.Id == CurrencyEnum.USD.Id ? UnitaryValuePurchaseOrderUSD :
+            QuoteCurrency.Id == CurrencyEnum.COP.Id ? UnitaryValuePurchaseOrderUSD * USDCOP :
+            QuoteCurrency.Id == CurrencyEnum.EUR.Id ? UnitaryValuePurchaseOrderUSD * USDEUR :
+            0;
+
+        public double QuoteValueCurrency => UnitaryValueQuoteCurrency * Quantity;
 
         public double AssignedUSD =>
             QuoteCurrency.Id == CurrencyEnum.USD.Id ? QuoteValueCurrency :

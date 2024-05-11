@@ -547,6 +547,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("PurchaseOrderItemId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("ReceivedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("TenantId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");

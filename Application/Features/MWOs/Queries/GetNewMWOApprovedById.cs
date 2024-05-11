@@ -87,7 +87,7 @@ namespace Application.Features.MWOs.Queries
                     purchaseorderiten.BudgetItemId = budgetitem.Id;
                     purchaseorderiten.PurchaseOrderId = purchaseorderitem.PurchaseOrderId;
                     purchaseorderiten.Name = purchaseorderitem.Name;
-                    purchaseorderiten.ActualCurrency = purchaseorderitem.ActualCurrency;
+                    purchaseorderiten.ActualCurrency = purchaseorderitem.POItemActualCurrency;
                     purchaseorderiten.UnitaryValueCurrency = purchaseorderitem.UnitaryValueCurrency;
                     purchaseorderiten.Quantity = purchaseorderitem.Quantity;
                     purchaseorderiten.IsTaxAlteration = purchaseorderitem.IsTaxAlteration;

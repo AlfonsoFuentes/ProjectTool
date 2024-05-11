@@ -36,7 +36,7 @@ public partial class NewPurchaseOrderCreateSalaryPage
 
         var USDCOP = MainApp.RateList == null ? 4000 : Math.Round(MainApp.RateList.COP, 2);
         var USDEUR = MainApp.RateList == null ? 1 : Math.Round(MainApp.RateList.EUR, 2);
-        var result = await BudgetItemService.GetBudgetItemMWOApprovedById(BudgetItemId);
+        var result = await BudgetItemService.OldGetBudgetItemMWOApprovedById(BudgetItemId);
         if (result.Succeeded)
         {
             Model = new();
@@ -184,7 +184,7 @@ public partial class NewPurchaseOrderCreateSalaryPage
             PurchaseOrderItems.Add(new());
         }
     }
-    public void RemovedBudgetItemToPurchaseOrder(NewPurchaseOrderCreateItemRequest Item)
+    public void RemovedBudgetItemToPurchaseOrder(NewPurchaseOrderReceiveItemRequest Item)
     {
         PurchaseOrderItems = new();
         if (Model.PurchaseOrderItems.Any(x => x.BudgetItemId == Item.BudgetItemId))

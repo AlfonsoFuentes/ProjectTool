@@ -48,7 +48,6 @@
 
         }
       
-
         public async Task<BudgetItem?> GetBudgetItemToUpdate(Guid BudgetItemId)
         {
             var result = await Context.BudgetItems
@@ -104,16 +103,19 @@
                 await Context.SaveChangesAsync(toke);
             }
         }
-
-        public async Task<List<BudgetItem>> GetItemsToUpdateVersion1()
+        public async Task<PurchaseOrderItem?> GetBudgetItemTaxAlteration(Guid PurchaseOrderId,Guid BudgetItemId)
         {
-            var budgetitems = await Context.BudgetItems
-                 .Where(x => x.IsNotAbleToEditDelete == true &&
-                 (x.Type == BudgetItemTypeEnum.Engineering.Id || x.Type == BudgetItemTypeEnum.Contingency.Id)).ToListAsync();
-
-            return budgetitems;
+            return await Context.PurchaseOrderItems
+                .SingleOrDefaultAsync(x => x.PurchaseOrderId == PurchaseOrderId && x.BudgetItemId == BudgetItemId && x.IsTaxAlteration);
 
         }
+        public async Task<PurchaseOrderItem?> GetBudgetItemTaxNoProductive(Guid PurchaseOrderId, Guid BudgetItemId)
+        {
+            return await Context.PurchaseOrderItems
+                .SingleOrDefaultAsync(x => x.PurchaseOrderId == PurchaseOrderId && x.BudgetItemId == BudgetItemId && x.IsTaxNoProductive);
+
+        }
+       
         public async Task<List<PurchaseOrder>> GetPurchaseOrderToUpdateVersion1()
         {
             var purchaseorders = await Context.PurchaseOrders
@@ -123,15 +125,7 @@
 
             return purchaseorders;
         }
-        public async Task<List<PurchaseOrderItem>> GetPurchaseOrderItemsToUpdateVersion2()
-        {
-            var purchaseorders = await Context.PurchaseOrderItems
-                .Include(x => x.PurchaseOrder)
-                .Where(x => x.PurchaseOrder.PurchaseOrderStatus > PurchaseOrderStatusEnum.Approved.Id)
-                .ToListAsync();
-
-            return purchaseorders;
-        }
+       
         public async Task<PurchaseOrder?> GetPurchaseOrderByIdCreatedAsync(Guid PurchaseOrderId)
         {
             var result = await Context.PurchaseOrders

@@ -55,6 +55,7 @@ namespace Infrastructure
             services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
             services.AddScoped<IPurchaseOrderValidatorRepository, PurchaseOrderValidatorRepository>();
             services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IVersionRepository, VersionRepository>();
             services.AddScoped<IQueryRepository, QueryRepository>();
             services.AddScoped<IQueryValidationsRepository, QueryValidationsRepository>();
             services.AddScoped<ISapAdjustRepository, SapAdjustRepository>();

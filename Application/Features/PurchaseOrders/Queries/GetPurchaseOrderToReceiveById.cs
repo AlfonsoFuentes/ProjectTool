@@ -78,7 +78,7 @@ namespace Application.Features.PurchaseOrders.Queries
                     PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.PurchaseOrderCurrency),
                     UnitaryValueCurrency = GetQuoteCurrencyValue(x.UnitaryValueCurrency, purchaseOrder.QuoteCurrency, purchaseOrder.PurchaseOrderCurrency,
                     purchaseOrder.USDCOP, purchaseOrder.USDEUR),
-                    POActualCurrency = x.ActualCurrency,
+                    POActualCurrency = x.POItemActualCurrency,
                     Quantity = x.Quantity,
                     TRMUSDCOP = purchaseOrder.USDCOP,
                     TRMUSDEUR = purchaseOrder.USDEUR,

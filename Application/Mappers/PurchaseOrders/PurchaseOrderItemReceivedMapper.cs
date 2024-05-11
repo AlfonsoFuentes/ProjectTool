@@ -5,16 +5,7 @@ namespace Application.Mappers.PurchaseOrders
 {
     public static class PurchaseOrderItemReceivedMapper
     {
-        public static PurchaseOrderItemReceived ToPurchaseOrderItemReceived(this NewPurchaseOrderCreateItemRequest request, PurchaseOrderItemReceived received)
-        {
-            received.USDEUR = request.USDEUR;
-            received.USDCOP = request.USDCOP;
-            received.CurrencyDate = request.CurrencyDate;
-            received.ValueReceivedCurrency = request.ItemQuoteValueCurrency;
-            
-
-            return received;
-        }
+       
         public static NewPriorPurchaseOrderReceivedResponse ToPurchaseOrderReceivedResponse(this PurchaseOrderItemReceived purchaseOrderReceived)
         {
             return new()

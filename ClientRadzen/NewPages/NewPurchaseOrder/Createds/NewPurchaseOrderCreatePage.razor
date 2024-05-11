@@ -1,0 +1,40 @@
+﻿@page "/NewCreatePurchaseOrder/{BudgetItemId:guid}"
+
+
+<PageTitle>Create New Purchase Order </PageTitle>
+@if (debug)
+{
+
+}
+@if (Model != null)
+{
+
+    <RadzenStack Orientation="Orientation.Vertical">
+        <RadzenRow>
+            <RadzenText TextStyle="TextStyle.DisplayH5"
+                        Text="@($"Create New Purchase Order in {Model.PurchaseOrder.CECName} with Main Budget {Model.PurchaseOrder.MainBudgetItem.Name}")"></RadzenText>
+        </RadzenRow>
+
+        <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <CascadingValue Value="this">
+                <PurchaseOrderTemplate OnSaveAsync="SaveAsync"
+                                       OnGetSuppliers="SupplierService.GetAllSupplier"
+                                       OriginalBudgetItems="@OriginalBudgetItems"
+                                       @bind-Suppliers="@Suppliers"
+                                       PurchaseOrderAction="PurchaseOrderTemplateAction.Create"
+                                       OnValidateAsync="ValidateAsync"
+                                       _fluentValidationValidator="@_fluentValidationValidator"
+                                       @bind-Model=@Model.PurchaseOrder></PurchaseOrderTemplate>
+            </CascadingValue>
+        </EditForm>
+
+    </RadzenStack>
+}
+
+
+@code {
+    bool debug = true;
+
+}
+

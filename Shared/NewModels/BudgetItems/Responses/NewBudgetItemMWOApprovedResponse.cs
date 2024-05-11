@@ -1,5 +1,7 @@
 ﻿
 
+using Shared.Enums.CostCenter;
+using Shared.Enums.MWOStatus;
 using Shared.NewModels.PurchaseOrders.Responses;
 
 namespace Shared.NewModels.BudgetItems.Responses
@@ -11,7 +13,11 @@ namespace Shared.NewModels.BudgetItems.Responses
         public Guid MWOId { get; set; }
         public string MWOName { get; set; } = string.Empty;
         public string MWOCECName { get; set; } = string.Empty;
-        public string MWOCostCenter { get; set; } = string.Empty;
+        public CostCenterEnum MWOCostCenter { get; set; } = CostCenterEnum.None;
+        public MWOTypeEnum MWOType {  get; set; } = MWOTypeEnum.None;
+        public FocusEnum MWOFocus {  get; set; } = FocusEnum.None;
+        public MWOStatusEnum MWOStatus { get; set; } = MWOStatusEnum.None;
+        public bool MWOIsAssetProductive {  get; set; } = false;
         public string Name { get; set; } = string.Empty;
         public BudgetItemTypeEnum Type { get; set; } = BudgetItemTypeEnum.None;
         public double UnitaryCostUSD { get; set; }
@@ -31,7 +37,8 @@ namespace Shared.NewModels.BudgetItems.Responses
         public List<NewPriorPurchaseOrderItemResponse> PurchaseOrderItems { get; set; } = new List<NewPriorPurchaseOrderItemResponse>();
         public bool IsTaxesMainTaxesData => Type.Id == BudgetItemTypeEnum.Taxes.Id && IsMainItemTaxesNoProductive;
         public bool CanCreatePurchaseOrder => !IsTaxesMainTaxesData;
-        public string Nomeclatore => $"{Type.Letter}{Order}";
+        public string Nomenclatore => $"{Type.Letter}{Order}";
+        public string NomenclatoreName => $"{Nomenclatore}-{Name}";
         public bool IsCapitalizedSalary => Type.Id == BudgetItemTypeEnum.Engineering.Id && IsEngineeringItem;
         public bool IsAlteration => Type.Id == BudgetItemTypeEnum.Alterations.Id;
 

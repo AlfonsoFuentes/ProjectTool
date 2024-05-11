@@ -39,7 +39,7 @@ namespace Application.NewFeatures.PurchaseOrders.Commands
                 received.CurrencyDate = DateTime.UtcNow;
                 received.USDEUR = request.Data.USDEUR;
                 received.USDCOP = request.Data.USDCOP;
-                received.ValueReceivedCurrency = purchaseorderitem.QuoteValueCurrency;
+                received.ValueReceivedCurrency = purchaseorderitem.POItemQuoteValueCurrency;
                 await Repository.AddAsync(received);
 
                 await Repository.AddAsync(purchaseorderitem);

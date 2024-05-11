@@ -114,8 +114,8 @@ namespace Application.Mappers.BudgetItems
                 Existing = budgetItem.Existing,
                 MWOId = budgetItem.MWOId,
                 MWOName = budgetItem.MWOName,
-                MWOCECName=budgetItem.MWOCECName,
-                MWOCostCenter = budgetItem.MWOCostCenter,
+                MWOCECName = budgetItem.CECName,
+                MWOCostCenter = budgetItem.CostCenter,
                 Name = budgetItem.Name,
                 Order = budgetItem.Order,
                 Percentage = budgetItem.Percentage,
@@ -125,6 +125,7 @@ namespace Application.Mappers.BudgetItems
                 UnitaryCostUSD = budgetItem.UnitaryCost,
                 PurchaseOrderItems = budgetItem.PurchaseOrderItems.Where(x => x.IsTaxAlteration == false).Select(x => x.ToPurchaseOrderItemResponse()).ToList(),
 
+
             };
         }
         public static NewBudgetItemToCreatePurchaseOrderResponse ToBudgetItemToCreatePurchaseOrder(this BudgetItem budgetItem)
@@ -132,20 +133,48 @@ namespace Application.Mappers.BudgetItems
             return new()
             {
                 BudgetItemId = budgetItem.Id,
-                
+
                 IsNotAbleToEditDelete = budgetItem.IsNotAbleToEditDelete,
                 IsMainItemTaxesNoProductive = budgetItem.IsMainItemTaxesNoProductive,
                 IsEngineeringItem = budgetItem.IsEngineeringItem,
-            
+
                 MWOId = budgetItem.MWOId,
                 MWOName = budgetItem.MWOName,
-                MWOCECName = budgetItem.MWOCECName,
-                MWOCostCenter = budgetItem.MWOCostCenter,
+                MWOCECName = budgetItem.CECName,
+                MWOCostCenter = budgetItem.CostCenter.Name,
                 Name = budgetItem.Name,
                 Order = budgetItem.Order,
-            
+
                 Quantity = budgetItem.Quantity,
-            
+
+                Type = BudgetItemTypeEnum.GetType(budgetItem.Type),
+                UnitaryCostUSD = budgetItem.UnitaryCost,
+                PurchaseOrderItems = budgetItem.PurchaseOrderItems.Where(x => x.IsTaxAlteration == false).Select(x => x.ToPurchaseOrderItemResponse()).ToList(),
+
+            };
+        }
+
+        public static NewBudgetItemMWOApprovedResponse ToBudgetItemMWOApproved(this BudgetItem budgetItem)
+        {
+            return new()
+            {
+                BudgetItemId = budgetItem.Id,
+
+                IsNotAbleToEditDelete = budgetItem.IsNotAbleToEditDelete,
+                IsMainItemTaxesNoProductive = budgetItem.IsMainItemTaxesNoProductive,
+                IsEngineeringItem = budgetItem.IsEngineeringItem,
+
+                MWOId = budgetItem.MWOId,
+                MWOName = budgetItem.MWOName,
+                MWOCECName = budgetItem.CECName,
+                MWOCostCenter = budgetItem.CostCenter,
+                MWOFocus = budgetItem.Focus,
+                MWOIsAssetProductive = budgetItem.IsAssetProductive,
+                MWOStatus = budgetItem.MWOStatus,
+                MWOType = budgetItem.MWOType,
+                Name = budgetItem.Name,
+                Order = budgetItem.Order,
+                Quantity = budgetItem.Quantity,
                 Type = BudgetItemTypeEnum.GetType(budgetItem.Type),
                 UnitaryCostUSD = budgetItem.UnitaryCost,
                 PurchaseOrderItems = budgetItem.PurchaseOrderItems.Where(x => x.IsTaxAlteration == false).Select(x => x.ToPurchaseOrderItemResponse()).ToList(),

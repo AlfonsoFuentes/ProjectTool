@@ -1,0 +1,41 @@
+﻿@page "/NewEditCreatePurchaseOrder/{PurchaseOrderId:guid}"
+
+<PageTitle>Edit New Purchase Requisition </PageTitle>
+@if (debug)
+{
+
+}
+@if (Model != null)
+{
+
+    <RadzenStack Orientation="Orientation.Vertical">
+        <RadzenRow>
+            <RadzenText TextStyle="TextStyle.DisplayH5"
+                        Text="@($"Edit Purchase Requisition {Model.PurchaseOrder.PurchaseRequisition}")"></RadzenText>
+        </RadzenRow>
+
+
+        <EditForm Model="@Model" OnValidSubmit="ValidateAsync">
+            <FluentValidationValidator @ref="_fluentValidationValidator" />
+            <CascadingValue Value="this">
+                <PurchaseOrderTemplate OnSaveAsync="SaveAsync"
+                                       OnGetSuppliers="SupplierService.GetAllSupplier"
+                                       OriginalBudgetItems="@OriginalBudgetItems"
+                                       @bind-Suppliers="@Suppliers"
+                                       PurchaseOrderAction="PurchaseOrderTemplateAction.EditCreated"
+                                       OnValidateAsync="ValidateAsync"
+                                       _fluentValidationValidator="@_fluentValidationValidator"
+                                       @bind-Model=@Model.PurchaseOrder></PurchaseOrderTemplate>
+            </CascadingValue>
+        </EditForm>
+
+
+    </RadzenStack>
+}
+
+
+@code {
+
+
+}
+

@@ -66,6 +66,7 @@ namespace Domain.Entities.Data
             return SapAdjust.Create(Id);
         }
         public DateTime ApprovedDate { get; set; }
+        
         [NotMapped]
         public List<BudgetItem> BudgetItemsExpenses => BudgetItems == null ? new() : BudgetItems.Where(x => x.IsAlteration).ToList();
         [NotMapped]
@@ -165,7 +166,6 @@ namespace Domain.Entities.Data
             BudgetItemsExpenses.Sum(x => x.CommitmentUSD);
         #endregion
         #endregion
-        [NotMapped]
-        public string CostCenterName => CostCenterEnum.GetName(CostCenter);
+     
     }
 }

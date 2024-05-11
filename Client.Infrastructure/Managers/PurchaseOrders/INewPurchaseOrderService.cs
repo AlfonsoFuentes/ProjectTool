@@ -13,20 +13,30 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         Task<IResult<NewPriorPurchaseOrderClosedResponse>> GetAllClosed();
         Task<IResult> CreatePurchaseOrderSalaryAsync(NewPurchaseOrderCreateSalaryRequest request);
         Task<IResult> CreatePurchaseOrderAsync(NewPurchaseOrderCreateRequest request);
-        Task<IResult> EditCreatedPurchaseOrderAsync(NewPurchaseOrderCreateEditRequest request);
+
+        Task<IResult> EditCreatedPurchaseOrderAsync(NewPurchaseOrderEditCreateRequest request);
+ 
         Task<IResult> DeletePurchaseOrderAsync(NewPurchaseOrderDeleteRequest request);
         Task<IResult> ApprovePurchaseOrderAsync(NewPurchaseOrderApproveRequest request);
         Task<IResult> UnApprovePurchaseOrderAsync(NewPurchaseOrderUnApproveRequest request);
         Task<IResult> ReOpenPurchaseOrderAsync(NewPurchaseOrderReOpenRequest request);
-        Task<IResult> ReceivePurchaseOrderAsync(NewPurchaseOrderReceiveRequest request);
-        Task<IResult> EditReceivePurchaseOrderAsync(NewPurchaseOrderEditReceiveRequest request);
-        Task<IResult> EditApprovedPurchaseOrderAsync(NewPurchaseOrderEditApprovedRequest request);
+        
+       
+        Task<IResult> EditApprovedPurchaseOrderAsync(NewPurchaseOrderEditApproveRequest request);
         Task<IResult> EditSalaryPurchaseOrderAsync(NewPurchaseOrderEditSalaryRequest request);
         Task<IResult<NewPurchaseOrderApproveRequest>> GetPurchaseOrderToApproved(Guid PurchaseOrderId);
-        Task<IResult<NewPurchaseOrderCreateEditRequest>> GetPurchaseOrderCreatedToEdit(Guid PurchaseOrderId);
+
+        Task<IResult<NewPurchaseOrderEditCreateRequest>> GetPurchaseOrderCreatedToEdit(Guid PurchaseOrderId);
+        Task<IResult> ReceivePurchaseOrderAsync(NewPurchaseOrderReceiveRequest request);
         Task<IResult<NewPurchaseOrderReceiveRequest>> GetPurchaseOrderToReceive(Guid PurchaseOrderId);
+        Task<IResult> OldReceivePurchaseOrderAsync(OldPurchaseOrderReceiveRequest request);
+        Task<IResult<OldPurchaseOrderReceiveRequest>> OldGetPurchaseOrderToReceive(Guid PurchaseOrderId);
+
         Task<IResult<NewPurchaseOrderEditReceiveRequest>> GetPurchaseOrderToEditeReceive(Guid PurchaseOrderId);
-        Task<IResult<NewPurchaseOrderEditApprovedRequest>> GetPurchaseOrderToEditApproved(Guid PurchaseOrderId);
+        Task<IResult> EditReceivePurchaseOrderAsync(NewPurchaseOrderEditReceiveRequest request);
+        Task<IResult<OldPurchaseOrderEditReceiveRequest>> OldGetPurchaseOrderToEditeReceive(Guid PurchaseOrderId);
+        Task<IResult> OldEditReceivePurchaseOrderAsync(OldPurchaseOrderEditReceiveRequest request);
+        Task<IResult<NewPurchaseOrderEditApproveRequest>> GetPurchaseOrderToEditApproved(Guid PurchaseOrderId);
         Task<IResult<NewPurchaseOrderEditSalaryRequest>> GetPurchaseOrderToEditSalary(Guid PurchaseOrderId);
     }
     public class NewPurchaseOrderService : INewPurchaseOrderService
@@ -37,6 +47,7 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
         {
             this.http = http;
         }
+
 
         public async Task<IResult> CreatePurchaseOrderAsync(NewPurchaseOrderCreateRequest request)
         {
@@ -91,13 +102,69 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
             return await result.ToResult<NewPurchaseOrderApproveRequest>();
         }
 
-        public async Task<IResult<NewPurchaseOrderCreateEditRequest>> GetPurchaseOrderCreatedToEdit(Guid PurchaseOrderId)
+       
+
+        public async Task<IResult> OldReceivePurchaseOrderAsync(OldPurchaseOrderReceiveRequest request)
         {
-            var result = await http.GetAsync($"{ClientEndPoint.NewPurchaseOrder.GetCreateToEdit}/{PurchaseOrderId}");
-            return await result.ToResult<NewPurchaseOrderCreateEditRequest>();
+            var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.Receive, request);
+            return await result.ToResult();
         }
 
-        public async Task<IResult> EditCreatedPurchaseOrderAsync(NewPurchaseOrderCreateEditRequest request)
+        public async Task<IResult<OldPurchaseOrderReceiveRequest>> OldGetPurchaseOrderToReceive(Guid PurchaseOrderId)
+        {
+            var result = await http.GetAsync($"{ClientEndPoint.NewPurchaseOrder.GetApprovedToReceive}/{PurchaseOrderId}");
+            return await result.ToResult<OldPurchaseOrderReceiveRequest>();
+        }
+
+        public async Task<IResult> OldEditReceivePurchaseOrderAsync(OldPurchaseOrderEditReceiveRequest request)
+        {
+            var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.EditReceive, request);
+            return await result.ToResult();
+        }
+
+        public async Task<IResult<OldPurchaseOrderEditReceiveRequest>> OldGetPurchaseOrderToEditeReceive(Guid PurchaseOrderId)
+        {
+            var result = await http.GetAsync($"{ClientEndPoint.NewPurchaseOrder.GetReceivedToEdit}/{PurchaseOrderId}");
+            return await result.ToResult<OldPurchaseOrderEditReceiveRequest>();
+        }
+
+        public async Task<IResult> CreatePurchaseOrderSalaryAsync(NewPurchaseOrderCreateSalaryRequest request)
+        {
+            var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.CreateSalary, request);
+            return await result.ToResult();
+        }
+
+        public async Task<IResult> EditApprovedPurchaseOrderAsync(NewPurchaseOrderEditApproveRequest request)
+        {
+            var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.EditApproved, request);
+            return await result.ToResult();
+        }
+
+        public async Task<IResult<NewPurchaseOrderEditApproveRequest>> GetPurchaseOrderToEditApproved(Guid PurchaseOrderId)
+        {
+            var result = await http.GetAsync($"{ClientEndPoint.NewPurchaseOrder.GetApprovedToEdit}/{PurchaseOrderId}");
+            return await result.ToResult<NewPurchaseOrderEditApproveRequest>();
+        }
+
+        public async Task<IResult> EditSalaryPurchaseOrderAsync(NewPurchaseOrderEditSalaryRequest request)
+        {
+            var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.EditSalary, request);
+            return await result.ToResult();
+        }
+
+        public async Task<IResult<NewPurchaseOrderEditSalaryRequest>> GetPurchaseOrderToEditSalary(Guid PurchaseOrderId)
+        {
+            var result = await http.GetAsync($"{ClientEndPoint.NewPurchaseOrder.GetSalaryToEdit}/{PurchaseOrderId}");
+            return await result.ToResult<NewPurchaseOrderEditSalaryRequest>();
+        }
+
+        public async Task<IResult<NewPurchaseOrderEditCreateRequest>> GetPurchaseOrderCreatedToEdit(Guid PurchaseOrderId)
+        {
+            var result = await http.GetAsync($"{ClientEndPoint.NewPurchaseOrder.GetCreateToEdit}/{PurchaseOrderId}");
+            return await result.ToResult<NewPurchaseOrderEditCreateRequest>();
+        }
+
+        public async Task<IResult> EditCreatedPurchaseOrderAsync(NewPurchaseOrderEditCreateRequest request)
         {
             var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.EditCreate, request);
             return await result.ToResult();
@@ -115,47 +182,17 @@ namespace Client.Infrastructure.Managers.PurchaseOrders
             return await result.ToResult<NewPurchaseOrderReceiveRequest>();
         }
 
-        public async Task<IResult> EditReceivePurchaseOrderAsync(NewPurchaseOrderEditReceiveRequest request)
-        {
-            var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.EditReceive, request);
-            return await result.ToResult();
-        }
-
         public async Task<IResult<NewPurchaseOrderEditReceiveRequest>> GetPurchaseOrderToEditeReceive(Guid PurchaseOrderId)
         {
             var result = await http.GetAsync($"{ClientEndPoint.NewPurchaseOrder.GetReceivedToEdit}/{PurchaseOrderId}");
             return await result.ToResult<NewPurchaseOrderEditReceiveRequest>();
         }
 
-        public async Task<IResult> CreatePurchaseOrderSalaryAsync(NewPurchaseOrderCreateSalaryRequest request)
+        public async Task<IResult> EditReceivePurchaseOrderAsync(NewPurchaseOrderEditReceiveRequest request)
         {
-            var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.CreateSalary, request);
+            var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.EditReceive, request);
             return await result.ToResult();
-        }
-
-        public async Task<IResult> EditApprovedPurchaseOrderAsync(NewPurchaseOrderEditApprovedRequest request)
-        {
-            var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.EditApproved, request);
-            return await result.ToResult();
-        }
-
-        public async Task<IResult<NewPurchaseOrderEditApprovedRequest>> GetPurchaseOrderToEditApproved(Guid PurchaseOrderId)
-        {
-            var result = await http.GetAsync($"{ClientEndPoint.NewPurchaseOrder.GetApprovedToEdit}/{PurchaseOrderId}");
-            return await result.ToResult<NewPurchaseOrderEditApprovedRequest>();
-        }
-
-        public async Task<IResult> EditSalaryPurchaseOrderAsync(NewPurchaseOrderEditSalaryRequest request)
-        {
-            var result = await http.PostAsJsonAsync(ClientEndPoint.NewPurchaseOrder.EditSalary, request);
-            return await result.ToResult();
-        }
-
-        public async Task<IResult<NewPurchaseOrderEditSalaryRequest>> GetPurchaseOrderToEditSalary(Guid PurchaseOrderId)
-        {
-            var result = await http.GetAsync($"{ClientEndPoint.NewPurchaseOrder.GetSalaryToEdit}/{PurchaseOrderId}");
-            return await result.ToResult<NewPurchaseOrderEditSalaryRequest>();
         }
     }
-    
+
 }

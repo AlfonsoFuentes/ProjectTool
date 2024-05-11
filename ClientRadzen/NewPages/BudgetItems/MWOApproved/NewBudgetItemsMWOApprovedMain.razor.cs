@@ -45,7 +45,7 @@ public partial class NewBudgetItemsMWOApprovedMain
     }
     Func<NewBudgetItemMWOApprovedResponse, bool> fiterexpresion => x =>
       x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
-      x.Nomeclatore.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
+      x.Nomenclatore.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
       x.BrandName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
       x.Type.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase) ||
     x.PurchaseOrderItems.Any(x => x.Name.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
@@ -53,7 +53,7 @@ public partial class NewBudgetItemsMWOApprovedMain
        x.PurchaseOrderItems.Any(x => x.PurchaseRequisition.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase)) ||
        x.PurchaseOrderItems.Any(x => x.Supplier.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
     public List<NewBudgetItemMWOApprovedResponse> FilteredItems => Response.BudgetItems.Count == 0 ? new() :
-        Response.BudgetItems?.Where(fiterexpresion).OrderBy(x => x.Nomeclatore).ToList();
+        Response.BudgetItems?.Where(fiterexpresion).OrderBy(x => x.Nomenclatore).ToList();
     public void ChangeFilter(string arg)
     {
         nameFilter = arg;

@@ -2,11 +2,10 @@
 using FluentValidation;
 using Shared.Enums.Currencies;
 using Shared.Models.PurchaseOrders.Requests.RegularPurchaseOrders.Creates;
-using Shared.NewModels.PurchaseOrders.Request;
 
 namespace Client.Infrastructure.Validators.PurchaseOrder
 {
-    
+
     public class ApprovePurchaseOrderValidator : AbstractValidator<ApprovedRegularPurchaseOrderRequest>
     {
         private IPurchaseOrderValidator PurchaseOrderValidator { get; set; }
@@ -24,28 +23,6 @@ namespace Client.Infrastructure.Validators.PurchaseOrder
             PurchaseOrderValidator = purchaseOrderValidator;
         }
         async Task<bool> ReviewPONumberExist(ApprovedRegularPurchaseOrderRequest Purchaseorder, string ponumber, CancellationToken cancellationToken)
-        {
-
-            var result = await PurchaseOrderValidator.ValidatePONumberExistInPurchaseOrder(Purchaseorder.PurchaseOrderId, ponumber);
-            return !result;
-        }
-    }
-    public class NewPurchaseOrderApproveValidator : AbstractValidator<NewPurchaseOrderApproveRequest>
-    {
-        private INewPurchaseOrderValidator PurchaseOrderValidator { get; set; }
-        public NewPurchaseOrderApproveValidator(INewPurchaseOrderValidator purchaseOrderValidator)
-        {
-
-            RuleFor(X => X.PurchaseOrderNumber).Must(x => x.StartsWith("850")).WithMessage("PO must start with 850");
-            RuleFor(X => X.PurchaseOrderNumber).Length(10).When(x => !string.IsNullOrEmpty(x.PurchaseOrderNumber)).WithMessage("PO number must 10 characters");
-            RuleFor(customer => customer.PurchaseOrderNumber).Matches("^[0-9]*$").When(x => !string.IsNullOrEmpty(x.PurchaseOrderNumber)).WithMessage("PO Number must be number!");
-            RuleFor(X => X.ExpectedDate).NotNull().WithMessage("Expected Date must be defined");
-
-            RuleFor(x => x.PurchaseOrderNumber).MustAsync(ReviewPONumberExist).When(x => !string.IsNullOrEmpty(x.PurchaseOrderNumber)).WithMessage(x => $"{x.PurchaseOrderNumber} already exist");
-   
-            PurchaseOrderValidator = purchaseOrderValidator;
-        }
-        async Task<bool> ReviewPONumberExist(NewPurchaseOrderApproveRequest Purchaseorder, string ponumber, CancellationToken cancellationToken)
         {
 
             var result = await PurchaseOrderValidator.ValidatePONumberExistInPurchaseOrder(Purchaseorder.PurchaseOrderId, ponumber);

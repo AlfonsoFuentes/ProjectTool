@@ -2,7 +2,7 @@ using Client.Infrastructure.Managers.UserManagement;
 using Client.Infrastructure.Managers.VersionSoftwares;
 using Shared.Models.UserAccounts.Reponses;
 using Shared.NewModels.SoftwareVersion;
-
+#nullable disable
 namespace ClientRadzen.Pages.Authetication;
 public partial class NewVersionList
 {

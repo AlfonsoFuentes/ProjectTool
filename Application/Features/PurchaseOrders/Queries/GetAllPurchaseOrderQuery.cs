@@ -114,7 +114,7 @@ namespace Application.Features.PurchaseOrders.Queries
                     Quantity = x.Quantity,
                     PurchaseOrderCurrency= CurrencyEnum.GetType(e.PurchaseOrderCurrency),
                     QuoteCurrency = CurrencyEnum.GetType(e.QuoteCurrency),
-                    ActualCurrency = x.ActualCurrency,
+                    ActualCurrency = x.POItemActualCurrency,
                    
                     USDCOP = e.USDCOP,
                     USDEUR = e.USDEUR,

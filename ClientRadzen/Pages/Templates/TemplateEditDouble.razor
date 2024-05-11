@@ -1,5 +1,5 @@
 ﻿<RadzenTextBox @bind-Value=@sValue Style="width:100%"
-               Placeholder="Input formula then push Enter button"
+               Placeholder="Input formula then push Enter button" Disabled=@Disabled
                @oninput="@((arg)=>OnInputValue(arg.Value!))"
                @onkeydown="@((arg)=>OnKeyDownCurrency(arg,sValue))"></RadzenTextBox>
 
@@ -15,10 +15,8 @@
     public EventCallback Change { get; set; }
     [Parameter]
     public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
-    protected override void OnInitialized()
-    {
-        sValue = Value.ToString();
-    }
+    [Parameter]
+    public bool Disabled { get; set; }
 
     async Task OnInputValue(object svalue)
     {
@@ -35,6 +33,13 @@
             if (OnKeyDown.HasDelegate) await OnKeyDown.InvokeAsync(arg);
 
         }
+    }
+
+    protected override void OnParametersSet()
+    {
+        double value = Value < 1 ? Math.Round(Value, 4) : Math.Round(Value, 2);
+     
+        sValue = value.ToString();
     }
     async Task Convert(string svalue)
     {

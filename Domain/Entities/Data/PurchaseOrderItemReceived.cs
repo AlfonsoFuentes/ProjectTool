@@ -20,8 +20,10 @@ namespace Domain.Entities.Data
         public double ValueReceivedCurrency { get; set; }
         public double USDCOP { get; set; }
         public double USDEUR { get; set; }
-
+        public DateTime ReceivedDate { get; set; }
         public DateTime CurrencyDate { get; set; }
+        [NotMapped]
+        public string BudgetItemNomenclatoreName => PurchaseOrderItem == null ? string.Empty : PurchaseOrderItem.NomenclatoreName;
         [NotMapped]
         public CurrencyEnum PurchaseOrderCurrency => PurchaseOrderItem == null ? CurrencyEnum.None : PurchaseOrderItem.PurchaseOrderCurrency;
 

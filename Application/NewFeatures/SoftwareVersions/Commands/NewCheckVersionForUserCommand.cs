@@ -7,15 +7,19 @@ namespace Application.NewFeatures.SoftwareVersions.Commands
     internal class NewCheckVersionForUserCommandHandler : IRequestHandler<NewCheckVersionForUserCommand, IResult>
     {
         private IAppDbContext _appDbContext;
-        private IRepository Repository { get; set; }
+        private IVersionRepository VersionRepository { get; set; }
+        private IRepository Repository {  get; set; }
         private IQueryRepository QueryRepository { get; set; }
         private readonly UserManager<AplicationUser> _userManager;
-        public NewCheckVersionForUserCommandHandler(IRepository repository, IAppDbContext appDbContext, IQueryRepository queryRepository, UserManager<AplicationUser> userManager)
+        public NewCheckVersionForUserCommandHandler(IVersionRepository repository, IAppDbContext appDbContext,
+            IRepository _Repository,
+            IQueryRepository queryRepository, UserManager<AplicationUser> userManager)
         {
-            Repository = repository;
+            VersionRepository = repository;
             _appDbContext = appDbContext;
             QueryRepository = queryRepository;
             _userManager = userManager;
+            Repository = _Repository;
         }
 
         public async Task<IResult> Handle(NewCheckVersionForUserCommand request, CancellationToken cancellationToken)
@@ -40,6 +44,10 @@ namespace Application.NewFeatures.SoftwareVersions.Commands
                             await UpdateVersion2();
                             await AddVersionToUser(currenuser!, version.Id);
                             break;
+                        case 3:
+                            await UpdateVersion3();
+                            await AddVersionToUser(currenuser!, version.Id);
+                            break;
                     }
 
                 }
@@ -59,7 +67,7 @@ namespace Application.NewFeatures.SoftwareVersions.Commands
         }
         async Task UpdateVersion1()
         {
-            var budgetItemEngoneeringContingency = await Repository.GetItemsToUpdateVersion1();
+            var budgetItemEngoneeringContingency = await VersionRepository.GetItemsToUpdateVersion1();
 
             foreach (var row in budgetItemEngoneeringContingency)
             {
@@ -72,17 +80,29 @@ namespace Application.NewFeatures.SoftwareVersions.Commands
         async Task UpdateVersion2()
         {
 
-            var purchaseorders = await Repository.GetPurchaseOrderItemsToUpdateVersion2();
+            var purchaseorders = await VersionRepository.GetPurchaseOrderItemsToUpdateVersion2();
 
             foreach (var purchaseorder in purchaseorders)
             {
                 var newactual = purchaseorder.AddPurchaseOrderReceived();
-                newactual.ValueReceivedCurrency = purchaseorder.ActualCurrency;
+                newactual.ValueReceivedCurrency = purchaseorder.POItemActualCurrency;
                 newactual.USDCOP = purchaseorder.USDCOP;
                 newactual.USDEUR = purchaseorder.USDEUR;
                 newactual.CurrencyDate = purchaseorder.PurchaseOrder.CurrencyDate;
 
                 await Repository.AddAsync(newactual);
+            }
+
+        }
+        async Task UpdateVersion3()
+        {
+
+            var purchaseOrderItemReceiveds = await VersionRepository.GetPurchaseOrderItemsReceivedToUpdateVersion3();
+
+            foreach (var item in purchaseOrderItemReceiveds)
+            {
+                item.ReceivedDate = item.CurrencyDate;
+                await Repository.UpdateAsync(item);
             }
 
         }

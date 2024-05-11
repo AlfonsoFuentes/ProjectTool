@@ -18,8 +18,8 @@ namespace Client.Infrastructure.Managers.BudgetItems
         Task<IResult> Delete(NewBudgetItemMWOCreatedResponse request);
         Task<IResult<NewBudgetItemMWOUpdateRequest>> GetBudgetItemToUpdate(Guid BudgetItemId);
         Task<IResult<NewMWOApprovedReponse>> GetAllMWOApprovedWithItems(Guid MWOId);
-        Task<IResult<NewBudgetItemToCreatePurchaseOrderResponse>> GetBudgetItemMWOApprovedById(Guid BudgetItemId);
-
+        Task<IResult<NewBudgetItemToCreatePurchaseOrderResponse>> OldGetBudgetItemMWOApprovedById(Guid BudgetItemId);
+        Task<IResult<NewBudgetItemMWOApprovedResponse>> GetBudgetItemMWOApprovedById(Guid BudgetItemId);
         Task<IResult<NewMWOApprovedForCreatePurchaseOrderReponse>> GetAllMWOApprovedForCreatePurchaseOrder(Guid MWOId);
     }
     public class NewBudgetItemService : INewBudgetItemService
@@ -76,12 +76,16 @@ namespace Client.Infrastructure.Managers.BudgetItems
             return await result.ToResult();
         }
 
-        public async Task<IResult<NewBudgetItemToCreatePurchaseOrderResponse>> GetBudgetItemMWOApprovedById(Guid BudgetItemId)
+        public async Task<IResult<NewBudgetItemToCreatePurchaseOrderResponse>> OldGetBudgetItemMWOApprovedById(Guid BudgetItemId)
         {
             var result = await http.GetAsync($"{ClientEndPoint.NewBudgetItem.GetBudgetItemByIdMWOApproved}/{BudgetItemId}");
             return await result.ToResult<NewBudgetItemToCreatePurchaseOrderResponse>();
         }
-
+        public async Task<IResult<NewBudgetItemMWOApprovedResponse>> GetBudgetItemMWOApprovedById(Guid BudgetItemId)
+        {
+            var result = await http.GetAsync($"{ClientEndPoint.NewBudgetItem.GetBudgetItemByIdMWOApproved}/{BudgetItemId}");
+            return await result.ToResult<NewBudgetItemMWOApprovedResponse>();
+        }
         public async Task<IResult<NewMWOApprovedForCreatePurchaseOrderReponse>> GetAllMWOApprovedForCreatePurchaseOrder(Guid MWOId)
         {
             var result = await http.GetAsync($"{ClientEndPoint.NewBudgetItem.GetAllApprovedForCreatePurchaseOrder}/{MWOId}");

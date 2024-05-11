@@ -3,8 +3,8 @@ using Shared.NewModels.PurchaseOrders.Request;
 
 namespace Application.NewFeatures.PurchaseOrders.Queries
 {
-    public record NewPurchaseOrderGetByIdToEditReceiveQuery(Guid PurchaseOrderId) : IRequest<IResult<NewPurchaseOrderEditReceiveRequest>>;
-    internal class NewPurchaseOrderGetByIdToEditReceiveQueryHandler : IRequestHandler<NewPurchaseOrderGetByIdToEditReceiveQuery, IResult<NewPurchaseOrderEditReceiveRequest>>
+    public record OldPurchaseOrderGetByIdToEditReceiveQuery(Guid PurchaseOrderId) : IRequest<IResult<OldPurchaseOrderEditReceiveRequest>>;
+    internal class NewPurchaseOrderGetByIdToEditReceiveQueryHandler : IRequestHandler<OldPurchaseOrderGetByIdToEditReceiveQuery, IResult<OldPurchaseOrderEditReceiveRequest>>
     {
         private IQueryRepository Repository { get; set; }
 
@@ -13,17 +13,17 @@ namespace Application.NewFeatures.PurchaseOrders.Queries
             Repository = repository;
         }
 
-        public async Task<IResult<NewPurchaseOrderEditReceiveRequest>> Handle(NewPurchaseOrderGetByIdToEditReceiveQuery request, CancellationToken cancellationToken)
+        public async Task<IResult<OldPurchaseOrderEditReceiveRequest>> Handle(OldPurchaseOrderGetByIdToEditReceiveQuery request, CancellationToken cancellationToken)
         {
             var row = await Repository.GetPurchaseOrderByIdToReceiveAsync(request.PurchaseOrderId);
             if (row == null)
             {
-                return Result<NewPurchaseOrderEditReceiveRequest>.Fail(ResponseMessages.ReponseFailMessage("", ResponseType.NotFound, ClassNames.PurchaseOrders));
+                return Result<OldPurchaseOrderEditReceiveRequest>.Fail(ResponseMessages.ReponseFailMessage("", ResponseType.NotFound, ClassNames.PurchaseOrders));
             }
 
             var result = row.ToPurchaseOrderEditReceiveRequest();
 
-            return Result<NewPurchaseOrderEditReceiveRequest>.Success(result);
+            return Result<OldPurchaseOrderEditReceiveRequest>.Success(result);
         }
     }
 }

@@ -3,7 +3,7 @@ using Shared.NewModels.PurchaseOrders.Request;
 
 namespace Application.NewFeatures.PurchaseOrders.Commands
 {
-    public record NewPurchaseOrderEditReceiveCommand(NewPurchaseOrderEditReceiveRequest Data) : IRequest<IResult>;
+    public record NewPurchaseOrderEditReceiveCommand(OldPurchaseOrderEditReceiveRequest Data) : IRequest<IResult>;
     internal class NewPurchaseOrderEditReceiveCommandHandler : IRequestHandler<NewPurchaseOrderEditReceiveCommand, IResult>
     {
         private IAppDbContext AppDbContext { get; set; }

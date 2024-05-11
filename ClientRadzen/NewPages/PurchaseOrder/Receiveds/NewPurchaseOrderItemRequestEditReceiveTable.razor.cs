@@ -1,9 +1,4 @@
-using ClientRadzen.NewPages.PurchaseOrder.Approveds;
-using Shared.ExtensionsMetods;
-using Shared.NewModels.BudgetItems.Responses;
 using Shared.NewModels.PurchaseOrders.Request;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ClientRadzen.NewPages.PurchaseOrder.Receiveds;
 #nullable disable
@@ -12,9 +7,9 @@ public partial class NewPurchaseOrderItemRequestEditReceiveTable
     [CascadingParameter]
     public App MainApp { get; set; }
     [CascadingParameter]
-    public NewPurchaseOrderEditReceivePage MainPage { get; set; }
+    public OldPurchaseOrderEditReceivePage MainPage { get; set; }
 
-    NewPurchaseOrderEditReceiveRequest Model => MainPage.Model;
+    OldPurchaseOrderEditReceiveRequest Model => MainPage.Model;
     int MaxColumn = 12;
     RadzenDataGrid<NewPurchaseOrderReceiveItemActualRequest> ordersGrid = null!;
     Density Density = Density.Compact;

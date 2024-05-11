@@ -2,8 +2,8 @@
 
 namespace Application.NewFeatures.BudgetItems.Queries
 {
-    public record NewBudgetItemGetByIdMWOApprovedQuery(Guid BudgetItemId) : IRequest<IResult<NewBudgetItemToCreatePurchaseOrderResponse>>;
-    internal class NewBudgetItemGetByIdMWOApprovedQueryHandler : IRequestHandler<NewBudgetItemGetByIdMWOApprovedQuery, IResult<NewBudgetItemToCreatePurchaseOrderResponse>>
+    public record NewBudgetItemGetByIdMWOApprovedQuery(Guid BudgetItemId) : IRequest<IResult<NewBudgetItemMWOApprovedResponse>>;
+    internal class NewBudgetItemGetByIdMWOApprovedQueryHandler : IRequestHandler<NewBudgetItemGetByIdMWOApprovedQuery, IResult<NewBudgetItemMWOApprovedResponse>>
     {
         private IQueryRepository QueryRepository { get; set; }
         private readonly IAppDbContext _cache;
@@ -13,7 +13,7 @@ namespace Application.NewFeatures.BudgetItems.Queries
             _cache = cache;
         }
 
-        public async Task<IResult<NewBudgetItemToCreatePurchaseOrderResponse>> Handle(NewBudgetItemGetByIdMWOApprovedQuery request, CancellationToken cancellationToken)
+        public async Task<IResult<NewBudgetItemMWOApprovedResponse>> Handle(NewBudgetItemGetByIdMWOApprovedQuery request, CancellationToken cancellationToken)
         {
             string message = string.Empty;
             Func<Task<BudgetItem?>> getbyid = () => QueryRepository.GetBudgetItemMWOApprovedAsync(request.BudgetItemId);
@@ -22,10 +22,10 @@ namespace Application.NewFeatures.BudgetItems.Queries
                 var result = await _cache.GetOrAddAsync($"{Cache.GetBudgetItemMWOApproved}:{request.BudgetItemId}", getbyid);
                 if (result == null)
                 {
-                    return Result<NewBudgetItemToCreatePurchaseOrderResponse>.Fail(ResponseMessages.ReponseFailMessage("", ResponseType.NotFound, ClassNames.BudgetItems));
+                    return Result<NewBudgetItemMWOApprovedResponse>.Fail(ResponseMessages.ReponseFailMessage("", ResponseType.NotFound, ClassNames.BudgetItems));
                 }
-                NewBudgetItemToCreatePurchaseOrderResponse response = result.ToBudgetItemToCreatePurchaseOrder();
-                return Result<NewBudgetItemToCreatePurchaseOrderResponse>.Success(response);
+                NewBudgetItemMWOApprovedResponse response = result.ToBudgetItemMWOApproved();
+                return Result<NewBudgetItemMWOApprovedResponse>.Success(response);
             }
             catch (Exception ex)
             {
@@ -33,7 +33,7 @@ namespace Application.NewFeatures.BudgetItems.Queries
             }
 
 
-            return Result<NewBudgetItemToCreatePurchaseOrderResponse>.Fail(message);
+            return Result<NewBudgetItemMWOApprovedResponse>.Fail(message);
 
 
 

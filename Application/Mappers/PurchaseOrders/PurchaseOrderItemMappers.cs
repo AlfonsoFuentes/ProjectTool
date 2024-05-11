@@ -1,5 +1,6 @@
 ﻿using Application.Mappers.BudgetItems;
 using Shared.Enums.PurchaseorderStatus;
+using Shared.NewModels.PurchaseOrders.Base;
 using Shared.NewModels.PurchaseOrders.Request;
 using Shared.NewModels.PurchaseOrders.Responses;
 
@@ -30,33 +31,15 @@ namespace Application.Mappers.PurchaseOrders
                 Quantity = purchaseOrderItem.Quantity,
                 QuoteCurrency = purchaseOrderItem.QuoteCurrency,
                 Supplier = purchaseOrderItem.Supplier,
-                UnitaryValueCurrency = purchaseOrderItem.UnitaryValueCurrency,
+                UnitaryValuePurchaseOrderCurrency = purchaseOrderItem.UnitaryValueCurrency,
                 USDCOP = purchaseOrderItem.USDCOP,
                 USDEUR = purchaseOrderItem.USDEUR,
                 PurchaseOrderReceiveds = (purchaseOrderItem.PurchaseOrderReceiveds == null || purchaseOrderItem.PurchaseOrderReceiveds.Count == 0) ? new() :
                 purchaseOrderItem.PurchaseOrderReceiveds.Select(x => x.ToPurchaseOrderReceivedResponse()).ToList(),
             };
         }
-        public static NewPurchaseOrderCreateItemRequest ToPurchaseOrderItemRequest(this PurchaseOrderItem purchaseOrderItem)
-        {
-            return new()
-            {
-                PurchaseOrderItemId = purchaseOrderItem.Id,
-                BudgetItem = purchaseOrderItem.BudgetItem == null ? null! : purchaseOrderItem.BudgetItem.ToBudgetItemToCreatePurchaseOrder(),
-                IsTaxAlteration = purchaseOrderItem.IsTaxAlteration,
-                IsTaxNoProductive = purchaseOrderItem.IsTaxNoProductive,
-                Name = purchaseOrderItem.Name,
-                PurchaseOrderCurrency = purchaseOrderItem.PurchaseOrderCurrency,
-                Quantity = purchaseOrderItem.Quantity,
-                QuoteCurrency = purchaseOrderItem.QuoteCurrency,
-                UnitaryValueCurrency = purchaseOrderItem.UnitaryValueCurrency,
-                USDCOP = purchaseOrderItem.USDCOP,
-                USDEUR = purchaseOrderItem.USDEUR,
-                CurrencyDate = purchaseOrderItem.PurchaseOrder.CurrencyDate,
-
-
-            };
-        }
+       
+      
         public static NewPurchaseOrderReceiveItemRequest ToPurchaseOrderReceiveItemRequest(this PurchaseOrderItem purchaseOrderItem)
         {
             return new()
@@ -86,24 +69,17 @@ namespace Application.Mappers.PurchaseOrders
         {
             return new NewPurchaseOrderReceiveItemActualRequest()
             {
-                POItemName= purchaseOrderItemReceived.PurchaseOrderItem.Name,
+                POItemName = purchaseOrderItemReceived.PurchaseOrderItem.Name,
                 ReceivedId = purchaseOrderItemReceived.Id,
                 PurchaseOrderCurrency = purchaseOrderItemReceived.PurchaseOrderCurrency,
                 ReceivedCurrency = purchaseOrderItemReceived.ValueReceivedCurrency,
                 USDCOP = purchaseOrderItemReceived.USDCOP,
                 USDEUR = purchaseOrderItemReceived.USDEUR,
-                CurrencyDate=purchaseOrderItemReceived.CurrencyDate,
+                CurrencyDate = purchaseOrderItemReceived.CurrencyDate,
             };
         }
-        public static PurchaseOrderItem ToPurchaseOrderItemFromCreateRequest(this NewPurchaseOrderCreateItemRequest request, PurchaseOrderItem item)
-        {
-            item.Quantity = request.Quantity;
-            item.UnitaryValueCurrency = request.UnitaryValueCurrency;
-            item.Name = request.Name;
-
-
-            return item;
-        }
+       
+       
         public static PurchaseOrderItem ToPurchaseOrderItemFromReceivedRequest(this NewPurchaseOrderReceiveItemRequest request, PurchaseOrderItem item)
         {
             item.Quantity = request.Quantity;

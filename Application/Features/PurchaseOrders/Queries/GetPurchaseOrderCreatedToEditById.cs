@@ -67,10 +67,10 @@ namespace Application.Features.PurchaseOrders.Queries
                     PurchaseOrderCurrency = CurrencyEnum.GetType(purchaseOrder.PurchaseOrderCurrency),
                     QuoteCurrencyValue = x.UnitaryValueCurrency,
                     BudgetUSD = x.BudgetItem.Budget,
-                    AssignedUSD = x.AssignedUSD,
+                    AssignedUSD = x.POItemValueUSD,
                     PotencialUSD = x.PotentialCommitmentUSD,
                     ActualUSD = x.ActualUSD,
-                    OriginalAssignedCurrency = x.AssignedUSD,
+                    OriginalAssignedCurrency = x.POItemValueUSD,
                     OriginalPotencialCurrency = x.PotentialCommitmentUSD,
                 }).ToList(),
 

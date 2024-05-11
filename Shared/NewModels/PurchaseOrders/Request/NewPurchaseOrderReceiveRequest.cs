@@ -2,7 +2,7 @@
 
 namespace Shared.NewModels.PurchaseOrders.Request
 {
-    public class NewPurchaseOrderReceiveRequest
+    public class OldPurchaseOrderReceiveRequest
     {
         public Guid PurchaseOrderId { get; set; }
         public string PurchaseOrderNumber { get; set; } = string.Empty;

@@ -63,14 +63,14 @@ namespace Domain.Entities.Data
         public bool IsTaxEditable { get; set; } = false;
         [NotMapped]
         public double ActualCurrency => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
-            PurchaseOrderItems.Sum(x => x.ActualCurrency);
+            PurchaseOrderItems.Sum(x => x.POItemActualCurrency);
         [NotMapped]
         public double ActualUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.ActualUSD);
        
         [NotMapped]
         public double AssignedUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
-            PurchaseOrderItems.Sum(x => x.AssignedUSD);
+            PurchaseOrderItems.Sum(x => x.POItemValueUSD);
         [NotMapped]
         public double ApprovedUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.ApprovedUSD);
@@ -83,6 +83,6 @@ namespace Domain.Entities.Data
             PurchaseOrderItems.Sum(x => x.CommitmentUSD);
         [NotMapped]
         public double QuoteValueCurrency => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
-            PurchaseOrderItems.Sum(x => x.QuoteValueCurrency);
+            PurchaseOrderItems.Sum(x => x.POItemQuoteValueCurrency);
     }
 }
