@@ -1,7 +1,4 @@
-﻿using Application.Features.PurchaseOrders.Queries;
-using Application.Features.PurchaseorderValidators.Queries;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Application.Features.PurchaseorderValidators.Queries;
 
 namespace Server.Controllers.PurchaseOrders
 {

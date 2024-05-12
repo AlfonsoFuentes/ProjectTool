@@ -1,9 +1,5 @@
 ﻿
 
-using Application.Interfaces;
-using Application.Mappers.BudgetItems;
-using Azure.Core;
-
 namespace Application.NewFeatures.BudgetItems.Commands
 {
     public record NewBudgetItemCreateCommand(NewBudgetItemMWOCreatedRequest Data) : IRequest<IResult>;

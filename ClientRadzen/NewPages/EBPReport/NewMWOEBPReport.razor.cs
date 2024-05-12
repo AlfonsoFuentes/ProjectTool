@@ -1,19 +1,19 @@
+#nullable disable
+
+using ClientRadzen.Enums;
 using ClientRadzen.NewPages.BudgetItems.MWOApproved;
-using ClientRadzen.NewPages.MWOS;
-using ClientRadzen.Pages.Enums;
 using Shared.NewModels.EBPReport;
 using Shared.NewModels.PurchaseOrders.Responses;
-#nullable disable
 
 namespace ClientRadzen.NewPages.EBPReport;
 public partial class NewMWOEBPReport
 {
     [CascadingParameter]
     private App MainApp { get; set; }
-    [CascadingParameter]
-    private NewBudgetItemsMWOApprovedMain MainPage { get; set; }
 
-    NewEBPReportResponse EBPReport => MainPage.EBPReport;
+    [Parameter]
+    [EditorRequired]
+    public NewEBPReportResponse EBPReport { get; set; }
     PurchaseorderView View;
     public List<NewPriorPurchaseOrderResponse> PurchaseOrders =>
         View == PurchaseorderView.None ? new() :
@@ -50,5 +50,6 @@ public partial class NewMWOEBPReport
         }
         StateHasChanged();
     }
-   
+
 }
+

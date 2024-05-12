@@ -1,11 +1,4 @@
-﻿using Shared.Models.SapAdjust;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Client.Infrastructure.Validators.SapAdjusts
+﻿namespace Client.Infrastructure.Validators.SapAdjusts
 {
     public class CreateSapAdjustValidator:AbstractValidator<CreateSapAdjustRequest>
     {

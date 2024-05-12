@@ -76,8 +76,8 @@ namespace Shared.NewModels.PurchaseOrders.Responses
             PurchaseOrderItems.Sum(x => x.PotentialCommitmentUSD);
 
 
-        public double PendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
-            PurchaseOrderItems.Sum(x => x.PendingToReceiveUSD);
+        public double CommitmentUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.CommitmentUSD);
 
         public double QuoteValueCurrency => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.QuoteValueCurrency);

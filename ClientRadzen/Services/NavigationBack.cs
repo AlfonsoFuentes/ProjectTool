@@ -15,7 +15,7 @@ namespace ClientRadzen.Services
             _navigationManager = navigationManager;
             _history = new List<string>(MinHistorySize + AdditionalHistorySize);
             _history.Add(_navigationManager.Uri);
-            _navigationManager.LocationChanged += OnLocationChanged;
+            _navigationManager.LocationChanged += OnLocationChanged!;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace ClientRadzen.Services
 
         public void Dispose()
         {
-            _navigationManager.LocationChanged -= OnLocationChanged;
+            _navigationManager.LocationChanged -= OnLocationChanged!;
         }
     }
 }

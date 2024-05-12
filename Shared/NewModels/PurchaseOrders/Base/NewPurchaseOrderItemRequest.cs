@@ -63,14 +63,14 @@ namespace Shared.NewModels.PurchaseOrders.Base
         public double POItemCommitmentCurrency =>
            PurchaseorderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? 0 : POItemValuePurchaseOrderCurrency - POItemActualCurrency;
         public double BudgetUSD => BudgetItem == null ? 0 : BudgetItem.BudgetUSD;
-        public double BudgetAssignedUSD => BudgetItem == null ? 0 : BudgetItem.AssignedUSD;
-        public double BudgetAssignedItemUSD => BudgetAssignedUSD + POItemValueUSD;
-        public double BudgetPendingToCommitUSD => BudgetUSD - BudgetAssignedItemUSD;
+     
+        public double BudgetPendingToCommitUSD => BudgetUSD - POItemValueUSD;
 
         public bool IsNameEmpty => string.IsNullOrEmpty(Name);
         public void SetBudgetItem(NewBudgetItemMWOApprovedResponse _BudgetItem)
         {
             BudgetItem = _BudgetItem;
+         
         }
         public void SetQuoteCurrency(CurrencyEnum _QuoteCurrency)
         {

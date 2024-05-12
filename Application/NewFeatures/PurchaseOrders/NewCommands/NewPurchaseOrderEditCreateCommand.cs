@@ -1,5 +1,4 @@
-﻿using Application.Mappers.PurchaseOrders.NewMappers;
-using Shared.NewModels.PurchaseOrders.Request;
+﻿using Shared.NewModels.PurchaseOrders.Request;
 
 namespace Application.NewFeatures.PurchaseOrders.NewCommands
 {

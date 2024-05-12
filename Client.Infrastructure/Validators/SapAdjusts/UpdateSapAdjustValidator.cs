@@ -1,6 +1,4 @@
-﻿using Shared.Models.SapAdjust;
-
-namespace Client.Infrastructure.Validators.SapAdjusts
+﻿namespace Client.Infrastructure.Validators.SapAdjusts
 {
     public class UpdateSapAdjustValidator : AbstractValidator<UpdateSapAdjustRequest>
     {

@@ -1,8 +1,4 @@
-﻿using Application.Caches;
-using Application.Mappers.PurchaseOrders;
-using Shared.NewModels.PurchaseOrders.Responses;
-
-namespace Application.NewFeatures.PurchaseOrders.Queries
+﻿namespace Application.NewFeatures.PurchaseOrders.Queries
 {
     public record NewPurchaseOrderGetAllCreatedQuery:IRequest<IResult<NewPriorPurchaseOrderCreatedResponse>>;
 

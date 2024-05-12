@@ -6,35 +6,23 @@
                 LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
     <Columns>
         <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
-                              Property="@nameof(NewPriorPurchaseOrderResponse.PurchaseorderName)"
-                              Title="Name" Width="150px" TextAlign="TextAlign.Left" />
-        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
-                              Title="Status" Width="70px" TextAlign="TextAlign.Left">
-            <Template Context="detail">
-                @detail.PurchaseOrderStatus.Name
-            </Template>
-        </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
-                              Property="@nameof(NewPriorPurchaseOrderResponse.PurchaseRequisition)"
-                              Title="PR" Width="100px" TextAlign="TextAlign.Left" />
-        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
                               Property="@nameof(NewPriorPurchaseOrderResponse.PurchaseOrderNumber)"
                               Title="PO Number" Width="100px" TextAlign="TextAlign.Left" />
         <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
+                              Property="@nameof(NewPriorPurchaseOrderResponse.PurchaseRequisition)"
+                              Title="PR" Width="100px" TextAlign="TextAlign.Left" />
+
+        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
+                              Property="@nameof(NewPriorPurchaseOrderResponse.PurchaseorderName)"
+                              Title="Name" Width="150px" TextAlign="TextAlign.Left" />
+        
+       
+        
+        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
                               Property="@nameof(NewPriorPurchaseOrderResponse.SupplierNickName)"
                               Title="Supplier" Width="100px" TextAlign="TextAlign.Left" />
-        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
-                              Property="@nameof(NewPriorPurchaseOrderResponse.AssignedUSD)"
-                              Title="Assigned" Width="100px" TextAlign="TextAlign.Left">
-            <Template Context="detail">
-                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.AssignedUSD)}")
-
-            </Template>
-            <FooterTemplate>
-                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", PurchaseOrders.Sum(x => x.AssignedUSD))}")</b>
-            </FooterTemplate>
-        </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
+        
+        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse" Visible=@(View== Enums.PurchaseorderView.Actual)
                               Property="@nameof(NewPriorPurchaseOrderResponse.ActualUSD)"
                               Title="Actual" Width="100px" TextAlign="TextAlign.Left">
             <Template Context="detail">
@@ -45,18 +33,18 @@
                 <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", PurchaseOrders.Sum(x => x.ActualUSD))}")</b>
             </FooterTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
-                              Property="@nameof(NewPriorPurchaseOrderResponse.PendingToReceiveUSD)"
+        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse" Visible=@(View== Enums.PurchaseorderView.Commitment)
+                              Property="@nameof(NewPriorPurchaseOrderResponse.CommitmentUSD)"
                               Title="Pending" Width="100px" TextAlign="TextAlign.Left">
             <Template Context="detail">
-                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.PendingToReceiveUSD)}")
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.CommitmentUSD)}")
 
             </Template>
             <FooterTemplate>
-                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", PurchaseOrders.Sum(x => x.PendingToReceiveUSD))}")</b>
+                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", PurchaseOrders.Sum(x => x.CommitmentUSD))}")</b>
             </FooterTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
+        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse" Visible=@(View== Enums.PurchaseorderView.Potential)
                               Property="@nameof(NewPriorPurchaseOrderResponse.PotentialCommitmentUSD)"
                               Title="Potential" Width="100px" TextAlign="TextAlign.Left">
             <Template Context="detail">
@@ -67,11 +55,7 @@
                 <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", PurchaseOrders.Sum(x => x.PotentialCommitmentUSD))}")</b>
             </FooterTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
-                              Property="@nameof(NewPriorPurchaseOrderResponse.ExpectedOn)"
-                              Title="Expected On" Width="100px" TextAlign="TextAlign.Left">
-
-        </RadzenDataGridColumn>
+        
         <RadzenDataGridColumn TItem="NewPriorPurchaseOrderResponse"
                               Title="Actions" Width="100px" TextAlign="TextAlign.Left">
             <Template Context="order">
@@ -145,7 +129,7 @@
                 }
                 <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall"
                               MouseEnter="@(args =>MainApp.ShowTooltip(args,$"Delete purchase order {order.PurchaseOrderNumber}",TooltipPosition.Left) )"
-                              class="rz-mr-1" Click="@(()=>MainPage.RemovePurchaseorder(order))" />
+                              class="rz-mr-1" Click="@(()=>RemovePurchaseorder(order))" />
             </Template>
         </RadzenDataGridColumn>
 

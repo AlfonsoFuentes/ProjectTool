@@ -1,5 +1,4 @@
-﻿using Client.Infrastructure.Managers.UserManagement;
-using Shared.Models.UserAccounts.Registers;
+﻿using Shared.Models.UserAccounts.Registers;
 
 namespace Client.Infrastructure.Validators.UserAccounts
 {

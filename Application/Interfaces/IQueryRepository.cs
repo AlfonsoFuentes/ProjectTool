@@ -23,5 +23,6 @@ namespace Application.Interfaces
         Task<PurchaseOrder?> GetPurchaseOrderByIdCreatedAsync(Guid PurchaseOrderId);
         Task<PurchaseOrder?> GetPurchaseOrderByIdToReceiveAsync(Guid PurchaseOrderId);
         Task<MWO?> GetMWOByIdWithPurchaseOrderAsync(Guid MWOId);
+        Task<MWO> GetSapAdjustsByMWOId(Guid MWOId);
     }
 }

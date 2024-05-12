@@ -1,6 +1,4 @@
-﻿using Application.Mappers.BudgetItems;
-
-namespace Application.NewFeatures.BudgetItems.Queries
+﻿namespace Application.NewFeatures.BudgetItems.Queries
 {
     public record NewBudgetItemGetByIdMWOApprovedQuery(Guid BudgetItemId) : IRequest<IResult<NewBudgetItemMWOApprovedResponse>>;
     internal class NewBudgetItemGetByIdMWOApprovedQueryHandler : IRequestHandler<NewBudgetItemGetByIdMWOApprovedQuery, IResult<NewBudgetItemMWOApprovedResponse>>

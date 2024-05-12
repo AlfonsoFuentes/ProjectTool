@@ -1,9 +1,4 @@
-﻿
-
-using Shared.Models.MWO;
-using Shared.NewModels.EBPReport;
-
-namespace Application.NewFeatures.MWOS.Queries
+﻿namespace Application.NewFeatures.MWOS.Queries
 {
     public record NewMWOEBPReportQuery(Guid MWOId) : IRequest<IResult<NewEBPReportResponse>>;
     internal class NewMWOEBPReportQueryHandler : IRequestHandler<NewMWOEBPReportQuery, IResult<NewEBPReportResponse>>
@@ -19,6 +14,7 @@ namespace Application.NewFeatures.MWOS.Queries
         public async Task<IResult<NewEBPReportResponse>> Handle(NewMWOEBPReportQuery request, CancellationToken cancellationToken)
         {
             string message = string.Empty;
+            
             Func<Task<MWO?>> getbyid = () => QueryRepository.GetMWOByIdWithPurchaseOrderAsync(request.MWOId);
             try
             {

@@ -21,7 +21,7 @@ namespace Shared.NewModels.MWOs.Reponses
 
         public List<NewBudgetItemMWOApprovedResponse> BudgetItems { get; set; } = new List<NewBudgetItemMWOApprovedResponse>();
 
-        public NewEBPReportResponse EBPReportResponse { get; set; } = new();
+
 
 
         public List<NewBudgetItemMWOApprovedResponse> BudgetItemsExpenses => BudgetItems == null ? new() : BudgetItems.Where(x => x.IsAlteration).ToList();
@@ -100,8 +100,8 @@ namespace Shared.NewModels.MWOs.Reponses
             BudgetItemsCapital.Sum(x => x.PotentialCommitmentUSD);
 
 
-        public double CapitalPendingToReceiveUSD => BudgetItemsCapital == null || BudgetItemsCapital.Count == 0 ? 0 :
-            BudgetItemsCapital.Sum(x => x.PendingToReceiveUSD);
+        public double CapitalCommitmentUSD => BudgetItemsCapital == null || BudgetItemsCapital.Count == 0 ? 0 :
+            BudgetItemsCapital.Sum(x => x.CommitmentUSD);
         #endregion
         #region ExpensesMWOApproved
         public double ExpensesPendingToCommitUSD => ExpensesUSD - ExpensesAssignedUSD;
@@ -118,8 +118,8 @@ namespace Shared.NewModels.MWOs.Reponses
             BudgetItemsExpenses.Sum(x => x.PotentialCommitmentUSD);
 
 
-        public double ExpensesPendingToReceiveUSD => BudgetItemsExpenses == null || BudgetItemsExpenses.Count == 0 ? 0 :
-            BudgetItemsExpenses.Sum(x => x.PendingToReceiveUSD);
+        public double ExpensesCommitmentUSD => BudgetItemsExpenses == null || BudgetItemsExpenses.Count == 0 ? 0 :
+            BudgetItemsExpenses.Sum(x => x.CommitmentUSD);
         #endregion
         #endregion
     }

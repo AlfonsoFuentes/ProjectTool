@@ -1,6 +1,6 @@
 using Client.Infrastructure.Managers.UserManagement;
 using Microsoft.AspNetCore.Components;
-
+#nullable disable
 namespace ClientRadzen.Pages.UserManagements;
 public partial class Logout
 {

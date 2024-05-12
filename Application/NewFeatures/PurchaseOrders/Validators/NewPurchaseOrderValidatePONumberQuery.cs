@@ -1,7 +1,4 @@
-﻿using Application.Interfaces;
-using MediatR;
-
-namespace Application.Features.PurchaseorderValidators.Queries
+﻿namespace Application.Features.PurchaseorderValidators.Queries
 {
     public record NewPurchaseOrderValidatePONumberQuery(string ponumber) : IRequest<bool>;
     internal class NewPurchaseOrderValidatePONumberQueryHandler : IRequestHandler<NewPurchaseOrderValidatePONumberQuery, bool>

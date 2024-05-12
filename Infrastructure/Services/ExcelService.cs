@@ -100,7 +100,7 @@ namespace Infrastructure.Services
                                 {
                                     stringValue = Convert.ToString(value, CultureInfo.InvariantCulture);
                                 }
-                                cell.CellValue = new CellValue(stringValue);
+                                cell.CellValue = new CellValue(stringValue!);
                                 cell.DataType = new EnumValue<CellValues>(CellValues.Number);
                             }
                             else
@@ -147,7 +147,7 @@ namespace Infrastructure.Services
 
         public static object GetValue(object target, string name)
         {
-            return target.GetType().GetProperty(name).GetValue(target);
+            return target.GetType().GetProperty(name)!.GetValue(target)!;
         }
 
         public static IEnumerable<KeyValuePair<string, Type>> GetProperties(Type type)

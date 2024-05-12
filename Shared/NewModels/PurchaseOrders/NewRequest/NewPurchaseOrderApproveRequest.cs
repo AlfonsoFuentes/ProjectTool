@@ -7,7 +7,7 @@ namespace Shared.NewModels.PurchaseOrders.Request
         public NewPurchaseOrderRequest PurchaseOrder { get; set; } = new NewPurchaseOrderRequest();
         public NewPurchaseOrderApproveRequest()
         {
-            
+
         }
 
     }

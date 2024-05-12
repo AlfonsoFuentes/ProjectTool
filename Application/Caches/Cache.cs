@@ -2,6 +2,7 @@
 {
     public static class Cache
     {
+        public static string GetSapAdjust = "get-SapAdjust";
         public static string GetAllSoftwareVersion = "all-SoftwareVersion";
         public static string GetAllBrands = "all-Brands";
         public static string GetAllSuppliers = "all-Suppliers";

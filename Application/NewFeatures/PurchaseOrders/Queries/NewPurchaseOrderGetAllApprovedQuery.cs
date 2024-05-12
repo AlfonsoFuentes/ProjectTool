@@ -1,7 +1,4 @@
-﻿using Application.Mappers.PurchaseOrders;
-using Shared.NewModels.PurchaseOrders.Responses;
-
-namespace Application.NewFeatures.PurchaseOrders.Queries
+﻿namespace Application.NewFeatures.PurchaseOrders.Queries
 {
     public record NewPurchaseOrderGetAllApprovedQuery : IRequest<IResult<NewPriorPurchaseOrderApprovedResponse>>;
     internal class NewPurchaseOrderGetAllApprovedQueryHandler : IRequestHandler<NewPurchaseOrderGetAllApprovedQuery, IResult<NewPriorPurchaseOrderApprovedResponse>>

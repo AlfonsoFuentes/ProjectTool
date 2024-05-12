@@ -1,6 +1,4 @@
-﻿using Application.Interfaces;
-
-namespace Application.NewFeatures.BudgetItems.Commands
+﻿namespace Application.NewFeatures.BudgetItems.Commands
 {
     public record NewBudgetItemDeleteCommand(NewBudgetItemMWOCreatedResponse Data) : IRequest<IResult>;
     internal class NewBudgetItemDeleteCommandHandler : IRequestHandler<NewBudgetItemDeleteCommand, IResult>

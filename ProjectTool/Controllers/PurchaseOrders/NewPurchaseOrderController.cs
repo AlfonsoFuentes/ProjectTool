@@ -1,10 +1,8 @@
-﻿using Application.Features.PurchaseOrders.Queries;
-using Application.NewFeatures.PurchaseOrders.Commands;
+﻿using Application.NewFeatures.PurchaseOrders.Commands;
 using Application.NewFeatures.PurchaseOrders.NewCommands;
 using Application.NewFeatures.PurchaseOrders.NewQueries;
 using Application.NewFeatures.PurchaseOrders.Queries;
 using Shared.NewModels.PurchaseOrders.Request;
-using Shared.NewModels.PurchaseOrders.Responses;
 
 namespace Server.Controllers.PurchaseOrders
 {

@@ -9,7 +9,7 @@ namespace Shared.NewModels.PurchaseOrders.Responses
         public Guid BudgetItemId { get; set; }
         public Guid PurchaseOrderId { get; set; }
         public string Name { get; set; } = string.Empty;
-       
+
         public double Quantity { get; set; }
         public bool IsTaxNoProductive { get; set; } = false;
         public bool IsTaxAlteration { get; set; } = false;
@@ -29,31 +29,35 @@ namespace Shared.NewModels.PurchaseOrders.Responses
         public string PurchaseOrderLegendToDelete => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ?
             PurchaseRequisition : PurchaseOrderNumber;
 
-        public double UnitaryValuePurchaseOrderCurrency { get; set; }
+        public double UnitaryValuePurchaseOrderCurrency =>
+            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? UnitaryValueQuoteUSD :
+            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? UnitaryValueQuoteUSD * USDCOP :
+            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? UnitaryValueQuoteUSD * USDEUR :
+            0;
         public double UnitaryValuePurchaseOrderUSD =>
             PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? UnitaryValuePurchaseOrderCurrency :
-            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? UnitaryValuePurchaseOrderCurrency / USDCOP :
-            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? UnitaryValuePurchaseOrderCurrency / USDEUR :
+            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? USDCOP == 0 ? 0 : UnitaryValuePurchaseOrderCurrency / USDCOP :
+            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? USDEUR == 0 ? 0 : UnitaryValuePurchaseOrderCurrency / USDEUR :
             0;
-        public double UnitaryValueQuoteCurrency =>
-            QuoteCurrency.Id == CurrencyEnum.USD.Id ? UnitaryValuePurchaseOrderUSD :
-            QuoteCurrency.Id == CurrencyEnum.COP.Id ? UnitaryValuePurchaseOrderUSD * USDCOP :
-            QuoteCurrency.Id == CurrencyEnum.EUR.Id ? UnitaryValuePurchaseOrderUSD * USDEUR :
+        public double UnitaryValueQuoteCurrency { get; set; }
+        public double UnitaryValueQuoteUSD =>
+            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? UnitaryValueQuoteCurrency :
+            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? USDCOP == 0 ? 0 : UnitaryValueQuoteCurrency / USDCOP :
+            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? USDEUR == 0 ? 0 : UnitaryValueQuoteCurrency / USDEUR :
             0;
-
         public double QuoteValueCurrency => UnitaryValueQuoteCurrency * Quantity;
 
-        public double AssignedUSD =>
-            QuoteCurrency.Id == CurrencyEnum.USD.Id ? QuoteValueCurrency :
-            QuoteCurrency.Id == CurrencyEnum.COP.Id ? QuoteValueCurrency / USDCOP :
-            QuoteCurrency.Id == CurrencyEnum.EUR.Id ? QuoteValueCurrency / USDEUR :
+        public double AssignedUSD => UnitaryValueQuoteUSD * Quantity;
+
+        public double ActualCurrency => (PurchaseOrderReceiveds == null || PurchaseOrderReceiveds.Count == 0) ? 0 :
+             PurchaseOrderReceiveds.Sum(x => x.ValueReceivedCurrency);
+
+        public double CommitmentCurrency =>
+            PurchaseOrderCurrency.Id == CurrencyEnum.USD.Id ? CommitmentUSD :
+            PurchaseOrderCurrency.Id == CurrencyEnum.COP.Id ? CommitmentUSD * USDCOP :
+            PurchaseOrderCurrency.Id == CurrencyEnum.EUR.Id ? UnitaryValueQuoteUSD * USDEUR :
             0;
 
-       public double ActualCurrency => (PurchaseOrderReceiveds == null || PurchaseOrderReceiveds.Count == 0) ? 0 :
-            PurchaseOrderReceiveds.Sum(x => x.ValueReceivedCurrency);
-
-        public double PendingToReceiveCurrency => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? 0 : QuoteValueCurrency - ActualCurrency;
-       
         public double ActualUSD => (PurchaseOrderReceiveds == null || PurchaseOrderReceiveds.Count == 0) ? 0 :
             PurchaseOrderReceiveds.Sum(x => x.ValueReceivedUSD);
 
@@ -63,8 +67,8 @@ namespace Shared.NewModels.PurchaseOrders.Responses
         public double ApprovedUSD =>
             PurchaseOrderStatus.Id != PurchaseOrderStatusEnum.Created.Id ? AssignedUSD : 0;
 
-        public double PendingToReceiveUSD => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? 0 : AssignedUSD - ActualUSD;
-      
+        public double CommitmentUSD => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ? 0 : ApprovedUSD - ActualUSD;
+
         public string LabelAction => PurchaseOrderStatus.Id == PurchaseOrderStatusEnum.Created.Id ?
           $"Edit {PurchaseRequisition}" : $"Edit {PurchaseOrderNumber}";
     }

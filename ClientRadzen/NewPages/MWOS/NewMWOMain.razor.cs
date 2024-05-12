@@ -174,7 +174,7 @@ public partial class NewMWOMain
     }
     public void ShowSapAlignmentofMWO(NewMWOApprovedReponse Response)
     {
-        //_NavigationManager.NavigateTo($"/SapAdjustListByMWO/{Response.MWOId}");
+        _NavigationManager.NavigateTo($"/SapAdjustListByMWO/{Response.MWOId}");
 
     }
     public async Task UnApproveMWO(NewMWOApprovedReponse Response)

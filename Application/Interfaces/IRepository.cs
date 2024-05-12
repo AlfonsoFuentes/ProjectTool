@@ -22,5 +22,6 @@ namespace Application.Interfaces
         Task<BudgetItem> GetTaxBudgetItemNoProductive(Guid MWOId);
         Task<PurchaseOrderItem?> GetBudgetItemTaxAlteration(Guid PurchaseOrderId, Guid BudgetItemId);
         Task<PurchaseOrderItem?> GetBudgetItemTaxNoProductive(Guid PurchaseOrderId, Guid BudgetItemId);
+        Task<SapAdjust> GetSapAdAjustsById(Guid SapAsjustId);
     }
 }

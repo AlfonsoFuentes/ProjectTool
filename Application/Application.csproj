@@ -21,9 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\ChangeUser\" />
     <Folder Include="NewFeatures\Brands\Exports\" />
     <Folder Include="NewFeatures\BudgetItems\Exports\" />
-    <Folder Include="NewFeatures\BudgetItems\Validators\" />
     <Folder Include="NewFeatures\MWOS\Exports\" />
     <Folder Include="NewFeatures\PurchaseOrders\Exports\" />
   </ItemGroup>

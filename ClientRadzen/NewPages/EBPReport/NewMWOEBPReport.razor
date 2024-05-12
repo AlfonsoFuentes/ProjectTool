@@ -1,4 +1,5 @@
-﻿
+﻿@using ClientRadzen.Enums
+
 
 <RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false"
                 AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
@@ -9,7 +10,7 @@
                 LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
     <Columns>
         <RadzenDataGridColumn TItem="NewSummaryTotalResponse"
-                              Property="@nameof(SummaryTotal.Actual)"
+                              Property="@nameof(NewSummaryTotalResponse.Actual)"
                               Title="Actual, USD" Width="100px" TextAlign="TextAlign.Left">
             <Template Context="detail">
                 @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Actual)}")
@@ -17,7 +18,7 @@
             </Template>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="NewSummaryTotalResponse"
-                              Property="@nameof(SummaryTotal.Commitment)"
+                              Property="@nameof(NewSummaryTotalResponse.Commitment)"
                               Title="Commitment, USD" Width="100px" TextAlign="TextAlign.Left">
             <Template Context="detail">
                 @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Commitment)}")
@@ -35,10 +36,10 @@
 
     </Columns>
 </RadzenDataGrid>
-@if(View!= PurchaseorderView.None)
+@if (View != PurchaseorderView.None)
 {
 
-    <NewMWOEBPReportPurchaseordersTable PurchaseOrders="@PurchaseOrders">
+    <NewMWOEBPReportPurchaseordersTable PurchaseOrders="@PurchaseOrders" View="@View">
 
     </NewMWOEBPReportPurchaseordersTable>
     

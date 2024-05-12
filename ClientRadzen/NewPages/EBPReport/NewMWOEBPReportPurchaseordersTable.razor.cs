@@ -1,3 +1,4 @@
+using ClientRadzen.Enums;
 using ClientRadzen.NewPages.BudgetItems.MWOApproved;
 using Shared.NewModels.PurchaseOrders.Request;
 using Shared.NewModels.PurchaseOrders.Responses;
@@ -8,8 +9,11 @@ public partial class NewMWOEBPReportPurchaseordersTable
 {
     [CascadingParameter]
     private App MainApp { get; set; }
-    [CascadingParameter]
-    private NewBudgetItemsMWOApprovedMain MainPage { get; set; }
+    [Inject]
+    private INewPurchaseOrderService PurchaseOrderService { get; set; }
+    [Parameter]
+    public PurchaseorderView View { get; set; }
+
     [Parameter]
   
     public List<NewPriorPurchaseOrderResponse> PurchaseOrders { get; set; } = new();
@@ -47,5 +51,29 @@ public partial class NewMWOEBPReportPurchaseordersTable
 
         _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.EditSalary}/{selectedRow.PurchaseOrderId}");
     }
-    
+    public async Task RemovePurchaseorder(NewPriorPurchaseOrderResponse purchaseOrderResponse)
+    {
+        var resultDialog = await DialogService.Confirm($"Are you sure delete {purchaseOrderResponse.PurchaseOrderLegendToDelete}?", "Confirm Delete",
+           new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (resultDialog.Value)
+        {
+            NewPurchaseOrderDeleteRequest request = new NewPurchaseOrderDeleteRequest()
+            {
+                PurchaseOrderId = purchaseOrderResponse.PurchaseOrderId,
+                Name = purchaseOrderResponse.PurchaseOrderNumber,
+            };
+            var result = await PurchaseOrderService.DeletePurchaseOrderAsync(request);
+            if (result.Succeeded)
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
+
+
+            }
+            else
+            {
+                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
+            }
+
+        }
+    }
 }

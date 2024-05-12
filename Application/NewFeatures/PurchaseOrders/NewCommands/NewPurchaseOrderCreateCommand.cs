@@ -1,7 +1,4 @@
-﻿using Application.Mappers.PurchaseOrders.NewMappers;
-using Shared.NewModels.PurchaseOrders.Request;
-
-namespace Application.NewFeatures.PurchaseOrders.NewCommands
+﻿namespace Application.NewFeatures.PurchaseOrders.NewCommands
 {
     public record NewPurchaseOrderCreateCommand(NewPurchaseOrderCreateRequest Data) : IRequest<IResult>;
     internal class NewNewPurchaseOrderCreateRequestHandler : IRequestHandler<NewPurchaseOrderCreateCommand, IResult>

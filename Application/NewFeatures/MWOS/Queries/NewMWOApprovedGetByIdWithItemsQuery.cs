@@ -15,18 +15,18 @@
         {
             string message = string.Empty;
             Func<Task<MWO?>> getbyid = () => QueryRepository.GetMWOByIdApprovedAsync(request.MWOId);
-            Func<Task<MWO?>> getbyebpid = () => QueryRepository.GetMWOByIdWithPurchaseOrderAsync(request.MWOId);
+          
             try
             {
-                var mwoebp = await _cache.GetOrAddAsync($"{Cache.GetMWOPurchaseOrderById}:{request.MWOId}", getbyebpid);
+               
                 var mwo = await _cache.GetOrAddAsync($"{Cache.GetMWOByApproved}:{request.MWOId}", getbyid);
-                if (mwo == null || mwoebp == null)
+                if (mwo == null )
                 {
                     return Result<NewMWOApprovedReponse>.Fail(ResponseMessages.ReponseFailMessage("", ResponseType.NotFound, ClassNames.MWO));
                 }
 
                 NewMWOApprovedReponse response = mwo.ToMWOApprovedReponse();
-                response.EBPReportResponse = mwoebp.ToMWOEBPReportResponse();
+        
                 return Result<NewMWOApprovedReponse>.Success(response);
             }
             catch (Exception ex)

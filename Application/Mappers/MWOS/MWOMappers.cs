@@ -1,14 +1,4 @@
-﻿
-
-
-
-using Application.Mappers.BudgetItems;
-using Application.Mappers.PurchaseOrders;
-using Shared.Enums.CostCenter;
-using Shared.Enums.MWOStatus;
-using Shared.NewModels.EBPReport;
-
-namespace Application.Mappers.MWOS
+﻿namespace Application.Mappers.MWOS
 {
     public static class MWOMappers
     {
@@ -133,26 +123,7 @@ namespace Application.Mappers.MWOS
 
             };
         }
-        public static NewMWOApprovedForCreatePurchaseOrderReponse ToMWOApprovedForCreatePurchaseOrderReponse(this MWO mwo)
-        {
-            return new()
-            {
-                MWOId = mwo.Id,
-                ApprovedDate = mwo.ApprovedDate,
-                CostCenter = CostCenterEnum.GetType(mwo.CostCenter),
-                Focus = FocusEnum.GetType(mwo.Focus),
-                IsAssetProductive = mwo.IsAssetProductive,
-                Name = mwo.Name,
-                MWONumber = mwo.MWONumber,
-                PercentageTaxForAlterations = mwo.PercentageTaxForAlterations,
-                Type = MWOTypeEnum.GetType(mwo.Type),
-                BudgetItems = (mwo.BudgetItems == null || mwo.BudgetItems.Count == 0) ? new() :
-                mwo.BudgetItems.Select(x => x.ToBudgetItemToCreatePurchaseOrder()).ToList(),
-
-
-
-            };
-        }
+       
         public static NewEBPReportResponse ToMWOEBPReportResponse(this MWO mwo)
         {
             return new()
@@ -166,7 +137,7 @@ namespace Application.Mappers.MWOS
                 MWONumber = $"CEC0000{mwo.MWONumber}",
                 Type = MWOTypeEnum.GetType(mwo.Type),
                 PurchaseOrders = mwo.PurchaseOrders == null || mwo.PurchaseOrders.Count == 0 ? new() :
-                mwo.PurchaseOrders.Select(x => x.ToPurchaseOrderResponse()).ToList(),
+                mwo.PurchaseOrders.Where(x=>x.IsAlteration==false).Select(x => x.ToPurchaseOrderResponse()).ToList(),
 
             };
         }

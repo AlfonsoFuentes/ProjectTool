@@ -1,4 +1,5 @@
 using Client.Infrastructure.Managers.PurchaseOrders;
+using Client.Infrastructure.Managers.Reports;
 using Shared.Enums.BudgetItemTypes;
 using Shared.Enums.PurchaseorderStatus;
 using Shared.NewModels.BudgetItems.Responses;
@@ -20,6 +21,8 @@ public partial class NewBudgetItemsMWOApprovedMain
     private INewPurchaseOrderService PurchaseOrderService { get; set; }
     [Inject]
     private INewMWOService MWOService { get; set; }
+    [Inject]
+    private IReportManager ReportService { get; set; }
     public NewMWOApprovedReponse Response { get; set; } = new();
     public string nameFilter { get; set; } = string.Empty;
 
@@ -34,13 +37,9 @@ public partial class NewBudgetItemsMWOApprovedMain
         if (result.Succeeded)
         {
             Response = result.Data;
-            EBPReport = Response.EBPReportResponse;
+         
         }
-        var resultEBP=await MWOService.GetMWOEBPReportById(MWOId);
-        if(resultEBP.Succeeded)
-        {
-            //EBPReport=resultEBP.Data;
-        }
+        
         StateHasChanged();
     }
     Func<NewBudgetItemMWOApprovedResponse, bool> fiterexpresion => x =>
@@ -206,29 +205,16 @@ public partial class NewBudgetItemsMWOApprovedMain
 
         }
     }
-    public async Task RemovePurchaseorder(NewPriorPurchaseOrderResponse purchaseOrderResponse)
+    protected override async Task OnParametersSetAsync()
     {
-        var resultDialog = await DialogService.Confirm($"Are you sure delete {purchaseOrderResponse.PurchaseOrderLegendToDelete}?", "Confirm Delete",
-           new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
-        if (resultDialog.Value)
+        await UpdateEBPRepor();
+    }
+    async Task UpdateEBPRepor()
+    {
+        var resultEBP = await ReportService.GetEBPReport(MWOId);
+        if (resultEBP.Succeeded)
         {
-            NewPurchaseOrderDeleteRequest request = new NewPurchaseOrderDeleteRequest()
-            {
-                PurchaseOrderId = purchaseOrderResponse.PurchaseOrderId,
-                Name = purchaseOrderResponse.PurchaseOrderNumber,
-            };
-            var result = await PurchaseOrderService.DeletePurchaseOrderAsync(request);
-            if (result.Succeeded)
-            {
-                MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
-
-
-            }
-            else
-            {
-                MainApp.NotifyMessage(NotificationSeverity.Error, "Error", result.Messages);
-            }
-
+            EBPReport = resultEBP.Data;
         }
     }
 }

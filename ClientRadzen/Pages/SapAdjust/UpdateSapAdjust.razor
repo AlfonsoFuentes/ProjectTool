@@ -1,5 +1,5 @@
 ﻿@page "/UpdateAdjustForMWO/{SapAdjustId:guid}"
-@using ClientRadzen.Pages.MWOPages
+
 
 <PageTitle>Update SAP Adjust</PageTitle>
 
@@ -140,9 +140,9 @@
                 </RadzenRow>
             </RadzenColumn>
             <RadzenColumn Size="12" SizeLG="6">
-                <MWOEBPReport MWOEBPResponse="@MWOEBPResponse">
+                <NewMWOEBPSapAdjustReport EBPReport="@MWOEBPResponse">
 
-                </MWOEBPReport>
+                </NewMWOEBPSapAdjustReport>
             </RadzenColumn>
         </RadzenRow>
 
@@ -153,7 +153,7 @@
 
 
 
-</RadzenStack>
+</RadzenStack> 
 
 @code {
     long? fileSize;

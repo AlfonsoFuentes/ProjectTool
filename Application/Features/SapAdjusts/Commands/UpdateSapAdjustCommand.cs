@@ -1,17 +1,13 @@
-﻿using Application.Interfaces;
-using Domain.Entities.Data;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.SapAdjust;
+﻿using Azure;
 
 namespace Application.Features.SapAdjusts.Commands
 {
     public record UpdateSapAdjustCommand(UpdateSapAdjustRequest Data) : IRequest<IResult>;
     internal class UpdateSapAdjustCommandHandler : IRequestHandler<UpdateSapAdjustCommand, IResult>
     {
-        private ISapAdjustRepository Repository { get; set; }
+        private IRepository Repository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
-        public UpdateSapAdjustCommandHandler(ISapAdjustRepository repository, IAppDbContext appDbContext)
+        public UpdateSapAdjustCommandHandler(IRepository repository, IAppDbContext appDbContext)
         {
             Repository = repository;
             AppDbContext = appDbContext;
@@ -23,7 +19,10 @@ namespace Application.Features.SapAdjusts.Commands
 
 
             var sapAdjust = await Repository.GetSapAdAjustsById(request.Data.SapAdjustId);
-            if (sapAdjust == null) return Result.Fail("row not found");
+            if (sapAdjust == null)
+            {
+                return Result.Fail(ResponseMessages.ReponseFailMessage(request.Data.Name, ResponseType.NotFound, ClassNames.SapAdjust));
+            }
             sapAdjust.PotencialSap = request.Data.PotencialSap;
             sapAdjust.ActualSap = request.Data.ActualSap;
             sapAdjust.CommitmentSap = request.Data.CommitmentSap;
@@ -35,14 +34,11 @@ namespace Application.Features.SapAdjusts.Commands
             sapAdjust.ImageDataFile = request.Data.ImageData;
             sapAdjust.ImageTitle = request.Data.ImageTitle;
 
-            await Repository.UpdateSapAdjust(sapAdjust);
-            var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            if (result > 0)
-            {
-                return Result.Success($"Sap Adjust was updated succesfully");
-            }
-
-            return Result.Fail("Sap adjust was not updated succesfully!");
+            await Repository.UpdateAsync(sapAdjust);
+            var result = await AppDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, $"{Cache.GetSapAdjust}:{request.Data.MWOId}");
+            return result > 0 ?
+               Result.Success(ResponseMessages.ReponseSuccesfullyMessage(request.Data.Name, ResponseType.Delete, ClassNames.SapAdjust)) :
+               Result.Fail(ResponseMessages.ReponseFailMessage(request.Data.Name, ResponseType.Delete, ClassNames.SapAdjust));
         }
     }
 }

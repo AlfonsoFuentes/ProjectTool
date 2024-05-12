@@ -1,6 +1,4 @@
-﻿using Application.Mappers.BudgetItems;
-
-namespace Application.NewFeatures.BudgetItems.Queries
+﻿namespace Application.NewFeatures.BudgetItems.Queries
 {
     public record NewBudgetItemGetByIdToUpdateQuery(Guid BudgetItemId) : IRequest<IResult<NewBudgetItemMWOUpdateRequest>>;
 

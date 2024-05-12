@@ -1,6 +1,4 @@
-﻿using Client.Infrastructure.Services;
-
-namespace Client.Infrastructure.Managers.Suppliers
+﻿namespace Client.Infrastructure.Managers.Suppliers
 {
     public interface INewSupplierValidatorService : IManager
     {

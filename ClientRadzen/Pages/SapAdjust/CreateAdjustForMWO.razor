@@ -1,5 +1,5 @@
 ﻿@page "/CreateAdjustForMWO/{MWOId:guid}"
-@using ClientRadzen.Pages.MWOPages
+
 
 <PageTitle>Create New SAP Adjust</PageTitle>
 
@@ -139,9 +139,9 @@
                 </RadzenRow>
             </RadzenColumn>
             <RadzenColumn Size="12" SizeLG="6">
-                <MWOEBPReport MWOEBPResponse="@MWOEBPResponse">
+                <NewMWOEBPSapAdjustReport EBPReport="@MWOEBPResponse">
 
-                </MWOEBPReport>
+                </NewMWOEBPSapAdjustReport>
             </RadzenColumn>
         </RadzenRow>
      
@@ -151,7 +151,7 @@
   
        
 
-</RadzenStack>
+</RadzenStack> 
 @code {
     string path = string.Empty;
 

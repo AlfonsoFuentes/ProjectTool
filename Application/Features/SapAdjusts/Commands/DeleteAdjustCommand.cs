@@ -1,16 +1,11 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.SapAdjust;
-
-namespace Application.Features.SapAdjusts.Commands
+﻿namespace Application.Features.SapAdjusts.Commands
 {
     public record DeleteSapAdjustCommand(SapAdjustResponse Data) : IRequest<IResult>;
     internal class DeleteSapAdjustCommandHandler : IRequestHandler<DeleteSapAdjustCommand, IResult>
     {
-        private ISapAdjustRepository Repository { get; set; }
+        private IRepository Repository { get; set; }
         private IAppDbContext AppDbContext { get; set; }
-        public DeleteSapAdjustCommandHandler(ISapAdjustRepository repository, IAppDbContext appDbContext)
+        public DeleteSapAdjustCommandHandler(IRepository repository, IAppDbContext appDbContext)
         {
             Repository = repository;
             AppDbContext = appDbContext;
@@ -18,15 +13,20 @@ namespace Application.Features.SapAdjusts.Commands
 
         public async Task<IResult> Handle(DeleteSapAdjustCommand request, CancellationToken cancellationToken)
         {
-
-            await Repository.DeleteSapAdAjust(request.Data.SapAdjustId);
-            var result = await AppDbContext.SaveChangesAsync(cancellationToken);
-            if (result > 0)
+            var row = await Repository.GetByIdAsync<SapAdjust>(request.Data.SapAdjustId);
+     
+            if (row == null)
             {
-                return Result.Success($"Sap Adjust was deleted succesfully");
+                return Result.Fail(ResponseMessages.ReponseFailMessage(request.Data.Name, ResponseType.NotFound, ClassNames.SapAdjust));
             }
 
-            return Result.Fail("Sap adjust was not deleted succesfully!");
+
+            await Repository.RemoveAsync(row);
+            var result = await AppDbContext.SaveChangesAndRemoveCacheAsync(cancellationToken, $"{Cache.GetSapAdjust}:{request.Data.MWOId}");
+
+            return result > 0 ?
+               Result.Success(ResponseMessages.ReponseSuccesfullyMessage(request.Data.Name, ResponseType.Delete, ClassNames.SapAdjust)) :
+               Result.Fail(ResponseMessages.ReponseFailMessage(request.Data.Name, ResponseType.Delete, ClassNames.SapAdjust));
         }
     }
 }

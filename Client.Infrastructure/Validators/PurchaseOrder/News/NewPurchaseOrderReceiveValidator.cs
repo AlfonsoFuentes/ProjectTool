@@ -1,6 +1,4 @@
-﻿using Shared.NewModels.PurchaseOrders.Request;
-
-namespace Client.Infrastructure.Validators.PurchaseOrder.News
+﻿namespace Client.Infrastructure.Validators.PurchaseOrder.News
 {
     public class NewPurchaseOrderReceiveValidator : AbstractValidator<NewPurchaseOrderReceiveRequest>
     {

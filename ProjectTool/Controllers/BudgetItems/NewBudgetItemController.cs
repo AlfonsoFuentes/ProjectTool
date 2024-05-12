@@ -57,10 +57,6 @@ namespace Server.Controllers.BudgetItems
         {
             return Ok(await Mediator.Send(new NewBudgetItemGetByIdMWOApprovedQuery(BudgetItemId)));
         }
-        [HttpGet("GetAllApprovedForCreatePurchaseOrder/{MWOId}")]
-        public async Task<IActionResult> GetAllApprovedForCreatePurchaseOrder(Guid MWOId)
-        {
-            return Ok(await Mediator.Send(new NewMWOApprovedForCreatePurchaseOrderGetByIdQuery(MWOId)));
-        }
+       
     }
 }

@@ -27,6 +27,8 @@ namespace Shared.NewModels.PurchaseOrders.Base
         public string SupplierNickName => Supplier == null ? string.Empty : Supplier.NickName;
         public string SupplierVendorCode => Supplier == null ? string.Empty : Supplier.VendorCode;
         public List<NewPurchaseOrderItemRequest> PurchaseOrderItems { get; set; } = new List<NewPurchaseOrderItemRequest>();
+
+        public List<NewBudgetItemMWOApprovedResponse> BudgetItemsInPurchaseOrder=> PurchaseOrderItems.Select(x=>x.BudgetItem).ToList();
         public string QuoteNo { get; set; } = string.Empty;
         public CurrencyEnum QuoteCurrency { get; set; } = CurrencyEnum.None;
         public CurrencyEnum PurchaseOrderCurrency { get; set; } = CurrencyEnum.None;
@@ -71,10 +73,10 @@ namespace Shared.NewModels.PurchaseOrders.Base
             PurchaseOrderItems.Sum(x => x.POItemCommitmentReceivingCurrency);
         public double POCommitmentReceivingUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
             PurchaseOrderItems.Sum(x => x.POItemCommitmentReceivingUSD);
-        public double BudgetPendingToCommitUSD => PurchaseOrderItems.Sum(x => x.BudgetPendingToCommitUSD);
+        public double BudgetPendingToCommitUSD => BudgetUSD - BudgetAssigned;
         public double BudgetUSD => PurchaseOrderItems.Sum(x => x.BudgetUSD);
-        public double BudgetAssignedUSD => PurchaseOrderItems.Sum(x => x.BudgetAssignedUSD);
-        public double BudgetAssignedItemUSD => PurchaseOrderItems.Sum(x => x.BudgetAssignedItemUSD);
+
+        public double BudgetAssigned => BudgetItemsInPurchaseOrder.Sum(x => x.PurchaseOrderItems.Sum(x=>x.AssignedUSD));
         public string SPL => MainBudgetItem == null ? string.Empty : MainBudgetItem.IsAlteration ? "0735015000" : "151605000";
         public bool IsAlteration => MainBudgetItem == null ? false : MainBudgetItem.IsAlteration;
         public bool IsCapitalizedSalary => MainBudgetItem == null ? false : MainBudgetItem.IsCapitalizedSalary;
@@ -92,8 +94,16 @@ namespace Shared.NewModels.PurchaseOrders.Base
             MainBudgetItem = _BudgetItem;
             AddBudgetItem(MainBudgetItem);
             SetTRM(_USDCOP, _USDEUR, DateTime.UtcNow);
-            if (MainBudgetItem.IsCapitalizedSalary) SetPurchaseOrderCurrency(CurrencyEnum.USD);
-            SetQuoteCurrency(CurrencyEnum.COP);
+            if (MainBudgetItem.IsCapitalizedSalary)
+            {
+                SetPurchaseOrderCurrency(CurrencyEnum.USD);
+                SetQuoteCurrency(CurrencyEnum.USD);
+            }
+            else
+            {
+                SetQuoteCurrency(CurrencyEnum.COP);
+            }
+            
         }
         public bool AddBudgetItem(NewBudgetItemMWOApprovedResponse _BudgetItem)
         {

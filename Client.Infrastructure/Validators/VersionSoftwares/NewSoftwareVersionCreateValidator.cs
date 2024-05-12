@@ -1,5 +1,4 @@
 ﻿using Client.Infrastructure.Managers.VersionSoftwares;
-using Shared.NewModels.SoftwareVersion;
 
 namespace Client.Infrastructure.Validators.VersionSoftwares
 {

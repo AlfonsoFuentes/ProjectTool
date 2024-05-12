@@ -22,5 +22,7 @@
         Task<bool> ValidatePurchaseNumberExist(Guid PurchaseOrderId, string ponumber);
         Task<bool> ValidatePurchaseRequisitionExist(string purchaserequisition);
         Task<bool> ValidatePurchaseRequisitionExist(Guid PurchaseOrderId, string purchaserequisition);
+        Task<bool> ReviewIfBudgetItemNameExist(Guid MWOId, string name);
+        Task<bool> ReviewIfBudgetItemNameExist(Guid Id, Guid MWOId, string name);
     }
 }

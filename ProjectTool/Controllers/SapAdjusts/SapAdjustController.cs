@@ -16,18 +16,18 @@ namespace Server.Controllers.SapAdjusts
         {
             Mediator = mediator;
         }
-        [HttpPost("CreateSapAdjust")]
+        [HttpPost(nameof(ClientEndPoint.Actions.Create))]
         public async Task<IActionResult> CreateSapAdjust(CreateSapAdjustRequest request)
         {
             return Ok(await Mediator.Send(new CreateSapAdjustCommand(request)));
         }
-        
-        [HttpPost("UpdateSapAdjust")]
+
+        [HttpPost(nameof(ClientEndPoint.Actions.Update))]
         public async Task<IActionResult> UpdateSapAdjust(UpdateSapAdjustRequest request)
         {
             return Ok(await Mediator.Send(new UpdateSapAdjustCommand(request)));
         }
-        [HttpPost("DeleteSapAdjust")]
+        [HttpPost(nameof(ClientEndPoint.Actions.Delete))]
         public async Task<IActionResult> DeleteSapAdjust(SapAdjustResponse response)
         {
             return Ok(await Mediator.Send(new DeleteSapAdjustCommand(response)));
@@ -37,7 +37,7 @@ namespace Server.Controllers.SapAdjusts
         {
             return Ok(await Mediator.Send(new GetSapAdjustByIdToUpdateQuery(Id)));
         }
-        [HttpGet("GetAllByMWO/{MWOId}")]
+        [HttpGet("GetByIdMWOApproved/{MWOId}")]
         public async Task<IActionResult> GetAllByMWO(Guid MWOId)
         {
             return Ok(await Mediator.Send(new GetSapAdjustByMWOIdQuery(MWOId)));

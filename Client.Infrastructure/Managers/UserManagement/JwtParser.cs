@@ -11,9 +11,9 @@
 
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
-            ExtractRolesFromJWT(claims, keyValuePairs);
+            ExtractRolesFromJWT(claims, keyValuePairs!);
 
-            claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
+            claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!)));
 
             return claims;
         }
@@ -33,7 +33,7 @@
 
             if (roles != null)
             {
-                var parsedRoles = roles.ToString().Trim().TrimStart('[').TrimEnd(']').Split(',');
+                var parsedRoles = roles.ToString()!.Trim().TrimStart('[').TrimEnd(']').Split(',');
 
                 if (parsedRoles.Length > 1)
                 {

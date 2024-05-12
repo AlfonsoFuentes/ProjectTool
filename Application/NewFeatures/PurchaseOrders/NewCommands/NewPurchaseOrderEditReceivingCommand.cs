@@ -1,7 +1,4 @@
-﻿using Shared.Enums.PurchaseorderStatus;
-using Shared.NewModels.PurchaseOrders.Request;
-
-namespace Application.NewFeatures.PurchaseOrders.NewCommands
+﻿namespace Application.NewFeatures.PurchaseOrders.NewCommands
 {
     public record NewPurchaseOrderEditReceivingCommand(NewPurchaseOrderEditReceiveRequest Data) : IRequest<IResult>;
     internal class NewPurchaseOrderEditReceivingCommandHandler : IRequestHandler<NewPurchaseOrderEditReceivingCommand, IResult>

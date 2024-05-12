@@ -1,14 +1,6 @@
-﻿using Azure.Core;
-using Microsoft.Extensions.Logging;
-using Polly;
+﻿using Polly;
 using Polly.Extensions.Http;
 using Polly.Retry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Client.Infrastructure.Services
 {

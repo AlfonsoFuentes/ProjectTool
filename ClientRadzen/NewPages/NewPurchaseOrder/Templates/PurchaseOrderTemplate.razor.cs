@@ -354,14 +354,6 @@ public partial class PurchaseOrderTemplate
     {
         PurchaseOrderItems = new();
 
-
-        if (Model.MainBudgetItem != null && Model.PurchaseOrderItems.Any(x => x.BudgetItemId == Model.MainBudgetItem.BudgetItemId))
-        {
-            PurchaseOrderItems.Add(Model.PurchaseOrderItems.Single(x => x.BudgetItemId == Model.MainBudgetItem.BudgetItemId));
-
-        }
-
-
         foreach (var item in Model.PurchaseOrderItems)
         {
             if (!PurchaseOrderItems.Any(x => x.BudgetItemId == item.BudgetItemId))
@@ -371,8 +363,8 @@ public partial class PurchaseOrderTemplate
             }
             if (BudgetItems.Any(x => x.BudgetItemId == item.BudgetItemId))
             {
-                var budgetitem = BudgetItems.Single(x => x.BudgetItemId == item.BudgetItemId);
-                BudgetItems.Remove(budgetitem);
+                var budgetitem = BudgetItems.FirstOrDefault(x => x.BudgetItemId == item.BudgetItemId);
+                BudgetItems.Remove(budgetitem!);
 
             }
         }

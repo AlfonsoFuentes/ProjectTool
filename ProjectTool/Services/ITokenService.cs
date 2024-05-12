@@ -32,7 +32,7 @@ namespace Server.Services
 
         public SigningCredentials GetSigningCredentials()
         {
-            var key = Encoding.UTF8.GetBytes(_jwtSettings["securityKey"]);
+            var key = Encoding.UTF8.GetBytes(_jwtSettings["securityKey"]!);
             var secret = new SymmetricSecurityKey(key);
 
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
@@ -85,7 +85,7 @@ namespace Server.Services
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(_jwtSettings["securityKey"])),
+                    Encoding.UTF8.GetBytes(_jwtSettings["securityKey"]!)),
                 ValidateLifetime = false,
                 ValidIssuer = _jwtSettings["validIssuer"],
                 ValidAudience = _jwtSettings["validAudience"],

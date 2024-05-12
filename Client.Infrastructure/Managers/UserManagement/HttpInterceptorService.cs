@@ -18,7 +18,7 @@ namespace Client.Infrastructure.Managers.UserManagement
 
         public async Task InterceptBeforeHttpAsync(object sender, HttpClientInterceptorEventArgs e)
         {
-            var absPath = e.Request.RequestUri.AbsolutePath;
+            var absPath = e.Request.RequestUri!.AbsolutePath;
 
             if (!absPath.Contains("token") && !absPath.Contains("accounts"))
             {

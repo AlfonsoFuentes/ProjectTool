@@ -142,5 +142,12 @@
             var result = await Context.BudgetItems.SingleOrDefaultAsync(x => x.MWOId == MWOId && x.IsMainItemTaxesNoProductive == true);
             return result!;
         }
+        public async Task<SapAdjust> GetSapAdAjustsById(Guid SapAsjustId)
+        {
+            return (await Context
+                .SapAdjusts.Include(x => x.MWO)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == SapAsjustId))!;
+        }
     }
 }

@@ -1,11 +1,5 @@
 ﻿
 
-using Azure.Core;
-using Shared.NewModels.BudgetItems.Request;
-using Shared.NewModels.BudgetItems.Responses;
-using Shared.NewModels.MWOs.Reponses;
-using static System.Net.WebRequestMethods;
-
 namespace Client.Infrastructure.Managers.BudgetItems
 {
     public interface INewBudgetItemService : IManager
@@ -20,7 +14,7 @@ namespace Client.Infrastructure.Managers.BudgetItems
         Task<IResult<NewMWOApprovedReponse>> GetAllMWOApprovedWithItems(Guid MWOId);
         Task<IResult<NewBudgetItemToCreatePurchaseOrderResponse>> OldGetBudgetItemMWOApprovedById(Guid BudgetItemId);
         Task<IResult<NewBudgetItemMWOApprovedResponse>> GetBudgetItemMWOApprovedById(Guid BudgetItemId);
-        Task<IResult<NewMWOApprovedForCreatePurchaseOrderReponse>> GetAllMWOApprovedForCreatePurchaseOrder(Guid MWOId);
+   
     }
     public class NewBudgetItemService : INewBudgetItemService
     {
@@ -86,10 +80,6 @@ namespace Client.Infrastructure.Managers.BudgetItems
             var result = await http.GetAsync($"{ClientEndPoint.NewBudgetItem.GetBudgetItemByIdMWOApproved}/{BudgetItemId}");
             return await result.ToResult<NewBudgetItemMWOApprovedResponse>();
         }
-        public async Task<IResult<NewMWOApprovedForCreatePurchaseOrderReponse>> GetAllMWOApprovedForCreatePurchaseOrder(Guid MWOId)
-        {
-            var result = await http.GetAsync($"{ClientEndPoint.NewBudgetItem.GetAllApprovedForCreatePurchaseOrder}/{MWOId}");
-            return await result.ToResult<NewMWOApprovedForCreatePurchaseOrderReponse>();
-        }
+       
     }
 }

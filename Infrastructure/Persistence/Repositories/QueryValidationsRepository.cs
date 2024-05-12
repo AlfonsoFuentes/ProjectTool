@@ -176,6 +176,23 @@
                 .AsQueryable()
                 .Where(x => x.Id != PurchaseOrderId).AnyAsync(x => x.PurchaseRequisition == purchaserequisition);
         }
-       
+        public async Task<bool> ReviewIfBudgetItemNameExist(Guid MWOId, string name)
+        {
+
+            return await Context.BudgetItems
+                .AsNoTracking()
+                .AsSplitQuery()
+                .AsQueryable()
+                .AnyAsync(x => x.MWOId == MWOId && x.Name == name);
+        }
+        public async Task<bool> ReviewIfBudgetItemNameExist(Guid Id, Guid MWOId, string name)
+        {
+
+            return await Context.BudgetItems
+                .AsNoTracking()
+                .AsSplitQuery()
+                .AsQueryable()
+                .Where(x => x.Id != Id && x.MWOId == MWOId).AnyAsync(x => x.Name == name);
+        }
     }
 }

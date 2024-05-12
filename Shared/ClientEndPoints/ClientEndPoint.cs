@@ -48,8 +48,13 @@
            
             public static string SoftwareVersion = "SoftwareVersion";
             public static string PurchaseOrder = "NewPurchaseOrder";
+            public static string Report = "Report";
+            public static string SapAdjust = "SapAdjust";
         }
-        
+        public static class Report
+        {
+            public static string GetEBPReport = $"{Controller.Report}/{Actions.GetEBPReport}";
+        }
         public static class NewBrand
         {
             public static string Create = $"{Controller.Brand}/{Actions.Create}";
@@ -80,7 +85,7 @@
             public static string GetAllCreated = $"{Controller.MWO}/{Actions.GetAllCreated}";
             public static string GetAllApproved = $"{Controller.MWO}/{Actions.GetAllApproved}";
             public static string GetToApproved = $"{Controller.MWO}/{Actions.GetToApproved}";
-            public static string GetEBPReport = $"{Controller.MWO}/{Actions.GetEBPReport}";
+            public static string GetByIdMWOApproved = $"{Controller.MWO}/{Actions.GetByIdMWOApproved}";
 
 
             public static string Create = $"{Controller.MWO}/{Actions.Create}";
@@ -129,6 +134,14 @@
             public static string GetApprovedToEdit = $"{Controller.PurchaseOrder}/{Actions.GetApprovedToEdit}";
             public static string GetSalaryToEdit = $"{Controller.PurchaseOrder}/{Actions.GetSalaryToEdit}";
             public static string GetCreateToEdit = $"{Controller.PurchaseOrder}/{Actions.GetCreatedToEdit}";
+        }
+        public static class SapAdjust
+        {
+            public static string Delete = $"{Controller.SapAdjust}/{Actions.Delete}";
+            public static string GetById = $"{Controller.SapAdjust}/{Actions.GetById}";
+            public static string Create = $"{Controller.SapAdjust}/{Actions.Create}";
+            public static string Update = $"{Controller.SapAdjust}/{Actions.Update}";
+            public static string GetByIdMWOApproved = $"{Controller.SapAdjust}/{Actions.GetByIdMWOApproved}";
         }
     }
 }

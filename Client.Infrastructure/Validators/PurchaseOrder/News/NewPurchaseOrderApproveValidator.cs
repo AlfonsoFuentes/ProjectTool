@@ -1,7 +1,4 @@
-﻿using Client.Infrastructure.Managers.PurchaseOrders;
-using FluentValidation;
-using Shared.Enums.Currencies;
-using Shared.NewModels.PurchaseOrders.Request;
+﻿
 
 namespace Client.Infrastructure.Validators.PurchaseOrder.News
 {

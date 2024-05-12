@@ -67,10 +67,10 @@
         <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"
                               Title="Commitment" TextAlign="TextAlign.Left">
             <Template Context="order">
-                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.PendingToReceiveUSD)}")
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", order.CommitmentUSD)}")
             </Template>
             <FooterTemplate>
-                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MainPage.FilteredItems.Sum(x => x.PendingToReceiveUSD))}")</b>
+                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", MainPage.FilteredItems.Sum(x => x.CommitmentUSD))}")</b>
             </FooterTemplate>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="NewBudgetItemMWOApprovedResponse"

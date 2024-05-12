@@ -1,8 +1,4 @@
-﻿using Client.Infrastructure.Managers.PurchaseOrders;
-using Shared.Enums.Currencies;
-using Shared.NewModels.PurchaseOrders.Request;
-
-namespace Client.Infrastructure.Validators.PurchaseOrder.News
+﻿namespace Client.Infrastructure.Validators.PurchaseOrder.News
 {
     public class NewPurchaseOrderEditApprovedValidator : AbstractValidator<NewPurchaseOrderEditApproveRequest>
     {

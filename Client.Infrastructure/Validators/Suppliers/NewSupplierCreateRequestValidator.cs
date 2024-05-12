@@ -1,6 +1,4 @@
-﻿using Shared.NewModels.Suppliers.Requests;
-
-namespace Client.Infrastructure.Validators.Suppliers
+﻿namespace Client.Infrastructure.Validators.Suppliers
 {
     public class NewSupplierCreateRequestValidator : AbstractValidator<NewSupplierCreateRequest>
     {

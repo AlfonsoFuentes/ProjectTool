@@ -1,8 +1,6 @@
-﻿using Application.Mappers.PurchaseOrders.NewMappers;
-using Shared.NewModels.PurchaseOrders.Request;
-
-namespace Application.NewFeatures.PurchaseOrders.NewQueries
+﻿namespace Application.NewFeatures.PurchaseOrders.NewQueries
 {
+
     public record NewPurchaseOrderGetByIdToApprovedQuery(Guid PurchaseOrderId) : IRequest<IResult<NewPurchaseOrderApproveRequest>>;
     internal class NewPurchaseOrderGetByIdToApprovedQueryHandler : IRequestHandler<NewPurchaseOrderGetByIdToApprovedQuery, IResult<NewPurchaseOrderApproveRequest>>
     {

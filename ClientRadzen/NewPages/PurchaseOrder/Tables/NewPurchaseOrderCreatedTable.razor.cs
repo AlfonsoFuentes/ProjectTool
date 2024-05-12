@@ -1,4 +1,3 @@
-using Shared.Models.PurchaseOrders.Responses;
 using Shared.NewModels.PurchaseOrders.Responses;
 #nullable disable
 namespace ClientRadzen.NewPages.PurchaseOrder.Tables;

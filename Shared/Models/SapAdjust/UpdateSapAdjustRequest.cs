@@ -1,14 +1,13 @@
-﻿using Shared.Models.MWO;
-
-namespace Shared.Models.SapAdjust
+﻿namespace Shared.Models.SapAdjust
 {
     public class UpdateSapAdjustRequest
     {
         public Guid SapAdjustId { get; set; }
         public DateTime Date { get; set; }
         public double ActualSap { get; set; }
-       
-      
+
+
+        public string Name => $"SAP Conciliation in {CECMWOName} in {Date.ToString("d")}";
         public double CommitmentSap { get; set; }
        
         public double PotencialSap { get; set; }

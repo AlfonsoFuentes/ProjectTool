@@ -57,8 +57,8 @@ namespace Shared.NewModels.BudgetItems.Responses
         
         public double PendingToCommitUSD => BudgetUSD - AssignedUSD;
         
-        public double PendingToReceiveUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
-            PurchaseOrderItems.Sum(x => x.PendingToReceiveUSD);
+        public double CommitmentUSD => PurchaseOrderItems == null || PurchaseOrderItems.Count == 0 ? 0 :
+            PurchaseOrderItems.Sum(x => x.CommitmentUSD);
         
         public double BudgetUSD => UnitaryCostUSD * Quantity;
     }

@@ -1,10 +1,9 @@
-using Blazored.FluentValidation;
-using Client.Infrastructure.Managers.SapAdjusts;
-using Microsoft.AspNetCore.Components;
-using Radzen;
-using Shared.Models.SapAdjust;
-using System.ComponentModel.DataAnnotations;
 #nullable disable
+using Client.Infrastructure.Managers.Reports;
+using Client.Infrastructure.Managers.SapAdjusts;
+using Shared.Models.SapAdjust;
+using Shared.NewModels.EBPReport;
+
 namespace ClientRadzen.Pages.SapAdjust;
 public partial class CreateAdjustForMWO
 {
@@ -13,32 +12,41 @@ public partial class CreateAdjustForMWO
     [Inject]
     private ISapAdjustService Service { get; set; }
     [Inject]
-    private IMWOService MWOService { get; set; }
+    private INewMWOService MWOService { get; set; }
     [Parameter]
     public Guid MWOId { get; set; }
     CreateSapAdjustRequest Model { get; set; } = new();
-
+    [Inject]
+    private IReportManager ReportManager { get; set; }
+    NewEBPReportResponse MWOEBPResponse { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
-        var result=await MWOService.GetMWOApprovedById(MWOId);
-        if(result.Succeeded)
+        var result = await MWOService.GetMWOByIdApproved(MWOId);
+        if (result.Succeeded)
         {
             Model.MWOApproved = result.Data;
         }
         Model.Date = DateTime.UtcNow;
 
-        var resultEbp = await MWOService.GetMWOEBPReport(MWOId);
+      
+    }
+
+    async Task UpdateEBPRepor()
+    {
+        var resultEbp = await ReportManager.GetEBPReport(MWOId);
         if (resultEbp.Succeeded)
         {
             MWOEBPResponse = resultEbp.Data;
         }
     }
-  
-    MWOEBPResponse MWOEBPResponse { get; set; } = new();
+    protected override async Task OnParametersSetAsync()
+    {
+        await UpdateEBPRepor();
+    }
     async Task SaveAsync()
     {
-        var result=await Service.CreateSapAdjust(Model);
-        if(result.Succeeded)
+        var result = await Service.CreateSapAdjust(Model);
+        if (result.Succeeded)
         {
             MainApp.NotifyMessage(NotificationSeverity.Success, "Success", result.Messages);
 
@@ -73,7 +81,7 @@ public partial class CreateAdjustForMWO
     }
     bool NotValidated = true;
 
-   
+
     public async Task ChangeActualSap(string actualsapstring)
     {
         double actualsap = 0;

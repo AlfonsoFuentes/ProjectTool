@@ -1,8 +1,10 @@
 using Blazored.FluentValidation;
+using Client.Infrastructure.Managers.Reports;
 using Client.Infrastructure.Managers.SapAdjusts;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Shared.Models.SapAdjust;
+using Shared.NewModels.EBPReport;
 using System.ComponentModel.DataAnnotations;
 #nullable disable
 namespace ClientRadzen.Pages.SapAdjust;
@@ -13,27 +15,22 @@ public partial class UpdateSapAdjust
     [Inject]
     private ISapAdjustService Service { get; set; }
     [Inject]
-    private IMWOService MWOService { get; set; }
+    private INewMWOService MWOService { get; set; }
     [Parameter]
     public Guid SapAdjustId { get; set; }
     UpdateSapAdjustRequest Model { get; set; } = new();
-    MWOEBPResponse MWOEBPResponse { get; set; } = new();
+    [Inject]
+    private IReportManager ReportManager { get; set; }
+    NewEBPReportResponse MWOEBPResponse { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
         var resultAdjust = await Service.GetSapAdjustById(SapAdjustId);
-        if(resultAdjust.Succeeded)
+        if (resultAdjust.Succeeded)
         {
             Model = resultAdjust.Data;
-            
+
         }
-        var resultEbp = await MWOService.GetMWOEBPReport(Model.MWOId);
-        if (resultEbp.Succeeded)
-        {
-            MWOEBPResponse = resultEbp.Data;
-        }
-
-
-
+        
     }
     async Task SaveAsync()
     {
@@ -73,7 +70,7 @@ public partial class UpdateSapAdjust
     }
     bool NotValidated = true;
 
-   
+
     public async Task ChangeActualSap(string actualsapstring)
     {
         double actualsap = 0;
@@ -110,5 +107,17 @@ public partial class UpdateSapAdjust
         }
 
         await ValidateAsync();
+    }
+    async Task UpdateEBPRepor()
+    {
+        var resultEbp = await ReportManager.GetEBPReport(Model.MWOId);
+        if (resultEbp.Succeeded)
+        {
+            MWOEBPResponse = resultEbp.Data;
+        }
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        await UpdateEBPRepor();
     }
 }

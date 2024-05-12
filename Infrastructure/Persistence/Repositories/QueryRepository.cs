@@ -247,5 +247,21 @@ namespace Infrastructure.Persistence.Repositories
 
             return result;
         }
+        public async Task<MWO> GetSapAdjustsByMWOId(Guid MWOId)
+        {
+
+            var context = await Context.MWOs
+                .Include(x => x.BudgetItems)
+                .Include(x => x.SapAdjusts)
+                 .AsNoTracking()
+              .AsSplitQuery()
+              .AsQueryable()
+                .SingleOrDefaultAsync(x => x.Id == MWOId);
+
+
+
+            return context!;
+
+        }
     }
 }

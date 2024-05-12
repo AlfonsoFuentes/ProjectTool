@@ -13,12 +13,12 @@ public partial class SapAdjustList
     public App MainApp { get; set; }
     [Inject]
     private ISapAdjustService Service { get; set; }
-   
+
     string nameFilter { get; set; } = string.Empty;
     SapAdjustResponseList Response { get; set; } = new();
     [Parameter]
     public Guid MWOId { get; set; }
-  
+
     protected override async Task OnInitializedAsync()
     {
         await UpdateAll();
@@ -30,7 +30,7 @@ public partial class SapAdjustList
         {
             Response = result.Data;
         }
-        
+
     }
     SapAdjustResponseList seletedRow = null!;
     async Task CreateAdjust()

@@ -1,16 +1,11 @@
-﻿using Application.Interfaces;
-using MediatR;
-using Shared.Commons.Results;
-using Shared.Models.SapAdjust;
-
-namespace Application.Features.SapAdjusts.Queries
+﻿namespace Application.Features.SapAdjusts.Queries
 {
     public record GetSapAdjustByIdToUpdateQuery(Guid SapAdjustId) : IRequest<IResult<UpdateSapAdjustRequest>>;
     internal class GetSapAdjustByIdToUpdateQueryHandler : IRequestHandler<GetSapAdjustByIdToUpdateQuery, IResult<UpdateSapAdjustRequest>>
     {
-        private ISapAdjustRepository Repository { get; set; }
+        private IRepository Repository { get; set; }
 
-        public GetSapAdjustByIdToUpdateQueryHandler(ISapAdjustRepository repository)
+        public GetSapAdjustByIdToUpdateQueryHandler(IRepository repository)
         {
             Repository = repository;
         }
@@ -36,6 +31,7 @@ namespace Application.Features.SapAdjusts.Queries
                 CECMWOName=$"CEC0000{query.MWO.MWONumber}",
                 PotencialSoftware = query.PotencialSoftware,
                 BudgetCapital = query.BudgetCapital,
+                
 
 
             };

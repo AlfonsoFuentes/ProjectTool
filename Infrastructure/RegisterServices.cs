@@ -50,10 +50,7 @@ namespace Infrastructure
 
             services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
       
-            services.AddScoped<IMWORepository, MWORepository>();
-            services.AddScoped<IBudgetItemRepository, BudgetItemRepository>();
-            services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
-            services.AddScoped<IPurchaseOrderValidatorRepository, PurchaseOrderValidatorRepository>();
+         
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<IVersionRepository, VersionRepository>();
             services.AddScoped<IQueryRepository, QueryRepository>();

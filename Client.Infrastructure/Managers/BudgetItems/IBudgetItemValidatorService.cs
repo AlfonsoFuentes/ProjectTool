@@ -7,10 +7,10 @@
     }
     public class BudgetItemValidatorService: IBudgetItemValidatorService
     {
-        private HttpClient Http;
-        public BudgetItemValidatorService(IHttpClientFactory httpClientFactory)
+        IHttpClientService Http;
+        public BudgetItemValidatorService(IHttpClientService httpClientFactory)
         {
-            Http = httpClientFactory.CreateClient("Auth");
+            Http = httpClientFactory;
         }
        
         public async Task<bool> ValidateNameExist(Guid MWOId, string mwoname)

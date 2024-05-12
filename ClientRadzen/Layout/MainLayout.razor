@@ -69,11 +69,11 @@
     }
     private void GoToMWOs()
     {
-        _NavigationManager.NavigateTo("/MWODataMain");
+        _NavigationManager.NavigateTo($"/{PageName.MWO.Main}");
     }
     private void GoToPurchaseorders()
     {
-        _NavigationManager.NavigateTo("/PurchaseOrdersDataList");
+        _NavigationManager.NavigateTo($"/{PageName.PurchaseOrder.Main}");
     }
     protected override Task OnParametersSetAsync()
     {

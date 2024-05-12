@@ -1,0 +1,52 @@
+﻿@using ClientRadzen.Enums
+
+
+<RadzenDataGrid AllowFiltering="false" AllowColumnResize="false" AllowAlternatingRows="false"
+                AllowGrouping="false" AllowSorting="false" PageSize="50" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+                Density="Density.Compact" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterPopupRenderMode="PopupRenderMode.OnDemand"
+                Data="@EBPReport.SummaryTotals" TItem="NewSummaryTotalResponse" ColumnWidth="300px"
+                CellClick="CellClick"
+                LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+    <Columns>
+        <RadzenDataGridColumn TItem="NewSummaryTotalResponse"
+                              Property="@nameof(NewSummaryTotalResponse.Actual)"
+                              Title="Actual, USD" Width="100px" TextAlign="TextAlign.Left">
+            <Template Context="detail">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Actual)}")
+
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewSummaryTotalResponse"
+                              Property="@nameof(NewSummaryTotalResponse.Commitment)"
+                              Title="Commitment, USD" Width="100px" TextAlign="TextAlign.Left">
+            <Template Context="detail">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Commitment)}")
+
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="NewSummaryTotalResponse"
+                              Property="@nameof(NewSummaryTotalResponse.Potential)"
+                              Title="Potential, USD" Width="100px" TextAlign="TextAlign.Left">
+            <Template Context="detail">
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.Potential)}")
+
+            </Template>
+        </RadzenDataGridColumn>
+
+    </Columns>
+</RadzenDataGrid>
+@if(View!= PurchaseorderView.None)
+{
+
+    <NewMWOEBPReportSapAdjustTable PurchaseOrders="@PurchaseOrders" View="@View">
+
+    </NewMWOEBPReportSapAdjustTable>
+    
+    
+    
+}
+
+@code {
+
+}

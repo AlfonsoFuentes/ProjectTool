@@ -1,6 +1,4 @@
-﻿using Azure.Core;
-using Shared.Models.UserManagements;
-using Shared.NewModels.SoftwareVersion;
+﻿
 
 namespace Client.Infrastructure.Managers.VersionSoftwares
 {

@@ -17,11 +17,11 @@ namespace Client.Infrastructure.Managers.SapAdjusts
     }
     public class SapAdjustService : ISapAdjustService
     {
-        private HttpClient Http;
+        IHttpClientService http;
 
-        public SapAdjustService(IHttpClientFactory httpClientFactory)
+        public SapAdjustService(IHttpClientService http)
         {
-            Http = httpClientFactory.CreateClient("Auth");
+            this.http = http;
         }
 
         public async Task<IResult> CreateSapAdjust(CreateSapAdjustRequest request)
@@ -29,7 +29,7 @@ namespace Client.Infrastructure.Managers.SapAdjusts
             try
             {
              
-                var httpresult = await Http.PostAsJsonAsync("SapAdjust/CreateSapAdjust", request);
+                var httpresult = await http.PostAsJsonAsync(ClientEndPoint.SapAdjust.Create, request);
 
                 return await httpresult.ToResult();
             }
@@ -44,8 +44,8 @@ namespace Client.Infrastructure.Managers.SapAdjusts
         {
             try
             {
-              
-                var httpresult = await Http.PostAsJsonAsync("SapAdjust/UpdateSapAdjust", request);
+
+                var httpresult = await http.PostAsJsonAsync(ClientEndPoint.SapAdjust.Update, request);
 
                 return await httpresult.ToResult();
             }
@@ -60,21 +60,21 @@ namespace Client.Infrastructure.Managers.SapAdjusts
 
         public async Task<IResult<SapAdjustResponseList>> GetAllSapAdjustByMWO(Guid MWOId)
         {
-            var httpresult = await Http.GetAsync($"SapAdjust/GetAllByMWO/{MWOId}");
-            return await httpresult.ToResult<SapAdjustResponseList>();
+            var result = await http.GetAsync($"{ClientEndPoint.SapAdjust.GetByIdMWOApproved}/{MWOId}");
+            return await result.ToResult<SapAdjustResponseList>();
         }
 
 
 
         public async Task<IResult<UpdateSapAdjustRequest>> GetSapAdjustById(Guid id)
         {
-            var httpresult = await Http.GetAsync($"SapAdjust/{id}");
+            var httpresult = await http.GetAsync($"{ClientEndPoint.Controller.SapAdjust}/{id}");
             return await httpresult.ToResult<UpdateSapAdjustRequest>();
         }
 
         public async Task<IResult> Delete(SapAdjustResponse request)
         {
-            var httpresult = await Http.PostAsJsonAsync($"SapAdjust/DeleteSapAdjust", request);
+            var httpresult = await http.PostAsJsonAsync(ClientEndPoint.SapAdjust.Delete, request);
             return await httpresult.ToResult();
         }
 

@@ -1,6 +1,4 @@
-﻿using Shared.NewModels.EBPReport;
-using Shared.NewModels.MWOs.Reponses;
-using Shared.NewModels.MWOs.Request;
+﻿
 
 namespace Client.Infrastructure.Managers.MWOS
 {
@@ -14,7 +12,7 @@ namespace Client.Infrastructure.Managers.MWOS
         Task<IResult> DeleteMWO(NewMWODeleteRequest request);
         Task<IResult> UnApprovedMWO(NewMWOUnApproveRequest request);
         Task<IResult<NewMWOApproveRequest>> GetMWOByIdToApprove(Guid MWOId);
-        Task<IResult<NewEBPReportResponse>> GetMWOEBPReportById(Guid MWOId);
+        Task<IResult<NewMWOApprovedReponse>> GetMWOByIdApproved(Guid MWOId);
         Task<IResult> ApproveMWO(NewMWOApproveRequest request);
     }
     public class NewMWOService : INewMWOService
@@ -78,10 +76,10 @@ namespace Client.Infrastructure.Managers.MWOS
             return await result.ToResult();
         }
 
-        public async Task<IResult<NewEBPReportResponse>> GetMWOEBPReportById(Guid MWOId)
+        public async Task<IResult<NewMWOApprovedReponse>> GetMWOByIdApproved(Guid MWOId)
         {
-            var result = await http.GetAsync($"{ClientEndPoint.NewMWO.GetEBPReport}/{MWOId}");
-            return await result.ToResult<NewEBPReportResponse>();
+            var result = await http.GetAsync($"{ClientEndPoint.NewMWO.GetByIdMWOApproved}/{MWOId}");
+            return await result.ToResult<NewMWOApprovedReponse>();
         }
     }
 }

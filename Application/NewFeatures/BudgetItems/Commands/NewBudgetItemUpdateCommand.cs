@@ -1,8 +1,4 @@
-﻿using Application.Mappers.BudgetItems;
-using Azure.Core;
-using MediatR;
-
-namespace Application.NewFeatures.BudgetItems.Commands
+﻿namespace Application.NewFeatures.BudgetItems.Commands
 {
     public record NewBudgetItemUpdateCommand(NewBudgetItemMWOUpdateRequest Data) : IRequest<IResult>;
     internal class NewBudgetItemUpdateCommandHandler : IRequestHandler<NewBudgetItemUpdateCommand, IResult>

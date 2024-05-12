@@ -47,14 +47,14 @@
             </FooterTemplate>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="NewPriorPurchaseOrderItemResponse"
-                              Property="@nameof(NewPriorPurchaseOrderItemResponse.PendingToReceiveUSD)"
+                              Property="@nameof(NewPriorPurchaseOrderItemResponse.CommitmentUSD)"
                               Title="Pending" Width="100px" TextAlign="TextAlign.Left">
             <Template Context="detail">
-                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.PendingToReceiveUSD)}")
+                @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", detail.CommitmentUSD)}")
 
             </Template>
             <FooterTemplate>
-                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", PurchaseOrderItems.Sum(x => x.PendingToReceiveUSD))}")</b>
+                <b>  @($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", PurchaseOrderItems.Sum(x => x.CommitmentUSD))}")</b>
             </FooterTemplate>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="NewPriorPurchaseOrderItemResponse"

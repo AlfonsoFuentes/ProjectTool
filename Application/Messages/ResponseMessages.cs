@@ -27,5 +27,6 @@
         public static string MWO = "MWO";
         public static string BudgetItems = "Budget Items";
         public static string PurchaseOrders = "Purchase Orders";
+        public static string SapAdjust = "SAP Conciliation";
     }
 }
